@@ -1,0 +1,89 @@
+\documentclass[12pt]{article}
+
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{natbib}
+\addtolength{\oddsidemargin}{-.7in}
+\addtolength{\evensidemargin}{-.7in}
+\addtolength{\textwidth}{1.4in}
+\usepackage{enumerate}
+\onehalfspacing
+\usepackage{geometry} % Required for customizing page layout
+\usepackage{ragged2e}
+
+\usepackage{caption}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartview = FitH,
+	pdfauthor = {...},
+	pdftitle = {...},
+	pdfkeywords = {...; ...; ...; ...},
+	colorlinks = true,
+	linkcolor = blue,
+	urlcolor = blue,
+	citecolor = blue,
+	linktocpage=true
+}
+
+\title{The nature of corporate credit frictions}
+\author{Barnabás Székely \\ \small  Goethe-Universität Frankfurt, GSEFM}
+\date{}
+
+
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Introduction} \label{sec:introduction}
+
+Corporate credit market frictions are traditionally characterized in the macro-finance literature as asset-based borrowing constraints. Recent contributions challenged this perspective based on more granular analyses of debt contracts. Lian and Ma (2021) argue that 80\% corporate debt is backed by future cash flows rather than assets - hence, credit frictions are better described as borrowing constraints based on earnings. In a similar vein, Dreschel (2023) finds that the majority of debt covenants limit debt in the function of current earnings. This led to the re-evaluation of credit frictions in macro-finance models. However, these studies typically view asset-based and earnings-based constraints as mutually exclusive, competing models of reality. This reduces analyses to addressing which one offers a more accurate description of credit frictions.  
+
+I argue that categorizing firms strictly as asset-based or cash flow-based borrowers does not describe the debt their financing problem accurately. Most North American, listed non-financial corporations hold multiple debt contracts comprising asset-based and cash flow-based debt as well. For these firms, accounting for earnings-based and asset-based frictions simultaneously would yield a more accurate representation of the debt financing problem. Building on an empirical analysis of debt financing strategies, I explore the determinants of the credit frictions experienced by non-financial corporations. These findings are consolidated in a heterogeneous agents, general equilibrium model. The purpose of this exercise is twofold. First, it provides an accurate description of the credit constraints faced by firms. Second, it estimates the effects of these frictions on the overall economy. 
+
+\subsection*{Empirical analysis of the debt financing strategies}
+I study a total of 180388 debt contracts held by 8974 non-financial corporations between 2010Q1 and 2023Q2. Debt-level data is collected from S\&P's Capital IQ, and firm-level data is from Compustat North America.\footnote{To extend the cross-country coverage of the analysis I also connect Capital IQ and ORBIS.} The motivating evidence is summarized by table 1: 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{l|rrr}
+\multicolumn{4}{l}{\textbf{Firm shares by debt financing strategy}} \\
+\hline
+\hspace{2.2cm} \textbf{Share by} & \textbf{\# of Firms} & \textbf{Assets}  & \textbf{Borrowing} \\  
+Asset-based borrowers & 35.66 \% & 4.83 \% & 3.36 \% \\ 
+`Hybrid' borrowers & 52.11 \% & 87.27 \% & 90.31  \% \\ 
+CF-based borrowers & 12.23 \% & 7.91 \% & 6.33  \% \\ 
+   \bottomrule
+\end{tabular}
+\label{tab:shares}
+\end{table}
+
+\noindent Previous studies overlook `hybrid' borrowers altogether, who account for 52.1\% or all firms (87.3\% of total asset value). To better understand how these firms choose their debt financing strategy, I study the determinants of CFL reliance (CF-based debt relative to total debt). The multivariate analyis suggests that the most important predictors of this indicator are size (measured by assets), leverage and the share of collateralizable assets on the balance sheet. More indebted firms rely on CF-based finance more often whereas higher collateralizability of assets is associated with lower CFL reliance. The relation of size and CFL reliance is U-shaped, with smallest and the largest firms relying on CF-based financing the most heavily.
+
+Moreover, the distribution of CFL reliance is consistent with high fixed costs of lending against future cash flows. In particular, two types fixed costs stand out. First, CF-based lending is based on the anticipation that the borrower will be reorganized should financial difficulties arise. Hence, the lender must take into account the potential legal, personnel and time expenses associated with this process. Second, cash flow-based contracts require the lender to monitor the borrower on an ongoing basis, which imposes significant expenses even in the normal course of operation. These costs limit the availability of cash flow based financing.
+
+\subsection*{Structural model of credit frictions}
+I consolidate the findings of the empirical analysis in a general equilibrium model that incorporates a representative household, heterogeneous firms (borrowers) and a competitive lender. Firms own capital and may borrow or save. Investments into capital are co-financed with the lender, subject to a zero profit condition. The terms of borrowing are shaped by lenders' costs and payoffs under each type of debt contract. Cash flow-based lending provides the opportunity to capture the continuation value of the firm which might allow for more lenient credit conditions. At the same time, it is subject to substantial fixed costs, which limits its' availability.    
+
+The combination these costs and payoffs implies that firms face a unique external finance premium determined by the value of assets, productivity, the value debt and the debt financing strategy they choose. In case of larger firms, fixed costs are insignificant (in relative terms) and liquidation is unlikely. These forms typically opt for cash flow based debt financing, hence financial frictions are primarily shaped by the going concern value of the borrower. On the other hand, smaller firms might be closed out of the CF-based lending market altogether, due to the fixed costs discussed above. These firms are largely subject to asset-based constraints. Competing with this effect is that asset-poor firms may face high asset-based financing costs as well. If such firms are subject to a favourable lender perception, they might find more lenient CF based debt conditions. This mechanism reproduces the U-shape of CFL reliance against size.  
+
+\subsection*{Conclusion}
+
+Most North American, traded non-financial corporations hold multiple debt contracts, which often comprise a combination of asset-based and cash flow-based debt. Thus, credit market frictions are better described as a combination of asset-based and earnings-based constraints. I first conduct an empirical analysis of firms debt financing strategies along these lines. Then, I use the findings of this analysis, to inform a structural model that provides precise description of credit frictions across different firms. 
+
+\bibliographystyle{apalike} % Choose your desired bibliography style
+
+\begin{thebibliography}{99}
+\bibitem{drechsel2023} Drechsel, T. (2023). Earnings-based borrowing constraints and macroeconomic fluctuations. \textit{American Economic Journal: Macroeconomics}, \textbf{15}(2), 1-34.
+
+\bibitem{lian2021} Lian, C., \& Ma, Y. (2021). Anatomy of corporate borrowing constraints. \textit{The Quarterly Journal of Economics}, \textbf{136}(1), 229-291.
+
+\end{thebibliography}
+
+
+\end{document}

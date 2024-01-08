@@ -1,0 +1,137 @@
+\documentclass[12pt]{article}
+
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\addtolength{\oddsidemargin}{-.7in}
+\addtolength{\evensidemargin}{-.7in}
+\addtolength{\textwidth}{1.4in}
+\usepackage{enumerate}
+\onehalfspacing
+\usepackage{geometry} % Required for customizing page layout
+
+\usepackage{caption}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartview = FitH,
+	pdfauthor = {...},
+	pdftitle = {...},
+	pdfkeywords = {...; ...; ...; ...},
+	colorlinks = true,
+	linkcolor = blue,
+	urlcolor = blue,
+	citecolor = blue,
+	linktocpage=true
+}
+
+
+\begin{document}
+\section{Partial equilibrium model - VFI only}
+\subsection{Ver 1 - Fixed q-s; no V1, without cash on hand}
+Labour policy: 
+\begin{equation}
+    n(k,\varepsilon_i) = \left( \dfrac{ \nu \varepsilon_i k^\alpha}{w} \right)^{\frac{1}{1-\nu}}
+\end{equation}
+Corresponding output: 
+\begin{equation}
+    y(k,\varepsilon_i) = \varepsilon_i k^{\alpha} \left( \dfrac{\nu \varepsilon_i k^\alpha}{w} \right)^{\frac{\nu}{1-\nu}}
+\end{equation}
+Corresponding profits: 
+\begin{equation}
+    \pi(k,\varepsilon_i) = (1-\nu) y(k,\varepsilon_i) - c
+\end{equation}
+External finance premium (will be just a parameter)
+\begin{equation}
+   q^s = \beta  (1-P_\chi)
+\end{equation}
+Value function:
+\begin{equation}
+     V(k,b, \varepsilon_i) = \max_{k',b'}  \left( \pi(k,\varepsilon_j)+(1-\delta)k - k' +  q^s b' -b  +
+            \beta (1-P_\chi) \sum_{j=1}^{N_\varepsilon} g_{ij}  V(x',\varepsilon_j') \right)
+\end{equation}
+
+\vspace{1cm}
+Here, the firm can directly choose $k'$ and $b'$, which make coding the model easier. The cost is that you are left with 3 state variables, which will probably not do when you solve more advanced versions of the model. 
+
+Since firms can directly choose next period's endogenous state variables, you do not need an additional constraints (as in the case of the cash on hand version). 
+
+\newpage
+\setcounter{equation}{0}
+
+
+\subsection{Ver 2 - Fixed q-s; no V1, with cash on on hand}
+Labour policy: 
+\begin{equation}
+    n(k,\varepsilon_i) = \left( \dfrac{ \nu \varepsilon_i k^\alpha}{w} \right)^{\frac{1}{1-\nu}}
+\end{equation}
+Corresponding output: 
+\begin{equation}
+    y(k,\varepsilon_i) = \varepsilon_i k^{\alpha} \left( \dfrac{\nu \varepsilon_i k^\alpha}{w} \right)^{\frac{\nu}{1-\nu}}
+\end{equation}
+Corresponding profits: 
+\begin{equation}
+    \pi(k,\varepsilon_i) = (1-\nu) y(k,\varepsilon_i) - c
+\end{equation}
+Cash on hand: 
+\begin{equation}
+   x = \pi(k,\varepsilon_j)+(1-\delta)k-b
+\end{equation}
+External finance premium
+\begin{equation}
+   q^s = \beta  (1-P_\chi)
+\end{equation}
+Value function:
+\begin{equation}
+     V(x,\varepsilon_i) = \max_{k',b'}  \left(x - k' +  q^s b' + 
+            \beta  (1-P_\chi)  \sum_{j=1}^{N_\varepsilon} g_{ij} V(x',\varepsilon_j') \right)
+\end{equation}
+Constraint: 
+\begin{equation}
+   x' = \pi(k',\varepsilon_j')+(1-\delta)k'-b'
+\end{equation}
+
+\vspace{1cm}
+For any given $x$, the choice of $k'$ pins down $b'$ as well. Therefore it is possible to rewrite the value function by substituting $b' = \pi(k',\varepsilon_j')+(1-\delta)k'-x'$ into the value function.
+
+\newpage
+\setcounter{equation}{0}
+
+
+\subsection{Ver 3 - Endogenous q-s; no V1, without cash on hand}
+Labour policy: 
+\begin{equation}
+    n(k,\varepsilon_i) = \left( \dfrac{ \nu \varepsilon_i k^\alpha}{w} \right)^{\frac{1}{1-\nu}}
+\end{equation}
+Corresponding output: 
+\begin{equation}
+    y(k,\varepsilon_i) = \varepsilon_i k^{\alpha} \left( \dfrac{\nu \varepsilon_i k^\alpha}{w} \right)^{\frac{\nu}{1-\nu}}
+\end{equation}
+Corresponding profits: 
+\begin{equation}
+    \pi(k,\varepsilon_i) = (1-\nu) y(k,\varepsilon_i) - c
+\end{equation}
+External finance premium:
+\begin{equation}
+    q^{abl}(k',b')b' = \beta \left[ (1-P_\chi) b' + P_\chi \min\{b', \ \phi_k (1-\delta) k' \} \right]  
+\end{equation}
+Value function:
+\begin{equation}
+     V(k,b, \varepsilon_i) = \max_{k',b'}  \left( \pi(k,\varepsilon_j)+(1-\delta)k - k' +  q^s b' -b  +
+            \beta (1-P_\chi) \sum_{j=1}^{N_\varepsilon} g_{ij}  V(x',\varepsilon_j') \right)
+\end{equation}
+
+\newpage
+
+
+
+\end{document}
+
+
+
+
+
+

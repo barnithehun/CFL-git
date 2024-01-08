@@ -1,0 +1,189 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[notes]{beamer}
+
+%Cheat-Sheet: https://www.cpt.univ-mrs.fr/~masson/latex/Beamer-appearance-cheat-sheet.pdf
+\usetheme{Frankfurt}
+
+%-- Layout --%
+% font size
+\usepackage[fontsize=11pt]{scrextend}
+\usepackage{amsmath}
+\usepackage[short]{optidef}
+\usepackage[backend=bibtex,style=authoryear]{biblatex}
+% page
+\setbeamersize{text margin left=1cm, text margin right=1cm}
+\setbeamercolor{button}{bg=blue, fg=white}
+% line space 
+\usepackage{setspace}
+\setstretch{0.8}
+% footline
+\addtobeamertemplate{navigation symbols}{}{
+    \usebeamerfont{footline}
+    % \usebeamercolor[fg]{footline}
+    \hspace{2em}
+    \insertframenumber/\inserttotalframenumber    }
+% headline
+\setbeamercovered{transparent}
+
+%-- Figure --%
+\usepackage{graphicx}
+% \usepackage{subfig}
+
+%-- Table --%
+\usepackage{tabularx,booktabs}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+%-- Text --%
+\usepackage{xcolor}
+% \usepackage{tikz}
+
+%-- Math --%
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+%-- Caption --%
+\usepackage{caption}
+\usepackage{subcaption}
+
+%-- Effects --%
+\usepackage{hyperref}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[]{Debt Financing Strategies of Heterogeneous Firms} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Barnab\'as Sz\'ekely} % Your name
+
+\date{\today } % Date, can be changed to a custom date
+
+\begin{document}
+\renewcommand{\arraystretch}{1.4}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+%%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%------------------------------------------------
+\section{Intro}
+
+\begin{frame}[label=slide2]
+\frametitle{Asset-Based and Cash-Flow Based lending}
+Motivation: 
+\begin{itemize}
+\item Economic determinants of creditors' payoffs 
+\item Nature and severity of credit market frictions
+\end{itemize} \vspace{4mm} 
+Lian and Ma (2021, QJE): 
+\begin{itemize}
+\item Asset-based lending (ABL)  $\rightarrow$ secured against borrowers' (physical) assets, distress is resolved by liquidation
+\item Cash flow-based lending (CFL)  $\rightarrow$ No specific assets as collateral, distress is resolved by reorganization
+\end{itemize}
+By volume, 80\% of US corporate debt is CFL! 
+\begin{itemize}
+\item Significant model implications
+\end{itemize}
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Evidence}
+
+
+\begin{frame}
+  \frametitle{Reliance to cash flow based finance}
+
+  \begin{columns}
+    \begin{column}{0.45\textwidth} % Adjust the width as needed
+   Debt classification: 
+   \begin{itemize}
+   \item Following Lian and Ma
+   \item US listed corporations 
+   \end{itemize}
+   I find: 73.4\% of debt is CFL  \vspace{1mm}  \\
+  $$ CFL \ reliance = \dfrac{CFL \  debt}{Total \  debt} $$ \vspace{3mm} \\ 
+  CFL-reliant firms are larger on average 
+  \begin{itemize}
+  \item   High fixed costs of CFL
+  \end{itemize}        
+    \end{column}
+    \begin{column}{0.55\textwidth} % Adjust the width as needed
+      \begin{figure}
+        \includegraphics[width=\textwidth]{cdfs.png} % Adjust the path and options as needed
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=slide2]
+\frametitle{CFL reliance across the firm sizes}
+U-shape: consistent across sectors, robust in multivariate analysis
+\begin{figure} [H]
+\centering
+\includegraphics[width=1 \textwidth]{smoothy2.png}
+\end{figure}  
+\end{frame}
+
+\section{Model}
+%------------------------------------------------
+\begin{frame}[label=slide2]
+\frametitle{Model setup}
+Structural model - goals
+\begin{itemize}
+\item Reproduce CFL reliance across firms
+\item See capital misallocation, reaction to aggregate shocks
+\end{itemize} \vspace{5mm}
+
+Model framework - Khan and Thomas (2013)
+\begin{itemize}
+\item Heterogeneous firms s.t. financial frictions
+\item Representative households, competitive lender
+\item Firms choose ABL or CFL $\rightarrow$ cost of each financing strategy depends on creditors' payoffs
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=slide2]
+\frametitle{Costs of borrowing: $q_{cfl}$ vs. $q_{abl}$}
+Cost of external finance: 
+\begin{itemize}
+\item Inverse gross interest rate $q_i$; risk free rate: $q_0 = 1 / \beta$
+\item Competitive lender $\rightarrow$ zero profit condition  
+\end{itemize} \vspace{4mm}
+\textbf{ABL}: the lender liquidates assets subject to a variable cost:
+$$ q_{abl}(k',b',\varepsilon)b' = \beta \left[ (1-P_\chi) b' + P_\chi \min\{b', \ \phi_k (1-\delta) k' \} \right]  $$ \vspace{2mm} \\
+\textbf{CFL}: the lender takes over the entire firm and resells it to the household subject to a variable \textbf{and} a fixed cost ($\zeta$)
+$$ q_{cfl}(k',b',\varepsilon)b' = \beta \left[ (1-P_\chi) b' + P_\chi \min\{b', \ \phi_v V_1(k',b',\varepsilon') - \zeta \} \right]  $$ 
+\end{frame}
+
+\section{Fixed costs}
+%------------------------------------------------
+\begin{frame}[label=slide2]
+\frametitle{The fixed cost of CFL - explaining $\zeta$ }
+In-default:  reorganization cost
+\begin{itemize}
+\item ABL: liquidation (Chapter 7) 
+\item CFL: reorganization (Chapter 11) $\rightarrow$ costly: negotiation between debtors, creditors, legal fees etc.
+\end{itemize} \vspace{3mm}
+No default: monitoring costs
+\begin{itemize}
+\item ABL: only a periodic appraisal of assets
+\item CFL: lender must carry out `due diligence' on an ongoing basis
+\end{itemize} 	\vspace{3mm}
+Summarized by parameter $\zeta$, paid by the lender in case of default
+
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,315 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[notes]{beamer}
+
+%Cheat-Sheet: https://www.cpt.univ-mrs.fr/~masson/latex/Beamer-appearance-cheat-sheet.pdf
+\usetheme{Frankfurt}
+
+%-- Layout --%
+% font size
+\usepackage[fontsize=11pt]{scrextend}
+\usepackage{amsmath}
+\usepackage{appendixnumberbeamer} 
+\usepackage[short]{optidef}
+\usepackage[backend=bibtex,style=authoryear]{biblatex}
+% page
+\setbeamersize{text margin left=1cm, text margin right=1cm}
+\setbeamercolor{button}{bg=blue, fg=white}
+% line space 
+% footline
+\addtobeamertemplate{navigation symbols}{}{
+    \usebeamerfont{footline}
+    % \usebeamercolor[fg]{footline}
+    \hspace{2em}
+    \insertframenumber/\inserttotalframenumber    }
+% headline
+\setbeamercovered{transparent}
+
+% for the indicator function
+\usepackage{dsfont}
+
+%-- Figure --%
+\usepackage{graphicx}
+% \usepackage{subfig}
+
+\DeclareMathOperator*{\argmin}{arg\,min} % Jan Hlavacek
+\DeclareMathOperator*{\argmax}{arg\,max} % Jan Hlavacek
+
+
+%-- Table --%
+\usepackage{tabularx,booktabs}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+%-- Text --%
+\usepackage{xcolor}
+% \usepackage{tikz}
+
+%-- Math --%
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+%-- Caption --%
+\usepackage{caption}
+\usepackage{subcaption}
+
+%-- Effects --%
+\usepackage{hyperref}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[]{The Nature of Corporate Credit Constraints \\
+\small Update on the theory} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Barnab\'as Sz\'ekely} % Your name
+
+\date{\today } % Date, can be changed to a custom date
+
+\begin{document}
+\renewcommand{\arraystretch}{1.4}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+%%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%---------------------------------------------------------------------------------
+
+
+\section{Introduction, literature}
+%------------------------------------------------
+\begin{frame}[label=1] 
+\frametitle{Credit market frictions in macro-finance}
+Traditional approach:
+\begin{itemize} \setlength\itemsep{0em} \small
+    \item Asset based borrowing constraints \\
+    \textit{Kiyotaki and Moore (1997); Bernanke, Gertler and Gilchrist (1999)}   
+    \item ABCs in the misallocation literature \\ \textit{Midrigan and Xu (2014), Banerjee and Moll (2010), Buera, Kaboski and Shin (2011)}
+\end{itemize} \normalsize \vspace{5mm} \\
+
+Prevalence of earnings based constraints:
+\begin{itemize} \setlength\itemsep{0em} \small
+    \item Lian and Ma (2021): 80\% of US corporate debt is CF-based
+    \item Drechsel (2023): 3 out of the 4 most often used debt covenants are earnings-based
+\end{itemize} \normalsize
+
+\end{frame}
+
+
+\begin{frame}[label=1] 
+\frametitle{Credit market frictions in macro-finance}
+
+Response to shocks: 
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item  TFP and `investments ' shocks have different effects depending on the debt contract in place \\ \textit{Drechsel (2023); Choi (2022)}
+    \item  Financial accelerator of BGG is mitigated \\ \textit{Lian and Ma (2021)}
+\end{itemize} \normalsize
+
+Monetary policy: 
+\begin{itemize} \setlength\itemsep{0em} \small
+    \item Sticky prices interact with EBCs, but not with ABCs \\ \textit{Drechsel (2023), Öztürk (2023), Greenwald (2019)}
+\end{itemize} \normalsize
+
+Macroprudential policy: 
+\begin{itemize} \setlength\itemsep{0em} \small
+    \item Firms do not over-borrow (rather, under-borrow) \\ \textit{Drechsel and Kim (2022)}
+\end{itemize} \normalsize
+
+
+\end{frame}
+
+\begin{frame}[label=slide2] \frametitle{Data and Motivation}
+Compustat and Capital IQ data; US traded firms; 2010-2023
+\begin{itemize}  \setlength\itemsep{0em}
+    \item Most firms typically hold multiple debt contracts (5.21 on average) and use on both type of debt!
+\end{itemize} \vspace{0.1mm} \\
+\begin{table}[h!]
+\centering
+\resizebox{0.95\textwidth}{!}{% 0.75 times the text width
+\begin{tabular}{l|rrr|r}
+\multicolumn{5}{l}{\textbf{Firm shares by debt financing strategy}} \\
+\toprule
+\textbf{Share by} & \textbf{\# of Firms} & \textbf{Assets}  & \textbf{Borrowing} & \textbf{Constraint} \\  
+Asset-based firms & 35.66\% & 4.83\% & 3.36\% & ABCs \\ 
+'Hybrid' firms & 52.11\% & 87.27\% & 90.31\% & In-between \\ 
+CF-based firms & 12.23\% & 7.91\% & 6.33\% & EBCs \\ 
+\bottomrule
+\end{tabular}
+}
+\label{tab:shares}
+\end{table} 
+\end{frame}
+
+\section{Alternative approach}
+
+%------------------------------------------------
+\begin{frame}[label=1] 
+\frametitle{Asset based vs. CF-based debt contracts}
+Asset-based debt contracts
+\begin{itemize}
+ \setlength\itemsep{0em}
+    \item Backed by collateral 
+    \item In default: recovering collateral
+    \item Comparative advantage: under liquidation
+\end{itemize} \vspace{5mm} \\
+
+Earnings-based debt contracts
+\begin{itemize}
+ \setlength\itemsep{0em}
+    \item Backed by continuation value 
+    \item In default: recovering the continuation value
+    \item Comparative advantage: under reorganization
+\end{itemize} 
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=2] \frametitle{The tradeoff}
+\begin{table}[h!]
+\centering
+\resizebox{0.9\textwidth}{!}{% 0.75 times the text width
+\begin{tabular}{l|cc}
+   & Liquidation  & Reorganization \\  
+  \midrule
+ Asset based contract & $ \phi_a (1-\delta) k$  &  $ \phi_a (1-\delta) k$ \\
+ CF based contract & $\phi_c (1-\delta) k$ & $ \phi_v V(x,\varepsilon) - \zeta $ \\ 
+\bottomrule
+\end{tabular}
+}
+\label{tab:shares}
+\end{table}  
+ $\phi_a > \phi_c \rightarrow $ AB contracts are better at recovering collateral
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=3] \frametitle{Liquidation decision}
+Household / Courts makes the liquidation decision: 
+\begin{itemize}  \setlength\itemsep{0em}
+    \item Decision is optimal:
+ $$ \max \Big\{ \phi_v V(k,b,\varepsilon)- \zeta, \  \phi_k (1-\delta) k \Big\}.$$
+    \item No strategic thinking on the firm / lender side 
+    \item Revenues and expenses appear in the HH budget constraint
+\end{itemize}  \vspace{5mm} \\ 
+Ex-ante probability of liquidation:
+$$ \gamma(k',b', \varepsilon) = E \left[ \mathds{1}(\phi_k (1-\delta) k  \  \geq \ \phi_v V(k,b,\varepsilon)- \zeta)  \right] $$
+
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame} \frametitle{External finance premium}
+The firm chooses the CFL reliance, $\tau$ to maximize $q(k',b',\varepsilon,\tau)$ \vspace{5mm} \\ 
+From lenders' zero profit condition: 
+\footnotesize
+\begin{align*}
+    & q(k',b',\varepsilon, \tau)b' =   \beta \left[ (1-P_\chi) b' +  \\
+         & \hspace{3mm} P_\chi \gamma(k',b', \varepsilon) \left[ \min\{b', \ (1-\tau) \phi_A (1-\delta) k' +\tau \phi_C (1-\delta) k' \} \right] + \\
+         & \hspace{3mm} P_\chi (1-\gamma(k',b', \varepsilon)) \left[ \min\Big{\{}b', \ (1-\tau) \phi_A (1-\delta) k' +\tau \left( \phi_v E \left[V^D_1(k',b',\varepsilon')\right] - \zeta \right) \Big{\}} \right] \right]  
+\end{align*} \vspace{0.1mm} \\ 
+\normalsize
+Optimal debt financing strategy can be isolated:
+\small
+$$ \tau^*(k',b',\varepsilon) = \argmax_\tau q(k',b', \varepsilon, \tau) \hspace{10mm} s.t: \tau \in (0,1) $$
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{Defaults and firm values}
+Value of a continuing firm: 
+\begin{equation*} \label{eq:V_2}
+V(x,\varepsilon) = \max_{k',b'} \left(x - k' +  q(k',b',\varepsilon)b' + (1-P_\chi)\beta E \left[ V(x',\varepsilon') \right] \right)
+\end{equation*} 
+subject to: 
+\small
+\begin{align*}
+    & q(k',b',\varepsilon) =   \frac{\beta}{b'}\left[ (1-P_\chi) b' +  \\
+         & \hspace{3mm} P_\chi \gamma \left[ \min\{b', \ (1-\tau^*) \phi_A (1-\delta) k' +\tau^* \phi_C (1-\delta) k' \} \right] + \\
+         & \hspace{3mm} P_\chi (1-\gamma) \left[ \min\Big{\{}b', \ (1-\tau^*) \phi_A (1-\delta) k' +\tau^* \left( \phi_v E \left[V^D_1(k',b',\varepsilon')\right] - \zeta \right) \Big{\}} \right] \right]  
+\end{align*}
+$$ x' = \pi(k',\varepsilon')+(1-\delta)k'-b' $$
+$$ x - k' +  q^s(k',b',\varepsilon)b' \geq 0 $$
+\normalsize
+
+
+\end{frame}
+
+\section{Conclusion}
+
+%------------------------------------------------
+\begin{frame}\frametitle{Conclusion}
+Advantages:
+\begin{itemize}
+ \setlength\itemsep{0em}
+    \item More intuitive, easier preliminary solutions
+    \item CFL reliance as a result of optimization (not mechanical from the probability of default)
+\end{itemize} \vspace{5mm} \\
+
+Drawbacks: 
+\begin{itemize}
+ \setlength\itemsep{0em}
+    \item Liquidation decision must be done by a 3rd party
+    \item Revenues and payoff accounting is more complicated
+\end{itemize} 
+
+\end{frame}
+
+\appendix
+
+\section{Appendix}
+
+%------------------------------------------------
+\begin{frame}\frametitle{Accounting payoffs - Liquidation}
+Firm exits - capital is shared between the lender and the HH
+\begin{itemize}  \setlength\itemsep{0em}
+    \item Cost of liquidation: $(1-\phi_A)(1-\delta)k$
+    \item The lender receives:
+    \small  $$ \min \{ b, \hspace{3mm} (1-\tau) \phi_A (1-\delta) k + \tau \phi_C (1-\delta) k \} $$ \normalsize
+    \item  The household receives whatever is left after paying the firm:
+    \small  $$ \max \{\phi_A (1-\delta) k - b, \hspace{3mm} \tau (\phi_A-\phi_C) k  \} $$ \normalsize
+    \end{itemize}
+ HH payoff is needed only to make accounting consistent
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}\frametitle{Accounting payoffs - Reorganization}
+Firm continues - the  HH pays to keep the firm going
+\begin{itemize} \setlength\itemsep{0em}
+    \item The lender gets a share in the firm after its CF-based debt
+    \item Resells it to the household at price $\tau V$
+    \item The total cost of reorganization is: $ (1- \phi_v) V + \zeta $ 
+    \item It is shared between the HH and lender (in proportion of $\tau$)
+\end{itemize}
+The household is willing to keep the firm going if: 
+$$\phi_k (1-\delta) k  \  < \ \phi_v V(k,b,\varepsilon)- \zeta$$
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}\frametitle{Accounting payoffs - Reorganization}
+\textbf{The HH pays: }
+\begin{itemize} \setlength\itemsep{0em}
+    \item Capital value after asset-based debt: $(1-\tau)\phi_A(1-\delta)k$
+    \item Firm value after CF-based debt: $\tau V$
+    \item His share of the reorganization cost: $ (1-\tau) [(1- \phi_v) V + \zeta)]$ 
+\end{itemize}
+Pays in total: $$ \max \{b - [(1- \phi_v) V + \zeta)], (1-\tau)\phi_A(1-\delta)k + \tau V + (1-\tau) [(1- \phi_v) V + \zeta)]\}  $$
+
+\textbf{The firm,}
+\begin{itemize} \setlength\itemsep{0em}
+    \item pays:  $ \tau [(1- \phi_v) V + \zeta)]$
+    \item receives: $(1-\tau)\phi_A(1-\delta)k + \tau V $
+\end{itemize}
+Receives in total: $$ \min \{b , (1-\tau)\phi_A(1-\delta)k + \tau (\phi_v V - \zeta) \}  $$
+
+\end{frame}
+
+
+\end{document}
