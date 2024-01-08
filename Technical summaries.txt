@@ -1,0 +1,80 @@
+Technical summaries
+
+Leo paper: 
+ - No investment 
+ - Endogenous insolvency from 2 elements: borrowing constraints and non-negativity of dividends
+ - Incentive to save: to decrease probability of insolvency
+ - Constrained vs unconstrained firms: 
+      - The unconstrained firm has escaped the threat of insolvency forever
+      - The constrained firm might not be threatened by insolvency now, but cannot save enough yet to escape this threat forever 
+ - The dividend policy becomes the same as in KT13
+
+
+KT13: 
+ - No insolvency - Exogenous, uniformaly distributed quits
+ - Capital investment
+ - Partial irrevesibility of capital: (s,S) investment structure - not relevant for me
+ - Constrained vs unconstrained firms: 
+	- The unconstrained can invest optimally and keep enough savings to remain unconstrained forever
+	- The constrained may be able to invest optimally but cannot keep enough saving to become unconstrained forever
+ - Constrained and unconstrained have different dividend policy, no firm has to do the entire optimization for all 3 state variables
+ 
+
+KT17: 
+ - Endogeneous defaults - Endogneous borrowing constraint and non-negativity of dividends
+ - Loan rate schedules depending on default probability 
+ - Due to defaults: an extra class of firms who actually face default risk - they have to solve the complete optimization problem
+
+
+Mine:
+ - Endogneous voluntary exits from Kaas - if implemented, the cut-off rates as well
+ - Stationary equilibrium characterization from Kaas
+ - Loan rate schedules from KT17
+ - Full firm classification from KT17
+ - Uniform default probability from KT13
+ - Added: Loan rate schedules depending CFL and ABL contracts
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Model timing
+
+T0 beggining
+
+- Firms produce 
+- The insolvency shock materializes
+
+ In default, under asset-based debt contract: 
+     - The lender liquidates the capital
+
+ In default, under a 'hybrid' debt contract: 
+     - The lender takes over the entire firm
+     - It decides between liquidating or reorganizing
+     - Reorganized firms are re-sold to the household
+ 
+ No Default: 
+     - Firms decide between continuing to the next period and exiting voluntarily
+     - Quiting firms are liquidated and stop producing
+
+
+- Entrants enter
+
+- Continuing firms decide next periods' capital, debt and debt financings strategy given the interest rate schedule presented to them 
+
+T1 beggining 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

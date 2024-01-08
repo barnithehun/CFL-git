@@ -1,0 +1,61 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Comments on the epirical work: 
+
+OVERHAULING WORK: 
+ - must focus on external finance premia more - the results will be about this so I have to have some results about it as well
+
+MAKE A REGRESSION FOR THE NEW OUTFLOWS OF DEBT!!!!!
+MAKE THE FIRM POINTS DISAPPEAR ON THE USHAPE
+LOOK AT THE PECKING OREDER REGRESSION
+MAKE A PLOT OF THE CREDIT PREMIUM - do we want to match it? probably not becasue I disregard the probability of default channel which adds to the gradient of the loan rate curve
+Box scatter plot for the u-shape
+Probably, it is better to have a Pols, Reduced Pols and FE  setup - the firms level shit is confusing
+Are there non-linearities in reliance on CF based lending and leverage? -- intuiton is that it shuold pick up sharply after 0.6-0.7 when the debt cannot be fully collateralized anymore. Maybe just plotting is enough, maybe i should look into fixed effects regression.
+
+Comments on the presentation: 
+- highlight with red in the introductory table and use that for motivation
+- explain why have no endogneous probability of default in the model
+- explain how the actual process of bankrupty is super complicated and some corners are needed to be cut to make the model work
+
+
+Comments on the paper
+ - DO YOU EVEN NEED ABL AND HYBRID DEBT CONTRACT? 
+ - add and appendix section on timing...
+ - rewrite the section on Q_cfl share I think there is a way to frame it better
+ - terminology just call them Q_a and Q_h 
+ - a different way to look at it is that ABL necesitates liquidation and 'CFL' does not
+ - rewrite investments and the budget constraint without chi_l
+ - rewrite budget constraint with the liquidation costs of firms 
+ - put in the timing section
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Think about what happens when there are multiple lenders and some are asset based and some are cash flow based 
+Have a good answer for priority 
+	- see Lian and Ma, CF-based vs. asset based lending is NOT about priority, it is about the cononmic determinants of in-default payments
+	- his problem was, what if there is a prioritized lender who comes in and takes the assets, then what happens to CF based lenders
+	    the anwer to this is as follows: the firm is either liquidated or reorganized, the lenders form expectations of the probability of these and hand out debt contracts accordingly
+Re-read Lian and Ma and Corbae and D'Erasmo
+
+See who works on corporate lending and defaults at GSEFM and try to ask for a meeting
+
+Rewrite the introduction the following way: since ABL vs CFL is hard to introduce, start with the lendings constriants - ABCs are derived from AB contracts and EBC from cash flow based contracts, however cash flow based contracts are more prevalent, so should we use EBCs? 
+
+
+It would be possible to see dynamics consequences of large fixed costs in a representative firm model. This would not be a pain in the ass but if I had just a representative firms. Then, it would be easy to consider alternative growth trajectories. 
+
+The type of debt contract does not pre-determine the mode of resolving defaults. However, it reflects credtors expectations on how it will be resolved eventually. Relation to C&D - they say that what matters is lenders expectation on the default resolution.  I say that this expectaiton is observable. If the firms gets a cash flow based contract the lender does not expect to see income from liquidation. If the contract is asset based income from liquidation is the main expectation. 
+  - see their table of recovery rates in different cases
+
+Probably it would be interesing to see how the external finance premium changes for ABL and CFL debt contracts - what would be nice to see that it is ceteris paribus higher for ABL contracts 
+ 	- there is a part in this in Lian and Ma..
+	- it would be interesting on a firm level - CFL reliance vs. the cost of external finance the firm faces
+
+It would be easy to build a "mock code"
+ - feed in the loan rate schedule
+ - take a distribution of firms (k,b,eps)
+ - see who gets what 
+ - problem would be that one would need to do the VFI to calculate firm values for this
+
+Taken out for now: 
+Öztürk (2022) studies a heterogeneous agents model in which firms exhibit differences in productivity and value of total asset. This setup allows him to explore the choice between asset based or cash flow based debt financing. 
