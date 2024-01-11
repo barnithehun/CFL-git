@@ -1,0 +1,49 @@
+\newpage
+
+\bibliographystyle{apalike} % Choose your desired bibliography style
+
+\begin{thebibliography}{99}
+\bibitem{azariadis2016} Azariadis, C., Kaas, L., \& Wen, Y. (2016). Self-fulfilling credit cycles. \textit{The Review of Economic Studies}, \textbf{83}(4), 1364-1405.
+
+\bibitem{banerjee2010} Banerjee, A.V., \& Moll, B. (2010). Why does misallocation persist? \textit{American Economic Journal: Macroeconomics}, \textbf{2}(1), 189-206.
+
+\bibitem{bernanke1999} Bernanke, B.S., Gertler, M., \& Gilchrist, S. (1999). The financial accelerator in a quantitative business cycle framework. In \textit{Handbook of macroeconomics} (Vol. 1, pp. 1341-1393).
+
+\bibitem{buera2011} Buera, F.J., Kaboski, J.P., \& Shin, Y. (2011). Finance and development: A tale of two sectors. \textit{American Economic Review}, \textbf{101}(5), 1964-2002.
+
+\bibitem{corbae2021} Corbae, D., \& D'Erasmo, P. (2021). Capital buffers in a quantitative model of banking industry dynamics. \textit{Econometrica}, \textbf{89}(6), 2975-3023.
+
+\bibitem{dinola2023} Di Nola, A., Kaas, L., \& Wang, H. (2023). Rescue policies for small businesses in the COVID-19 recession. \textit{Review of Economic Dynamics}.
+
+\bibitem{drechsel2023} Drechsel, T. (2023). Earnings-based borrowing constraints and macroeconomic fluctuations. \textit{American Economic Journal: Macroeconomics}, \textbf{15}(2), 1-34.
+
+\bibitem{greenwald2019} Greenwald, D. (2019). Firm debt covenants and the macroeconomy: The interest coverage channel.
+
+\bibitem{hopenhayn1992} Hopenhayn, H.A. (1992). Entry, exit, and firm dynamics in long run equilibrium. \textit{Econometrica: Journal of the Econometric Society}, 1127-1150.
+
+\bibitem{hopenhayn2014} Hopenhayn, H.A. (2014). Firms, misallocation, and aggregate productivity: A review. \textit{Annu. Rev. Econ.}, \textbf{6}(1), 735-770.
+
+\bibitem{hsieh2009} Hsieh, C.T., \& Klenow, P.J. (2009). Misallocation and manufacturing TFP in China and India. \textit{The Quarterly Journal of Economics}, \textbf{124}(4), 1403-1448.
+
+\bibitem{jeenas2019} Jeenas, P. (2019). Firm balance sheet liquidity, monetary policy shocks, and investment dynamics. \textit{Work}, \textbf{5}.
+
+\bibitem{jungherr2022} Jungherr, J., \& Schott, I. (2022). Slow debt, deep recessions. \textit{American Economic Journal: Macroeconomics}, \textbf{14}(1), 224-259.
+
+\bibitem{khan2013} Khan, A., \& Thomas, J.K. (2013). Credit shocks and aggregate fluctuations in an economy with production heterogeneity. \textit{Journal of Political Economy}, \textbf{121}(6), 1055-1107.
+
+\bibitem{kiyotaki1997} Kiyotaki, N., \& Moore, J. (1997). Credit cycles. \textit{Journal of Political Economy}, \textbf{105}(2), 211-248.
+
+\bibitem{kochen2022} Kochen, F. (2022). Finance over the life cycle of firms. Unpublished manuscript.
+
+\bibitem{lian2021} Lian, C., \& Ma, Y. (2021). Anatomy of corporate borrowing constraints. \textit{The Quarterly Journal of Economics}, \textbf{136}(1), 229-291.
+
+\bibitem{midrigan2014} Midrigan, V., \& Xu, D.Y. (2014). Finance and misallocation: Evidence from plant-level data. \textit{American Economic Review}, \textbf{104}(2), 422-458.
+
+\bibitem{ottonello2020} Ottonello, P., \& Winberry, T. (2020). Financial heterogeneity and the investment channel of monetary policy. \textit{Econometrica}, \textbf{88}(6), 2473-2502.
+
+\bibitem{restuccia2013} Restuccia, D., \& Rogerson, R. (2013). Misallocation and productivity. \textit{Review of Economic Dynamics}, \textbf{16}(1), 1-10.
+
+\bibitem{senga2017} Senga, T., Thomas, J., \& Khan, A. (2017). Default risk and aggregate fluctuations in an economy with production heterogeneity. In \textit{2017 Meeting Papers} (No. 889). Society for Economic Dynamics.
+
+\bibitem{townsend1979} Townsend, R. M. (1979). Optimal contracts and competitive markets with costly state verification. \textit{Journal of Economic Theory}, 21(2), 265-293.
+\end{thebibliography}
