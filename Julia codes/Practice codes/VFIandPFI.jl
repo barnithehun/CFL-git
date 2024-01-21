@@ -1,4 +1,6 @@
 # This is a Julia code on the basic structure on VFI and PFI
+# ! The original lecture: https://scpo-compecon.github.io/CoursePack/Html/dynamic-programming
+
 # The example model is a simple growth model with recursive formulation: 
 #  y = k^α, k_0 is given
 #  Bellman: V(k) = max_k'  ln(f(k)-k') + βV(k')

@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{Introduction, literature}{2}{0}{1}
+\beamer@sectionintoc {2}{Alternative approach}{5}{0}{2}
+\beamer@sectionintoc {3}{Conclusion}{10}{0}{3}
+\beamer@sectionintoc {4}{Appendix}{11}{1}{4}

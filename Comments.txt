@@ -31,5 +31,9 @@ Probably it would be interesTing to see how the external finance premium changes
  	- there is a part in this in Lian and Ma.
 	- it would be interesting on a firm level - CFL reliance vs. the cost of external finance the firm faces
 
-Taken out for now: 
-Öztürk (2022) studies a heterogeneous agents model in which firms exhibit differences in productivity and value of total asset. This setup allows him to explore the choice between asset based or cash flow based debt financing. 
+Certain firms could fully secure themselves with assets and with continuation value as well...
+ - just assume that these firm have a CFL reliance 1-liquidation probability
+ - this is at most 38% of all firms, but the true value must be significantly lower, cannot say much more as longs as I do not have the continuation values
+
+
+ Maybe it is just enough to explain the U-shape in a PE model and be done with it...
