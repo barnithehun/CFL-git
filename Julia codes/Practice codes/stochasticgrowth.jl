@@ -109,4 +109,57 @@ plot!(plt, p.y, v_star.(p.y; p), linewidth = 2, alpha = 0.6,
       label = "true value function")
 plot!(plt, legend = :bottomright)
 
+##### Now, solve the same thing with discrete DP #####
+using SparseArrays, QuantEcon
 
+# defining parameters and the production function
+alpha = 0.65
+f(k) = k .^ alpha
+u_log(x) = log(x)
+beta = 0.95
+
+# grid is defined for capital
+grid_max = 2
+grid_size = 10
+grid = range(1e-6, grid_max, length = grid_size)
+
+# state: capital this period
+# action: capital next period
+# k' is feasible on if k' < f(k')
+
+# state action pairs
+C = f.(grid) .- grid'
+coord = repeat(collect(1:grid_size), 1, grid_size) # coordinate matrix
+s_indices = coord[C .> 0]               # extracts values of coord where C is larger than 0 
+a_indices = transpose(coord)[C .> 0] # same for transpose(cord) - here you can do this because state and action are on the same grid
+
+[s_indices a_indices]
+
+L = length(a_indices)
+
+# return function is log consumption for those entries where C > 0
+R = u_log.(C[C .> 0]);
+
+Q = spzeros(L, grid_size) # Formerly spzeros - creating a sparse matrix
+for i in 1:L
+    Q[i, a_indices[i]] = 1
+end
+
+# calculating the results
+ddp = DiscreteDP(R, Q, beta, s_indices, a_indices);
+@elapsed results = solve(ddp, VFI)
+v, sigma, num_iter = results.v, results.sigma, results.num_iter
+num_iter
+
+# a comparision with the solution of the continuous model
+c = f(grid) - grid[sigma]
+ab = alpha * beta
+c1 = (log(1 - alpha * beta) + log(alpha * beta) * alpha * beta / (1 - alpha * beta)) /
+     (1 - beta)
+c2 = alpha / (1 - alpha * beta)
+
+v_star(k) = c1 + c2 * log(k)
+c_star(k) = (1 - alpha * beta) * k .^ alpha
+
+plot(grid, [v v_star.(grid)], ylim = (-40, -32), lw = 2,
+     label = ["discrete" "continuous"])
