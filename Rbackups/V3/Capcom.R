@@ -248,7 +248,7 @@ dlevel <- capiq
 
 # COMPUSTAT: some firms are reported in canadian dollars --- bringing all compustat values to USD
 comps <- left_join(comps, filter(exrate, currencyid == 27), by = c("year", "quarter"))
-monetary_vars <- setdiff(comps0 %>% select_if(is.numeric) %>% names(), c("cshoq", "emp", "year", "quarter", "currencyid"))  
+monetary_vars <- setdiff(comps0 %>% select_if(is.numeric) %>% names(), c("cshoq", "emp", "year", "quarter", "qtr", "currencyid"))  
 comps0 <- comps %>% filter(curcdq == "CAD") 
 comps0[monetary_vars] <- comps0[monetary_vars] / comps0$avg_priceclose 
 comps <- rbind(comps %>% filter(curcdq == "USD"), comps0) 

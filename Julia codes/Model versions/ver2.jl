@@ -16,7 +16,7 @@ x_size = 100;
 k_size = 100;
 b_size = 100;
 # Define idiosyncratic shocks
-e_chain = MarkovChain([0.9 0.1; 0.1 0.9], [8; 12])
+e_chain = MarkovChain([0.9 0.1; 0.1 0.9], [5; 8])
 # two results to extract are, z_chain.p; z_chain.state_valuese_size = length(e_chain.state_values)
 e_size = length(e_chain.state_values)
 
@@ -48,9 +48,6 @@ x_low = fn_X(k_grid[1],b_grid[end], e_chain.state_values[1])
 x_high = fn_X(k_grid[end], b_grid[1], e_chain.state_values[end])
 x_grid = range(x_low, x_high, x_size)
 
-Pi_max = fn_Pi(k_grid[1],  e_chain.state_values[1])
-Pi_min = fn_Pi(k_grid[end], e_chain.state_values[end])
-
 #= LOG GRIDS
  # k-grid
    k_grid = 10 .^ range(0, 6, k_size)
@@ -61,7 +58,7 @@ Pi_min = fn_Pi(k_grid[end], e_chain.state_values[end])
 
 # Define Q(n,m,n) matrix
 n = x_size * e_size  # all possible states
-m = k_size * b_size           # all possible actions
+m = k_size * b_size  # all possible actions
 
 # total number of possible states
 s_vals = gridmake(x_grid, e_chain.state_values)  # combination of each by value 
@@ -112,11 +109,12 @@ R = fill(-Inf, n, m);
 
         e = s_vals[s_i, 2]     
         x = s_vals[s_i, 1]
-
         d = fn_D(next_k, next_b, x)
 
         if d >= 0
             R[s_i, new_a_i] = d  
+        else
+            R[s_i, new_a_i] = 1.6 * d
         end
 
     end
@@ -139,9 +137,13 @@ for i in 1:n
     pol = policies[i]
     k = a_vals[pol,1]
     b = a_vals[pol,2]
-    e = s_vals[i, 2]
     
-    sumres[i, :] .= [k, b, fn_N(k, e), fn_Y(k, e), fn_Pi(k, e), fn_X(k, b, e), fn_D(k, b, fn_X(k, b, e))]
+    # current productivity
+    e = s_vals[i, 2]
+    x = s_vals[i, 1]
+
+    
+    sumres[i, :] .= [k, b, fn_N(k, e), fn_Y(k, e), fn_Pi(k, e), fn_X(k, b, e), fn_D(k, b, x)]
    
 end
 
@@ -160,6 +162,8 @@ plot4 = plot(sumres2[:,1], [sumres2[:,5] sumres2[:,6] sumres2[:,7] sumres2[:,9]]
 
 plot(plot1, plot3, plot2, plot4, layout = (2, 2), size = (1000, 800))
    
+# savefig("ver2.png")
+
 ##################### THE SAME PROBLEM BUT WHT STATE - ACTION PAIRS  
 
 #=

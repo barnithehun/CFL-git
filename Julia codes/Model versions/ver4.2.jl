@@ -195,8 +195,8 @@ plot9 = plot(sum_3[:,1], sum_3[:,10], lw = 2,
    
 plot(plot1, plot3, plot5, plot2, plot4, plot6, plot7, plot8, plot9, layout = (3, 3), size = (1000, 800))
 
-# savefig("ver3.png")
 
+# extra codes
 sumres = DataFrame(sumres, :auto)
 CSV.write("matrix.csv", DataFrame(sumres))
 
