@@ -129,7 +129,7 @@ R = fill(-Inf,  n, m);
        if d >= 0
            R[s_i, new_a_i] = d 
        else
-           R[s_i, new_a_i] = 1.6 * d 
+           R[s_i, new_a_i] = 100 * d 
        end
 
    end
@@ -196,12 +196,8 @@ plot9 = plot(sum_3[:,1], sum_3[:,10], lw = 2,
 plot(plot1, plot3, plot5, plot2, plot4, plot6, plot7, plot8, plot9, layout = (3, 3), size = (1000, 800))
 
 # savefig("ver3.png")
+#using CSV, DataFrames
+#sumres = DataFrame(sumres, :auto)
+#CSV.write("matrix.csv", DataFrame(sumres))
 
-sumres = DataFrame(sumres, :auto)
-CSV.write("matrix.csv", DataFrame(sumres))
-
-
-using Pkg
-Pkg.add("DataFrames")
-using CSV, DataFrames
 

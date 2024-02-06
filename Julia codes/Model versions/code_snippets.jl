@@ -77,3 +77,4 @@ end
 
 x_dist = bar(x_dist, xlabel="Index", ylabel="Values")
 
+bar(x_dist, xlabel="Index", ylabel="Values") |> (p -> xlims!(p, 30, 40)) |> display

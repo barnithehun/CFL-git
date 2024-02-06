@@ -1,5 +1,5 @@
 ########################################################################
-#### VER 4 - adding endogneous exits as and extra state - decision #####
+###### VER 4 - endogneous exits as and extra state - action pair #######
 ########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, SparseArrays, ProgressMeter
@@ -155,7 +155,7 @@ R = fill(-Inf,  n, m);
                  R[s_i, new_a_i] = 0    # with this, it can be interpreted as default
             end
 
-            if exit == 1      # ok
+            if exit == 1      
                 R[s_i, new_a_i] = 0
             end
 
