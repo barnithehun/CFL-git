@@ -146,7 +146,7 @@ R = fill(-Inf,  n, m);
 
    for s_i in 1:n
        
-      def = defpol[s_i,3]
+      def = defpol[s_i,3] # not need it here with this...
       pdef = 1-((1-pdef_exo) * (1-pdef_endo[s_i,3]))
       q = fn_Q(next_k, next_b, pdef)
 

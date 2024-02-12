@@ -174,10 +174,10 @@ On debt debt demand of firms
 \end{itemize}
 
 
-\subsection*{Ver 4.2 - Endogenous default probabilities and interest rates}
+\subsection*{Ver 4.1 - Endogenous defaults, and fixed x-interpolation}
 \textbf{Same as in Ver 3:} AR(1) productivity process, Labour policy; Corresponding output; Corresponding profits; Future cash on hand; External finance premium. \vspace{3mm} \\
 Equity finance option is not necessary anymore, but I keep it with prohibitive costs. This is needed to ensure that firms have a feasible action every state.  \vspace{3mm} \\
-Default decision: the firm chooses $\sigma(x, \varepsilon)$ and the corresponding $V(x \varepsilon)$. It chooses default if $V(x,\varepsilon) \leq 0$ and $x \leq 0$ - hence the firm can fall back to limited liability and the associated value is zero. \vspace{3mm} \\
+Default decision: the firm chooses $\sigma(x, \varepsilon)$ and the corresponding $V(x, \varepsilon)$. It chooses default if $V(x,\varepsilon) \leq 0$ and $x \leq 0$ - hence the firm can fall back to limited liability and the associated value is zero. \vspace{3mm} \\
 Exit decision (not implemented in this version): the firm can decide to quit without falling back to limited liability. The associated value is the cash on hand: $x$. The firm chooses this if $V(x, \varepsilon) \leq x$ and $x \geq 0$. \vspace{3mm} \\
 Value functions:
 \begin{equation}
@@ -188,28 +188,20 @@ where $ V_{def} = 0$, $V_{exit} = x$ and $V_{cont}$ is
      V_{cont}(x, \varepsilon_i) = \max_{k',b'}  \left( x - k' +  q(k',b',\varepsilon) b' +
             \beta (1-P_\chi) \sum_{j=1}^{N_\varepsilon} g_{ij}  V_0(x',\varepsilon_j') \right)
 \end{equation}
-Default-responsive interest rates: In previous iterations of the model, the interest rate was calculated on the basis of an exogeneous default probability. Now you have a default decision you can update the interest rates while taking into account the endogenous default probability. I follow the following algorithm: 
+When a firm chooses $(k',b')$ it can expect a realization of $x$, given its current $\varepsilon$. The problem is that this may not lie on the $x$ grid. In previous versions, I chose the $x_i$ on the grid that was closest to the realization of $x$. This has led to some imprecisions. Here, I make the following adjustment: if observe the two gridpoints that surround the realization of $x$. These are defined as $x_{low}$ and $x_{high}$. \vspace{3mm} \\
+Then, assume that the probability of falling on these points linearly depends on the relative distance of the realization $x$ from $x_{low}$ and $x_{high}$ respectively. This yields more stable results, but computing the optimal policies becomes much slower. Its is probably because the Q matrix becomes much more dense with this adjustment. Also, setting up Q takes longer.
+
+\subsection*{Ver 5 - default probabilities and endogenous interest rates}
+
+
+In previous iterations of the model, the interest rate was calculated on the basis of an exogeneous default probability. Now you have a default decision you can update the interest rates while taking into account the endogenous default probability. I follow the following algorithm: 
 \begin{enumerate}
-    \item Set $q|P_{d}(exo)$, the interest rate given the exogenous default probability. Then I calculate $V(x,\varepsilon)$ given $q|P_{d}(exo)$ - which allows me to calculate the default decision for each $(x,\varepsilon)$
-    \item Now it is possible to calculate what is the chance that the firm lands on a state $(x,e)$ such that it chooses to default. This corresponds to endogenous default probability $P_d(endo)|(k',b')$ 
-    \item Update interest rates taking into account the endogenous default probability $q|P_{d}(exo),P_{d}(endo)$
-    \item Repeat $1-3$ until the optimal policies do not change. (This is sometimes not reached do to some minimal oscillation after a lot of iteration - however the actual effect of this is typically small.)
+    \item Set $q|P_{d}(exo)$, the interest rate given the exogenous default probability. Then I calculate $V(x,\varepsilon)$ given $q|P_{d}(exo)$ - which allows me to calculate the default decision for each $(x,\varepsilon)$.
+    \item Now it is possible to calculate what is the probability that the firm lands on a state $(x,e)$ associated with default. This corresponds to endogenous default probability $P_d(endo)|(x,e,k',b')$ - where $P_d(endo)$ is an $n \times m$ matrix containing the default probabilities for each state-action pair.
+    \item Update interest rates taking into account the endogenous default probability $q|P_{d}(exo),P_{d}(endo)$ and recalculate the optimal $k',b$ and default policies
+    \item Repeat $1-3$ until the optimal policies and interest rates do not change - that is, $ (k^{i},b^{i},\chi^{i},q^{i}) = (k^{i-1},b^{i-1},\chi^{i-1},q^{i-1}) $ for each state $(x,\varepsilon)$
 \end{enumerate}
 
-\subsection*{Ver 5 - Fixing x-interpolation}
-When a firm chooses $(k',b')$ it can expect a realization of $x$, given its current $\varepsilon$. The problem is that this will no lie on the $x$ grid. In previous versions, I chose the $x_i$ on the grid that was closest to the realization of $x$. This has led to some imprecisions.  \vspace{3mm} \\
-Here, I make the following adjustment: if observe the two gridpoints that surround the realization of $x$. These are define as $x_{low}$ and $x_{high}$. Then, assume that the probability of falling on these points linearly depends on the relative distance of the realization $x$ from $x_{low}$ and $x_{high}$ \vspace{3mm} \\
-This yields more stable results, but computing the optimal policies becomes much slower. Its is probably because the Q matrix becomes much more dense with this adjustment. Also, setting up Q takes longer.
-
-
-
-
-
-\begin{figure}[H]  % [h] indicates placing the image here
-    \centering
-    \caption{Ver5 - after 6 iterations} \label{chart:CFLcdf}
-    \includegraphics[width=1\textwidth]{ver5.png}
-\end{figure}
 
 
 \end{document}

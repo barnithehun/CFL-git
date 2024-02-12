@@ -155,7 +155,7 @@ R = fill(-Inf,  n, m);
                  R[s_i, new_a_i] = 0    # with this, it can be interpreted as default
             end
 
-            if exit == 1      
+            if exit == 1      # ok
                 R[s_i, new_a_i] = 0
             end
 
