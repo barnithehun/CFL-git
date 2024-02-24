@@ -1,11 +1,11 @@
 ########################################################################
-###### VER 5.1 - endogneous defaults as extra state - action pair ######
+########## VER 5.1 - ver 4.1 with exit and default  decision ###########
 ########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, SparseArrays, ProgressMeter, Dates, XLSX, DataFrames
 
-###  State variables (def, x, ε)
-###  Action variables (def', k', b')
+###  State variables (quit, x, ε)
+###  Action variables (def', exit', k', b')
 ###  ε is stochastic and engonenous 
 ###  x is semi-engonenous 
 
@@ -71,22 +71,22 @@ x_grid =  [range(x_low, 0, div(x_size, 2))[1:end-1]; range(0, x_high, div(x_size
 n = x_size * e_size  # all possible states
 m = k_size * b_size  # all possible actions
 
-# total number of possible states
-s_vals = [gridmake(x_grid, e_vals) zeros(n)]            # combination of each by value 
+# total number of possible states, +1 state for being quit 
+s_vals = [gridmake(x_grid, e_vals) zeros(n)]           
 s_vals = [s_vals; [0 0 1]]
 
 s_i_vals = [gridmake(1:x_size, 1:e_size) zeros(n)] 
-s_i_vals = Int.([s_i_vals; [div(x_size,2) 1 1]])  # here, I set productivity to the lowest possible value, prly will not matter
+s_i_vals = Int.([s_i_vals; [div(x_size,2) 1 1]])  # productivity after default does not matter
 
-a_vals = [gridmake(k_grid, b_grid) zeros(m)]
-a_vals = [a_vals; [0 0 1]]
+a_vals = [gridmake(k_grid, b_grid) zeros(m,2) ]
+a_vals = [a_vals; [0 0 1 0]; [0 0 0 1]]
 
-a_i_vals = [gridmake(1:k_size, 1:b_size) zeros(m)]
-a_i_vals = Int.([a_i_vals; [1 div(b_size,2) 1]])
+a_i_vals = [gridmake(1:k_size, 1:b_size) zeros(m,2)]
+a_i_vals = Int.([a_i_vals; [1 div(b_size,2) 1 0]; [1 div(b_size,2) 0 1]])
 
 # adjusting the gridsize
 n = n+1
-m = m+1
+m = m+2
 #################################### Standard approach
 Q = zeros(n, m, n); 
 for a_i in 1:m
@@ -97,12 +97,13 @@ for a_i in 1:m
 
      # actions (values)
      next_def = a_vals[a_i, 3] 
+     next_exit = a_vals[a_i, 4] 
      def = s_vals[s_i,3]
      b = a_vals[a_i, 2]   
      k = a_vals[a_i, 1]   
                  
         for next_e_i in 1:e_size  
-            if  def == 0 && next_def == 0
+            if  def == 0 && next_def == 0 && next_exit == 0
             
              # next period cash on hand x'(b',k',e')
              x_next = fn_X(k,b,e_vals[next_e_i])
@@ -118,7 +119,7 @@ for a_i in 1:m
                     if x_next > x_grid[x_close]
                         x_far = x_close + 1
                         else
-                        x_far = x_close -1
+                        x_far = x_close - 1
                     end
                     
                     x_close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
@@ -161,158 +162,161 @@ iter = 0
    println(iter)
    kbexq_old = kbexq_new
 
-R = fill(-Inf,  n, m);
-for a_i in 1:m   
-          
-   # actions
-   next_b = a_vals[a_i,2]
-   next_k = a_vals[a_i,1]
-   next_def =  a_i_vals[a_i,3]
+    R = fill(-Inf,  n, m);
+    for a_i in 1:m   
+            
+    # actions
+    next_b = a_vals[a_i,2]
+    next_k = a_vals[a_i,1]
+    next_def =  a_i_vals[a_i,3]
+    next_exit =  a_i_vals[a_i,4]
 
-   for s_i in 1:n
-      
-      pdef = 1-((1-pdef_exo) * (1-pdef_endo[s_i, a_i]))
-      q = fn_Q(next_k, next_b, pdef)
 
-      def = s_vals[s_i, 3]
+    for s_i in 1:n
+        
+        pdef = 1-((1-pdef_exo) * (1-pdef_endo[s_i, a_i]))
+        q = fn_Q(next_k, next_b, pdef)
+        def = s_vals[s_i, 3]
+        x = s_vals[s_i, 1]
 
-      if next_def == 1 
-         #R[s_i, a_i] = x    # with this, it is exit
-         R[s_i, a_i] = 0    # with this, it is default
-      end
+        if next_def == 1 
+            R[s_i, a_i] = 0   
+        end
+        
+        if next_exit == 1
+            R[s_i, a_i] = x  
+        end
 
-      if def == 1      
-         R[s_i, a_i] = 0
-      end
+        if def == 1      
+            R[s_i, a_i] = 0
+        end
 
-      if next_def == 0 && def == 0
-         
-         # prev. default and cash on hand and dividends
-         x = s_vals[s_i, 1]
-         d = fn_D(next_k, next_b, x, q)
+        if next_def == 0 && def == 0 && next_exit == 0
+            
+            # dividends
+            d = fn_D(next_k, next_b, x, q)
 
-         if d >= 0
-            R[s_i, a_i] = d 
-         # else
-         #   R[s_i, a_i] = 10^3 * d # proibitive cost
-         end
-      end
+            if d >= 0
+                R[s_i, a_i] = d 
+            end
+        end
+
+        end
+    end
+
+    ddp = DiscreteDP(R, Q, discount);
+    @elapsed results = solve(ddp, PFI)
+
+    # interpreting results
+    values = results.v;
+    policies = results.sigma;  # optimal policy     
+
+    ###################################################################
+    # summarising results
+    nvar_sumres = 11
+    sumres = zeros(n, nvar_sumres)
+    for s_i in 1:n
+
+    # states
+    x = s_vals[s_i, 1]
+    e = s_vals[s_i, 2]
+
+    # policies
+    pol = policies[s_i]
+    k = a_vals[pol,1]
+    b = a_vals[pol,2]
+    def = a_vals[pol,3]
+    exit = a_vals[pol,4]
+
+    # cash on hand if productivity stays the same
+    next_x = fn_X(k, b, e)   
+
+    pdef = 1-((1-pdef_exo) * (1-pdef_endo[s_i,pol]))
+    q = fn_Q(k, b, pdef)
+
+    d = fn_D(k, b, x, q)
+    val = values[s_i]
+
+    sumres[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, d, val]
+    end
+
+    #= plotting
+        sum_1 = sumres[sumres[:, 2] .== e_vals[1] , :]
+        sum_med = sumres[sumres[:, 2] .== e_vals[Int(median(1:e_size))] , :]
+        sum_3 = sumres[sumres[:, 2] .== e_vals[end] , :]
+
+
+        plot1 = plot(sum_1[:,1], [sum_1[:,3] sum_1[:,4]], lw = 2,
+            label = ["k_prime" "b_prime"])
+        plot2 = plot(sum_1[:,1], [sum_1[:,5] sum_1[:,6] ], lw = 2,
+            label = ["pdef" "q"])
+
+        plot3 = plot(sum_med[:,1], [sum_med[:,3] sum_med[:,4]], lw = 2,
+            label = ["k_prime" "b_prime"])
+        plot4 = plot(sum_med[:,1], [sum_med[:,5] sum_med[:,6] ], lw = 2,
+            label = ["pdef" "q"])
+
+        plot5 = plot(sum_3[:,1], [sum_3[:,3] sum_3[:,4]], lw = 2,
+            label = ["k_prime" "b_prime"])
+        plot6 = plot(sum_3[:,1], [sum_3[:,5] sum_3[:,6] ], lw = 2,
+            label = ["pdef" "q"])
+
+
+        plot(plot1, plot3, plot5, plot2, plot4, plot6, layout = (2, 3), size = (1400, 800))
+
+    =#
+
+    if iter % 5 == 0
+    column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :d, :val]
+    sumres_df = DataFrame(sumres, column_names)
+    time_string = "$(Dates.hour(now()))_$(Dates.minute(now()))_$(Dates.second(now()))"
+    XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)
+    end 
+
+    ###############################################################################
+    # Probability of default given optimal k', b' policies that are given by x, e
+    pdef_endo = zeros(n,m)
+    for s_i in 1:n
+        
+    # state indicies
+    # x_i = s_i_vals[s_i, 1]
+    e_i = s_i_vals[s_i, 2]
+
+    for a_i in 1:m
+    
+        # policies given (x,e)
+        next_k = a_vals[a_i,1]
+        next_b = a_vals[a_i,2]
+        #  def = a_i_vals[a_i,3]
+
+        for next_e_i in 1:e_size
+
+            p_trans = e_chain.p[e_i, next_e_i] 
+            x_next = fn_X(next_k,next_b,e_vals[next_e_i])
+            x_index = argmin(abs.(x_next .- x_grid))
+    
+            # search for where it is on the s_i grid
+            xe_index =  x_index + (next_e_i-1)*x_size
+            
+            # default policy given (x,e)
+            pol = policies[xe_index]
+            next_def = a_i_vals[pol, 3]
+            
+            # update endogeneous default probability
+            pdef_endo[s_i, a_i] = pdef_endo[s_i, a_i] + p_trans*next_def
+            
+        end 
+
+        # Does not really matter, since payoff won't depend on q() in default
+        #if def == 1 
+        #    pdef_endo[s_i, a_i] = 1
+        # end
 
     end
-end
-
-ddp = DiscreteDP(R, Q, discount);
-@elapsed results = solve(ddp, PFI)
-
-# interpreting results
-values = results.v;
-policies = results.sigma;  # optimal policy     
-
-###################################################################
-# summarising results
-nvar_sumres = 10
-sumres = zeros(n, nvar_sumres)
-for s_i in 1:n
-
-   # states
-   x = s_vals[s_i, 1]
-   e = s_vals[s_i, 2]
-
-   # policies
-   pol = policies[s_i]
-   k = a_vals[pol,1]
-   b = a_vals[pol,2]
-   def = a_vals[pol,3]
-
-   # cash on hand if productivity stays the same
-   next_x = fn_X(k, b, e)   
-
-   pdef = 1-((1-pdef_exo) * (1-pdef_endo[s_i,pol]))
-   q = fn_Q(k, b, pdef)
-
-   d = fn_D(k, b, x, q)
-   val = values[s_i]
-
-   sumres[s_i, :] .= [x, e, k, b, next_x, def, pdef, q, d, val]
-end
-
-   #= plotting
-      sum_1 = sumres[sumres[:, 2] .== e_vals[1] , :]
-      sum_med = sumres[sumres[:, 2] .== e_vals[Int(median(1:e_size))] , :]
-      sum_3 = sumres[sumres[:, 2] .== e_vals[end] , :]
+    end
 
 
-      plot1 = plot(sum_1[:,1], [sum_1[:,3] sum_1[:,4]], lw = 2,
-         label = ["k_prime" "b_prime"])
-      plot2 = plot(sum_1[:,1], [sum_1[:,5] sum_1[:,6] ], lw = 2,
-         label = ["pdef" "q"])
-
-      plot3 = plot(sum_med[:,1], [sum_med[:,3] sum_med[:,4]], lw = 2,
-         label = ["k_prime" "b_prime"])
-      plot4 = plot(sum_med[:,1], [sum_med[:,5] sum_med[:,6] ], lw = 2,
-         label = ["pdef" "q"])
-
-      plot5 = plot(sum_3[:,1], [sum_3[:,3] sum_3[:,4]], lw = 2,
-         label = ["k_prime" "b_prime"])
-      plot6 = plot(sum_3[:,1], [sum_3[:,5] sum_3[:,6] ], lw = 2,
-         label = ["pdef" "q"])
-
-
-      plot(plot1, plot3, plot5, plot2, plot4, plot6, layout = (2, 3), size = (1400, 800))
-
-   =#
-
-if iter % 5 == 0
-   column_names = [:x, :e, :k, :b, :next_x, :def, :pdef, :q, :d, :val]
-   sumres_df = DataFrame(sumres, column_names)
-   time_string = "$(Dates.hour(now()))_$(Dates.minute(now()))_$(Dates.second(now()))"
-   XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)
-end 
-
-###############################################################################
-# Probability of default given optimal k', b' policies that are given by x, e
-pdef_endo = zeros(n,m)
-@elapsed for s_i in 1:n
-     
-  # state indicies
-  # x_i = s_i_vals[s_i, 1]
-  e_i = s_i_vals[s_i, 2]
-
-  for a_i in 1:m
-   
-      # policies given (x,e)
-      next_k = a_vals[a_i,1]
-      next_b = a_vals[a_i,2]
-      def = a_i_vals[a_i,3]
-
-      for next_e_i in 1:e_size
-
-         p_trans = e_chain.p[e_i, next_e_i] 
-         x_next = fn_X(next_k,next_b,e_vals[next_e_i])
-         x_index = argmin(abs.(x_next .- x_grid))
-   
-         # search for where it is on the s_i grid
-         xe_index =  x_index + (next_e_i-1)*x_size
-         
-         # default policy given (x,e)
-         pol = policies[xe_index]
-         next_def = a_i_vals[pol, 3]
-         
-         # update endogeneous default probability
-         pdef_endo[s_i, a_i] = pdef_endo[s_i, a_i] + p_trans*next_def
-         
-      end 
-
-      # Does not really matter, since payoff won't depend on q() in default
-      if def == 1
-         pdef_endo[s_i, a_i] = 1
-      end
-
-   end
-end
-
-
-kbexq_new = sumres[:, [3, 4, 5, 7]]
+ kbexq_new = sumres[:, [3, 4, 7, 9]]
 
 end
 

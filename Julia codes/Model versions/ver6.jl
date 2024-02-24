@@ -1,19 +1,19 @@
 ########################################################################
-################# VER 6 - ver 5.1 with exit decision ###################
+################# VER 6 - heterogeneous debt contracts #################
 ########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, SparseArrays, ProgressMeter, Dates, XLSX, DataFrames
 
-###  State variables (def, x, ε)
-###  Action variables (def', k', b')
+###  State variables (quit, x, ε)
+###  Action variables (def', exit', k', b')
 ###  ε is stochastic and engonenous 
 ###  x is semi-engonenous 
 
 # grids sizes - x,k,b should be even numbers!!
-x_size = 50;
-e_size = 11;
-k_size = 50;
-b_size = 50;
+x_size = 40;
+e_size = 7;
+k_size = 30;
+b_size = 30;
 
 # AR(1) produictivity
 rho_e = 0.969;
@@ -35,7 +35,10 @@ pdef_exo = 0.02;           # default probability
 discount = beta*(1-pdef_exo);  # discount parameter
 phi_a = 0.5;               # re-sale value of capital
 phi_c = 0.5;               # variable cost of reorganization                
-xi = 2*10^5;               # fixed cost of reorganization
+kappa = 0.3;               # capital recovery rate of CFL debt
+zeta = 10^5;               # fixed cost of reorganization
+tau_vec = 0:1              # vector of CFL reliances - optimal will be one or zero anywaysseasasadewdscxad3qewsaxc 
+
 
 # functions: contenporaneous optimization
 fn_N(k,e) =  (nu*e*k^alpha / wage)^(1/(1-nu));      
@@ -45,18 +48,34 @@ fn_Pi(k, e) = (1-nu)*fn_Y(k,e)-pc;
 # functions: cash on hand and future values
 fn_X(k,b,e) =  fn_Pi(k, e) + (1-delta) * k - b;
 
-function fn_Q(next_k, next_b, pdef)
-   if next_b == 0
-      q = 0.97  # exact number does not matter
-   else
-      q= (beta*((1-pdef)*next_b + pdef * min(next_b, phi_a*(1-delta)*next_k)))/next_b
-   end
+# Optimal CFL reliance and interest rate
+function fn_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
+    q_tau = zeros(length(tau_vec))
+
+    if next_b == 0
+        fill!(q_tau, 0.97)
+    else
+        q_tau .= (beta ./ next_b) .* ((1 .- pdef) .* next_b .+
+             pdef .* min.(next_b, pliq .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* kappa .* Pi_liq) .+ 
+             (1 .- pliq) .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* Pi_reo)))
+    end
+
+    q, tau_index = findmax(q_tau)
+
+    if isapprox(q, minimum(q_tau), atol=0.002) # == won't work here, there will always be a small numerical diff
+        tau = Pi_reo > Pi_liq ? 1 : 0
+    else
+        tau = tau_vec[tau_index]
+    end
+
+    return q, tau
 end
 
-fn_D(next_k, next_b, x, q) =  x - next_k + q * next_b; # here, defined through x
+# dividends, defined through x 
+fn_D(next_k, next_b, x, q) =  x - next_k + q * next_b;
 
 # liquidation decision
-fn_chi(k,val) = Int(phi_a*(1-delta)*k >= phi_c * val - xi)
+fn_chi(k,val) = Int(phi_a*(1-delta)*k >= phi_c*val - zeta)
 
 # Creating grids - should contain 0 in every case 
 k_grid = range(0, 10^5, k_size)
@@ -71,25 +90,25 @@ x_grid =  [range(x_low, 0, div(x_size, 2))[1:end-1]; range(0, x_high, div(x_size
 n = x_size * e_size  # all possible states
 m = k_size * b_size  # all possible actions
 
-# total number of possible states
-s_vals = [gridmake(x_grid, e_vals) zeros(n)]            # combination of each by value 
+# total number of possible states, +1 state for being quit 
+s_vals = [gridmake(x_grid, e_vals) zeros(n)]           
 s_vals = [s_vals; [0 0 1]]
 
 s_i_vals = [gridmake(1:x_size, 1:e_size) zeros(n)] 
-s_i_vals = Int.([s_i_vals; [div(x_size,2) 1 1]])  # here, I set productivity to the lowest possible value, prly will not matter
+s_i_vals = Int.([s_i_vals; [div(x_size,2) 1 1]])  # productivity after default does not matter
 
-a_vals = [gridmake(k_grid, b_grid) zeros(m)]
-a_vals = [a_vals; [0 0 1]]
+a_vals = [gridmake(k_grid, b_grid) zeros(m,2) ]
+a_vals = [a_vals; [0 0 1 0]; [0 0 0 1]]
 
-a_i_vals = [gridmake(1:k_size, 1:b_size) zeros(m)]
-a_i_vals = Int.([a_i_vals; [1 div(b_size,2) 1]])
+a_i_vals = [gridmake(1:k_size, 1:b_size) zeros(m,2)]
+a_i_vals = Int.([a_i_vals; [1 div(b_size,2) 1 0]; [1 div(b_size,2) 0 1]])
 
 # adjusting the gridsize
 n = n+1
 m = m+2
 #################################### Standard approach
 Q = zeros(n, m, n); 
-for a_i in 1:m
+@elapsed for a_i in 1:m
     for  s_i in 1:n 
 
      # productivities (indicies)
@@ -97,12 +116,13 @@ for a_i in 1:m
 
      # actions (values)
      next_def = a_vals[a_i, 3] 
+     next_exit = a_vals[a_i, 4] 
      def = s_vals[s_i,3]
      b = a_vals[a_i, 2]   
      k = a_vals[a_i, 1]   
                  
         for next_e_i in 1:e_size  
-            if  def == 0 && next_def == 0
+            if  def == 0 && next_def == 0 && next_exit == 0
             
              # next period cash on hand x'(b',k',e')
              x_next = fn_X(k,b,e_vals[next_e_i])
@@ -118,7 +138,7 @@ for a_i in 1:m
                     if x_next > x_grid[x_close]
                         x_far = x_close + 1
                         else
-                        x_far = x_close -1
+                        x_far = x_close - 1
                     end
                     
                     x_close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
@@ -151,168 +171,163 @@ for a_i in 1:m
 end
 
 # initital (!) endogeneous default probability for each state
-pdef_endo = zeros(n,m)
-kbexq_old = zeros(n,4)
-kbexq_new = fill(1,n,4)
+q_sa = fill(0.97,n,m);
+pdef_sa = zeros(n,m);
+pliq_sa = zeros(n,m);
+Pi_liq_sa = zeros(n,m);
+Pi_reo_sa =  zeros(n,m);
+tau_sa = zeros(n,m);
+
+kbexqt_old = zeros(n,4);
+kbexqt_new = similar(kbexqt_old);
 ################ 
 iter = 0
-@elapsed while !isequal(kbexq_old,kbexq_new)
-   iter = iter +1
+@elapsed while !isequal(kbexqt_old,kbexqt_new)
+
+   iter = iter + 1
    println(iter)
-   kbexq_old = kbexq_new
+   kbexqt_old = kbexqt_new
 
-R = fill(-Inf,  n, m);
-for a_i in 1:m   
-          
-   # actions
-   next_b = a_vals[a_i,2]
-   next_k = a_vals[a_i,1]
-   next_def =  a_i_vals[a_i,3]
+    R = fill(-Inf,  n, m);
+    for a_i in 1:m   
+            
+     # actions
+     next_b = a_vals[a_i,2]
+     next_k = a_vals[a_i,1]
+     next_def =  a_i_vals[a_i,3]
+     next_exit =  a_i_vals[a_i,4]
 
-   for s_i in 1:n
-      
-      pdef = 1-((1-pdef_exo) * (1-pdef_endo[s_i, a_i]))
-      q = fn_Q(next_k, next_b, pdef)
+        
+        for s_i in 1:n
+            
+            def = s_vals[s_i, 3]
+            x = s_vals[s_i, 1]
 
-      def = s_vals[s_i, 3]
+            if next_def == 0 && def == 0 && next_exit == 0
+                
+                # dividends
+                q = q_sa[s_i,a_i]
+                d = fn_D(next_k, next_b, x, q)
 
-      if next_def == 1 
-         #R[s_i, a_i] = x    # with this, it is exit
-         R[s_i, a_i] = 0    # with this, it is default
-      end
+                if d >= 0
+                    R[s_i, a_i] = d 
+                end
 
-      if def == 1      
-         R[s_i, a_i] = 0
-      end
+            elseif next_def == 1 
+                R[s_i, a_i] = -1000   # -5000 if you want anyone to quit on its own
+            elseif next_exit == 1
+                R[s_i, a_i] = x  
+            elseif def == 1      
+                R[s_i, a_i] = 0
+            end
 
-      if next_def == 0 && def == 0
-         
-         # prev. default and cash on hand and dividends
-         x = s_vals[s_i, 1]
-         d = fn_D(next_k, next_b, x, q)
-
-         if d >= 0
-            R[s_i, a_i] = d 
-         # else
-         #   R[s_i, a_i] = 10^3 * d # proibitive cost
-         end
-      end
-
+        end
     end
+
+    ddp = DiscreteDP(R, Q, discount);
+    @elapsed results = solve(ddp, PFI)
+
+    # interpreting results
+    values = results.v;
+    policies = results.sigma;  # optimal policy     
+
+    ###################################################################
+    # summarising results
+    nvar_sumres = 15
+    sumres = zeros(n, nvar_sumres)
+    for s_i in 1:n
+
+        # states
+        x = s_vals[s_i, 1]
+        e = s_vals[s_i, 2]
+
+        # policies
+        pol = policies[s_i]
+        k = a_vals[pol,1]
+        b = a_vals[pol,2]
+        def = a_vals[pol,3]
+        exit = a_vals[pol,4]
+
+        # cash on hand if productivity stays the same
+        next_x = fn_X(k, b, e)  
+        
+        if def == 0
+            q = q_sa[s_i, pol]
+            tau = tau_sa[s_i, pol]
+            pdef = pdef_sa[s_i, pol]
+            pliq = pliq_sa[s_i, pol]    
+            d = fn_D(k, b, x, q)
+            Pi_liq = Pi_liq_sa[s_i, pol] 
+            Pi_reo = Pi_reo_sa[s_i, pol] 
+        else
+            q = 0
+            tau = 0
+            pdef = 0
+            pliq = 0
+            d = 0
+            Pi_liq = 0
+            Pi_reo = 0
+        end
+
+        val = values[s_i]
+
+        sumres[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, pliq, d, val, Pi_liq, Pi_reo, tau]
+    end
+
+    if iter % 5 == 0
+        column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :pliq, :d, :val, :Pi_liq_sa, :Pi_reo_sa, :tau]
+        sumres_df = DataFrame(sumres, column_names)
+        time_string = "$(Dates.hour(now()))_$(Dates.minute(now()))_$(Dates.second(now()))"
+        XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)
+    end 
+
+    ###############################################################################
+    # Calculates probability of default given optimal k', b' policies that are given by x, e
+    # Then it calculates q based on that
+    @elapsed for s_i in 1:n
+        x_i = s_i_vals[s_i, 1]
+        e_i = s_i_vals[s_i, 2]
+    
+        for a_i in 1:m
+            next_k = a_vals[a_i, 1]
+            next_b = a_vals[a_i, 2]
+    
+            pdef_endo = 0
+            pliq = 0
+            Pi_reo = 0
+    
+            for next_e_i in 1:e_size
+                p_trans = e_chain.p[e_i, next_e_i]
+                x_next = fn_X(next_k, next_b, e_vals[next_e_i])
+
+                x_index = argmin(abs.(x_next .- x_grid))
+                xe_index = x_index + (next_e_i - 1) * x_size
+    
+                val = values[xe_index]
+                pol = policies[xe_index]
+                next_def = a_i_vals[pol, 3]
+    
+                pdef_endo += p_trans * next_def
+                pliq += p_trans * fn_chi(next_k, val)
+                Pi_reo += p_trans * max(phi_c*val - zeta, 0)
+            end
+    
+            pdef = 1 - ((1 - pdef_exo) * (1 - pdef_endo))
+            Pi_liq = phi_a*(1-delta)*next_k
+            q, tau = fn_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
+
+
+            # saving results for summary
+            pdef_sa[s_i, a_i] = pdef
+            pliq_sa[s_i, a_i] = pliq
+            Pi_liq_sa[s_i, a_i] = Pi_liq
+            Pi_reo_sa[s_i, a_i] = Pi_reo
+            q_sa[s_i,a_i] = q 
+            tau_sa[s_i,a_i] = tau
+
+
+        end
+    end
+
+ kbexqt_new = sumres[:, [3, 4, 6, 15]]
 end
-
-ddp = DiscreteDP(R, Q, discount);
-@elapsed results = solve(ddp, PFI)
-
-# interpreting results
-values = results.v;
-policies = results.sigma;  # optimal policy     
-
-###################################################################
-# summarising results
-nvar_sumres = 10
-sumres = zeros(n, nvar_sumres)
-for s_i in 1:n
-
-   # states
-   x = s_vals[s_i, 1]
-   e = s_vals[s_i, 2]
-
-   # policies
-   pol = policies[s_i]
-   k = a_vals[pol,1]
-   b = a_vals[pol,2]
-   def = a_vals[pol,3]
-
-   # cash on hand if productivity stays the same
-   next_x = fn_X(k, b, e)   
-
-   pdef = 1-((1-pdef_exo) * (1-pdef_endo[s_i,pol]))
-   q = fn_Q(k, b, pdef)
-
-   d = fn_D(k, b, x, q)
-   val = values[s_i]
-
-   sumres[s_i, :] .= [x, e, k, b, next_x, def, pdef, q, d, val]
-end
-
-   #= plotting
-      sum_1 = sumres[sumres[:, 2] .== e_vals[1] , :]
-      sum_med = sumres[sumres[:, 2] .== e_vals[Int(median(1:e_size))] , :]
-      sum_3 = sumres[sumres[:, 2] .== e_vals[end] , :]
-
-
-      plot1 = plot(sum_1[:,1], [sum_1[:,3] sum_1[:,4]], lw = 2,
-         label = ["k_prime" "b_prime"])
-      plot2 = plot(sum_1[:,1], [sum_1[:,5] sum_1[:,6] ], lw = 2,
-         label = ["pdef" "q"])
-
-      plot3 = plot(sum_med[:,1], [sum_med[:,3] sum_med[:,4]], lw = 2,
-         label = ["k_prime" "b_prime"])
-      plot4 = plot(sum_med[:,1], [sum_med[:,5] sum_med[:,6] ], lw = 2,
-         label = ["pdef" "q"])
-
-      plot5 = plot(sum_3[:,1], [sum_3[:,3] sum_3[:,4]], lw = 2,
-         label = ["k_prime" "b_prime"])
-      plot6 = plot(sum_3[:,1], [sum_3[:,5] sum_3[:,6] ], lw = 2,
-         label = ["pdef" "q"])
-
-
-      plot(plot1, plot3, plot5, plot2, plot4, plot6, layout = (2, 3), size = (1400, 800))
-
-   =#
-
-if iter % 5 == 0
-   column_names = [:x, :e, :k, :b, :next_x, :def, :pdef, :q, :d, :val]
-   sumres_df = DataFrame(sumres, column_names)
-   time_string = "$(Dates.hour(now()))_$(Dates.minute(now()))_$(Dates.second(now()))"
-   XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)
-end 
-
-###############################################################################
-# Probability of default given optimal k', b' policies that are given by x, e
-pdef_endo = zeros(n,m)
-@elapsed for s_i in 1:n
-     
-  # state indicies
-  # x_i = s_i_vals[s_i, 1]
-  e_i = s_i_vals[s_i, 2]
-
-  for a_i in 1:m
-   
-      # policies given (x,e)
-      next_k = a_vals[a_i,1]
-      next_b = a_vals[a_i,2]
-      def = a_i_vals[a_i,3]
-
-      for next_e_i in 1:e_size
-
-         p_trans = e_chain.p[e_i, next_e_i] 
-         x_next = fn_X(next_k,next_b,e_vals[next_e_i])
-         x_index = argmin(abs.(x_next .- x_grid))
-   
-         # search for where it is on the s_i grid
-         xe_index =  x_index + (next_e_i-1)*x_size
-         
-         # default policy given (x,e)
-         pol = policies[xe_index]
-         next_def = a_i_vals[pol, 3]
-         
-         # update endogeneous default probability
-         pdef_endo[s_i, a_i] = pdef_endo[s_i, a_i] + p_trans*next_def
-         
-      end 
-
-      # Does not really matter, since payoff won't depend on q() in default
-      if def == 1
-         pdef_endo[s_i, a_i] = 1
-      end
-
-   end
-end
-
-
-kbexq_new = sumres[:, [3, 4, 5, 7]]
-
-end
-

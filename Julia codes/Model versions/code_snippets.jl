@@ -78,3 +78,117 @@ end
 x_dist = bar(x_dist, xlabel="Index", ylabel="Values")
 
 bar(x_dist, xlabel="Index", ylabel="Values") |> (p -> xlims!(p, 30, 40)) |> display
+
+
+
+using Optim
+
+# Define your function
+function my_function(x, tau)
+    # Your function definition here
+    return -x^2 + tau * x
+end
+
+# Set the bounds for tau
+lower_bound = 0.0
+upper_bound = 1.0
+
+# Set an initial guess for tau within the bounds
+initial_tau_guess = 0.5
+
+# Define a function that takes a parameter vector [tau] and returns the negative of your function
+obj_function(tau) = -my_function(2.0, tau[1])
+
+# Use the optimize function with bounds to find the maximum
+result = optimize(obj_function, [initial_tau_guess], LBFGS(), Optim.Options(g_tol=1e-6), lower=lower_bound, upper=upper_bound)
+
+# Extract the optimal tau value
+optimal_tau = result.minimizer[1]
+
+# Evaluate the function at the optimal tau value
+max_value = -result.minimum
+
+println("Optimal tau: $optimal_tau")
+println("Maximum value: $max_value")
+
+
+
+
+# Optimal CFL reliance and interest rate
+function fn_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
+   q_tau = zeros(length(tau_vec))
+
+   if next_b == 0
+       fill!(q_tau, 0.97)
+   else
+       q_tau .= (beta ./ next_b) .* ((1 .- pdef) .* next_b .+
+            pdef .* pliq .* min.(next_b, (1 .- tau_vec) .* Pi_liq .+ tau_vec .* kappa .* Pi_liq) .+
+            pdef .* (1 .- pliq) .* min.(next_b, (1 .- tau_vec) .* Pi_liq .+ tau_vec .* Pi_reo))
+   end
+
+   q, tau_index = findmax(q_tau)
+
+   if q ≈ minimum(q_tau)
+       tau = 1 - pliq
+   else
+       tau = tau_vec[tau_index]
+   end
+
+   return q, tau
+end
+
+
+
+
+# Example data (replace with actual values)
+pdef = 0.02
+
+pliq = 0.25
+
+Pi_liq = 49000
+Pi_reo = 68957
+next_b = 65306
+tau_vec = 0.0:0.1:1.0
+
+function plot_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
+
+    q_tau = zeros(length(tau_vec))
+ 
+    if next_b == 0
+        fill!(q_tau, 0.97)
+    else
+        q_tau .= (beta ./ next_b) .* ((1 .- pdef) .* next_b .+
+             pdef .* min.(next_b, pliq .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* kappa .* Pi_liq) .+ 
+             (1 .- pliq) .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* Pi_reo)))
+    end
+
+    plot(tau_vec, q_tau, label="q vs tau", xlabel="tau", ylabel="q", legend=:topleft)
+    title!("q vs tau") |> display
+
+ end
+
+plot_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
+
+
+function fn_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
+    q_tau = zeros(length(tau_vec))
+
+    if next_b == 0
+        fill!(q_tau, 0.97)
+    else
+        q_tau .= (beta ./ next_b) .* ((1 .- pdef) .* next_b .+
+             pdef .* min.(next_b, pliq .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* kappa .* Pi_liq) .+ 
+             (1 .- pliq) .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* Pi_reo)))
+    end
+
+    q, tau_index = findmax(q_tau)
+
+    if isapprox(q, minimum(q_tau), atol=0.002) # == won't work here, there will always be a small numerical diff
+        tau = Pi_reo > Pi_liq ? 1 : 0
+    else
+        tau = tau_vec[tau_index]
+    end
+
+    return q, tau
+end
+fn_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
