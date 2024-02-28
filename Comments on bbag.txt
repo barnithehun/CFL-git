@@ -5,22 +5,17 @@ Marek on coding:
  - Use Julia, it is at least as fast as matlab - almost the same syntax just uses [] instead of ()
  - Parallelization only when your single core model runs perfectly
  - You can use matlab analytics to see how costly running each line of code is - only once you have a working code
- - Phyton codes Marek has send, in the correspoindng paper they consider a lot cases and they have codes for it (*check the paper examples first)
+ - Phyton codes Marek has send, in the corresponding paper they consider a lot cases and they have codes for it (*check the paper examples first)
  - Calibrating: you need to bring down your model solution time under around 20mins
- - Cluster: you can use it but you should first have working model first - paralleization is also needed here
+ - Cluster: you can use it but you should first have working model first - parallelization is also needed here
  - You could try a model with just profits not continuation value
  - Probably, the best exercise would be to do THE OPTIMAL CFL RELIANCE IN JULIA
 
 Comments on the presentation:
  - You should rewrite the Bellman with expectations
- - What kind of friction firms face? - is it that firms are inherently different or do they choose diffenet debt financing strategies that leads to different credit frictions? 
+ - What kind of friction firms face? - is it that firms are inherently different or do they choose different debt financing strategies that leads to different credit frictions? 
  - Still need to further clarify the research question --- what kind of firm characteristics are we talking about?
  - Make the model slides more efficient, just focus on the details --- make a timing on firm values! - V0, V1, V2 timing on a timeline 
  - Why not have asset-based vs. CF-based
  - Should reproduce the U-shape makes people super interested usually
  - When you have a fixed costs you should have an extra min-max in there so that the V-zeta does not turn negative
-
-Additional
- - You could have misallocation study but based on liquidation vs reorganization - should be easier to collect cross-country evidence
- - Should rewrite the literature review a bit to be more like the presentation slides
- - Check misallocation under CFL = 0, = 1 or {0,1} and [0,1]

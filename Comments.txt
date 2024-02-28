@@ -1,23 +1,15 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Comments on the epirical work: 
-
-Costs of high reorganization costs 
-   - Usually ppl just think in therms of inefficient reorganization
-   - When CF based lending is taken into account, this is also related to financial frictions!	
+Comments on the empirical work: 
 
 OVERHAULING WORK: 
  - must focus on external finance premia more - the results will be about this so I have to have some results about it as well
 
 MAKE A REGRESSION FOR THE NEW OUTFLOWS OF DEBT!!!!!
 LOOK AT THE PECKING ORDER REGRESSION
-MAKE A PLOT OF THE CREDIT PREMIUM - do we want to match it? probably not becasue I disregard the probability of default channel which adds to the gradient of the loan rate curve
+MAKE A PLOT OF THE CREDIT PREMIUM - do we want to match it? probably not because I disregard the probability of default channel which adds to the gradient of the loan rate curve
 Box scatter plot for the u-shape
 Probably, it is better to have a Pols, Reduced Pols and FE  setup - the firms level shit is confusing
-Are there non-linearities in reliance on CF based lending and leverage? -- intuiton is that it should pick up sharply after 0.6-0.7 when the debt cannot be fully collateralized anymore. Maybe just plotting is enough, maybe i should look into fixed effects regression.
-
-Comments on the presentation: 
-- explain why have no endogneous probability of default in the model
-- explain how the actual process of bankrupty is super complicated and some corners are needed to be cut to make the model work
+Are there non-linearities in reliance on CF based lending and leverage? -- intuition is that it should pick up sharply after 0.6-0.7 when the debt cannot be fully collateralized anymore. Maybe just plotting is enough, maybe i should look into fixed effects regression.
 
 Probably better to avoid equity financing in the model. May make the firms' problem easier but then you have to account for who holds equities and how shares work with firms. Not impossible, but probably non-negative dividends are easier. 
 
@@ -25,13 +17,13 @@ Probably better to avoid equity financing in the model. May make the firms' prob
 
 Think about what happens when there are multiple lenders and some are asset based and some are cash flow based 
 Have a good answer for priority 
-	- see Lian and Ma, CF-based vs. asset based lending is NOT about priority, it is about the cononmic determinants of in-default payments
+	- see Lian and Ma, CF-based vs. asset based lending is NOT about priority, it is about the economic determinants of in-default payments
 	- his problem was, what if there is a prioritized lender who comes in and takes the assets, then what happens to CF based lenders
 	    the answer to this is as follows: the firm is either liquidated or reorganized, the lenders form expectations of the probability of these and hand out debt contracts accordingly
 
 See who works on corporate lending and defaults at GSEFM and try to ask for a meeting 
 
-Probably it would be interesTing to see how the external finance premium changes for ABL and CFL debt contracts - what would be nice to see that it is ceteris paribus higher for ABL contracts 
+Probably it would be interesting to see how the external finance premium changes for ABL and CFL debt contracts - what would be nice to see that it is ceteris paribus higher for ABL contracts 
  	- there is a part in this in Lian and Ma.
 	- it would be interesting on a firm level - CFL reliance vs. the cost of external finance the firm faces
 

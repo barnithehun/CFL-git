@@ -152,6 +152,7 @@ Here the two innovations are that interest rates are endogenous and the producti
 \end{figure}
 
 \newpage
+\setcounter{equation}{0}
 
 \subsection*{Ver 4.1 - Endogenous defaults, and better x-interpolation}
 \textbf{Same as in Ver 3:} AR(1) productivity process, Labour policy; Corresponding output; Corresponding profits; Future cash on hand; External finance premium. \vspace{3mm} \\
@@ -179,17 +180,20 @@ In previous iterations of the model, the interest rate was calculated on the bas
     \item Update interest rates taking into account the endogenous default probability $q|P_{d}(exo),P_{d}(endo)$ and recalculate the optimal $k',b$ and default policies
     \item Repeat $1-3$ until the optimal policies and interest rates do not change - that is, $ (k^{i},b^{i},\chi^{i},q^{i}) = (k^{i-1},b^{i-1},\chi^{i-1},q^{i-1}) $ for each state $(x,\varepsilon)$
 \end{enumerate}
-\textbf{Exit decision}: In this version, I also implement endogenous exit decision. This is analogous to the default decision, with the difference that firms may keep their cash on hand if they quit voluntarily. Moreover, you need to change the value of defaulting to some small negative value ($-1000$ in this calibration). Otherwise firms always prefer to just pay all cash on hand as dividends and stay on the market for one more period on the off chance that they receive a large, positive productivity shock. 
-
+\textbf{Exit decision}: I also implement endogenous exit decision. This is analogous to the default decision, with the difference that firms may keep their cash on hand if they quit voluntarily. Moreover, you need to change the value of defaulting to some small negative value ($-1000$ in this calibration). Otherwise firms always prefer to just pay all cash on hand as dividends and stay on the market for one more period on the off chance that they receive a large, positive productivity shock. \vspace{3mm} \\
+\textbf{Probability of default}: default can derive from an exogenous default shock or endogenous decision of the firm. The total probability of default can be described with:
+$$             P_D = 1 - [(1 - P_{exo})(1 - P_{endo})]   $$ 
+I will use this formula in the following.
 \newpage
 
 \section*{Summary of models up to Ver 5}
 
 \textbf{Measure of size problem}: The cash on hand approach does not have a good measure of current size. The current cash on hand might be misleading since large debt might cancel out large capital stocks. You could do next periods' expected cash on hand, or next period's capital stock. \vspace{3mm} \\
-\textbf{On interest rates}: You can rarely see default probabilities over 4\%. This is because the probability of default jumps at some point at a certain debt policy. This implies very low interest rates, which is not a good deal for the firm. Therefore in most cases, firms stop short of high levels of debt that would increase their default probabilities too much. \vspace{3mm} \\
-\textbf{On debt debt policy of firms}: Here firms discount future by $\beta(1-P_\chi)$, whereas the fully secured interest rate is $\beta$. Therefore, when the firms manages to be fully secured, it prefers to hold a lot of debt and pay higher dividends, because if it default next period it might have to fall back on limited liability. This implies that even large, cash rich companies hold a lot of debt. Not a bad result, but probably not for the right reasons. \vspace{3mm} \\
-\textbf{Firm growth}: Firms grow very quickly to their efficient size. A firm with no cash on hand has easy access to a lot of debt, and can grow out of cash-poorness very quickly. This might be a problem when I want to focus low wealth but productive firms. Try the reparametrization of the model - although gains here will probably be limited. Also you can also try adding a fixed cost of liquidation (paid by the lender). The advantage of this is that it can be treated purely as a calibration parameter (as opposed to default probability and resale value of capital) \vspace{3mm} \\
+\textbf{On interest rates}: You can rarely see default probabilities over 4\%. This is because the probability of default jumps at some point at a certain debt policy. This implies very high interest rates, which is not a good deal for the firm. Therefore in most cases, firms stop short of high levels of debt that would increase their default probabilities too much. \vspace{3mm} \\
+\textbf{On debt debt policy of firms}: Here firms discount future by $\beta(1-P_\chi)$, whereas the fully secured interest rate is $\beta$. Therefore, when the firms manages to be fully secured, it prefers to hold a lot of debt and pay higher dividends, because if it defaults next period it might have to fall back on limited liability. This implies that even large, cash rich companies hold a lot of debt. Not a bad result, but probably not for the right reasons. \vspace{3mm} \\
+\textbf{Firm growth}: Firms grow very quickly to their efficient sizes. A firm with no cash on hand has easy access to a lot of debt, and can grow out of cash-poorness very quickly. This might be a problem when I want to focus low wealth but productive firms. Try the reparametrization of the model - although gains here will probably be limited. Also you can also try adding a fixed cost of liquidation (paid by the lender). The advantage of this is that it can be treated purely as a calibration parameter (as opposed to default probability and resale value of capital) \vspace{3mm} \\
 \textbf{Conceptualizing negative cash on hand}. How would a firm enter with negative cash on hand? You can add entry costs (usually they are needed anyways). Also you can suppose that these are distributed in a way that firms with large and negative cash on hand may enter. This is needed if you want to have cash poor but productive firms in the model. 
+\setcounter{equation}{0}
 
 \subsection*{Ver 6 - Heterogeneous debt contracts}
 \textbf{Same as in Ver 5:} AR(1) productivity process, Labour policy; Corresponding output; Corresponding profits; Future cash on hand; Default decision, Exit decision \vspace{3mm}  \\
@@ -209,7 +213,7 @@ External finance premium:
         & \quad  +  \ (1-\gamma(k',b',\varepsilon))\left((1-\tau') \phi_A (1-\delta) k' +\tau' \left( \phi_C \E_{\varepsilon'|\varepsilon}V_2 (x', \varepsilon') - \zeta \right) \right) \big\} \Big) \Big{]} 
     \end{split}
 \end{equation}
-The firm has access to CF-based and asset-based debt contracts simultaneously. It chooses the optimal reliance on CF-backed debt, $\tau$ to maximize $q$. Therefore, the $\argmax$ of equation 12 describes optimal CFL reliance. The solution strategy is the same as in version 5, but now it is much more complex, hence it is also more prone to error. \textbf{It does not even converge now:}
+The firm has access to CF-based and asset-based debt contracts simultaneously. It chooses the optimal reliance on CF-backed debt, $\tau$ to maximize $q$. Therefore, the $\argmax$ of equation 3 describes optimal CFL reliance. The solution strategy is the same as in version 5, but now it is much more complex, hence it is also more prone to error.
 \begin{enumerate}
     \item Set $q^0$, the starting interest rate at $\beta$ and calculate the value of the firm, $V(x,\varepsilon)$ and $k', b'$ and exit policies given  $q^0$. 
     \item Calculate the following: the probability of default $P_D$, the probability of liquidation under default $\gamma$, the liquidation value; $\phi_A (1-\delta) k'$ and the reorganization value; $V_2 (x', \varepsilon') - \zeta$ given $q^0$, for each state-action pair - meaning that all these are $n \times m$ matrices.
@@ -217,19 +221,48 @@ The firm has access to CF-based and asset-based debt contracts simultaneously. I
     \item Repeat $1-3$ until the optimal policies and interest rates do not change - that is, $ (k^{i},b^{i},\chi^{i},q^{i}) = (k^{i-1},b^{i-1},\chi^{i-1},q^{i-1}) $, or at least within some tolerance value for each state $(x,\varepsilon)$.
 \end{enumerate}
 
-\subsubsection*{Ver 6 - Problems}
+\subsubsection*{Ver 6 - Problems and ideas}
 \textbf{The linearity of q in CFL reliance:} \\
-The expected in -default payoff of the lender after the asset-based debt is: 
+The expected in-default payoff of the lender after the asset-based debt is: 
 $$  (1-\tau') \phi_A (1-\delta) k'  $$
 for CF-based debt: 
 $$    \tau'\left[\gamma(k',b',\varepsilon)(\kappa \phi_A  (1-\delta) k') +  (1-\gamma(k',b',\varepsilon))\left( \phi_C \E_{\varepsilon'|\varepsilon}V_2 (x', \varepsilon') - \zeta \right) \right] $$
-The borrower chooses $\tau$ to maximize the sum of these two values. Since both of them depend on $\tau$ linearly, the optimal decision on $\tau$ is 0 if the first sum is larger and 1 of the second sum is larger. Hence, this setup still cannot reproduce CFL reliance in the range of $(0,1)$. The solution would be to add a $\gamma$ that increases in $\tau$. That is, higher reliance on CF based lending increases the chance of liquidation. This is realistic if the borrower can keep whatever is leftover the default process and it gets to decide on liquidation. An example would be that a firms with a lot of unsecured debt chooses liquidation since lenders cannot enforce liquidation payments. Not too realistic but acceptable. \vspace{3mm} \\
-\textbf{Adding extreme shocks}: with just the AR(1) productivity process, only a few firms end up close to cutoff values that yield non-extreme solutions. This could change if you added and extreme shock to productivity, which put firms into the best or the worst productivity bracket with some small probability. 
+The borrower chooses $\tau$ to maximize the sum of these two values. Since both of them depend on $\tau$ linearly, the optimal decision on $\tau$ is 0 if the first sum is larger and 1 of the second sum is larger. Hence, this setup still cannot reproduce CFL reliance in the range of $(0,1)$. The solution would be to add a $\gamma$ that increases in $\tau$. That is, higher reliance on CF based lending increases the chance of liquidation. This is realistic if the borrower can keep whatever is leftover the default process and it gets to decide on liquidation. An example would be that a firms with a lot of unsecured debt chooses liquidation since lenders cannot enforce liquidation payments. \vspace{3mm} \\
+\textbf{Adding extreme shocks}: with just the AR(1) productivity process, only a few firms end up close to cutoff values that yield non-extreme solutions. This could change if you added and extreme shock to productivity, which put firms into the best or the worst productivity bracket with some small probability.  \vspace{3mm} \\ 
+\textbf{Issues of non-convergence}: sometimes this model version does not converge. There might be two reasons for this. First, it might be that the next $x$ with a particular debt decision falls on falls closer to the non-default $x$ on the grid than the one associated with default. Then the lender offers the borrower a low interest rate even though the debt policy is not sustainable. In this case, the iteration is cut short. A quick solution is to increase the x-grid. A better one would be to do the same Xlow-Xhigh setup as in the Q matrix - \textbf{try this!}. Second, the model practically converges, but there is oscillation between two neighboring debt levels and corresponding q-s. This can be solved with increasing the $b$ grid. Alternatively, you can just write a code that stops after this oscillation starts. Not very elegant but it is ok.
+
 \newpage
-Talk a bit of the non-convergence \\
-Discuss future directions, talk of the misallocation approach with a particular focus on the extensive margin. And discuss the cost of small firm liquidation, is shutting the out of the market for CFL debt. 
 
+\subsection*{The future paper}
 
+The concise idea: CFL lending can have a huge impact on better capital allocation, especially if we look at misallocation on the extensive margin rather than the intensive margin. This is also evidenced by the following: small firms often rely a lot on CFL debt. However, lenders are willing to lend against future cash flows only if there is a fairly decent chance that the firm is reorganized under financial distress (consider just imposing reorganization probability exogenously) This implies that the cost of small firm liquidation has a distinct and potentially huge cost - beyond the inefficient liquidation that is often quoted. If small firms are regularly liquidated this shuts them out of the CF-based debt market which deprives them from accessing CF-back borrowing and keeps them from reaching their efficient size (or entering).
+
+\subsubsection*{ToDo - Literature and writing}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item Rewrite the literature review a bit to be more like the presentation slides
+    \item Find the inefficient liquidation vs. efficient reorganization quote  
+    \item Read more on inefficient liquidation
+\end{itemize} \normalsize
+
+\subsubsection*{ToDo - Empirics}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item \textbf{Look into how you could retrieve liquidation probabilities (see C\&D)}
+    \item Make a regression for the new outflows of debt
+    \item Probably, it is better to have a Pols, Reduced Pols and FE  setup - the firms level regression is confusing
+    \item Are there non-linearities in reliance on CF based lending and leverage? - intuition is that it should pick up sharply after 0.6-0.7 when the debt cannot be fully collateralized anymore
+    \item Look at lifecycle effects - at which phase of their lifecycle firms borrow against future cash flows. Similarly, look at the pecking order effects when it comes to borrowing CF vs. AB.
+\end{itemize} \normalsize
+
+\subsubsection*{ToDo - Model}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item Update default probabilities with the interpolated $x$-es
+    \item Find a grid and calibration in ver5 where no firms are grid-constraint
+    \item Figure out log-grids! 
+    \item Consider exogenous liquidation probabilities !!! - its not realistic anyways as is and it allows you to focus on the small firm liquidation point.
+    \item The big one: look into how entry and exit dynamics should be modeled in the discrete DP framework
+    \item Take the the Quantecon examples and solve your model without global variables and with functions
+\end{itemize} \normalsize
+\textbf{Firm dynamics}: The way to think about it is probably as follows, what I have in ver6 describes firm decisions. That is, optimal $(k',b', def, exit)$. The exit and default decision shows the outflow of firms. The inflow of firms is given by the mass of the potential entrants, their distribution $(x, \varepsilon)$ and their decisions to enter given the value functions calculated above. So what you have to do probably is to save firm decisions, look at other models how they calculate the stationary distribution of firms and imitate that. Will not be able to use the built in version - there is a Hopenhayn model code in Julia so lets try to look at that.
 \end{document}
 
 

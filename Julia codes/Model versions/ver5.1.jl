@@ -237,43 +237,7 @@ iter = 0
     d = fn_D(k, b, x, q)
     val = values[s_i]
 
-    sumres[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, d, val]
-    end
-
-    #= plotting
-        sum_1 = sumres[sumres[:, 2] .== e_vals[1] , :]
-        sum_med = sumres[sumres[:, 2] .== e_vals[Int(median(1:e_size))] , :]
-        sum_3 = sumres[sumres[:, 2] .== e_vals[end] , :]
-
-
-        plot1 = plot(sum_1[:,1], [sum_1[:,3] sum_1[:,4]], lw = 2,
-            label = ["k_prime" "b_prime"])
-        plot2 = plot(sum_1[:,1], [sum_1[:,5] sum_1[:,6] ], lw = 2,
-            label = ["pdef" "q"])
-
-        plot3 = plot(sum_med[:,1], [sum_med[:,3] sum_med[:,4]], lw = 2,
-            label = ["k_prime" "b_prime"])
-        plot4 = plot(sum_med[:,1], [sum_med[:,5] sum_med[:,6] ], lw = 2,
-            label = ["pdef" "q"])
-
-        plot5 = plot(sum_3[:,1], [sum_3[:,3] sum_3[:,4]], lw = 2,
-            label = ["k_prime" "b_prime"])
-        plot6 = plot(sum_3[:,1], [sum_3[:,5] sum_3[:,6] ], lw = 2,
-            label = ["pdef" "q"])
-
-
-        plot(plot1, plot3, plot5, plot2, plot4, plot6, layout = (2, 3), size = (1400, 800))
-
-    =#
-
-    if iter % 5 == 0
-    column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :d, :val]
-    sumres_df = DataFrame(sumres, column_names)
-    time_string = "$(Dates.hour(now()))_$(Dates.minute(now()))_$(Dates.second(now()))"
-    XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)
-    end 
-
-    ###############################################################################
+    sumres[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, d, val]    ###############################################################################
     # Probability of default given optimal k', b' policies that are given by x, e
     pdef_endo = zeros(n,m)
     for s_i in 1:n
@@ -320,3 +284,8 @@ iter = 0
 
 end
 
+
+column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :pliq, :d, :val, :Pi_liq_sa, :Pi_reo_sa, :tau]
+sumres_df = DataFrame(sumres, column_names)
+time_string = "$(Dates.day(now()))_$(Dates.hour(now()))$(Dates.minute(now()))$(Dates.second(now()))"
+XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)

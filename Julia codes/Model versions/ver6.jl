@@ -10,10 +10,10 @@ using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, SparseArrays, P
 ###  x is semi-engonenous 
 
 # grids sizes - x,k,b should be even numbers!!
-x_size = 40;
-e_size = 7;
-k_size = 30;
-b_size = 30;
+x_size = 80;
+e_size = 11;
+k_size = 60;
+b_size = 60;
 
 # AR(1) produictivity
 rho_e = 0.969;
@@ -37,7 +37,7 @@ phi_a = 0.5;               # re-sale value of capital
 phi_c = 0.5;               # variable cost of reorganization                
 kappa = 0.3;               # capital recovery rate of CFL debt
 zeta = 10^5;               # fixed cost of reorganization
-tau_vec = 0:1              # vector of CFL reliances - optimal will be one or zero anywaysseasasadewdscxad3qewsaxc 
+tau_vec = 0:1              # vector of CFL reliances - optimal will be one or zero anyways
 
 
 # functions: contenporaneous optimization
@@ -78,8 +78,8 @@ fn_D(next_k, next_b, x, q) =  x - next_k + q * next_b;
 fn_chi(k,val) = Int(phi_a*(1-delta)*k >= phi_c*val - zeta)
 
 # Creating grids - should contain 0 in every case 
-k_grid = range(0, 10^5, k_size)
-b_grid = range(0, 10^5, b_size)
+k_grid = range(0, 10^6, k_size)
+b_grid = range(0, 10^6, b_size)
 #b_grid =  [range(-10^5, 0, div(b_size, 2))[1:end-1]; range(0, 10^5, div(b_size, 2) +1 )]
 
 x_low = fn_X(k_grid[1],b_grid[end], e_vals[1])
@@ -274,17 +274,12 @@ iter = 0
         sumres[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, pliq, d, val, Pi_liq, Pi_reo, tau]
     end
 
-    if iter % 5 == 0
-        column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :pliq, :d, :val, :Pi_liq_sa, :Pi_reo_sa, :tau]
-        sumres_df = DataFrame(sumres, column_names)
-        time_string = "$(Dates.hour(now()))_$(Dates.minute(now()))_$(Dates.second(now()))"
-        XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)
-    end 
+
 
     ###############################################################################
     # Calculates probability of default given optimal k', b' policies that are given by x, e
     # Then it calculates q based on that
-    @elapsed for s_i in 1:n
+    for s_i in 1:n
         x_i = s_i_vals[s_i, 1]
         e_i = s_i_vals[s_i, 2]
     
@@ -331,3 +326,9 @@ iter = 0
 
  kbexqt_new = sumres[:, [3, 4, 6, 15]]
 end
+
+
+column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :pliq, :d, :val, :Pi_liq_sa, :Pi_reo_sa, :tau]
+sumres_df = DataFrame(sumres, column_names)
+time_string = "$(Dates.day(now()))_$(Dates.hour(now()))$(Dates.minute(now()))$(Dates.second(now()))"
+XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)
