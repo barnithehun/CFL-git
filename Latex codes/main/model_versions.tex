@@ -231,38 +231,147 @@ The borrower chooses $\tau$ to maximize the sum of these two values. Since both 
 \textbf{Adding extreme shocks}: with just the AR(1) productivity process, only a few firms end up close to cutoff values that yield non-extreme solutions. This could change if you added and extreme shock to productivity, which put firms into the best or the worst productivity bracket with some small probability.  \vspace{3mm} \\ 
 \textbf{Issues of non-convergence}: sometimes this model version does not converge. There might be two reasons for this. First, it might be that the next $x$ with a particular debt decision falls on falls closer to the non-default $x$ on the grid than the one associated with default. Then the lender offers the borrower a low interest rate even though the debt policy is not sustainable. In this case, the iteration is cut short. A quick solution is to increase the x-grid. A better one would be to do the same Xlow-Xhigh setup as in the Q matrix - \textbf{try this!}. Second, the model practically converges, but there is oscillation between two neighboring debt levels and corresponding q-s. This can be solved with increasing the $b$ grid. Alternatively, you can just write a code that stops after this oscillation starts. Not very elegant but it is ok.
 
-\newpage
-
 \subsection*{The future paper}
 
 The concise idea: CFL lending can have a huge impact on better capital allocation, especially if we look at misallocation on the extensive margin rather than the intensive margin. This is also evidenced by the following: small firms often rely a lot on CFL debt. However, lenders are willing to lend against future cash flows only if there is a fairly decent chance that the firm is reorganized under financial distress (consider just imposing reorganization probability exogenously) This implies that the cost of small firm liquidation has a distinct and potentially huge cost - beyond the inefficient liquidation that is often quoted. If small firms are regularly liquidated this shuts them out of the CF-based debt market which deprives them from accessing CF-back borrowing and keeps them from reaching their efficient size (or entering).
 
+\newpage
+
 \subsubsection*{ToDo - Literature and writing}
 \begin{itemize}\setlength\itemsep{0em} \small
     \item Rewrite the literature review a bit to be more like the presentation slides
-    \item Find the inefficient liquidation vs. efficient reorganization quote  
-    \item Read more on inefficient liquidation
+    \item Find the inefficient liquidation vs. efficient reorganization quote \checkmark 
+    \item Read more on inefficient liquidation \checkmark
+    \item Read a take notes of the reference papers' estimation and results sections \checkmark
 \end{itemize} \normalsize
 
 \subsubsection*{ToDo - Empirics}
 \begin{itemize}\setlength\itemsep{0em} \small
-    \item \textbf{Look into how you could retrieve liquidation probabilities (see C\&D)}
+    \item Look into how you could retrieve liquidation probabilities from other data sources \checkmark
+    \item Look for datasets that are similar to FCJ data
+    \item Look into the effect of a binary SME dummy (or sub-50 million firms) on liquidation and reorganization - also with this dummy approach and over time plot would be feasible \checkmark
     \item Make a regression for the new outflows of debt
-    \item Probably, it is better to have a Pols, Reduced Pols and FE  setup - the firms level regression is confusing
+    \item Have a Pols, Reduced Pols and FE  setup - the firms level regression is confusing
     \item Are there non-linearities in reliance on CF based lending and leverage? - intuition is that it should pick up sharply after 0.6-0.7 when the debt cannot be fully collateralized anymore
     \item Look at lifecycle effects - at which phase of their lifecycle firms borrow against future cash flows. Similarly, look at the pecking order effects when it comes to borrowing CF vs. AB.
 \end{itemize} \normalsize
 
 \subsubsection*{ToDo - Model}
 \begin{itemize}\setlength\itemsep{0em} \small
-    \item Update default probabilities with the interpolated $x$-es
-    \item Find a grid and calibration in ver5 where no firms are grid-constraint
-    \item Figure out log-grids! 
+    \item Update default probabilities with the interpolated $x$-es \checkmark
+    \item Figure out log-grids! \checkmark
+    \item Find a grid and calibration in ver5 where no firms are grid-constrained \checkmark
     \item Consider exogenous liquidation probabilities !!! - its not realistic anyways as is and it allows you to focus on the small firm liquidation point.
-    \item The big one: look into how entry and exit dynamics should be modeled in the discrete DP framework
-    \item Take the the Quantecon examples and solve your model without global variables and with functions
+    \item Take the the Quantecon examples and solve your model without global variables and with functions \checkmark
+    \item Look into how entry and exit dynamics should be modeled in the discrete DP framework \checkmark
+    \item Add starting the (x,e) grid, and read up on best practices on implementation
+    \item Implement equilibrium wage from free entry condition \checkmark
+    \item Implement stationary distribution following Leo's code and Corbae and D'Erasmo algorithm
 \end{itemize} \normalsize
-\textbf{Firm dynamics}: The way to think about it is probably as follows, what I have in ver6 describes firm decisions. That is, optimal $(k',b', def, exit)$. The exit and default decision shows the outflow of firms. The inflow of firms is given by the mass of the potential entrants, their distribution $(x, \varepsilon)$ and their decisions to enter given the value functions calculated above. So what you have to do probably is to save firm decisions, look at other models how they calculate the stationary distribution of firms and imitate that. Will not be able to use the built in version - there is a Hopenhayn model code in Julia so lets try to look at that.
+
+\newpage
+
+\section*{General Notes}
+\textbf{Firm dynamics}: The way to think about it is probably as follows, what I have in ver6 describes firm decisions. That is, optimal $(k',b', \tau', def, exit)$. The exit and default decision shows the outflow of firms. The inflow of firms is given by the mass of the potential entrants, their distribution $(x, \varepsilon)$ and their decisions to enter given the value functions calculated above. So what you have to do probably is to save firm decisions, look at other models how they calculate the stationary distribution of firms and imitate that. Will not be able to use the built in version - there is a Hopenhayn model code in Julia so lets try to look at that.  \vspace{3mm} \\
+\noindent \textbf{Make it work in functions}: granular approach:
+\begin{itemize}
+    \item Set model parameters in a function (as in discreteDP.jl)
+    \item Make a set\_grid function that takes in the grid dimensions outputs s\_vals, s\_i\_vals, a\_vals, a\_i\_vals
+    \item Make a setQ function (inputs: grids and parameters; outputs: Q)
+    \item Make a setR function (inputs: grids and parameters, default prob. and Q; outputs: R)
+    \item Make a update\_q function - containing the 'sumres loop' and the 'update loop'
+    \item Solve through the model but now only with the function call
+\end{itemize}
+It might be better to just make a huge "firmoptim" function that takes in grids and parameters and results in firm policies: $(k',b', \tau', def, exit)$. This would be easier to integrate in the Hopenhayn framework, where you still need and entry dynamics and a stationary distribution if firms to have a complete description of the production section. \vspace{3mm} \\
+\textbf{Taking logarithmic grids}: Results with logarithmic grids are perfect, but they generally make sense. The problem is that some low cash on hand firms prefer to just produce a lot in the current period without accumulating assets - their production is financed by external finance almost entirely and their next period cash on hand is stuck at a low value. This is especially true for high productivity firms. This is not a bug (see the steadily increasing value in $x$) and it is not necessarily a problem, but it is a bit weird that firms of the same productivity do not converge to the same cash on hand - should check it under CFL borrowing. I should also add that this in every calibration, under some certain values very few firms actually do this. Making the discount parameter closer to one would probably solve this problem.   \vspace{3mm} \\
+\textbf{Allowing for financial savings}:  Allowing $b$ to be negative means that a lot of firms with low productivity but high cash on hand do not exit immediately, but dismantles capital stock gradually. This would yield a gradual decline of financial wealth. Overall, results are nicer and converge faster, but of corse the grid becomes less granular. \vspace{3mm} \\
+\textbf{The productivity process (Tauchen's method)}: \\
+Productivity follows the AR(1) process:
+$$ \ln(\varepsilon_{t+1}) = (1-\rho) \ln(\varepsilon_0) + \rho \ln(\varepsilon_t) + \sigma \zeta_\varepsilon $$
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item $\rho$ is the persistence of the shock
+    \item ln($\varepsilon_0$) is 'average productivity'm calibrated to $1$ in Kaas et al.
+    \item $\sigma$ is the standard deviation of shocks
+\end{itemize} \normalsize
+I discretize the log-process via Tauchen's method, then take the exponents of the productivity values. This process does have some mean reversion in it, due to the first term on the RHS - however not every paper have this term, KT13 for instance does not. Moreover, I found two calibration approach: in Kaas, Öztürk and Kochen it is high persistence with $\rho$ close to one and small innovations whereas with KT13 and CandD, $\rho$ is around $2/3$ and innovations are large. Overall, I am not a hundred percent sure how to best set it.  \vspace{3mm} \\
+\textbf{The determinants of firm size}: The Lukas type span of control parameter, and the price of the final good are the best to limit firm size. If you want more firms to participate (and firms participate from a lower cash on hand level) decrease the participation cost of entering.
+
+\subsection*{Finding the stationary firm distribution}
+Solution approach:
+\begin{itemize} \setlength\itemsep{0em}
+    \item Set up the VFI to find optimal policies given state variables and the wage, $w$ (some models solve for the price of the final good $p$, I use price as the numeraire so I can solve for the wage)
+    \item Equilibrium wage is such that the value of entering is equal to the cost of entering: $V^e = k$ - this works only with entry decision 2. (see below)
+    \item The stationary distribution is defined as follows in matrix form 
+       $$ \mu = F(I-\text{diag}(X)) \mu + mf^0 = M\mu + mf^0 = m(I-M)^{-1}f^0 $$
+       where F is the transition matrix given productivity shocks and policies; X denotes the exit policy; $f^0$ is the vector of entrants and $m$ scales the distribution of firms
+    \item Defines the transition matrix of incumbents given production and exit policies and the productivity transition matrix $\rightarrow$ M
+    \item Takes the vector of entrants $\rightarrow f^0$
+    \item The unscaled stationary distribution of firms ($\mu^{0}$) can be expressed as: 
+        $$\mu^{0}= (I-M)^{-1}f^0$$
+    \item Finds $m$ from labour market equilibrium 
+        $N(w) = m \sum_\varepsilon \sum_x \mu^{0}_{x, \varepsilon} n_{x, \varepsilon} $
+    \item Scales the stationary distribution $\mu = m\mu^0$
+\end{itemize}
+Not clear how to solve with an entry process where potential entrants can observe ($x,\varepsilon$). The problem in that case is that there is not a uniform value to entering, $V^e(x,\varepsilon)$. Hence, you cannot equate it to a constant cost of entry. My guess would be then to set wage to match the share of new entrants - $m$ applies to entrants but it scales the entire stationary distribution. \vspace{3mm} \\
+ \textbf{On entry decision}: this must be figured out in order to have a stationary distribution of firms. In the Hopenhayn model the entry decision is made ex-ante, before learning about your productivity. Therefore, the value of entering is the same $V^e$ for each potential entrant. Under the free entry condition, $V^e = k$. I set up the model such that potential entrants first learn about their state and then decide to enter or not. This setup is designed to study composition of entrants under aggregate shock - as in Khan and Thomas. \vspace{3mm} \\
+I see 3 ways:
+\begin{enumerate} \setlength\itemsep{0em}
+    \item Entrants decide in full knowledge of their ($x, \varepsilon$) - KT16, Kaas22
+    \item Entrants decide ex-ante, knowing only $V^e$ - Hopenhayn, CandD
+    \item Exogenous flow of entrants - Leo's recommendation, KT13, Öztürk (2023)
+\end{enumerate}
+Number 1 and 2 can be made almost equivalent setting the timing such that entrants do not produce in the current period. In this case, potential entrants uniformly face $V^e$. Then, they receive ($x, \varepsilon$) and can decide to exit, default or continue just as the rest of the incumbents. Hence, nonviable young firms exit after one period instead of not entering at the first place. The only difference to approach n1 is that it adds to the default and exit rates, but you can use the solution approach from above! \vspace{3mm} \\
+Alternatively, you could have entry in the beginning of the period after which startups produce and decide to exit and or default. This is almost the same except that entrants take part in production. In both cases, entrants' debt could be zero. \vspace{3mm} \\
+\textbf{Setting starting distribution}: \\
+You have to define the joint starting distribution of $\Gamma(x,\varepsilon)$, but $(x,\varepsilon)$ are independent in the beginning so you can just define the two distributions separately. Productivity distribution could be the same, or even dominating the incumbent stationary distribution. \vspace{3mm} \\
+Entrant timing: there is a mass of potential entrants that can enter after production has taken place. This decision is informed by the free entry condition, $V^e - (x_e + c_e) = 0$, where $x_e$ the starting cash on hand and the $c_e$ is the setup cost. This formulation allows you to set an $x_e$ distribution with negative values. If the firm decides to exit or go into default, the household gets $x_e - c_e$, where $c_e$ is a sunk cost. This decision takes effect at the end of the period, so firms quit without ever taking part in production.
+\newpage
+\subsection*{Notes on reference papers' estimation part}
+\subsubsection*{Khan and Thomas - 2013}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item They also match the debt-to-assets ratio
+    \item They set 7 productivity states for firms - they just calibrate the AR(1) parameters, not estimate them
+    \item They use X as a measure of size, calculated as K minus B, even though they have K and B separately in their model - look into this approach, it could be fitted using Compustat definitions and it max produce a better stationary distribution
+    \item Idiosyncratic productivity shocks a large and the process is nor persistent ($\rho = 0.659$, $\sigma = 0.118$)
+    \item Capital distribution between 0 and 4 - there's also some pretty big spikes in the stationary distribution of capital, so this might not be something I should worry about too much
+    \item Firm lifecycle plots, they simulate how firms of a certain starting productivity accumulate capital and financial saving - it would be interesting in my case to have a with and without access to CFL debt comparison - one great thing about these plots that you only need firm optimization for it!
+    \item The big point they are making is that productivity shocks have temporary and small effects, whereas credit shocks have larger and more lasting effects as they induce misallocation of capital
+\end{itemize} \normalsize
+
+\subsubsection*{Corbae and D'Erasmo}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item They do not match for distributions of absolute values such as capital or debt or assets - only for ratios such as leverage
+    \item Similar AR(1) process parameters to Khan and Thomas
+    \item They discuss recovery rates and q-s given debt and capital - it would be interesting to do this when firms have access to CFL debt versus when they do not
+    \item Some firms hold negative debt, these are low productivity firms with a lot of capital
+    \item They make a point out of matching debt/assets ratio
+    \item They look into the potential effects of a bankruptcy reform. They highlight that usually you find only very little TFP growth out of decreasing financial frictions - in their case the weighted productivity growth is 0.4\% which is low given that the reform is substantial
+\end{itemize} \normalsize
+
+\subsubsection*{Kaas, Di'Nola and Wang}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item They make a point out of making the small firm distribution in employment size fit the data and match exit rates as well, for me it is less important but still should be done
+    \item They have a very nice plot of debt on the x-axis, and productivity on the y-axis, and then they can color the firms that are staying, or exiting, or forcefully exiting the market - I would need to do this for X
+    \item They also find that even though the effects of the policy experiment is large on small firms, productivity improvements are small due to their low market share
+\end{itemize} \normalsize
+
+\subsubsection*{Öztürk - JMP}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item He considers the initial capital stock as 25\% of the average firm's capital stock
+    \item A critique of this paper's approach is that it ignores the fact that liquidation probability, determined by or beyond the firm's control, influences CFL availability
+    \item Same colored graph as in Kaas, but now for liquidation and reorganization - could reproduce with different liquidation probabilities
+    \item Uses a different AR(1) process, with high persistence and small shock - same goes Kochen and Kaas et al.
+\end{itemize} \normalsize
+
+\subsubsection*{Kochen - JMP}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item He emphasizes that young, productive firms heavily rely on external financing. Financial frictions matter because they limit these dynamic firms - cashflow-based lending becomes relevant here as it enables young, productive firms to borrow against future cashflows
+    \item In contrast to other authors, he identifies substantial TFP losses, ranging from 10 to 20\% - this relates to point about considering both misallocation of the intensive versus the extensive margin
+    \item He considers 10\% of yearly depreciation rate
+    \item His focus isn't on matching the stationary distribution of firms; instead, he aims to capture the dynamics of individual firms
+    \item He measures misallocation by contrasting it with a perfect credit economy. You could technically replicate this by solving a model without financial frictions using the same calibration, revealing the true impact on TFP! - this approach requires two separate model solutions so its potentially cumbersome but at least the concept is clear. Also you could do an no frictions, frictions with ABL and frictions with CFL and ABL scenario
+    \item He looks into output differences due to capital deepening, misallocation on the intensive and on the extensive margin\end{itemize} \normalsize
+    
 \end{document}
 
 

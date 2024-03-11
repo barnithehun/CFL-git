@@ -12,19 +12,19 @@ using BenchmarkTools, LaTeXStrings, LinearAlgebra, Plots, QuantEcon, Statistics,
 
 # this is a way to make parameters
 # calling SimpleOG() makes a named tuple with the parameter values
-SimpleOG(; B = 3, M = 2, alpha = 0.5, beta = 0.9) = (; B, M, alpha, beta)
+SimpleOG(; B = 3, M = 2, alpha = 0.5, beta = 0.9) 
 
 function transition_matrices(g)
     (; B, M, alpha, beta) = g       # define the parameters within the function -in the spirit of avoiding global variables
     u(c) = c^alpha
-    n = B + M + 1
+    n = B + M + 10
     m = M + 1
 
     R = zeros(n, m)
     Q = zeros(n, m, n)
 
     for a in 0:M
-        Q[:, a + 1, (a:(a + B)) .+ 1] .= 1 / (B + 1)   # here the state variable will be reset every period by the action, so you can define entire columns for th Q matrix! 
+        Q[:, a + 1, (a:(a + B)) .+ 1] .= 1 / (B + 1)   # here the state variable will be reset every period by the action, so you can define entire columns for the Q matrix! 
         for s in 0:(B + M)
             R[s + 1, a + 1] = (a <= s ? u(s - a) : -Inf)
         end

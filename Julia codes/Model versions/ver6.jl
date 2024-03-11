@@ -10,10 +10,10 @@ using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, SparseArrays, P
 ###  x is semi-engonenous 
 
 # grids sizes - x,k,b should be even numbers!!
-x_size = 80;
+x_size = 50;
 e_size = 11;
-k_size = 60;
-b_size = 60;
+k_size = 50;
+b_size = 50;
 
 # AR(1) produictivity
 rho_e = 0.969;
@@ -275,7 +275,6 @@ iter = 0
     end
 
 
-
     ###############################################################################
     # Calculates probability of default given optimal k', b' policies that are given by x, e
     # Then it calculates q based on that
@@ -294,7 +293,6 @@ iter = 0
             for next_e_i in 1:e_size
                 p_trans = e_chain.p[e_i, next_e_i]
                 x_next = fn_X(next_k, next_b, e_vals[next_e_i])
-
                 x_index = argmin(abs.(x_next .- x_grid))
                 xe_index = x_index + (next_e_i - 1) * x_size
     
