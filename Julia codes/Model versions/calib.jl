@@ -1,15 +1,24 @@
 ########################################################################
-###x############## VER 5.3 -  functionize ver 5.1 ######################
+###################### VER 5.3 -  CALIBRATION ##########################
 ########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays
 using SparseArrays, Dates, XLSX, DataFrames, Distributions
 
+
+pvec = 0:0.1:1;
+results = zeros(16,length(pvec));
+
+@elapsed for (iter, PVAL) in enumerate(pvec)
+
+ println("Iteration: $iter, Value: $PVAL")
+
+
 function gridsize()
     # grids sizes - x,k,b should be even numbers!!
     return(
         x_size = 40,
-        e_size = 17,
+        e_size = 7,
         k_size = 30,
         b_size = 30)
 end
@@ -18,15 +27,15 @@ function parameters()
     rho_e = 0.969
     sigma_e = 0.146
     nul_e = 1
-    DRS = 0.75
+    DRS = 0.75   
     alpha = 1/3 * DRS
     nu = 2/3 * DRS
     pc = 15
-    beta = 0.96
-    delta = 0.06
-    pdef_exo = 0.04
+    beta = 0.97
+    delta = 0.02
+    pdef_exo = 0.02
     discount = beta * (1 - pdef_exo)
-    phi_a = 0.4
+    phi_a = 0.5
     tauchen_sd = 4
     
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
@@ -59,8 +68,8 @@ function FirmOptim(wage)
         e_vals = exp.(e_chain.state_values)
         
         # Log-grids
-        k_grid = [0;exp.(range(log(10), log(10^6), k_size-1))]
-        b_grid = [0;exp.(range(log(10), log(10^6), b_size-1))]  # no savings
+        k_grid = [0;exp.(range(log(10), log(5*10^5), k_size-1))]
+        b_grid = [0;exp.(range(log(10), log(5*10^5), b_size-1))]  # no savings
 
         x_low = fn_X(k_grid[1],b_grid[end], e_vals[1])
         x_high = fn_X(k_grid[end], b_grid[1], e_vals[end])
@@ -356,7 +365,7 @@ end
 ####### ENTRANTS #######
 
 # mapping the productivity process
- function EntryValue(SumPol,
+function EntryValue(SumPol,
                      e_chain,
                      beta = 0.97)  
 
@@ -442,7 +451,6 @@ exitmass=transpose(mu)*xpol
 entrymass = m*(1-transpose(xpol)*f0)  # m, needs to be adjusted with the firms that decide to quit immidiately
 exitshare = exitmass/totalmass
 
-
 totK = transpose(mu)*SumPol[1:n,3]
 totB = transpose(mu)*SumPol[1:n,4]
 totL = transpose(mu)*SumPol[1:n,10] # Ns = Nd
@@ -459,111 +467,13 @@ meanY = totY / totalmass
 avg_b2k = transpose(mu) * ifelse.(isnan.(SumPol[1:n,4] ./ SumPol[1:n, 3]) .| isinf.(SumPol[1:n,4] ./ SumPol[1:n, 3]), 0, SumPol[1:n,4] ./ SumPol[1:n, 3]) / totalmass
 # average interest rate
 avg_rate = 1/((transpose(mu) *SumPol[1:n,9])/totalmass)-1
-
 # average productivity of active firms
 avg_prod = transpose(mu) * ifelse.(isnan.(SumPol[1:n,11] ./ SumPol[1:n, 10]) .| isinf.(SumPol[1:n,11] ./ SumPol[1:n, 10]), 0, SumPol[1:n,11] ./ SumPol[1:n, 10]) / totalmass
 
-############ Distribution results ############
 
-function StatDist(binnum, var::Char, SumPol)
-
-    char_to_number = Dict('k' => 3, 'b' => 4, 'l' => 10, 'y' => 11, 'p' => 12, 'd' => 13)
-    varnum = get(char_to_number, var, 0)
-    max = maximum(SumPol[:, varnum])
-
-    bins = [0; exp.(range(log(10), log(max+1), binnum-1))]
-    binfill = zeros(binnum, 1)
-    
-    n = size(SumPol,1)-1
-    for s_i = 1:n
-
-        val = SumPol[s_i,varnum] 
-        val_close = argmin(abs.(val .- bins))
-
-        if val_close != binnum
-                  
-            if val > bins[val_close]
-                binfill[val_close + 1] += mu[s_i]
-             else
-                binfill[val_close] += mu[s_i]
-             end
-
-         else
-            binfill[val_close] += mu[s_i]
-        end        
-    end
-
-    PDF = binfill ./ sum(binfill)
-    CDF = cumsum(PDF, dims = 1)
-
-    return ( PDF, CDF, bins ) 
-    
-end
-
-function plotPDF(binnum, var::Char, SumPol)
-
-    PDF, _, bins = StatDist(binnum, var::Char, SumPol)
-    bin_labels = string.(round.(bins ./ 1000, digits=2))
-    plot = bar(bin_labels, PDF, title=var, xrotation=45)
-    return ( plot )
+results[:,iter] = vcat(totalmass, exitmass, entrymass, exitshare, totK, totB, totL, totY, totPi, YtoL, meanL, meanK, meanY, avg_b2k, avg_rate, avg_prod)
 
 end
 
-function plotCDF(binnum, var::Char, SumPol)
-
-    _, CDF, bins = StatDist(binnum, var::Char, SumPol)
-    bin_labels = string.(round.(bins ./ 1000, digits=2))
-    plott = plot(bin_labels, CDF, title=var, xrotation=45, legend=false, linewidth=3)
-    return ( plott )
-
-end
-
-# REINSERT dividends
-binnum = 8
-plot(plotPDF(binnum, 'k', SumPol),
-     plotPDF(binnum, 'b', SumPol),
-     plotPDF(binnum, 'l', SumPol),
-     plotPDF(binnum, 'y', SumPol),
-     plotPDF(binnum, 'p', SumPol),
-     plotPDF(binnum, 'd', SumPol), layout=(2,3), size=(1200, 800))
-# savefig("FirmDist.png")  
-     
-binnum = 10
-plot(plotCDF(binnum, 'k', SumPol),
-     plotCDF(binnum, 'b', SumPol),
-     plotCDF(binnum, 'l', SumPol),
-     plotCDF(binnum, 'y', SumPol),
-     plotCDF(binnum, 'p', SumPol),
-     plotCDF(binnum, 'd', SumPol), layout=(2,3), size=(1200, 800))
-
-# stationary x distribution
-x_dist = zeros(x_size)
-for s_i in 1:e_size
-    x_dist += mu[1 + (s_i-1)*x_size : s_i*x_size]
-end
-
-# stationary e distribution
-e_dist = zeros(e_size)
-for s_i in 1:e_size
-    e_dist[s_i] = sum(mu[1 + (s_i-1)*x_size : s_i*x_size])
-end
-
-plot(bar(string.(round.(exp.(e_chain.state_values))), e_dist, title = "e_dist"),
-     bar(string.(round.(unique(SumPol[:, 1])./1000)),  x_dist, title = "x_dist"), 
-    layout=(2,1), size=(1200, 800))
-
-#Print w = 1 results
-function PrintPol()    
-    column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :l, :y, :Pi, :d, :val]
-    SumPol_df = DataFrame(SumPol, column_names)
-    time_string = "$(Dates.day(now()))_$(Dates.hour(now()))$(Dates.minute(now()))$(Dates.second(now()))"
-    XLSX.writetable("$time_string.xlsx", sheetname="sheet1", SumPol_df)
-end
-PrintPol()    
-
-
-# DOCUMENT EXIT AND ENTRY POLICIES - FIND A WAY TO PLOT THEM
-# FIND A WAY TO STUDY FIRM DYNAMICS - SIMULATIONS WOULD BE A WAY FORWARD (SEE KT13)
-	
-	
-	
+varnames = ["totalmass", "exitmass", "entrymass", "exitshare", "totK", "totB", "totL", "totY", "totPi", "YtoL", "meanL", "meanK", "meanY", "avg_b2k", "avg_rate", "avg_prod"];
+results = NamedArray(results, names=( varnames, string.(pvec) ) ,  dimnames=("Res", "ParamVal"))
