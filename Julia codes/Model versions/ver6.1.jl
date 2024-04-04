@@ -10,10 +10,10 @@ using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, SparseArrays, P
 ###  x is semi-engonenous 
 
 # grids sizes - x,k,b should be even numbers!!
-x_size = 50;
+x_size = 60;
 e_size = 11;
-k_size = 50;
-b_size = 50;
+k_size = 40;
+b_size = 40;
 
 # AR(1) produictivity
 rho_e = 0.969;
@@ -26,14 +26,11 @@ e_vals = exp.(e_vals) .+ 1
 
 # paramaters 
 wage = 1.85;               # wage (exo. in the PE model)
-alpha = 1/3*0.88;          # capital share
-nu = 2/3*0.88;             # labour share
-pc = 1500;                 # participation cost
-beta = 0.97;               # discount rate
 delta = 0.02;              # depreciation
 pdef_exo = 0.02;           # default probability
 discount = beta*(1-pdef_exo);  # discount parameter
 phi_a = 0.5;               # re-sale value of capital
+
 phi_c = 0.5;               # variable cost of reorganization                
 kappa = 0.3;               # capital recovery rate of CFL debt
 zeta = 10^5;               # fixed cost of reorganization
@@ -49,21 +46,22 @@ fn_Pi(k, e) = (1-nu)*fn_Y(k,e)-pc;
 fn_X(k,b,e) =  fn_Pi(k, e) + (1-delta) * k - b;
 
 # Optimal CFL reliance and interest rate
-function fn_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
-    q_tau = zeros(length(tau_vec))
+function fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
 
-    if next_b == 0
-        fill!(q_tau, 0.97)
+    # vectorized for efficiency
+    q_tau = zeros(length(tau_vec))
+    if next_b == 0   
+        fill!(q_tau, beta)
     else
         q_tau .= (beta ./ next_b) .* ((1 .- pdef) .* next_b .+
-             pdef .* min.(next_b, pliq .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* kappa .* Pi_liq) .+ 
-             (1 .- pliq) .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* Pi_reo)))
+            pdef .* min.(next_b, gam .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* kappa .* Pi_liq) .+ 
+            (1 .- gam) .* ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* Pi_reo)))
     end
 
     q, tau_index = findmax(q_tau)
 
-    if isapprox(q, minimum(q_tau), atol=0.002) # == won't work here, there will always be a small numerical diff
-        tau = Pi_reo > Pi_liq ? 1 : 0
+    if isapprox(q, maximum(q_tau), atol=0.001) # == won't work here, there will always be a small numerical diff
+        tau = (1-gam)*Pi_reo > gam*Pi_liq ? 1 : 0
     else
         tau = tau_vec[tau_index]
     end
@@ -78,8 +76,8 @@ fn_D(next_k, next_b, x, q) =  x - next_k + q * next_b;
 fn_chi(k,val) = Int(phi_a*(1-delta)*k >= phi_c*val - zeta)
 
 # Creating grids - should contain 0 in every case 
-k_grid = range(0, 10^6, k_size)
-b_grid = range(0, 10^6, b_size)
+k_grid = range(0, 10^5, k_size)
+b_grid = range(0, 10^5, b_size)
 #b_grid =  [range(-10^5, 0, div(b_size, 2))[1:end-1]; range(0, 10^5, div(b_size, 2) +1 )]
 
 x_low = fn_X(k_grid[1],b_grid[end], e_vals[1])
@@ -173,13 +171,16 @@ end
 # initital (!) endogeneous default probability for each state
 q_sa = fill(0.97,n,m);
 pdef_sa = zeros(n,m);
-pliq_sa = zeros(n,m);
+gam_sa = zeros(n,m);
 Pi_liq_sa = zeros(n,m);
 Pi_reo_sa =  zeros(n,m);
 tau_sa = zeros(n,m);
 
 kbexqt_old = zeros(n,4);
 kbexqt_new = similar(kbexqt_old);
+
+nvar_sumres = 15
+sumres = zeros(n, nvar_sumres)
 ################ 
 iter = 0
 @elapsed while !isequal(kbexqt_old,kbexqt_new)
@@ -224,17 +225,14 @@ iter = 0
         end
     end
 
-    ddp = DiscreteDP(R, Q, discount);
-    @elapsed results = solve(ddp, PFI)
+    ddp = QuantEcon.DiscreteDP(R, Q, discount);
+    results = QuantEcon.solve(ddp, PFI)
 
-    # interpreting results
     values = results.v;
     policies = results.sigma;  # optimal policy     
 
     ###################################################################
     # summarising results
-    nvar_sumres = 15
-    sumres = zeros(n, nvar_sumres)
     for s_i in 1:n
 
         # states
@@ -255,23 +253,17 @@ iter = 0
             q = q_sa[s_i, pol]
             tau = tau_sa[s_i, pol]
             pdef = pdef_sa[s_i, pol]
-            pliq = pliq_sa[s_i, pol]    
+            gam = gam_sa[s_i, pol]    
             d = fn_D(k, b, x, q)
             Pi_liq = Pi_liq_sa[s_i, pol] 
             Pi_reo = Pi_reo_sa[s_i, pol] 
         else
-            q = 0
-            tau = 0
-            pdef = 0
-            pliq = 0
-            d = 0
-            Pi_liq = 0
-            Pi_reo = 0
+            q = pdef = d = gam = Pi_liq = Pi_reo = tau = 0
         end
 
         val = values[s_i]
 
-        sumres[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, pliq, d, val, Pi_liq, Pi_reo, tau]
+        sumres[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, gam, d, val, Pi_liq, Pi_reo, tau]
     end
 
 
@@ -279,6 +271,7 @@ iter = 0
     # Calculates probability of default given optimal k', b' policies that are given by x, e
     # Then it calculates q based on that
     for s_i in 1:n
+
         x_i = s_i_vals[s_i, 1]
         e_i = s_i_vals[s_i, 2]
     
@@ -287,12 +280,14 @@ iter = 0
             next_b = a_vals[a_i, 2]
     
             pdef_endo = 0
-            pliq = 0
+            gam = 0
             Pi_reo = 0
     
             for next_e_i in 1:e_size
+                
                 p_trans = e_chain.p[e_i, next_e_i]
                 x_next = fn_X(next_k, next_b, e_vals[next_e_i])
+
                 x_index = argmin(abs.(x_next .- x_grid))
                 xe_index = x_index + (next_e_i - 1) * x_size
     
@@ -301,18 +296,18 @@ iter = 0
                 next_def = a_i_vals[pol, 3]
     
                 pdef_endo += p_trans * next_def
-                pliq += p_trans * fn_chi(next_k, val)
+                gam += p_trans * fn_chi(next_k, val)
                 Pi_reo += p_trans * max(phi_c*val - zeta, 0)
             end
     
             pdef = 1 - ((1 - pdef_exo) * (1 - pdef_endo))
             Pi_liq = phi_a*(1-delta)*next_k
-            q, tau = fn_Tau_Q(pdef, pliq, Pi_liq, Pi_reo, next_b, tau_vec)
+            q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
 
 
             # saving results for summary
             pdef_sa[s_i, a_i] = pdef
-            pliq_sa[s_i, a_i] = pliq
+            gam_sa[s_i, a_i] = gam
             Pi_liq_sa[s_i, a_i] = Pi_liq
             Pi_reo_sa[s_i, a_i] = Pi_reo
             q_sa[s_i,a_i] = q 
@@ -323,10 +318,16 @@ iter = 0
     end
 
  kbexqt_new = sumres[:, [3, 4, 6, 15]]
+
 end
 
 
-column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :pliq, :d, :val, :Pi_liq_sa, :Pi_reo_sa, :tau]
-sumres_df = DataFrame(sumres, column_names)
-time_string = "$(Dates.day(now()))_$(Dates.hour(now()))$(Dates.minute(now()))$(Dates.second(now()))"
-XLSX.writetable("$time_string.xlsx", sheetname="sheet1", sumres_df)
+
+##### Print w = 1 results
+function PrintPol()    
+    column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :gam, :d, :val, :Pi_liq, :Pi_reo, :tau]
+    SumPol_df = DataFrame(sumres, column_names)
+    time_string = "$(Dates.day(now()))_$(Dates.hour(now()))$(Dates.minute(now()))$(Dates.second(now()))"
+    XLSX.writetable("$time_string.xlsx", sheetname="sheet1", SumPol_df)
+end
+PrintPol()    

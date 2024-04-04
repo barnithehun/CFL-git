@@ -1,15 +1,15 @@
 ########################################################################
-###x############## VER 5.3 -  functionize ver 5.1 ######################
+########### VER 7.1 -  Ver 5.2 with stationary distribution ############
 ########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays
-using SparseArrays, Dates, XLSX, DataFrames, Distributions
+using SparseArrays, Dates, XLSX, DataFrames, Distributions, Random
 
 function gridsize()
     # grids sizes - x,k,b should be even numbers!!
     return(
         x_size = 40,
-        e_size = 17,
+        e_size = 11,
         k_size = 30,
         b_size = 30)
 end
@@ -25,7 +25,7 @@ function parameters()
     beta = 0.96
     delta = 0.06
     pdef_exo = 0.04
-    discount = beta * (1 - pdef_exo)
+    discount = beta * (1-pdef_exo)
     phi_a = 0.4
     tauchen_sd = 4
     
@@ -125,15 +125,15 @@ function FirmOptim(wage)
                             x_far = x_close - 1
                         end
                         
-                        x_close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
+                        close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
             
                         # finding the correspoing indicies     
                         xe_close = x_close + (next_e_i-1)*x_size
                         xe_far = x_far + (next_e_i-1)*x_size
                         
                         # filling the transition matrix
-                        Q[s_i, a_i, xe_close] = p_trans*x_close_weight
-                        Q[s_i, a_i, xe_far] = p_trans*(1-x_close_weight)
+                        Q[s_i, a_i, xe_close] = p_trans*close_weight
+                        Q[s_i, a_i, xe_far] = p_trans*(1-close_weight)
 
                     else
                         xe_close = x_close + (next_e_i-1)*x_size
@@ -157,12 +157,17 @@ function FirmOptim(wage)
     kbexq_old = zeros(n,4)
     kbexq_new = fill(1,n,4)
     SumPol = zeros(n, 14)
-    policies = zeros(n,1)
+    iter = 0
     ################ 
     while !isequal(kbexq_old,kbexq_new)
 
-        kbexq_old = kbexq_new
-        
+        iter += 1
+        if iter > 80
+            println("Error: Iteration number exceeded 80")
+            break
+        end
+
+        kbexq_old = kbexq_new      
         R = fill(-Inf,  n, m);
         for a_i in 1:m           
                 # actions
@@ -269,13 +274,9 @@ function FirmOptim(wage)
 
                         if x_next < x_grid[end] && x_next > x_grid[1]
                             
-                            if x_next > x_grid[x_close]
-                                x_far = x_close + 1
-                                else
-                                x_far = x_close - 1
-                            end
+                            x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
                             
-                            x_close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
+                            close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
                 
                             # finding the correspoing indicies     
                             xe_far = x_far + (next_e_i-1)*x_size
@@ -284,9 +285,9 @@ function FirmOptim(wage)
                             next_def_far = a_i_vals[policies[xe_far], 3]
                             
                             # update endogeneous default probability
-                            pdef_endo += p_trans*(x_close_weight*next_def_close + (1-x_close_weight)*next_def_far)
+                            pdef_endo += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
 
-                        else # x_close_weight = 1
+                        else # close_weight = 1
                             pdef_endo += p_trans * next_def_close
                         end  
                     
@@ -303,9 +304,10 @@ function FirmOptim(wage)
         kbexq_new = SumPol[:, [3, 4, 7, 9]]
 
     end
+    println("Total 'main loop' iterations: ", iter)
 
-    ### Incumbent and exit dynamics ### 
-    # Fmat - from state n, what is the probability of ending up instate n', given optimal policy
+    ### Incumbent dynamics ### 
+    # Fmat - from state n, what is the probability of ending up in state n', given optimal policy
     Fmat = zeros(n-1,n-1)
     for s_i in 1:(n-1)
                
@@ -313,39 +315,32 @@ function FirmOptim(wage)
         next_k = SumPol[s_i, 3]
         next_b = SumPol[s_i, 4]
         
-        
-        e_i = Int(floor( (s_i-1) / x_size) + 1)    # x_i = s_i % x_size
+        e_i = Int(floor( (s_i-1) / x_size) + 1) 
         for next_e_i in 1:e_size
 
             p_trans = e_chain.p[e_i, next_e_i]
             x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
-            x_close = argmin(abs.(x_next .- x_grid))   
+            x_close = argmin(abs.(x_next .- x_grid))
             xe_close = x_close + (next_e_i-1)*x_size
 
             if x_next < x_grid[end] && x_next > x_grid[1]
                 
-                if x_next > x_grid[x_close]
-                    x_far = x_close + 1
-                    else
-                    x_far = x_close - 1
-                end
-                
-                x_close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
+                x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
+
+                close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
     
                 # finding xe_index     
                 xe_far = x_far + (next_e_i-1)*x_size
 
                 # filling Fmat
-                Fmat[s_i, xe_close] += p_trans * x_close_weight
-                Fmat[s_i, xe_far] += p_trans * (1-x_close_weight)                               
+                Fmat[s_i, xe_close] += p_trans * close_weight
+                Fmat[s_i, xe_far] += p_trans * (1-close_weight)                               
 
-            else # x_close_weight = 1
+            else # close_weight = 1
                 Fmat[s_i, xe_close] += p_trans
             end  
-        
-        end 
-        
+        end
     end
 
     return ( SumPol, e_chain, transpose(Fmat) )
@@ -366,8 +361,9 @@ end
 
     # entrant X distribution - x_e = 0  in every case 
     x_vals = unique(SumPol[:, 1])
+    zero_index = findall(x -> x == 0.0, x_vals)
     x_entry = zeros(length(x_vals))
-    x_entry[Int(length(x_vals)/2)] = 1 # if x = 0 prob = 1 
+    x_entry[zero_index .+ 0] .= 1 # if x = 0 prob = 1 
 
     #= alternative: x_e is a lognormal distribution
         x_dist = 200*LogNormal(0.4,0.4)-300
@@ -428,11 +424,11 @@ function stat_dist(SumPol, Fmat, f0)
     m = 10000/Nd
     mu = m.*mu_0
 
-    return ( mu, m , xpol)
+    return ( mu, m , xpol )
         
 end
 
-########## RESULTS ###########
+####################### RESULTS ############################
 x_size, e_size, _, _ = gridsize()
 mu, m, xpol = stat_dist(SumPol, Fmat, f0)
 n = size(SumPol,1)-1
@@ -441,7 +437,6 @@ totalmass = sum(mu)
 exitmass=transpose(mu)*xpol 
 entrymass = m*(1-transpose(xpol)*f0)  # m, needs to be adjusted with the firms that decide to quit immidiately
 exitshare = exitmass/totalmass
-
 
 totK = transpose(mu)*SumPol[1:n,3]
 totB = transpose(mu)*SumPol[1:n,4]
@@ -464,7 +459,6 @@ avg_rate = 1/((transpose(mu) *SumPol[1:n,9])/totalmass)-1
 avg_prod = transpose(mu) * ifelse.(isnan.(SumPol[1:n,11] ./ SumPol[1:n, 10]) .| isinf.(SumPol[1:n,11] ./ SumPol[1:n, 10]), 0, SumPol[1:n,11] ./ SumPol[1:n, 10]) / totalmass
 
 ############ Distribution results ############
-
 function StatDist(binnum, var::Char, SumPol)
 
     char_to_number = Dict('k' => 3, 'b' => 4, 'l' => 10, 'y' => 11, 'p' => 12, 'd' => 13)
@@ -519,7 +513,7 @@ function plotCDF(binnum, var::Char, SumPol)
 end
 
 # REINSERT dividends
-binnum = 8
+binnum = 10
 plot(plotPDF(binnum, 'k', SumPol),
      plotPDF(binnum, 'b', SumPol),
      plotPDF(binnum, 'l', SumPol),
@@ -533,8 +527,7 @@ plot(plotCDF(binnum, 'k', SumPol),
      plotCDF(binnum, 'b', SumPol),
      plotCDF(binnum, 'l', SumPol),
      plotCDF(binnum, 'y', SumPol),
-     plotCDF(binnum, 'p', SumPol),
-     plotCDF(binnum, 'd', SumPol), layout=(2,3), size=(1200, 800))
+     plotCDF(binnum, 'p', SumPol), layout=(2,3), size=(1200, 800))
 
 # stationary x distribution
 x_dist = zeros(x_size)
@@ -552,7 +545,136 @@ plot(bar(string.(round.(exp.(e_chain.state_values))), e_dist, title = "e_dist"),
      bar(string.(round.(unique(SumPol[:, 1])./1000)),  x_dist, title = "x_dist"), 
     layout=(2,1), size=(1200, 800))
 
-#Print w = 1 results
+
+###### Exit and Entry decision ######
+# entry means not exiting after the productivity and x draw - so they are the same decision
+ExitPol = fill(NaN, e_size, 1)
+for s_i in 1:n 
+    
+    e_i = Int(floor( (s_i-1) / x_size) + 1)  
+    x_i = (s_i % x_size == 0) ? x_size : (s_i % x_size)
+
+    if x_i != 1 && xpol[s_i] != 1 && xpol[s_i-1] == 1
+        ExitPol[e_i,1] = SumPol[x_i,1]
+    end
+end
+plot(string.(round.(exp.(e_chain.state_values))), ExitPol, title=var, xrotation=45, legend=false, linewidth=3)
+
+#### Firm evolution - LLN ####
+function xe_evolution(SumPol, Fmat, periods)
+
+    n = size(SumPol,1)-1
+    xpol = SumPol[1:n,6] + SumPol[1:n,7] # i do not account for exo exits
+    xpol_mat = Matrix(I,n,n) - Diagonal(xpol)
+    Mmat = Fmat*xpol_mat                 # transition matrix if entry
+
+    f_dist = fill(1.0, n, 1)
+    f_dist = (Mmat^periods)*f_dist
+
+    # stationary x distribution
+    x_dist = zeros(x_size)
+    for s_i in 1:e_size
+        x_dist += f_dist[1 + (s_i-1)*x_size : s_i*x_size]
+    end
+
+    # stationary e distribution
+    e_dist = zeros(e_size)
+    for s_i in 1:e_size
+        e_dist[s_i] = sum(f_dist[1 + (s_i-1)*x_size : s_i*x_size])
+    end
+
+    xedist = plot(bar(string.(round.(exp.(e_chain.state_values))), e_dist, title = "e_dist"),
+        bar(string.(round.(unique(SumPol[:, 1])./1000)),  x_dist, title = "x_dist"), 
+        layout=(2,1), size=(1200, 800))
+
+    return (xedist)
+
+end
+xe_evolution(SumPol, Fmat, 10)
+
+### Firm Evolution - Simulations ###
+# In this version, there are productivity shocks, you could consider a setup absent of them
+
+function xkb_simul(SumPol, Fmat; simn_length = 10000, e_i)
+
+    function next_si(Fvec)
+        
+        r = rand()  # uniform distribution between 0-1
+        cumulative_prob = 0.0
+        
+        for (i, prob) in enumerate(Fvec)
+            cumulative_prob += prob
+            if r < cumulative_prob
+                return i
+            end
+        end 
+
+        return length(Fvec)  # default to the last state if no transition
+        
+    end
+
+    simt_length = 10
+    simmat_k = fill(NaN, simn_length,simt_length);
+    simmat_b = fill(NaN, simn_length,simt_length);
+    simmat_x = fill(NaN, simn_length,simt_length);
+    for simn in 1:simn_length 
+
+        x_i = findall(x -> x == 0.0, unique(SumPol[:, 1]))[1]
+        s_i = x_i + (e_i-1)*x_size
+
+        for simt in 1:simt_length 
+
+            xpol = SumPol[s_i,6] + SumPol[s_i,7] 
+
+            if xpol != 1
+                
+                if simt == 1
+                    simmat_x[simn,simt] = SumPol[s_i,1]
+                    simmat_k[simn,simt] = SumPol[s_i,3]
+                    simmat_b[simn,simt] = SumPol[s_i,4]
+                else
+                    # Fmat is the transposed! transition matrix   
+                    Fvec = Fmat[:,s_i]
+                    s_i = next_si(Fvec)
+                    simmat_x[simn,simt] = SumPol[s_i,1]
+                    simmat_k[simn,simt] = SumPol[s_i,3]
+                    simmat_b[simn,simt] = SumPol[s_i,4]
+                end
+
+            else
+                break
+            end
+        end
+    end
+
+    meanX = zeros(simt_length)
+    meanK = zeros(simt_length) 
+    meanB = zeros(simt_length)
+    n_share = zeros(simt_length)
+    for simt in 1:simt_length 
+
+        meanX[simt, 1] = mean(filter(!isnan, simmat_x[:, simt]))
+        meanK[simt, 1] = mean(filter(!isnan, simmat_k[:, simt]))
+        meanB[simt, 1] = mean(filter(!isnan, simmat_b[:, simt]))
+        n_share[simt, 1] =   (simn_length - length(filter(!isnan, simmat_x[:, simt])))/simn_length
+
+    end
+
+    x_axis = 1:simt_length
+
+    plott1 = plot(x_axis, meanX, label="X", linewidth=3)
+    plot!(x_axis, meanK, label="K'", linewidth=3) 
+    plot!(x_axis, meanB, label="B'", linewidth=3)
+    
+    plott2 = plot(x_axis, n_share, label="share of exits", linewidth=3)
+    
+    return ( plot(plott1, plott2, layout=(1,2), size=(1200, 800))   )
+
+end
+
+xkb_simul(SumPol, Fmat, simn_length = 100000, e_i = 9)
+
+##### Print w = 1 results
 function PrintPol()    
     column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :l, :y, :Pi, :d, :val]
     SumPol_df = DataFrame(SumPol, column_names)
@@ -562,8 +684,6 @@ end
 PrintPol()    
 
 
-# DOCUMENT EXIT AND ENTRY POLICIES - FIND A WAY TO PLOT THEM
-# FIND A WAY TO STUDY FIRM DYNAMICS - SIMULATIONS WOULD BE A WAY FORWARD (SEE KT13)
-	
-	
-	
+# PRLY WILL HAVE TO REWIRTE WITH A MORE INTERESTING ENTRY X
+# RE-DO THE MODEL WITH ENTRY COSTS
+

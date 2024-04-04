@@ -234,17 +234,6 @@ The borrower chooses $\tau$ to maximize the sum of these two values. Since both 
 \newpage
 
 \section*{General Notes}
-\textbf{Firm dynamics}: The way to think about it is probably as follows, what I have in ver6 describes firm decisions. That is, optimal $(k',b', \tau', def, exit)$. The exit and default decision shows the outflow of firms. The inflow of firms is given by the mass of the potential entrants, their distribution $(x, \varepsilon)$ and their decisions to enter given the value functions calculated above. So what you have to do probably is to save firm decisions, look at other models how they calculate the stationary distribution of firms and imitate that. Will not be able to use the built in version - there is a Hopenhayn model code in Julia so lets try to look at that.  \vspace{3mm} \\
-\noindent \textbf{Make it work in functions}: granular approach:
-\begin{itemize}
-    \item Set model parameters in a function (as in discreteDP.jl)
-    \item Make a set\_grid function that takes in the grid dimensions outputs s\_vals, s\_i\_vals, a\_vals, a\_i\_vals
-    \item Make a setQ function (inputs: grids and parameters; outputs: Q)
-    \item Make a setR function (inputs: grids and parameters, default prob. and Q; outputs: R)
-    \item Make a update\_q function - containing the 'sumres loop' and the 'update loop'
-    \item Solve through the model but now only with the function call
-\end{itemize}
-It might be better to just make a huge "firmoptim" function that takes in grids and parameters and results in firm policies: $(k',b', \tau', def, exit)$. This would be easier to integrate in the Hopenhayn framework, where you still need and entry dynamics and a stationary distribution if firms to have a complete description of the production section - \textbf{went with this.} \vspace{3mm} \\
 \textbf{Taking logarithmic grids}: Results with logarithmic grids are not perfect, but they generally make sense. The problem is that some low cash on hand firms prefer to just produce a lot in the current period without accumulating assets - their production is financed by external finance almost entirely and their next period cash on hand is stuck at a low value. This is especially true for high productivity firms. This is not a bug (see the steadily increasing value in $x$) and it is not necessarily a problem, but it is a bit weird that firms of the same productivity do not converge to the same cash on hand - should check it under CFL borrowing. I should also add that this in every calibration, under some certain values very few firms actually do this. Making the discount parameter closer to one would probably solve this problem.   \vspace{3mm} \\
 \textbf{Allowing for financial savings}:  Allowing $b$ to be negative means that a lot of firms with low productivity but high cash on hand do not exit immediately, but dismantles capital stock gradually. This would yield a gradual decline of financial wealth. Overall, results are nicer and converge faster, but of coarse the grid becomes less granular. With log grids and negative financial savings the model does not converge.  \vspace{3mm} \\
 \textbf{The productivity process (Tauchen's method)}: \\
@@ -288,6 +277,23 @@ There is a mass ($m$) of potential entrants that may enter after production has 
 Define the joint starting distribution of $\Gamma(x,\varepsilon)$. Since $(x,\varepsilon)$ are independent in the beginning, you can just define the two distributions separately. The common practice is to set entrant productivity distribution equal to the stationary distribution implied by the Markov Chain. Having an entry cost also justifies setting a $x_e$ distribution with negative values. In this case, the firm co-finances entry with the household. If the firm decides to exit without taking part in production the household gets $x_e - c_e$, meaning that $c_e$ is treated as a sunk cost. An interesting approach is to set the entry cost such that the equilibrium wage is equal to 1. Then you would not have to mention the large entry cost in the calibration - although this is not necessarily a problem. For now, I am choosing x=0 for all entrants because it is clearer. However, you might want to consider the x-distribution approach later, that might yield larger effects on the intensive margin. \vspace{3mm} \\
 \textbf{In the current model}, entrants enter at the beginning with $x = 0$ (to keep things simple), they do not take part in production but may pay dividends and exit or default. These assumptions ensure that they face the same optimization as incumbents, so I do not have to solve a separate VFI for entrants. Their entry cost $c_e$ and starting cash on hand $x_e$ is financed by the household. If they exit or default immediately $x_e$ is rebated to the HH and $c_e$ is lost. This implies a stationary distribution of:
 $$ \mu = F(I-\text{diag}(X)) \mu + m(I-\text{diag}(X))f^0 $$
+\newpage
+
+\subsubsection*{Interpretation of model results}
+\textbf{Entry on the extensive margin.} I study if CF-based borrowing affects the extensive entry margin for firms. I find that there are no significant differences between the ABL and the CFL case - this somewhat contradicts preliminary runs. However, this is not such a big shortcoming, with the current calibration productive firms still enter with around -20000 of cash on hand. There is no realistic way to justify this sort of cash on hand upon entry. \vspace{3mm} \\
+\textbf{Comparing ABL and CFL case.} I extend the calibrated model version where firms only have access to ABL debt (ABL-case), to the model where there may choose either (CFL-case). Sanity check: the CFL case where the cost of CFL is prohibitive is equivalent to the ABL case. The differences are the following: 
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item When firms do not have access to CFL debt, they often hold more capital. This can occasionally be seen on the long-run. Firms hold more capital after they have reached their optimal size when there is no CFL lending available. This is even more pronounced when firms enter the market with negative cash on hand. In this case, they can pay their previous debts only if they buy a lot of next periods' capital, which gives them access to a lot of debt.
+    \item The main difference between ABL and CFL cases, is that in the latter case the most productive firms have a better access to external finance, which means that they rarely borrow for a $q$ much different from $\beta$. This allows them to pay higher dividends and realize higher values. However, this does not always realize in higher capital or debt - this may be partly explained by the incentive to over-borrow in the ABL case, but its also possible that the grid is not fine enough. Later, in firms' life-span these differences evaporate as firms become unconstrained.
+    \item Large recovery rates for banks also implies that firms can run a bigger chance of default without increasing the external finance premium too much.
+    \item The largest effect could be through the change of values, with changes the entry decision and affects wages. These effects are probably not huge but still considerable. If you want to increase the effect of CFL lending on the stationary equilibrium, consider calibrations that change the value of entrants.
+\end{itemize} \normalsize
+\textbf{Ex-ante default probability.} Theoretically, the question is what I consider the focus of the analysis - the liquidation probability or the fixed cost of reorganization. The model may seem more realistic when you focus on the fixed cost of reorganization, which yields endogenous liquidation probabilities. However, this must be derived from the liquidation decision which is also unrealistic. Exogenous liquidation probabilities, would be less realistic but it would save me from \vspace{3mm} \\
+In the current model, default probabilities are endogenously defined by the expectation of the liquidation decision. However it seems that endogenous $\gamma$-s complicate the model a lot. First, a model where these cannot be set, must be adjusted through $\zeta$ and $\phi_c$, which is more cumbersome. Second, sometimes it yields weird results. For instance, in a case where reorganization costs are prohibitive, the lender can predict with certainty that the firm will be liquidated, which may even yield more relaxed credit conditions. Fixed liquidation probabilites would probably yield a more stable model.
+How to implement these, probably the best approach is to look at the production of firms and fit a decreasing curve through it that is informed by IDB data. How to do it in practice is less obvious. \vspace{3mm} \\
+\textbf{Exogenous default}: having this in the model means that firms have no incentive to accumulate cash on hand. This implies that firm growth basically typically happens in 3-4 period. After that point the firm has no incentive to accumulate more cash on hand and is effectively unconstrained. Therefore, it might be interesting to consider cases where, there is not exogenous default (set Pdef-exo = 0 or take it out of the discount). If you do this firms accumulate cash on hand over time. They use this to finance capital investments, so they do not need to hold debt (in this case negative debt may make more sense).  \vspace{3mm} \\ However, in firm dynamics, firm reaction is not linear, at some point firms decide to limit production in order to accumulate cash flow faster. This leads to this wobbly dynamic behavior which is not really nice. This should be better explored but I am not sure how to do it practically. Probably the best way to do it is to assume that firms can steal $b$ and just keep $x$. This way you keep up high borrowing rates. Alternatively, you can assume that firms keep $(x-b)$ which is more realistic but it decreases interest rates. Either way, this requires rewriting the Q-matrix. \vspace{3mm} \\
+\textbf{Firm dynamics} As its stands in earlier model version Fmat does not take into account exits in firm dynamics. This does not affect optimal firms choices (those are informed by Q and R) but it affects stationary distribution. Big masses of firms pile up in weird steady states that are associated with high liquidation probability. In later versions (up from ver7.3) this is fixed. Transition values in Fmat are scaled down with the endogeneous default probability, and a separate column for default-state is added. Overall the differences after the update are not large, but still visible. Put more effort into modeling the dynamics such as this! It would be possible to do the same thing with pdef-exogenous !!!
+
 \newpage
 \subsection*{Notes on reference papers' estimation part}
 \subsubsection*{Khan and Thomas - 2013}
@@ -343,6 +349,7 @@ $$ \mu = F(I-\text{diag}(X)) \mu + m(I-\text{diag}(X))f^0 $$
 \subsubsection*{ToDo - Literature and writing}
 \begin{itemize}\setlength\itemsep{0em} \small
     \item Rewrite the literature review a bit to be more like the presentation slides
+    \item Recalculate the sums the household gets after liquidation and reorganization, remember that households must pay some of the reorganization cost that is equal to $(1-\tau)\zeta$
     \item Find the inefficient liquidation vs. efficient reorganization quote \checkmark 
     \item Read more on inefficient liquidation \checkmark
     \item Read a take notes of the reference papers' estimation and results sections \checkmark
@@ -360,9 +367,8 @@ $$ \mu = F(I-\text{diag}(X)) \mu + m(I-\text{diag}(X))f^0 $$
     \item Have a Pols, Reduced Pols and FE  setup - the firms level regression is confusing
     \item Are there non-linearities in reliance on CF based lending and leverage? - intuition is that it should pick up sharply after 0.6-0.7 when the debt cannot be fully collateralized anymore
     \item Look at lifecycle effects - at which phase of their lifecycle firms borrow against future cash flows. Similarly, look at the pecking order effects when it comes to borrowing CF vs. AB
-    \item Search for target-able moments in the data: cash on hand
-    \item Also look into distributions of interesting variables
-    \item Need more information on exit and entry dynamics
+    \item Search for target-able moments in the data such as cash on hand
+    \item Find more information on exit and entry dynamics
 \end{itemize} \normalsize
 
 \subsubsection*{ToDo - Model}
@@ -384,11 +390,37 @@ $$ \mu = F(I-\text{diag}(X)) \mu + m(I-\text{diag}(X))f^0 $$
     \item Find the ratios to match - debt to asset, size distribution of firms, default rates, exit rates (those with a data equivalent are preferable), share of entrants, employment share of  entrants \checkmark
     \item Make a loop that solves the model multiple times and prints equilibrium values \checkmark
     \item Implement stationary distribution taking into account the exits due to exogenous defaults \checkmark
-
+    \item Document and plot exit and entry policies \checkmark
+    \item Find a way to study firm dynamics - simulations would be a way forward \checkmark
+    \item As it stands now a lot of productivity states (almost half) do not enter under any cash on hand. Consider shifting the productivity distribution to the right, to root these out
+    \item The entry x-values are not ok, because I changed the grid - fix it \checkmark
+    \item Expand to the case where debt contracts are heterogeneous! \checkmark
+    \begin{itemize}
+        \item Implement ver6 in ver5.3: highlight the differences  \checkmark
+        \item Establish PIliq and PIreo; in the code: \checkmark 
+        \item Build in a maxiter backstop in the function \checkmark
+    \end{itemize}
+    \item Reorganize results discussion, steady state functionize results  \checkmark
+    \item Average rates are not valid as is - fix them using loops because it is more intuitive  \checkmark
+    \item Establish an exogenous liquidation probability for each capital value 
+    \item Plot optimal policies, with of d,q,k,b,value etc. at different cash on hand values. It seems that there are some significant differences there!
+    \item Look into cases where $\zeta$ changes across firms
+    \item Look into solving the model such that Ce is fixed and the wage is found with a bisection
+    \item Could define unconstrained as q $\approx$ beta - not true, sometimes large firms allow a bit lower q. This is probably do to the exogenous default probability \checkmark
+    \item Do a calibration version of 7.2 with bisection implemented
+    \item There is a reason behind shifting the productivity distribution of entrants, because as is very few enters with a viable productivity
+    \item Second check functions and Q matrix  \checkmark
+    \item Fix Fmat!   \checkmark    
+        \begin{itemize}
+        \item Consider first a model solution where you calculate the probability of default with Fmat values, then scale down Fmat with def-prob and add an extra state to it that corresponds to the exit case (use endogenous default probabilities)  \checkmark
+        \item Update the rest of the function for the additional steady state  \checkmark
+        \item See how this affects the stationary distribution \checkmark
+        \item Documents and second check the differences  \checkmark
+    \end{itemize}
+    \item Fix exit/entry and mass summary statistics - its probably not correct right now  
 \end{itemize} \normalsize
 
 \newpage
-
 
     
 \end{document}
