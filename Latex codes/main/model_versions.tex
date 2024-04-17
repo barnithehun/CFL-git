@@ -189,7 +189,7 @@ I will use this formula in the following.
 \section*{Summary of models up to Ver 5}
 
 \textbf{Measure of size problem}: The cash on hand approach does not have a good measure of current size. The current cash on hand might be misleading since large debt might cancel out large capital stocks. You could do next periods' expected cash on hand, or next period's capital stock. \vspace{3mm} \\
-\textbf{On interest rates}: You can rarely see default probabilities over 4\%. This is because the probability of default jumps at some point at a certain debt policy. This implies very high interest rates, which is not a good deal for the firm. Therefore in most cases, firms stop short of high levels of debt that would increase their default probabilities too much. \vspace{3mm} \\
+\textbf{On interest rates}: You can rarely see default probabilities over 4\%. This does not mean that financial frictions are not significant. This is because the probability of default jumps at some point at a certain debt policy. This implies very high interest rates, which is not a good deal for the firm. Therefore in most cases, firms stop short of high levels of debt that would increase their default probabilities too much. \vspace{3mm} \\
 \textbf{On debt debt policy of firms}: Here firms discount future by $\beta(1-P_\chi)$, whereas the fully secured interest rate is $\beta$. Therefore, when the firms manages to be fully secured, it prefers to hold a lot of debt and pay higher dividends, because if it defaults next period it might have to fall back on limited liability. This implies that even large, cash rich companies hold a lot of debt. Not a bad result, but probably not for the right reasons. \vspace{3mm} \\
 \textbf{Firm growth}: Firms grow very quickly to their efficient sizes. A firm with no cash on hand has easy access to a lot of debt, and can grow out of cash-poorness very quickly. This might be a problem when I want to focus low wealth but productive firms. Try the reparametrization of the model - although gains here will probably be limited. Also you can also try adding a fixed cost of liquidation (paid by the lender). The advantage of this is that it can be treated purely as a calibration parameter (as opposed to default probability and resale value of capital) \vspace{3mm} \\
 \textbf{Conceptualizing negative cash on hand}. How would a firm enter with negative cash on hand? You can add entry costs (usually they are needed anyways). Also you can suppose that these are distributed in a way that firms with large and negative cash on hand may enter. This is needed if you want to have cash poor but productive firms in the model. 
@@ -402,26 +402,32 @@ How to implement these, probably the best approach is to look at the production 
     \end{itemize}
     \item Reorganize results discussion, steady state functionize results  \checkmark
     \item Average rates are not valid as is - fix them using loops because it is more intuitive  \checkmark
-    \item Establish an exogenous liquidation probability for each capital value 
-    \item Plot optimal policies, with of d,q,k,b,value etc. at different cash on hand values. It seems that there are some significant differences there!
-    \item Look into cases where $\zeta$ changes across firms
-    \item Look into solving the model such that Ce is fixed and the wage is found with a bisection
+    \item Plot optimal policies, with of d,q,k,b,value etc. at different cash on hand values. It seems that there are some significant differences there! \checkmark
+    \item Look into solving the model such that Ce is fixed and the wage is found with a bisection \checkmark
     \item Could define unconstrained as q $\approx$ beta - not true, sometimes large firms allow a bit lower q. This is probably do to the exogenous default probability \checkmark
-    \item Do a calibration version of 7.2 with bisection implemented
-    \item There is a reason behind shifting the productivity distribution of entrants, because as is very few enters with a viable productivity
+    \item Do a calibration version of 7.3 with bisection implemented \checkmark
     \item Second check functions and Q matrix  \checkmark
-    \item Fix Fmat!   \checkmark    
+    \item Fix Fmat! \checkmark    
         \begin{itemize}
         \item Consider first a model solution where you calculate the probability of default with Fmat values, then scale down Fmat with def-prob and add an extra state to it that corresponds to the exit case (use endogenous default probabilities)  \checkmark
         \item Update the rest of the function for the additional steady state  \checkmark
         \item See how this affects the stationary distribution \checkmark
         \item Documents and second check the differences  \checkmark
     \end{itemize}
-    \item Fix exit/entry and mass summary statistics - its probably not correct right now  
+    \item Fix exit/entry and mass summary statistics - its probably not correct right now   
+    \item Look into cases where $\zeta$ changes across firms
+    \item Establish an exogenous liquidation probability for each capital value 
+    \item The effects of CFL borrowing on entry value is subdued because only in two entry states CFL borrowing is worth it. The value of entering is significantly different only in these states. Incidentally, the probability of entering in these states are low. To amend this, either change the entry productivity distribution, or change $\zeta$ such that CF borrowing becomes available.
 \end{itemize} \normalsize
 
 \newpage
-
+\subsection*{Summary notes - 10.04}
+\begin{itemize}
+    \item A more elegant way to solve exogenous defaults is to set up a productivity process that may teleport firms to the lowest productivity. This would not generate incentives to get rid of all cash on hand, since firms could still choose to exit. Another benefit is that you have to change just the productivity process.
+    \item Add a fixed cost of liquidation to be paid by the lender. This may increase financial frictions, and reduce firm dynamism.
+    \item Consider the possibility of financial savings (negative debt)
+    \item 
+\end{itemize}
     
 \end{document}
 

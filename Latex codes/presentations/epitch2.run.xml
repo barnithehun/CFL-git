@@ -44,11 +44,11 @@
   <internal package="biblatex" priority="9" active="1">
     <generic>latex</generic>
     <provides type="dynamic">
-      <file>bbag_ver3.aux</file>
-      <file>bbag_ver3-blx.bib</file>
+      <file>epitch2.aux</file>
+      <file>epitch2-blx.bib</file>
     </provides>
     <requires type="dynamic">
-      <file>bbag_ver3.bbl</file>
+      <file>epitch2.bbl</file>
     </requires>
     <requires type="static">
       <file>blx-dm.def</file>
@@ -67,20 +67,20 @@
     <cmdline>
       <binary>bibtex</binary>
       <option>-min-crossrefs 2</option>
-      <infile>bbag_ver3</infile>
+      <infile>epitch2</infile>
     </cmdline>
     <input>
-      <file>bbag_ver3.aux</file>
+      <file>epitch2.aux</file>
     </input>
     <output>
-      <file>bbag_ver3.bbl</file>
+      <file>epitch2.bbl</file>
     </output>
     <provides type="dynamic">
-      <file>bbag_ver3.bbl</file>
+      <file>epitch2.bbl</file>
     </provides>
     <requires type="dynamic">
-      <file>bbag_ver3.aux</file>
-      <file>bbag_ver3-blx.bib</file>
+      <file>epitch2.aux</file>
+      <file>epitch2-blx.bib</file>
     </requires>
     <requires type="editable">
     </requires>

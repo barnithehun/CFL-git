@@ -1,14 +1,14 @@
 ########################################################################
-############### VER 7.3 - updated productivity process #################
+########### VER 7.4 - exogeneous liquidation probability ###############
 ########################################################################
 
-using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, SparseArrays, Dates, XLSX, DataFrames, Distributions, Random
+using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, Dates, XLSX, DataFrames, Distributions, Random, CSV
 
 function gridsize()
     # grids sizes - x,k,b should be even numbers!!
     return(
         x_size = 50,
-        e_size = 17,
+        e_size = 11,
         k_size = 40,
         b_size = 40)
 end
@@ -20,7 +20,7 @@ function parameters()
     DRS = 0.75
     alpha = 1/3 * DRS
     nu = 2/3 * DRS
-    pc = 15
+    pc = 1000
     beta = 0.96
     delta = 0.06
     pdef_exo = 0.04
@@ -465,7 +465,7 @@ function PrintPol()
     time_string = "$(Dates.day(now()))_$(Dates.hour(now()))_$(Dates.minute(now()))_$(Dates.second(now()))"
     XLSX.writetable("$time_string.xlsx", sheetname="sheet1", SumPol_df)
 end
-PrintPol()    
+# PrintPol()    
 
 ################ Results: steady state values ###################
     function sumSS(SumPol,Fmat,f0)
@@ -493,7 +493,7 @@ PrintPol()
         meanY = totY / totalmass 
 
         # here LIE does not work bc. Im averaging ratios - loop is more readible than the vectorized version
-        avg_b2k, mu_b2k, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL = 0, 0, 0, 0, 0, 0, 0, 0
+        avg_b2k, mu_b2k, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL, SMEshare = 0, 0, 0, 0, 0, 0, 0, 0, 0
         for s_i in 1:n
 
             if (SumPol[s_i,6] + SumPol[s_i,7]) != 1
@@ -515,19 +515,23 @@ PrintPol()
                 avg_CFL += mu[s_i]/totalmass * SumPol[s_i,17]
                 mu_CFL += mu[s_i]/totalmass
             end  
-            
 
+            if SumPol[s_i, 3] != 0 && (SumPol[s_i, 3]+SumPol[s_i, 1]) <= 5000 # smake definition
+                SMEshare += mu[s_i]/totalmass
+            end
+            
         end
         avg_q = avg_q / mu_q
         avg_b2k = avg_b2k / mu_b2k
         avg_prod = avg_prod / mu_prod # sanity check
         avg_CFL = avg_CFL / mu_CFL
+        SMEshare = SMEshare / mu_CFL # mu_CFL has the same condition in the denominator
 
         CFshare = (transpose(mu)*(SumPol[1:n,4] .* SumPol[1:n,17]))  /  totB
 
-        results = zeros(18,1)
-        results[:,1] = vcat(totalmass, exitmass, entrymass, exitshare, totK, totB, totL, totY, totPi, YtoL, meanL, meanK, meanY, avg_b2k, avg_q, avg_prod, CFshare, avg_CFL)
-        varnames = ["totalmass", "exitmass", "entrymass", "exitshare", "totK", "totB", "totL", "totY", "totPi", "YtoL", "meanL", "meanK", "meanY", "avg_b2k", "avg_q", "avg_prod", "CFshare", "avg_CFL"];
+        results = zeros(19,1)
+        results[:,1] = vcat(totalmass, exitmass, entrymass, exitshare, totK, totB, totL, totY, totPi, YtoL, meanL, meanK, meanY, avg_b2k, avg_q, avg_prod, CFshare, avg_CFL, SMEshare)
+        varnames = ["totalmass", "exitmass", "entrymass", "exitshare", "totK", "totB", "totL", "totY", "totPi", "YtoL", "meanL", "meanK", "meanY", "avg_b2k", "avg_q", "avg_prod", "CFshare", "avg_CFL", "SMEshare"];
         results = NamedArray(results, names=( varnames, ["values"] ) ,  dimnames=("Res", "ParamVal"))
 
     return ( results )
