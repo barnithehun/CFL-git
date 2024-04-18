@@ -414,19 +414,22 @@ How to implement these, probably the best approach is to look at the production 
         \item See how this affects the stationary distribution \checkmark
         \item Documents and second check the differences  \checkmark
     \end{itemize}
-    \item Fix exit/entry and mass summary statistics - its probably not correct right now   
-    \item Look into cases where $\zeta$ changes across firms
-    \item Establish an exogenous liquidation probability for each capital value 
-    \item The effects of CFL borrowing on entry value is subdued because only in two entry states CFL borrowing is worth it. The value of entering is significantly different only in these states. Incidentally, the probability of entering in these states are low. To amend this, either change the entry productivity distribution, or change $\zeta$ such that CF borrowing becomes available.
+    \item Do the exogenous liquidation probability experiment (not sure if necessary because the endogenous model version produces okay liquidation probabilities too)
+        \begin{itemize}
+            \item Since it is theoretically consistent, define 'small firms' as assets under 50 million. 
+            \item Then isolate a liquidation probability in R for those that are under this threshold and over it
+            \item Define it in model version 7.4, in the update loop
+            \item Run experiments with it! - change the liquidation probabilities and see how access to CFL changes
+        \end{itemize}
+    \item Consider the alternative, where the and exogenous liquidation probability is defined for the entire distribution of firm sizes, given the R file - problem with this is that it is much less straightforward to run experiments on it
 \end{itemize} \normalsize
 
 \newpage
-\subsection*{Summary notes - 10.04}
+\subsection*{Summary notes - 10.18}
 \begin{itemize}
-    \item A more elegant way to solve exogenous defaults is to set up a productivity process that may teleport firms to the lowest productivity. This would not generate incentives to get rid of all cash on hand, since firms could still choose to exit. Another benefit is that you have to change just the productivity process.
     \item Add a fixed cost of liquidation to be paid by the lender. This may increase financial frictions, and reduce firm dynamism.
     \item Consider the possibility of financial savings (negative debt)
-    \item 
+    \item The effects of CFL borrowing on entry value is subdued because only in two entry states CFL borrowing is worth it. The value of entering is significantly different only in these states. Incidentally, the probability of entering in these states are low. To amend this, either change the entry productivity distribution, or change $\zeta$ such that CF borrowing becomes available.
 \end{itemize}
     
 \end{document}

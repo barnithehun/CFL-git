@@ -2,13 +2,14 @@
 ########### VER 7.4 - exogeneous liquidation probability ###############
 ########################################################################
 
-using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, Dates, XLSX, DataFrames, Distributions, Random, CSV
+using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, Dates, XLSX, DataFrames, Distributions, Random, CSV, Interpolations
+
 
 function gridsize()
     # grids sizes - x,k,b should be even numbers!!
     return(
         x_size = 50,
-        e_size = 11,
+        e_size = 7,
         k_size = 40,
         b_size = 40)
 end
@@ -20,7 +21,7 @@ function parameters()
     DRS = 0.75
     alpha = 1/3 * DRS
     nu = 2/3 * DRS
-    pc = 1000
+    pc = 15
     beta = 0.96
     delta = 0.06
     pdef_exo = 0.04
@@ -297,7 +298,6 @@ function FirmOptim(wage; phi_c)
                 next_b = a_vals[a_i,2]
 
                 pdef = 0
-                gam = 0
                 Pi_reo = 0
                 Pi_liq = phi_a*(1-delta)*next_k
 
@@ -323,21 +323,26 @@ function FirmOptim(wage; phi_c)
                         
                         close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
                         
-                        # value needed only for Pi_reo and gam
+                        # value needed only for Pi_reo
                         val = close_weight*val_close + (1-close_weight)*val_far    
 
                         pdef += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
-                        gam += p_trans * fn_chi(next_k, val) 
                         Pi_reo += p_trans * max(phi_c*val - zeta, 0)
 
                     else # close_weight = 1
                         val = val_close
                         pdef += p_trans * next_def_close
-                        gam += p_trans * fn_chi(next_k, val)
                         Pi_reo += p_trans * max(phi_c*val - zeta, 0)                        
                     end  
                 
                 end 
+
+                # Imported, empirical
+                if next_k <= 5000
+                    gam = 0.572
+                    else
+                    gam = 0.0583                
+                end
 
                 # saving results for summary
                 q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
@@ -426,10 +431,6 @@ function EntryValue(SumPol, e_chain)
 
 end
 
-wage = 1
-@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.7)
-c_e, f0 = EntryValue(SumPol, e_chain) # free entry condition
-
 ####### STATIONARY DISTRIBUTION ########
 function stat_dist(SumPol, Fmat, f0)
 
@@ -456,316 +457,6 @@ function stat_dist(SumPol, Fmat, f0)
         
 end
 
-# Print policies
-function PrintPol()    
-    mu, _, _ = stat_dist(SumPol, Fmat, f0)
-    column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :l, :y, :Pi, :d, :gam, :Pi_liq, :Pi_reo, :tau, :val, :SSpercent]
-    SumPoll = hcat(SumPol[1:end, :],round.(mu ./ sum(mu) .* 100, digits=4))
-    SumPol_df = DataFrame(SumPoll, column_names)
-    time_string = "$(Dates.day(now()))_$(Dates.hour(now()))_$(Dates.minute(now()))_$(Dates.second(now()))"
-    XLSX.writetable("$time_string.xlsx", sheetname="sheet1", SumPol_df)
-end
-# PrintPol()    
-
-################ Results: steady state values ###################
-    function sumSS(SumPol,Fmat,f0)
-        
-        mu, m, xpol = stat_dist(SumPol, Fmat, f0)
-        n = size(SumPol,1)
-        totalmass = sum(mu)
-
-        # THIS IS PRLY NOT CORRECT BUT IT ADDS UP AT LEAST
-        # this contains firms that exit immidiately which are not counted in the model
-        exitmass=transpose(mu)*xpol
-        entrymass = m*(1-transpose(xpol)*f0)  # m, needs to be adjusted with the firms that decide to quit immidiately
-        exitshare = exitmass/totalmass 
-
-        totK =  transpose(mu)*SumPol[1:n,3]
-        totB =  transpose(mu)*SumPol[1:n,4]
-        totL =  transpose(mu)*SumPol[1:n,10] # Ns = Nd
-        totY =  transpose(mu)*SumPol[1:n,11]
-        totPi = transpose(mu)*SumPol[1:n,12]
-
-        YtoL = totY/totL
-
-        meanL = totL / totalmass 
-        meanK = totK / totalmass 
-        meanY = totY / totalmass 
-
-        # here LIE does not work bc. Im averaging ratios - loop is more readible than the vectorized version
-        avg_b2k, mu_b2k, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL, SMEshare = 0, 0, 0, 0, 0, 0, 0, 0, 0
-        for s_i in 1:n
-
-            if (SumPol[s_i,6] + SumPol[s_i,7]) != 1
-                avg_q += mu[s_i]/totalmass * SumPol[s_i,9]
-                mu_q += mu[s_i]/totalmass
-            end
-
-            if SumPol[s_i,4] != 0 && SumPol[s_i, 3] != 0
-                avg_b2k += mu[s_i]/totalmass * SumPol[s_i,4] / SumPol[s_i, 3]
-                mu_b2k += mu[s_i]/totalmass
-            end  
-
-            if SumPol[s_i,11] != 0 && SumPol[s_i, 10] != 0
-                avg_prod += mu[s_i]/totalmass * SumPol[s_i,11] ./ SumPol[s_i, 10]
-                mu_prod += mu[s_i]/totalmass
-            end  
-
-            if  SumPol[s_i, 3] != 0
-                avg_CFL += mu[s_i]/totalmass * SumPol[s_i,17]
-                mu_CFL += mu[s_i]/totalmass
-            end  
-
-            if SumPol[s_i, 3] != 0 && (SumPol[s_i, 3]+SumPol[s_i, 1]) <= 5000 # smake definition
-                SMEshare += mu[s_i]/totalmass
-            end
-            
-        end
-        avg_q = avg_q / mu_q
-        avg_b2k = avg_b2k / mu_b2k
-        avg_prod = avg_prod / mu_prod # sanity check
-        avg_CFL = avg_CFL / mu_CFL
-        SMEshare = SMEshare / mu_CFL # mu_CFL has the same condition in the denominator
-
-        CFshare = (transpose(mu)*(SumPol[1:n,4] .* SumPol[1:n,17]))  /  totB
-
-        results = zeros(19,1)
-        results[:,1] = vcat(totalmass, exitmass, entrymass, exitshare, totK, totB, totL, totY, totPi, YtoL, meanL, meanK, meanY, avg_b2k, avg_q, avg_prod, CFshare, avg_CFL, SMEshare)
-        varnames = ["totalmass", "exitmass", "entrymass", "exitshare", "totK", "totB", "totL", "totY", "totPi", "YtoL", "meanL", "meanK", "meanY", "avg_b2k", "avg_q", "avg_prod", "CFshare", "avg_CFL", "SMEshare"];
-        results = NamedArray(results, names=( varnames, ["values"] ) ,  dimnames=("Res", "ParamVal"))
-
-    return ( results )
-
-    end
-
-    sumSS(SumPol,Fmat,f0)
-
-############ Results: stationary distributions ############
-    function StatDist(binnum, var::Char, SumPol)
-
-        char_to_number = Dict('k' => 3, 'b' => 4, 'l' => 10, 'y' => 11, 'p' => 12, 'v' => 18)
-        varnum = get(char_to_number, var, 0)
-        max = maximum(SumPol[:, varnum])
-
-        bins = [0; exp.(range(log(10), log(max+1), binnum-1))]
-        binfill = zeros(binnum, 1)
-        
-        n = size(SumPol,1)-1
-        for s_i = 1:n
-
-            val = SumPol[s_i,varnum] 
-            val_close = argmin(abs.(val .- bins))
-
-            if val_close != binnum
-                    
-                if val > bins[val_close]
-                    binfill[val_close + 1] += mu[s_i]
-                else
-                    binfill[val_close] += mu[s_i]
-                end
-
-            else
-                binfill[val_close] += mu[s_i]
-            end        
-        end
-
-        PDF = binfill ./ sum(binfill)
-        CDF = cumsum(PDF, dims = 1)
-
-        return ( PDF, CDF, bins ) 
-        
-    end
-    mu, m , xpol = stat_dist(SumPol, Fmat, f0)
-
-
-    function plotPDF(binnum, var::Char, SumPol)
-
-        PDF, _, bins = StatDist(binnum, var::Char, SumPol)
-        bin_labels = string.(round.(bins ./ 1000, digits=2))
-        plot = bar(bin_labels, PDF, title=var, xrotation=45)
-        return ( plot )
-
-    end
-
-    function plotCDF(binnum, var::Char, SumPol)
-
-        _, CDF, bins = StatDist(binnum, var::Char, SumPol)
-        bin_labels = string.(round.(bins ./ 1000, digits=2))
-        plott = plot(bin_labels, CDF, title=var, xrotation=45, legend=false, linewidth=3)
-        return ( plott )
-
-    end
-
-    binnum = 10
-    plot(plotPDF(binnum, 'k', SumPol),
-        plotPDF(binnum, 'b', SumPol),
-        plotPDF(binnum, 'l', SumPol),
-        plotPDF(binnum, 'y', SumPol),
-        plotPDF(binnum, 'p', SumPol),
-        plotPDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
-    plot(plotCDF(binnum, 'k', SumPol),
-        plotCDF(binnum, 'b', SumPol),
-        plotCDF(binnum, 'l', SumPol),
-        plotCDF(binnum, 'y', SumPol),
-        plotCDF(binnum, 'p', SumPol),
-        plotCDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
-
-
-    # XE distribution
-    function plotXE(SumPol, mu, e_chain)
-
-        x_size, e_size, _, _ = gridsize()
-            x_dist = zeros(x_size)
-        for s_i in 1:e_size
-            x_dist += mu[1 + (s_i-1)*x_size : s_i*x_size]
-        end
-
-        # stationary e distribution
-        e_dist = zeros(e_size)
-        for s_i in 1:e_size
-            e_dist[s_i] = sum(mu[1 + (s_i-1)*x_size : s_i*x_size])
-        end
-
-        return (plot(bar(string.(round.(exp.(e_chain.state_values))), e_dist, title = "e_dist"),
-                bar(string.(round.(unique(SumPol[:, 1])./1000)),  x_dist, title = "x_dist"), 
-                layout=(2,1), size=(1200, 800)))
-
-    end
-    plotXE(SumPol, mu, e_chain)
-
-############ Results: dynamics simulations ##############
-    # In this version, there are productivity shocks, you could consider a setup absent of them
-    function xkb_simul(SumPol, Fmat; simn_length = 10000, e_i)
-
-        function next_si(Fvec)
-            
-            r = rand()  # uniform distribution between 0-1
-            cumulative_prob = 0.0
-            
-            for (i, prob) in enumerate(Fvec)
-                cumulative_prob += prob
-                if r < cumulative_prob
-                    return i
-                end
-            end 
-
-            return length(Fvec)  # default to the last state if no transition
-            
-        end
-
-        x_size, e_size, _, _ = gridsize()
-
-        simt_length = 25
-        simmat_k = fill(NaN, simn_length,simt_length);
-        simmat_b = fill(NaN, simn_length,simt_length);
-        simmat_x = fill(NaN, simn_length,simt_length);
-        for simn in 1:simn_length 
-
-            x_i = findall(x -> x == 0.0, unique(SumPol[:, 1]))[1]
-            s_i = x_i + (e_i-1)*x_size
-
-            for simt in 1:simt_length 
-
-                xpol = SumPol[s_i,6] + SumPol[s_i,7] 
-
-                if xpol != 1
-                    
-                    if simt == 1
-                        simmat_x[simn,simt] = SumPol[s_i,1]
-                        simmat_k[simn,simt] = SumPol[s_i,3]
-                        simmat_b[simn,simt] = SumPol[s_i,4]
-                    else
-                        # Fmat is the transposed! transition matrix   
-                        Fvec = Fmat[:,s_i]
-                        s_i = next_si(Fvec)
-                        simmat_x[simn,simt] = SumPol[s_i,1]
-                        simmat_k[simn,simt] = SumPol[s_i,3]
-                        simmat_b[simn,simt] = SumPol[s_i,4]
-                    end
-
-                else
-                    break
-                end
-            end
-        end
-
-        meanX = zeros(simt_length)
-        meanK = zeros(simt_length) 
-        meanB = zeros(simt_length)
-        n_share = zeros(simt_length)
-        for simt in 1:simt_length 
-
-            meanX[simt, 1] = mean(filter(!isnan, simmat_x[:, simt]))
-            meanK[simt, 1] = mean(filter(!isnan, simmat_k[:, simt]))
-            meanB[simt, 1] = mean(filter(!isnan, simmat_b[:, simt]))
-            n_share[simt, 1] =   (simn_length - length(filter(!isnan, simmat_x[:, simt])))/simn_length
-
-        end
-
-        x_axis = 1:simt_length
-
-        plott1 = plot(x_axis, meanX, label="X", linewidth=3)
-        plot!(x_axis, meanK, label="K'", linewidth=3) 
-        plot!(x_axis, meanB, label="B'", linewidth=3)
-        
-        plott2 = plot(x_axis, n_share, label="share of exits", linewidth=3)
-        
-        return ( plot(plott1, plott2, layout=(1,2), size=(1200, 800))   )
-
-    end
-
-    x_size, e_size, _, _ = gridsize()
-    plot(xkb_simul(SumPol, Fmat, simn_length = 100000, e_i = e_size-2),
-        xkb_simul(SumPol, Fmat, simn_length = 100000, e_i = e_size-1),
-        xkb_simul(SumPol, Fmat, simn_length = 100000, e_i = e_size), layout=(4,1), size=(1200, 800))
-
-############ Results: policies ##############
-    @elapsed SumPolabl, _, _ = FirmOptim(wage, phi_c = 0)
-    @elapsed SumPolcfl, _, _ = FirmOptim(wage, phi_c = 0.7)
-
-    function plotPolicy(SumPolabl, SumPolcfl, e_val)
-        
-        SPabl = copy(SumPolabl)
-        SPcfl = copy(SumPolcfl)
-        xvals = string.(Int.(round.(unique(SPabl[:, 1]))))
-
-        n = size(SPabl, 1)
-        for s_i in 1:n
-        
-            SPabl[s_i, 6] + SPabl[s_i, 7] == 1 ? SPabl[s_i, :] .= NaN : SPabl[s_i, :]
-            SPcfl[s_i, 6] + SPcfl[s_i, 7] == 1 ? SPcfl[s_i, :] .= NaN : SPcfl[s_i, :]
-            
-        end
-        
-        x_size, _, _, _ = gridsize()
-        e_ind = e_val*x_size
-        
-        plott1 = plot(xvals, SPabl[e_ind-x_size+1:e_ind, 3], label="K", linewidth=3, alpha=0.8, xrotation=45)
-        plot!(xvals, SPcfl[e_ind-x_size+1:e_ind, 3], label="K0", linewidth=3, linestyle=:dash, alpha=0.8)
-        
-        plott2 =plot(xvals, SPabl[e_ind-x_size+1:e_ind, 4], label="B", linewidth=3, alpha=0.8, xrotation=45)
-        plot!(xvals, SPcfl[e_ind-x_size+1:e_ind, 4], label="B0", linewidth=3, linestyle=:dash, alpha=0.8)
-        
-        plott3 =plot(xvals, SPabl[e_ind-x_size+1:e_ind, 5], label="X", linewidth=3, alpha=0.8, xrotation=45)
-        plot!(xvals, SPcfl[e_ind-x_size+1:e_ind, 5], label="X0", linewidth=3, linestyle=:dash, alpha=0.8)
-        
-        plott5 =plot(xvals, SPabl[e_ind-x_size+1:e_ind, 9], label="q", linewidth=3, alpha=0.8, xrotation=45)
-        plot!(xvals, SPcfl[e_ind-x_size+1:e_ind, 9], label="q0", linewidth=3, linestyle=:dash, alpha=0.8)
-        
-        plott6 =plot(xvals, SPabl[e_ind-x_size+1:e_ind, 11], label="y", linewidth=3, alpha=0.8, xrotation=45)
-        plot!(xvals, SPcfl[e_ind-x_size+1:e_ind, 11], label="y0", linewidth=3, linestyle=:dash, alpha=0.8)
-        
-        plott7 =plot(xvals, SPabl[e_ind-x_size+1:e_ind, 18]-SPabl[e_ind-x_size+1:e_ind, 13], label="Continuation Value", linewidth=3, alpha=0.8, xrotation=45)
-        plot!(xvals, SPcfl[e_ind-x_size+1:e_ind, 18]-SPcfl[e_ind-x_size+1:e_ind, 13], label="Continuation Value0", linewidth=3, linestyle=:dash, alpha=0.8)
-        
-        return(plot(plott1, plott2, plott3, plott5, plott6, plott7, layout=(3,3), size=(1200, 1100)))
-        
-                    
-    end
-
-    plotPolicy(SumPolabl, SumPolcfl, 11)
-
-############ Results: solving for wage ##############
 function FindWage(wage; phi_c)  
 
     beta = parameters().beta
@@ -790,13 +481,47 @@ function FindWage(wage; phi_c)
 
 end
 
+################ Importing result functions ###################
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPol.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/plotPol.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/StatDist_plot.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/sumSS.jl")
+
+############ Results: stationary distributions ############
+wage = 1
+@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0)
+c_e, f0 = EntryValue(SumPol, e_chain) 
+
+mu, m , xpol = stat_dist(SumPol, Fmat, f0)
+PrintPol()    
+sumSS(SumPol,Fmat,f0)
+
+binnum = 10
+plot(plotPDF(binnum, 'k', SumPol), plotPDF(binnum, 'b', SumPol), plotPDF(binnum, 'l', SumPol),
+    plotPDF(binnum, 'y', SumPol), plotPDF(binnum, 'p', SumPol), plotPDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
+
+plot(plotCDF(binnum, 'k', SumPol), plotCDF(binnum, 'b', SumPol), plotCDF(binnum, 'l', SumPol),
+    plotCDF(binnum, 'y', SumPol), plotCDF(binnum, 'p', SumPol), plotCDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
+
+plotXE(SumPol, mu, e_chain)
+
+############ Results: dynamics simulations ##############
+x_size, e_size, _, _ = gridsize()
+plot(dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size-2),
+        dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size-1),
+        dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size), layout=(4,1), size=(1000, 800))
+
+############ Results: policies ##############
+@elapsed SumPolabl, _, _ = FirmOptim(wage, phi_c = 0)
+@elapsed SumPolcfl, _, _ = FirmOptim(wage, phi_c = 0.7)
+
+plotPol(SumPolabl, SumPolcfl, 11)
+
+############ Results: solving for wage ##############
+
 #Finding wage given entry cost, using bisection 
 tolerance = 1
-c_e = 812.0357021040768
-# c_e = 3626.022492315388
-c_e = 1822.1138130133795
-
-
 wage_abl = 1
 @elapsed SumPol, e_chain, Fmat = FirmOptim(wage_abl, phi_c = 0)
 c_e, f0 = EntryValue(SumPol, e_chain) # free entry condition
@@ -807,7 +532,3 @@ phi_c = 0.7
 SumPol, e_chain, Fmat = FirmOptim(wage_cfl, phi_c = phi_c)
 c_e_cfl, f0 = EntryValue(SumPol, e_chain)
 results_cfl = sumSS(SumPol,Fmat,f0)
-
-
-wage_cfl = 2.052978515625 
-wage_cfl = 1.028594970703125  # 1.05841064453125
