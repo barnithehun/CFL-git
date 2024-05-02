@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1713112694 "c:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/main/main.tex" "main.pdf" "main" 1713112699 0
+["pdflatex"] 1714378801 "c:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/main/main.tex" "main.pdf" "main" 1714378810 0
   "C:/Users/szjud/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1709919706 81247 50d52f6487769ef97fe2dc7d59ae1563 ""
   "C:/Users/szjud/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk" 1704724638 11548 518ed146d14d49e9c24c2e876f0970dc ""
   "C:/Users/szjud/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1200.pk" 1704724639 14064 d961c2f12feff7c106b46911040f3924 ""
@@ -122,12 +122,12 @@
   "C:/Users/szjud/AppData/Local/Programs/MiKTeX/tex/latex/tools/enumerate.sty" 1686255640 3468 a25a09d5c0a232a2d82e47496071c7fa ""
   "C:/Users/szjud/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "CFshare.png" 1704718806 109909 42d1d648e56d4c744386b13b4f70a240 ""
-  "c:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/main/main.tex" 1713112693 85248 1494ae54ee2eda0fac87a64a53a30d8d ""
+  "c:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/main/main.tex" 1714378799 85272 6601c056db82b68cbf927c8676f0b71f ""
   "cdf_country.png" 1704718806 232457 6ae95ba5a925d39766972e3da55c6453 ""
   "exit_entry.png" 1704718806 353572 1cc74db3f3a1b12a48e67efaad0b3bcf ""
-  "main.aux" 1713112699 12018 44e7299d9fd27159cb3d78198c27c240 "pdflatex"
-  "main.out" 1713112699 5593 985e68ed4010e424b4f505a883de0d69 "pdflatex"
-  "main.tex" 1713112693 85248 1494ae54ee2eda0fac87a64a53a30d8d ""
+  "main.aux" 1714378809 12018 44e7299d9fd27159cb3d78198c27c240 "pdflatex"
+  "main.out" 1714378809 5593 985e68ed4010e424b4f505a883de0d69 "pdflatex"
+  "main.tex" 1714378799 85272 6601c056db82b68cbf927c8676f0b71f ""
   "ridges.png" 1704718806 179798 5264ff2ccfb455d6ea312b48073d8174 ""
   "smoothcfd.png" 1709974992 187976 a70f39e43f7b883b4eaec597d8922af1 ""
   "smoothy_country.png" 1704718806 366800 6dcae2794f2dad4bc3db7cedd90906f4 ""

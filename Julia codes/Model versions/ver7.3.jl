@@ -82,7 +82,7 @@ function FirmOptim(wage; phi_c)
     # Setting the state-space
         # productivity process
         e_chain = tauchen(e_size, rho_e, sigma_e, (1-rho_e)*nul_e, tauchen_sd)
-        e_vals = exp.(e_chain.state_values)
+        e_vals = exp.(e_chain.state_values) 
         # adding exogeneous default shocks
         e_ptrans = e_chain.p .* (1-pdef_exo) 
         e_ptrans[:,1] = e_ptrans[:,1] .+ pdef_exo
@@ -402,7 +402,6 @@ function FirmOptim(wage; phi_c)
 
 end
 
-
 ####### ENTRANTS #######
 function EntryValue(SumPol, e_chain)  
 
@@ -478,20 +477,31 @@ function FindWage(wage; phi_c)
 end
 
 ################ Importing result functions ###################
-include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim.jl")
-include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPol.jl")
-include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/plotPol.jl")
-include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/StatDist_plot.jl")
-include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/sumSS.jl")
+    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim.jl")
+    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim2.jl")
+    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPol.jl")
+    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/plotPol.jl")
+    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/StatDist_plot.jl")
+    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/sumSS.jl")
+
+############ Results: calculation, only abl -> 0 ############ 
+wage = 1
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
+@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.7)
+
+c_e, f0 = EntryValue(SumPol, e_chain) 
+c_e0, f00 = EntryValue(SumPol0, e_chain0) 
+
+
+c_e0 / c_e 
+
+mu, m, xpol = stat_dist(SumPol, Fmat, f0)
+mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00)
 
 ############ Results: stationary distributions ############
-wage = 1
-@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.7)
-c_e, f0 = EntryValue(SumPol, e_chain) 
-
-mu, m , xpol = stat_dist(SumPol, Fmat, f0)
-PrintPol()    
+PrintPol()  
 sumSS(SumPol,Fmat,f0)
+sumSS(SumPol0,Fmat0,f00)
 
 binnum = 10
 plot(plotPDF(binnum, 'k', SumPol), plotPDF(binnum, 'b', SumPol), plotPDF(binnum, 'l', SumPol),
@@ -502,29 +512,32 @@ plot(plotCDF(binnum, 'k', SumPol), plotCDF(binnum, 'b', SumPol), plotCDF(binnum,
 
 plotXE(SumPol, mu, e_chain)
 
+binnum = 10
+Ushape(binnum, SumPol, mu)
+
 ############ Results: dynamics simulations ##############
 x_size, e_size, _, _ = gridsize()
 plot(dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size-2),
         dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size-1),
         dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size), layout=(4,1), size=(1000, 800))
 
-############ Results: policies ##############
-@elapsed SumPolabl, _, _ = FirmOptim(wage, phi_c = 0)
-@elapsed SumPolcfl, _, _ = FirmOptim(wage, phi_c = 0.7)
 
-plotPol(SumPolabl, SumPolcfl, 11)
+############ Results: compariaion of policies and firm dynamics ##############
+plotPol(SumPol0, SumPol, 6)
+dynsim2(6, 100000, 15)
+ProdDist(SumPol, mu, SumPol0, mu0)
+
 
 ############ Results: solving for wage ##############
-
 #Finding wage given entry cost, using bisection 
 tolerance = 1
-wage_abl = 1
-@elapsed SumPol, e_chain, Fmat = FirmOptim(wage_abl, phi_c = 0)
+wage_0 = 1
+@elapsed SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c = 0)
 c_e, f0 = EntryValue(SumPol, e_chain) # free entry condition
-results_abl = sumSS(SumPol,Fmat,f0)
+results_0 = sumSS(SumPol,Fmat,f0)
 
 phi_c = 0.7
 @elapsed wage_cfl = find_zero(wage -> FindWage(wage, phi_c = phi_c) - c_e, (0.9, 1.1), Bisection(), rtol=tolerance, verbose=true)
 SumPol, e_chain, Fmat = FirmOptim(wage_cfl, phi_c = phi_c)
-c_e_cfl, f0 = EntryValue(SumPol, e_chain)
+c_e, f0 = EntryValue(SumPol, e_chain)
 results_cfl = sumSS(SumPol,Fmat,f0)

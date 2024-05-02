@@ -1,6 +1,6 @@
 function StatDist(binnum, var::Char, SumPol)
 
-    char_to_number = Dict('k' => 3, 'b' => 4, 'l' => 10, 'y' => 11, 'p' => 12, 'v' => 18)
+    char_to_number = Dict('x' => 1, 'e' => 2, 'k' => 3, 'b' => 4, 'q' => 9, 'l' => 10, 'y' => 11, 'p' => 12, 'd' => 13, 't' => 17, 'v' => 18)
     varnum = get(char_to_number, var, 0)
     max = maximum(SumPol[:, varnum])
 
@@ -71,3 +71,91 @@ function plotXE(SumPol, mu, e_chain)
             layout=(2,1), size=(1200, 800)))
 
 end
+
+
+# Production distribution
+function ProdDist(SumPol, mu, SumPol0, mu0)
+
+    totY =  transpose(mu)*SumPol[:,11]
+    x_size, e_size, _, _ = gridsize()
+    pdf_prod = zeros(e_size)
+    cdf_prod = zeros(e_size)
+    for e_ind in 1:e_size
+        
+        pdf_intv = (e_ind-1)*x_size+1:e_ind*x_size
+        pdf_prod[e_ind] = (transpose(mu[pdf_intv]) * SumPol[pdf_intv,11]) / totY
+    
+        cdf_intv = 1:e_ind*x_size
+        cdf_prod[e_ind] = (transpose(mu[cdf_intv]) * SumPol[cdf_intv,11]) / totY
+        
+    end
+
+    totY = transpose(mu0)*SumPol0[:,11]
+    x_size, e_size, _, _ = gridsize()
+    pdf_prod0 = zeros(e_size)
+    cdf_prod0 = zeros(e_size)
+    for e_ind in 1:e_size
+        
+        pdf_intv = (e_ind-1)*x_size+1:e_ind*x_size
+        pdf_prod0[e_ind] = (transpose(mu0[pdf_intv]) * SumPol0[pdf_intv,11]) / totY
+
+        cdf_intv = 1:e_ind*x_size
+        cdf_prod0[e_ind] = (transpose(mu0[cdf_intv]) * SumPol0[cdf_intv,11]) / totY
+        
+    end
+    
+    x_axis = 1:e_size
+    plott1 = plot(x_axis, pdf_prod0, label="Production0", linewidth=3)
+              plot!(x_axis, pdf_prod, label= "Production", linestyle=:dash, linewidth=3)
+
+
+    plott2=  plot(x_axis, cdf_prod0, label="Cumulative Production0", linewidth=3)
+              plot!(x_axis, cdf_prod, label= "Cumulative Production", linestyle=:dash, linewidth=3)
+    
+    return ( plot(plott1, plott2, layout=(1,2), size=(900, 400)) )     
+    
+end
+
+
+
+function Ushape(binnum, SumPol, mu)
+
+    totalmass = sum(mu)
+    maxval = maximum(SumPol[:, 1] .+ SumPol[:, 3])
+    bins = [10; exp.(range(log(50), log(maxval+1), binnum-1))]
+    avg_CFL = zeros(binnum, 1)
+    mu_CFL = zeros(binnum, 1)
+    
+    n = size(SumPol,1)-1 
+    for bin = 1:binnum
+
+        for s_i = 1:n
+            val = SumPol[s_i, 1] + SumPol[s_i, 3]
+
+            if bin == 1
+
+                if  SumPol[s_i, 3] != 0 && val < bins[bin]
+                    avg_CFL[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
+                    mu_CFL[bin] += mu[s_i]/totalmass
+                end  
+
+            else
+
+                if  SumPol[s_i, 3] != 0 && val > bins[bin-1] && val < bins[bin]
+                    avg_CFL[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
+                    mu_CFL[bin] += mu[s_i]/totalmass
+                end  
+
+
+            end  
+        end
+
+    end
+
+    avg_CFL = avg_CFL ./ mu_CFL
+
+    plot(string.(round.(bins ./ 100)), avg_CFL, title = "Average CFL", xrotation=45, legend=false, linewidth = 3, size=(800, 600))
+
+    
+end
+

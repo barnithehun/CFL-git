@@ -236,6 +236,7 @@ The borrower chooses $\tau$ to maximize the sum of these two values. Since both 
 \section*{General Notes}
 \textbf{Taking logarithmic grids}: Results with logarithmic grids are not perfect, but they generally make sense. The problem is that some low cash on hand firms prefer to just produce a lot in the current period without accumulating assets - their production is financed by external finance almost entirely and their next period cash on hand is stuck at a low value. This is especially true for high productivity firms. This is not a bug (see the steadily increasing value in $x$) and it is not necessarily a problem, but it is a bit weird that firms of the same productivity do not converge to the same cash on hand - should check it under CFL borrowing. I should also add that this in every calibration, under some certain values very few firms actually do this. Making the discount parameter closer to one would probably solve this problem.   \vspace{3mm} \\
 \textbf{Allowing for financial savings}:  Allowing $b$ to be negative means that a lot of firms with low productivity but high cash on hand do not exit immediately, but dismantles capital stock gradually. This would yield a gradual decline of financial wealth. Overall, results are nicer and converge faster, but of coarse the grid becomes less granular. With log grids and negative financial savings the model does not converge.  \vspace{3mm} \\
+\textbf{Firm dynamics - Fmat fix} As its stands in earlier model version Fmat does not take into account exits in firm dynamics. This does not affect optimal firms choices (those are informed by Q and R) but it affects stationary distribution. Big masses of firms pile up in weird steady states that are associated with high liquidation probability. In later versions (up from ver7.2) this is fixed. Transition values in Fmat are scaled down with the endogeneous default probability, and a separate column for default-state is added. Overall the differences after the update are not large, but still visible. \vspace{3mm} \\
 \textbf{The productivity process (Tauchen's method)}: \\
 Productivity follows the AR(1) process:
 $$ \ln(\varepsilon_{t+1}) = (1-\rho) \ln(\varepsilon_0) + \rho \ln(\varepsilon_t) + \sigma \zeta_\varepsilon $$
@@ -291,8 +292,9 @@ $$ \mu = F(I-\text{diag}(X)) \mu + m(I-\text{diag}(X))f^0 $$
 \textbf{Ex-ante default probability.} Theoretically, the question is what I consider the focus of the analysis - the liquidation probability or the fixed cost of reorganization. The model may seem more realistic when you focus on the fixed cost of reorganization, which yields endogenous liquidation probabilities. However, this must be derived from the liquidation decision which is also unrealistic. Exogenous liquidation probabilities, would be less realistic but it would save me from \vspace{3mm} \\
 In the current model, default probabilities are endogenously defined by the expectation of the liquidation decision. However it seems that endogenous $\gamma$-s complicate the model a lot. First, a model where these cannot be set, must be adjusted through $\zeta$ and $\phi_c$, which is more cumbersome. Second, sometimes it yields weird results. For instance, in a case where reorganization costs are prohibitive, the lender can predict with certainty that the firm will be liquidated, which may even yield more relaxed credit conditions. Fixed liquidation probabilites would probably yield a more stable model.
 How to implement these, probably the best approach is to look at the production of firms and fit a decreasing curve through it that is informed by IDB data. How to do it in practice is less obvious. \vspace{3mm} \\
-\textbf{Exogenous default}: having this in the model means that firms have no incentive to accumulate cash on hand. This implies that firm growth basically typically happens in 3-4 period. After that point the firm has no incentive to accumulate more cash on hand and is effectively unconstrained. Therefore, it might be interesting to consider cases where, there is not exogenous default (set Pdef-exo = 0 or take it out of the discount). If you do this firms accumulate cash on hand over time. They use this to finance capital investments, so they do not need to hold debt (in this case negative debt may make more sense).  \vspace{3mm} \\ However, in firm dynamics, firm reaction is not linear, at some point firms decide to limit production in order to accumulate cash flow faster. This leads to this wobbly dynamic behavior which is not really nice. This should be better explored but I am not sure how to do it practically. Probably the best way to do it is to assume that firms can steal $b$ and just keep $x$. This way you keep up high borrowing rates. Alternatively, you can assume that firms keep $(x-b)$ which is more realistic but it decreases interest rates. Either way, this requires rewriting the Q-matrix. \vspace{3mm} \\
-\textbf{Firm dynamics} As its stands in earlier model version Fmat does not take into account exits in firm dynamics. This does not affect optimal firms choices (those are informed by Q and R) but it affects stationary distribution. Big masses of firms pile up in weird steady states that are associated with high liquidation probability. In later versions (up from ver7.3) this is fixed. Transition values in Fmat are scaled down with the endogeneous default probability, and a separate column for default-state is added. Overall the differences after the update are not large, but still visible. Put more effort into modeling the dynamics such as this! It would be possible to do the same thing with pdef-exogenous !!!
+\textbf{Exogenous Default}: having this in the model means that firms have no incentive to accumulate cash on hand. This implies that firm growth basically typically happens in 3-4 period. After that point the firm has no incentive to accumulate more cash on hand and is effectively unconstrained. Therefore, it might be interesting to consider cases where, there is not exogenous default (set Pdef-exo = 0 or take it out of the discount). If you do this firms accumulate cash on hand over time. They use this to finance capital investments, so they do not need to hold debt (in this case negative debt may make more sense). However, firm reaction is not linear, at some point firms decide to limit production in order to accumulate cash flow faster. This leads to a wobbly dynamic behavior which is not really nice. This should be better explored but I am not sure how to do it practically. \vspace{3mm} \\
+\textbf{Dynamic Simulations}. I take an entrant with a certain productivity and simulate their path given Fmat - the transition matrix of incumbent firms. Then, I repeat this simulation a large number of times and take averages - these show the average path of a firm that enters at a given distribution. The path of x, k, b, y, d and v  are intuitive, the reason for the decline at large productivities comes from the mean-reversion of the AR process. \vspace{3mm} \\
+The issue is with comparisons: I compare firm dynamics when there is access to CF-based borrowing and when there is none. I find that firms that are not the highest productivity state (but still have access of CF-based borrowing) are smaller (smaller production, capital and value). The reason behind could be that I assume a fixed wage in the process, which implies that the entry cost is changing. Meaning, that I do not run the model on the same parameter values. This shows on the steady state values.  When there is access to CFL, firms are on average smaller and produce less but hold more debt. Maybe comparing them when entry cost is fixed and wages are different would be a better idea. \vspace{3mm} \\
 
 \newpage
 \subsection*{Notes on reference papers' estimation part}
@@ -369,6 +371,7 @@ How to implement these, probably the best approach is to look at the production 
     \item Look at lifecycle effects - at which phase of their lifecycle firms borrow against future cash flows. Similarly, look at the pecking order effects when it comes to borrowing CF vs. AB
     \item Search for target-able moments in the data such as cash on hand
     \item Find more information on exit and entry dynamics
+    \item Since Lian and Ma are also about debt covenants mainly, it would be interesting to find that the external finance premium in CF-based debt contracts  responds more to earnings and such (or just acts differently to ABL contracts - for instance the external finance premium depnds on profitability for them but not for assets)
 \end{itemize} \normalsize
 
 \subsubsection*{ToDo - Model}
@@ -414,24 +417,54 @@ How to implement these, probably the best approach is to look at the production 
         \item See how this affects the stationary distribution \checkmark
         \item Documents and second check the differences  \checkmark
     \end{itemize}
-    \item Do the exogenous liquidation probability experiment (not sure if necessary because the endogenous model version produces okay liquidation probabilities too)
+    \item Do the exogenous liquidation probability experiment (not sure if necessary because the endogenous model version produces okay liquidation probabilities too) \checkmark
         \begin{itemize}
-            \item Since it is theoretically consistent, define 'small firms' as assets under 50 million. 
-            \item Then isolate a liquidation probability in R for those that are under this threshold and over it
-            \item Define it in model version 7.4, in the update loop
-            \item Run experiments with it! - change the liquidation probabilities and see how access to CFL changes
+            \item It is theoretically consistent, define 'small firms' as assets under 50 million. \checkmark
+            \item Then isolate a liquidation probability in R for those that are under this threshold and over it  \checkmark
+            \item Define it in model version 7.4, in the update loop \checkmark
+            \item Run experiments with it! - change the liquidation probabilities and see how access to CFL changes \checkmark
         \end{itemize}
-    \item Consider the alternative, where the and exogenous liquidation probability is defined for the entire distribution of firm sizes, given the R file - problem with this is that it is much less straightforward to run experiments on it
+    \item Consider the alternative, where the and exogenous liquidation probability is defined for the entire distribution of firm sizes, given the R file - problem with this is that it is much less straightforward to run experiments on it \checkmark
+    \item Do a share of production by firms that plot productivity states against the cumulative production \checkmark
+    \item Check out fixed costs to liquidation - if they change anything \checkmark
+    \item Make a better framework to compare ABL and CFL cases - now its to manual  \checkmark
+    \item Try shifting the productivity process by one. This does not affect much, the first 5 productivity state does not produce - exactly the same way as if the productivity was not shifted - \textbf{This confirms that other firms' production affects optimal policy, even when PE effects are not taken into account. Not sure why though.} \checkmark
+    \item \textbf{RUN.} Run 7.4 to see how much the fixed gamma affects average productivity under each case - it has some effect on productivity differences but nit much, \checkmark
+    \item \textbf{RUN.} See runs 9 productivity states - it works well, effect of CFL is large \checkmark
+    \item \textbf{RUN.} 17 productivity states with no financial frictions \checkmark
+    \item \textbf{RUN.} 17 productivity states and overall effects with the fixed gamma calibration \checkmark
 \end{itemize} \normalsize
-
 \newpage
-\subsection*{Summary notes - 10.18}
+\subsection*{Summary to do and Notes - 04.18}
 \begin{itemize}
-    \item Add a fixed cost of liquidation to be paid by the lender. This may increase financial frictions, and reduce firm dynamism.
-    \item Consider the possibility of financial savings (negative debt)
+    \item Consider the possibility of financial savings (negative debt) - maybe, this would also help with high b2a ratios
     \item The effects of CFL borrowing on entry value is subdued because only in two entry states CFL borrowing is worth it. The value of entering is significantly different only in these states. Incidentally, the probability of entering in these states are low. To amend this, either change the entry productivity distribution, or change $\zeta$ such that CF borrowing becomes available.
+    \item \textbf{Productivity states}: the steady state differences between ABL and CFl is the largest for 7 productivity states - but the dynamic simulations and reaction functions for these firms are really weird, so I should use at least 11 productivity state (or more).
+    \item One issue with fixed costs of liquidation: a lot of firms will now have close to 0 for both PIliq and something very close to 0 in PIreorg. This implies that even small firms are borrowing against cash flows.  \textbf{Note that these could be associated with unsecured debt}. To fix this, you have to add an extra condition in the CFL reliance function, that would state that firms borrow against assets when they have effectively 0 of both PIliq and PIreorg. This kinda contradicts that unsecured debt are classified in the data as CF based.
+    \item \textbf{ERROR.} Think about the following: if the default shock also diminishes firm productivity firms will not be reorganized. The reason you do not see this effect in the model is that you calculate the \textit{unconditional probability} of that the firm will be in a state that would warrant reorganization. In fact what should look at is the probability of reorganization \textit{given default}. Two possible fixes are: take exogenous liquidation probabilities - in this case you would not even have to change the code. Or revert back to exogenous insolvency shocks. Probably, the first is easier.
+    \item One thing to try is to have a \textbf{productivity process that may jump from any point to a high productivity}. This would allow small firms to borrow against the possibility that they get this positive shock - there is one another paper that Marek has mentioned that does this. To keep firms from lingering on without producing anything, you would need to increase participation costs and default, costs. In this case small firms could have a decently high continuation value and borrow against future cash-flows but still stay small! 
 \end{itemize}
     
+
+\subsection*{Notes on comments and talk - 4.30}
+\begin{itemize}
+    \item Why do you need heterogenous firms (and structural model in general) - \textit{to be able to replicate how firms of different size, debt and productivity borrow against future cash-flows}
+    \item The RQ is way too general, it is better to focus on the 80\% the U-shape and the fact that hybrid borrowers exist - replicating hybrid borrowers would also be important, probably the easiest way to go about this is making liquidation probability depend CFl reliance, or to different debt maturity
+    \item Think harder about the default process
+    \item The buildup of the paper could be: 
+    \begin{itemize}
+        \item 80\% by volume is ok but it is distributed in a U-shape across firms 
+        \item This could be explained if you model the expected payoff of lenders given the classification of debt contracts
+        \item Having more frequent reorganization for large firms is actually enough - maybe you could make the household pay the reorganization cost. This could explain why large firms borrow more heavily against future cash flows 
+    \end{itemize}
+    \item When I say that small firms do not have enough collateral to borrow against assets it is compatible with fixed costs of liquidation
+    \item See alternative calibrations for the entry process. Higher productivity entries may increase the productivity gains from CF-based borrowing. 
+    \item The maximization over $\tau$ cannot be isolated from the rest of the firm decision (over $k'$ and $b'$) - so do not treat it as two separate optimizations
+    \item Make the empirical analysis more precise, make regression not only on the stock of debt but also on the outflows of it. Identify all possible empirical determinants of CFL reliance and try to relate it to the model. Moreover, finds some proxies of ex-ante liquidation probability, if possible. 
+    \item If you emphasize fixed costs in the default process, you need empirical support for it - \textit{This will be kind of hard to obtain because these costs are often non-monetary}
+    \item People seem to be interested in accelerator mechanisms - look for some 
+\end{itemize}
+
 \end{document}
 
 
