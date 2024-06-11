@@ -1,0 +1,278 @@
+% !TEX program = pdflatex
+% !TEX enableSynctex = true
+% !BIB program = bibtex
+
+\documentclass[12pt]{article}
+
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{dsfont}
+\usepackage{natbib}
+\addtolength{\oddsidemargin}{-.7in}
+\addtolength{\evensidemargin}{-.7in}
+\addtolength{\textwidth}{1.4in}
+\usepackage{enumerate}
+\onehalfspacing
+\usepackage{geometry} % Required for customizing page layout
+\usepackage{ragged2e}
+
+\usepackage{caption}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartview = FitH,
+	pdfauthor = {...},
+	pdftitle = {...},
+	pdfkeywords = {...; ...; ...; ...},
+	colorlinks = true,
+	linkcolor = blue,
+	urlcolor = blue,
+	citecolor = blue,
+	linktocpage=true
+}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\title{Corporate credit frictions under heterogeneous debt contracts}
+\date{}
+
+\begin{document}
+
+\author{Barnabás Székely}
+\date{\today}
+\vspace{-1in}
+
+\begin{table}[H]
+    \centering
+    \caption{Reliance on CF-based borrowing}
+    \small
+    \label{tab:your_table_label}
+    \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{3}{c}{Across Firms} & \multicolumn{3}{c}{Within Firms} \\
+    \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+    \textbf{LHS}: CFL share (\%) & Value & SE & & Value & SE & \\
+    \midrule
+    EBITDA to Assets & -33.2*** & (3.48) & & 8.00* & (4.36) & \\
+    Pledgeability & -14.0*** & (0.886) & & -9.67** & (3.93) & \\
+    Liquidity & 18.8*** & (1.69) & & 11.7*** & (3.33) & \\
+    Leverage & 19.1*** & (0.885) & & 27.4*** & (2.83) & \\
+    Interest Coverage & 1.68*** & (0.665) & & 1.49*** & (0.387) & \\
+    Age & 0.044*** & (0.0039) & & -1.21*** & (0.122) & \\
+    Employees & -0.029*** & (0.0014) & & -0.081** & (0.039) & \\
+    Log of Assets & -87.9*** & (2.95) & & -55.1*** & (13.8) & \\
+    Log of Assets Squared & 5.95*** & (0.169) & & 3.55*** & (0.821) & \\
+    Productivity & 68.5*** & (5.35) & & 41.2*** & (13.6) & \vspace{2mm} \\
+    \multicolumn{7}{l}{\textbf{Credit Ratings} - baseline: A} \\
+    A+  & 5.72*** & (1.26) & & & & \\
+    A-  & 0.259 & (1.08) & & & & \\
+    B+  & -8.97*** & (0.918) & & & & \\
+    B   & -3.90*** & (0.929) & & & & \\
+    B-  & -14.3*** & (0.911) & & & & \\
+    C   & -13.8*** & (0.936) & & & & \\
+    D   & -12.6*** & (1.16) & & & & \vspace{2mm} \\
+    \hline
+    Company fixed effects & No & & & Yes & & \\
+    Period fixed effects & Yes & & & Yes & & \\
+    Industry fixed effects & Yes & & & No & & \\
+    Observations & 45,656 & & & 60,856 & & \\
+    R-squared & 0.302 & & & 0.039 & & \\
+    Number of Companies & & & & 4,611 & & \\
+    \bottomrule
+    \multicolumn{7}{c}{Robust standard errors in parentheses} \\
+    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+    \end{tabular}%
+\end{table}
+
+
+\author{Barnabás Székely}
+\date{\today}
+\vspace{-1in}
+
+\begin{table}[H]
+    \centering
+    \caption{Investment rate}
+    \small
+    \label{tab:your_table_label}
+    \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{3}{c}{Across Firms} & \multicolumn{3}{c}{Within Firms} \\
+    \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+    \textbf{LHS}: Investment Rate & Value & SE & & Value & SE & \\
+    \midrule
+    Spread & -0.0186*** & (0.004) & & -0.0187*** & (0.006) & \\
+    EBITDA to Assets & 1.185*** & (0.00417) & &  0.696*** & (0.146) & \\
+    Age & -0.002*** & (0.0002) & & -0.007*** & (0.0007) & \\
+    Employees & -0.0005*** & (0.001) & & -0.01** & (0.001) & \\
+    Log of Assets & -0.028** & (0.013) & & 0.021 &  (0.033) & \vspace*{3mm} \\
+    \multicolumn{7}{l}{\textbf{Credit Ratings} - baseline: A} \\
+    A+  & 0.079 & (0.053) & & & & \\
+    A-  & 0.073 & (0.047) & & & & \\
+    B+  & 0.23*** & (0.042) & & & & \\
+    B   & 0.054 & (0.039) & & & & \\
+    B-  & -0.081** & (0.041) & & & & \\
+    C   & 0.026 & (0.043) & & & & \\
+    D   & 0.33*** & (0.06) & & & & \vspace{2mm} \\
+    \hline
+    Company fixed effects & No & & & Yes & & \\
+    Period fixed effects & Yes & & & Yes & & \\
+    Industry fixed effects & Yes & & & No & & \\
+    Observations &  44,964 & & & 60,567 & & \\
+    R-squared & 0.121 & & & 0.007 & & \\
+    Number of Companies & & & & 4,356 & & \\
+    \bottomrule
+    \multicolumn{7}{c}{Robust standard errors in parentheses} \\
+    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+    \end{tabular}%
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Spread}
+    \label{tab:your_table_label}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{2}{c}{All contracts} & \multicolumn{2}{c}{CF contracts} & \multicolumn{2}{c}{AB contracts} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+    \textbf{LHS}: Spread & Value & SE & Value & SE & Value & SE \\
+    \midrule
+    EBITDA to Assets & -6.869*** & (0.487) & -5.617*** & (0.653) & -7.828*** & (0.736) \\
+    Pledgeability & -0.298*** & (0.0885) & -0.0879 & (0.111) & -0.492*** & (0.145) \\
+    Log of Assets & -0.507*** & (0.0270) & -0.629*** & (0.0326) & -0.290*** & (0.0558) \\
+    Leverage & 1.729*** & (0.106) & 2.195*** & (0.138) & 0.830*** & (0.169) \\
+    Age & -0.005 & (0.004) & -0.008 & (0.005) & -0.006 & (0.009) \\
+    Employees & -0.0005*** & (0.0001) & -0.0005*** & (0.0001) & 0.0025 & (0.0018) \\
+    CFshare & 0.192*** & (0.0666) & -0.490*** & (0.114) & 0.461*** & (0.113)  \vspace{2mm} \\
+    \multicolumn{7}{l}{\textbf{Industries} - baseline: SIC group: Agriculture and Fishing} \\
+    Construction & 0.690*** & (0.264) & 1.372*** & (0.441) & 0.163 & (0.368) \\
+    Manufacturing & 0.186 & (0.237) & 0.682 & (0.425) & 0.0269 & (0.304) \\
+    Mining & 0.732*** & (0.247) & 1.212*** & (0.433) & 0.375 & (0.332) \\
+    Retail Trade & 0.746*** & (0.248) & 1.328*** & (0.435) & 0.147 & (0.326) \\
+    Services & 0.248 & (0.241) & 0.827* & (0.428) & -0.194 & (0.313) \\
+    Public Util., Transport & 0.527** & (0.243) & 1.006** & (0.429) & 0.205 & (0.326) \\
+    Wholesale Trade & 0.606** & (0.258) & 0.792* & (0.443) & 0.453 & (0.344) \vspace{2mm} \\
+    \multicolumn{7}{l}{\textbf{Credit Ratings} - baseline: Rating: A}  \\
+    A+ & 0.385*** & (0.103) & 0.412*** & (0.0914) & 1.892*** & (0.509) \\
+    A- & 0.195** & (0.0787) & 0.227*** & (0.0687) & 0.117 & (0.356) \\
+    B+ & 0.838*** & (0.0749) & 0.872*** & (0.0699) & 0.363 & (0.328) \\
+    B  & 0.319*** & (0.0721) & 0.231*** & (0.0627) & 0.253 & (0.334) \\
+    B- & 1.177*** & (0.0753) & 1.349*** & (0.0722) & 0.540* & (0.327) \\
+    C  & 1.839*** & (0.0854) & 1.824*** & (0.0960) & 1.365*** & (0.328) \\
+    D  & 2.293*** & (0.140) & 2.783*** & (0.185) & 1.341*** & (0.362) \vspace{2mm} \\
+    \midrule
+    Period fixed effects & Yes & & Yes & & Yes & \\
+    Observations & 16,858 & & 10,142 & & 6,716 & \\
+    R-squared & 0.275 & & 0.397 & & 0.165 & \\
+    \bottomrule
+    \multicolumn{7}{c}{Robust standard errors in parentheses} \\
+    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+    \end{tabular}%
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Interest rate}
+    \label{tab:your_table_label}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{2}{c}{All contracts} & \multicolumn{2}{c}{CF contracts} & \multicolumn{2}{c}{AB contracts} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+    \textbf{LHS}: Interest rate & Value & SE & Value & SE & Value & SE \\
+    \midrule
+    EBITDA to Assets & -7.372*** & (0.563) & -5.578*** & (0.798) & -8.350*** & (0.798) \\
+    Pledgeability & -0.0652 & (0.0984) & 0.288** & (0.126) & -0.358** & (0.158) \\
+    Log of Assets & -0.514*** & (0.0286) & -0.707*** & (0.0397) & -0.256*** & (0.0546) \\
+    Leverage & 1.815*** & (0.117) & 2.250*** & (0.156) & 1.144*** & (0.182) \\
+    Age & -0.0003 & (0.0005) & -0.0005 & (0.0005) & 0.00002 & (0.001) \\
+    Employees & -0.0005*** & (0.0001) & -0.0005*** & (0.0001) & 0.002 & (0.002) \\
+    Maturity & 0.0105*** & (0.0006) & 0.012*** & (0.0005) & 0.008*** & (0.001) \vspace{2mm} \\
+    \multicolumn{7}{l}{\textbf{Industries} - baseline: SIC group: Agriculture and Fishing} \\
+    Construction & 0.574* & (0.325) & 1.126* & (0.644) & 0.005 & (0.4) \\
+    Manufacturing & 0.193 & (0.299) & 0.355 & (0.634) & 0.176 & (0.330) \\
+    Mining & 0.999*** & (0.308) & 1.164* & (0.640) & 0.563 & (0.355) \\
+    Retail Trade & 0.837*** & (0.309) & 1.106* & (0.641) & 0.396 & (0.353) \\
+    Services & 0.278 & (0.302) & 0.561 & (0.635) & -0.00794 & (0.339) \\
+    Public Util., Transport & 0.629** & (0.304) & 0.815 & (0.636) & 0.366 & (0.352) \\
+    Wholesale Trade & 0.578* & (0.315) & 0.610 & (0.644) & 0.403 & (0.366) \vspace{2mm} \\
+    \multicolumn{7}{l}{\textbf{Credit Ratings} - baseline: Rating: A}  \\
+    A+ & 0.257** & (0.104) & 0.376*** & (0.0945) & 0.888 & (0.550) \\
+    A- & 0.266*** & (0.0866) & 0.278*** & (0.0732) & 0.0175 & (0.428) \\
+    B+ & 0.678*** & (0.0810) & 0.782*** & (0.0741) & -0.0135 & (0.389) \\
+    B  & 0.237*** & (0.0790) & 0.213*** & (0.0673) & -0.174 & (0.397) \\
+    B- & 0.973*** & (0.0807) & 1.212*** & (0.0760) & 0.145 & (0.388) \\
+    C  & 1.729*** & (0.0937) & 1.794*** & (0.104) & 1.099*** & (0.391) \\
+    D  & 2.081*** & (0.151) & 2.477*** & (0.190) & 1.192*** & (0.428) \vspace{2mm} \\
+    \midrule
+    Period fixed effects & Yes & & Yes & & Yes & \\
+    Observations & 18,236 & & 11,073 & & 7,163 & \\
+    R-squared & 0.236 & & 0.335 & & 0.155 & \\
+    \bottomrule
+    \multicolumn{7}{c}{Robust standard errors in parentheses} \\
+    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+    \end{tabular}%
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Firm-level average spread}
+    \label{tab:your_table_label}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{2}{c}{All Frims} & \multicolumn{2}{c}{CF borrowers} & \multicolumn{2}{c}{AB borrowers} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+    \textbf{LHS}: Average Credit Spread & Value & SE & Value & SE & Value & SE \\
+    \midrule
+    EBITDA to Assets & -3.489*** & (0.183) & -0.788** & (0.375) & -4.587*** & (0.350) \\
+    Pledgeability & -0.275*** & (0.0402) & 0.150 & (0.148) & -1.024*** & (0.0857) \\
+    Log of Assets & -0.481*** & (0.0115) & -1.125*** & (0.0462) & -0.304*** & (0.0319) \\
+    Leverage & 1.811*** & (0.0447) & 1.467*** & (0.169) & 1.923*** & (0.109) \\
+    Age & -0.0008*** & (0.0002) & 0.0046*** & (0.0006) & -0.0065*** & (0.0006) \\
+    Employees & 0.0003*** & (0.0001) & 0.0137*** & (0.0012) & 0.0068*** & (0.0012) \vspace{2mm} \\
+    \multicolumn{7}{l}{\textbf{Industries} - baseline: SIC group: Agriculture and Fishing} \\
+    Agriculture and Fishing & 0.646*** & (0.111) & 0.240 & (0.264) & 0.788*** & (0.220) \\
+    Construction & 0.173* & (0.0983) & -0.637*** & (0.243) & 0.0940 & (0.149) \\
+    Manufacturing & 0.785*** & (0.102) & 0.587** & (0.260) & 0.551*** & (0.171) \\
+    Mining & 0.410*** & (0.102) & -0.105 & (0.272) & -0.0160 & (0.159) \\
+    Retail Trade & 0.0883 & (0.101) & -0.678*** & (0.253) & -0.387** & (0.158) \\
+    Services & 0.479*** & (0.102) & -0.148 & (0.280) & -0.110 & (0.174) \\
+    Public Util., Transport & 0.0215 & (0.104) & -0.917*** & (0.309) & -0.462*** & (0.159) \vspace{2mm} \\
+    \multicolumn{7}{l}{\textbf{Credit Ratings} - baseline: Rating: A}  \\
+    A+ & 0.0725 & (0.0486) & 0.0705 & (0.148) & 2.008*** & (0.287) \\
+    A- & 0.126*** & (0.0413) & 0.455*** & (0.141) & -0.111 & (0.178) \\
+    B+ & 0.372*** & (0.0355) & 0.383*** & (0.136) & 0.202 & (0.163) \\
+    B & 0.0932*** & (0.0344) & 0.127 & (0.131) & -0.119 & (0.162) \\
+    B- & 0.590*** & (0.0358) & 0.451*** & (0.143) & 0.558*** & (0.162) \\
+    C & 1.209*** & (0.0382) & 0.840*** & (0.148) & 1.296*** & (0.162) \\
+    D & 1.351*** & (0.0523) & 0.821*** & (0.191) & 1.097*** & (0.183) \vspace{2mm} \\
+    \midrule
+    Period fixed effects & Yes & & Yes & & Yes & \\
+    Observations & 67,201 & & 7,066 & & 19,116 & \\
+    R-squared & 0.256 & & 0.339 & & 0.221 & \\
+    \bottomrule
+    \multicolumn{7}{c}{Robust standard errors in parentheses} \\
+    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+    \end{tabular}%
+    }
+\end{table}
+
+Sedlacek comments \\
+\begin{itemize}
+    \item Focus on liquidation probability!
+    \item Build a story around it - low probability of liquidation, asset poor firms want to rely on CF-backed firms but having no access to it. Facilitating access to CF based debt is may increase efficiency. Accelerator mechanism: in periods of financial distress firms are more likely to be liquidated, further limits their access to CF-based debt.  
+    \item Firm distribution - large firms are getting easy access a priori, small firms do not! 
+    \item Mention the rest of the shortcomings as well, but only on the sides 
+    \item 
+\end{itemize}
+
+\end{document}

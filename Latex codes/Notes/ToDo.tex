@@ -1,0 +1,196 @@
+% !TEX program = pdflatex
+% !TEX enableSynctex = true
+% !BIB program = bibtex
+
+\documentclass[12pt]{article}
+
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{dsfont}
+\usepackage{natbib}
+\addtolength{\oddsidemargin}{-.7in}
+\addtolength{\evensidemargin}{-.7in}
+\addtolength{\textwidth}{1.4in}
+\usepackage{enumerate}
+\onehalfspacing
+\usepackage{geometry} % Required for customizing page layout
+\usepackage{ragged2e}
+
+\usepackage{caption}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartview = FitH,
+	pdfauthor = {...},
+	pdftitle = {...},
+	pdfkeywords = {...; ...; ...; ...},
+	colorlinks = true,
+	linkcolor = blue,
+	urlcolor = blue,
+	citecolor = blue,
+	linktocpage=true
+}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\title{To-Do}
+\date{}
+
+\begin{document}
+
+\subsubsection*{ToDo - Literature and writing}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item Find the inefficient liquidation vs. efficient reorganization quote \checkmark 
+    \item Read more on inefficient liquidation \checkmark
+    \item Read a take notes of the reference papers' estimation and results sections \checkmark
+    \item Look up estimation targets in reference papers and document them \checkmark
+    \item Document each parameter, what is it and which values it affects \checkmark
+    \item Read up on how interest rates are studied (optimal would be capitalIQ) \checkmark
+    \begin{itemize}
+        \item Gonzalez and Sy - regressions on the interest rate spread. The they use bank, sector, year fixed effects, firm controls such as age, tangibility, profitability. Spread is defined as the loan rate minus the T-bill rate matched to the corresponding maturity. 
+    \end{itemize}
+    \item Re-read - Lian and Ma, Corbae and D'Erasmo \checkmark
+    \item Is there a variation in the debt covenants $\phi_k$, $\phi_\pi$? If there is no mention of this, then find some evidence that these vary across firms. 
+    \item Studies that have credit spreads in their regressions
+    \item Look at and mention the credit guarantee 
+\end{itemize} \normalsize
+
+\newpage
+
+\subsubsection*{ToDo - Empirics}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item Look into how you could retrieve liquidation probabilities from other data sources \checkmark
+    \item Look for datasets that are similar to FCJ data - that is the LoPucki Bankruptcy data \checkmark
+    \item Look into the effect of a binary SME dummy (or sub-50 million firms) on liquidation and reorganization - also with this dummy approach and over time plot would be feasible \checkmark
+    \item Make a regression for the new inflows of debt \checkmark
+    \item Have a Pols, Reduced Pols and FE  setup - the firms level regression is confusing
+    \item Are there non-linearities in reliance on CF based lending and leverage? - intuition is that it should pick up sharply after 0.3-0.4 when the debt cannot be fully collateralized anymore 
+    \item Check if the interest rate of ABL debt is really lower that the interest rate of CFL debt \checkmark
+    \item Gather interest rate data - make a dlevel data that has the interest rate spread \checkmark
+    \item Drop Canada observations! 
+    \begin{itemize}
+        \item Check how many debt contracts have interest rate data \checkmark
+        \item Check interest rate benchmarks - 80\% are NA and see most common benchmark types and how they are distributed across debt contracts  \checkmark
+        \item Follow Gonzalez and Sy - use T-bill rates at the corresponding maturity to calculate the spread \checkmark
+        \item Find/Calculate maturity in the data - (currmatu and maxmatu) \checkmark
+        \item Collect T-bill info at different maturities for the past 12 years \checkmark
+        \item Once you have credit spreads you can start running regressions (alternatively, you could look into studying interest rates without studying the credit spread) \checkmark
+        \item Look if you can collect data on the lender 
+        \item There is an FJC defaults dataset - it is possible to connect but the quality of the connection is questionable \checkmark
+    \end{itemize}
+    \item Alternative measures of EBITDA \checkmark - the overall picture is quite straightforward - ebitda decreases the spread, but more so for AB contracts than CF contracts - which is a bit of a puzzle 
+    \begin{itemize}
+        \item Try average growth of EBITDA in the past 4 quarters, also just try lagged EBITDA - they do not do much. \checkmark
+    \end{itemize}
+    \item Make a regression of how much AB and CF debt firms have relative to their sizes (Firm-level regression, you need AB-val, CF-val, and truncation.) \checkmark
+    \item Leverage should should be included with a lag - \textit{Maybe, actually it should not be if you do not put the debt volume in the regression.} \checkmark
+    \item Study firm-level average external finance premium, for all 3 types of firms \checkmark
+    \item Examine debt issuance as the outcome variable - not sure how to do this yet. The question is if the spread decreases issuance ceteris paribus. If it does that is evidence that the credit spread matters. \checkmark
+    \begin{itemize}
+        \item What explains debt inflows (of AB or CF or both kind of debt) \checkmark
+        \item What explains the changes in net debt \checkmark
+        \item What explains investment \checkmark
+    \end{itemize}
+    \item Check if there is FISD data on WRDS
+    \item Try firm level LSDV regressions \checkmark
+    \item Write an email about FJC 
+    \item \textbf{ERROR.} You should use the weighted average of spreads
+\end{itemize} \normalsize
+
+\newpage
+
+\subsubsection*{ToDo - Model}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item Update default probabilities with the interpolated $x$-es \checkmark
+    \item Figure out log-grids! \checkmark
+    \item Find a grid and calibration in ver5 where no firms are grid-constrained \checkmark
+    \item Consider exogenous liquidation probabilities !!! - its not realistic anyways as is and it allows you to focus on the small firm liquidation point \checkmark
+    \item Take the the Quantecon examples and solve your model without global variables and with functions \checkmark
+    \item Look into how entry and exit dynamics should be modeled in the discrete DP framework \checkmark
+    \item Add starting the (x,e) grid, and read up on best practices on implementation \checkmark
+    \item Implement equilibrium wage from free entry condition \checkmark
+    \item Find a calibration or grid where $w=1$ works, rewrite the entry value function such that it solves for wage = 1, and better parametrized \checkmark
+    \item Find the optimization package for bisection (do not do it by hand) \checkmark
+    \item Implement stationary distribution following Leo's code and CandD algorithm \checkmark
+    \item Adjust the grid for x-es based on the stationary distribution, re-introduce financial savings \checkmark
+    \item Make the current model better functionized \checkmark
+    \item Do a function for analytics: firms (k,b,n,y,q) in the stationary equilibrium; average firms size and productivity, exit/entry rate, aggregate employment, output \checkmark
+    \item Find the ratios to match - debt to asset, size distribution of firms, default rates, exit rates (those with a data equivalent are preferable), share of entrants, employment share of  entrants \checkmark
+    \item Make a loop that solves the model multiple times and prints equilibrium values \checkmark
+    \item Implement stationary distribution taking into account the exits due to exogenous defaults \checkmark
+    \item Document and plot exit and entry policies \checkmark
+    \item Find a way to study firm dynamics - simulations would be a way forward \checkmark
+    \item As it stands now a lot of productivity states (almost half) do not enter under any cash on hand. Consider shifting the productivity distribution to the right, to root these out
+    \item The entry x-values are not ok, because I changed the grid - fix it \checkmark
+    \item Expand to the case where debt contracts are heterogeneous! \checkmark
+    \begin{itemize}
+        \item Implement ver6 in ver5.3: highlight the differences  \checkmark
+        \item Establish PIliq and PIreo; in the code: \checkmark 
+        \item Build in a maxiter backstop in the function \checkmark
+    \end{itemize}
+    \item Reorganize results discussion, steady state functionize results  \checkmark
+    \item Average rates are not valid as is - fix them using loops because it is more intuitive  \checkmark
+    \item Plot optimal policies, with of d,q,k,b,value etc. at different cash on hand values. It seems that there are some significant differences there! \checkmark
+    \item Look into solving the model such that Ce is fixed and the wage is found with a bisection \checkmark
+    \item Could define unconstrained as q $\approx$ beta - not true, sometimes large firms allow a bit lower q. This is probably do to the exogenous default probability \checkmark
+    \item Do a calibration version of 7.3 with bisection implemented \checkmark
+    \item Second check functions and Q matrix  \checkmark
+    \item Fix Fmat! \checkmark    
+        \begin{itemize}
+        \item Consider first a model solution where you calculate the probability of default with Fmat values, then scale down Fmat with def-prob and add an extra state to it that corresponds to the exit case (use endogenous default probabilities)  \checkmark
+        \item Update the rest of the function for the additional steady state  \checkmark
+        \item See how this affects the stationary distribution \checkmark
+        \item Documents and second check the differences  \checkmark
+    \end{itemize}
+    \item Do the exogenous liquidation probability experiment (not sure if necessary because the endogenous model version produces okay liquidation probabilities too) \checkmark
+        \begin{itemize}
+            \item It is theoretically consistent, define 'small firms' as assets under 50 million. \checkmark
+            \item Then isolate a liquidation probability in R for those that are under this threshold and over it  \checkmark
+            \item Define it in model version 7.4, in the update loop \checkmark
+            \item Run experiments with it! - change the liquidation probabilities and see how access to CFL changes \checkmark
+        \end{itemize}
+    \item Consider the alternative, where the and exogenous liquidation probability is defined for the entire distribution of firm sizes, given the R file - problem with this is that it is much less straightforward to run experiments on it \checkmark
+    \item Do a share of production by firms that plot productivity states against the cumulative production \checkmark
+    \item Check out fixed costs to liquidation - if they change anything \checkmark
+    \item Make a better framework to compare ABL and CFL cases - now its to manual  \checkmark
+    \item Try shifting the productivity process by one. This does not affect much, the first 5 productivity state does not produce - exactly the same way as if the productivity was not shifted - \textbf{This confirms that other firms' production affects optimal policy, even when PE effects are not taken into account. Not sure why though.} \checkmark
+    \item \textbf{RUN.} Run 7.4 to see how much the fixed gamma affects average productivity under each case - it has some effect on productivity differences but nit much, \checkmark
+    \item \textbf{RUN.} See runs 9 productivity states - it works well, effect of CFL is large \checkmark
+    \item \textbf{RUN.} 17 productivity states with no financial frictions \checkmark
+    \item \textbf{RUN.} 17 productivity states and overall effects with the fixed gamma calibration \checkmark
+\end{itemize} \normalsize
+\newpage
+\subsection*{To do and Notes - 04.18}
+\begin{itemize} \setlength\itemsep{0em} \small
+    \item Consider the possibility of financial savings (negative debt) - maybe, this would also help with high b2a ratios
+    \item The effects of CFL borrowing on entry value is subdued because only in two entry states CFL borrowing is worth it. The value of entering is significantly different only in these states. Incidentally, the probability of entering in these states are low. To amend this, either change the entry productivity distribution, or change $\zeta$ such that CF borrowing becomes available.
+    \item \textbf{Productivity states}: the steady state differences between ABL and CFL is the largest for 7 productivity states - but the dynamic simulations and reaction functions for these firms are really weird, so I should use at least 11 productivity state (or more).
+    \item One issue with fixed costs of liquidation: a lot of firms will now have close to 0 for both PIliq and something very close to 0 in PIreorg. This implies that even small firms are borrowing against cash flows.  \textbf{Note that these could be associated with unsecured debt}. To fix this, you have to add an extra condition in the CFL reliance function, that would state that firms borrow against assets when they have effectively 0 of both PIliq and PIreorg. This kinda contradicts that unsecured debt are classified in the data as CF based.
+    \item \textbf{ERROR.} Think about the following: if the default shock also diminishes firm productivity firms will not be reorganized. The reason you do not see this effect in the model is that you calculate the \textit{unconditional probability} of that the firm will be in a state that would warrant reorganization. In fact what should look at is the probability of reorganization \textit{given default}. Two possible fixes are: take exogenous liquidation probabilities - in this case you would not even have to change the code. Or revert back to exogenous insolvency shocks. Probably, the first is easier.
+    \item One thing to try is to have a \textbf{productivity process that may jump from any point to a high productivity}. This would allow small firms to borrow against the possibility that they get this positive shock - there is one another paper that Marek has mentioned that does this. To keep firms from lingering on without producing anything, you would need to increase participation costs and default, costs. In this case small firms could have a decently high continuation value and borrow against future cash-flows but still stay small! 
+\end{itemize}  \normalsize
+    
+
+\subsection*{Notes on comments and talk - 4.30}
+\begin{itemize} \setlength\itemsep{0em} \small
+    \item Why do you need heterogenous firms (and structural model in general) - \textit{to be able to replicate how firms of different size, debt and productivity borrow against future cash-flows}
+    \item The RQ is way too general, it is better to focus on the 80\% the U-shape and the fact that hybrid borrowers exist - replicating hybrid borrowers would also be important, probably the easiest way to go about this is making liquidation probability depend CFl reliance, or to different debt maturity
+    \item See alternative calibrations for the entry process. Higher productivity entries may increase the productivity gains from CF-based borrowing. 
+    \item \textbf{ERROR.} The maximization over $\tau$ cannot be isolated from the rest of the firm decision (over $k'$ and $b'$) - so do not treat it as two separate optimizations
+    \item Make the empirical analysis more precise, make regression not only on the stock of debt but also on the outflows of it. Identify all possible empirical determinants of CFL reliance and try to relate it to the model. Moreover, finds some proxies of ex-ante liquidation probability, if possible. 
+    \item If you emphasize fixed costs in the default process, you need empirical support for it - \textit{This will be kind of hard to obtain because these costs are often non-monetary}
+    \item People seem to be interested in accelerator mechanisms - look for some 
+    \item Kill fixed costs from the lending side, you will not need them - enough to have them in the reorganization decision. 
+    \item Conceptually, do not de-couple default probability and liquidation probability, use the conditional probability - this would make the terminology easier, but it requires some revision of the model notation
+\end{itemize} \normalsize
+
+
+
+
+ \end{document}

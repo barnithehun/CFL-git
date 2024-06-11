@@ -1,0 +1,152 @@
+
+% !TEX program = pdflatex
+% !TEX enableSynctex = true
+% !BIB program = bibtex
+
+
+\documentclass[12pt]{article}
+
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\addtolength{\oddsidemargin}{-.7in}
+\addtolength{\evensidemargin}{-.7in}
+\addtolength{\textwidth}{1.4in}
+\usepackage{enumerate}
+\onehalfspacing
+\usepackage{geometry} % Required for customizing page layout
+
+\usepackage{caption}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartview = FitH,
+	pdfauthor = {...},
+	pdftitle = {...},
+	pdfkeywords = {...; ...; ...; ...},
+	colorlinks = true,
+	linkcolor = blue,
+	urlcolor = blue,
+	citecolor = blue,
+	linktocpage=true
+}
+
+
+
+\begin{document}
+
+\section*{Literature Review}
+\subsection*{González and Sy, 2024}
+They use the heterogenous firms setup of Khan and Thomas (2013) to explain how firms choose asset-based and CF-based debt contracts. In particular, they find that average reliance on CF based lending is U-shaped across firm sizes - just as I do. The shortcoming of their approach is that they use a hard constraint for each debt contract: asset-based constraints for asset-backed contracts and earnings-based for CF-backed contracts. This limits their enquiry in several ways. First they can explain only the extensive margin, i.e firms that choose only asset-backed contracts or CFL contracts, but not those who use both. This is fine for Spain because only around 23\% of firms use both debt contracts. In the US this is 56\% (collectively using 90\% of debt) so there the intensive margin matters more. Second, they do not take into account the lenders' side of the problem, which means that they overlook liquidation probability as an important predictor CF-based borrowing. This further implies that they need a lot of assumptions to fit the U-shape to the data. They need the following four assumption to have the U-shape. 
+\begin{enumerate} \setlength\itemsep{0em} 
+    \item Cost of pledging collateral: variable costs of borrowing against assets
+    \item Asset-backed loans have a lower interest rate 
+    \item Microeconomic cost of capital adjustment
+    \item In default earnings are easier to retrieve to assets
+\end{enumerate}
+Assumptions 1-3 are needed to match the right hand side of the U-shape. If any of them are missing the U-shape breaks down. \textit{N1} is well-argued, but it no clear if it is quantitatively as important as they claim to be. In any case, it is not standard in the literature. \textit{N2} is maybe the most problematic they make a fine job of showing it in regressions, but it is not consistent with the model assumptions. The use of hard constraints implies that in case of default the lender can fully retrieve its' initial investment. Hence there is no reason for it to charge a premium for either of the debt types. \textit{N3} is fairly standard in the literature. Finally they use \textit{N4} to match the LHS of the U-shape. This assumption results from the calibration of the model. Other than that its not argued extensively. \vspace{3mm} \\
+In my model lenders explicitly take into account the continuation value of the firm. Moreover the in-default payoff is a function of the liquidation probability. This offers a simpler explanation of the U-shape. Small firms have large continuation value relative to their asset value. CF lending worth it for them even if the liquidation probability is relatively large. Large firms have a very low liquidation probability which makes them ideal for CF-based borrowing. \vspace{3mm} \\
+Other comments:
+\begin{itemize} \setlength\itemsep{0em} \small
+    \item They equate unsecured debt to CF-based debt, which seems to be the case for Spain. For the US, it different due to blanket liens and equity-backed debt constructs.
+    \item Relatedly, they find the find that the interest rates of CF-based debts are lower, but I am not sure this finding would hold for the US - then, the question remains, why is the U-shape so persistent? 
+    \item They also find that CF-based debt is associated with higher employment growth while asset-backed debts seem to induce investment growth. This is a nice result. 
+    \item They run loan-level regressions, which is a good idea. 
+    \item They assume that whatever is not seized by the lender is kept by the firms. This is a pretty standard assumption so I could use it as well. 
+\end{itemize}  \normalsize
+\subsection*{Kermani and Ma, 2020}
+They look in detail into the empirical determinants of CFL-based vs. asset based borrowing. They differentiate, CF-based lending by the amount of lenders' control: strong control is associated with loans, weak control with bonds and notes. They build a model of how the optimal control of the lenders should be - interesting, but not very relevant for me. Where I depart from them, is that in their model the lender exercises control by using debt covenants. Borrowing is limited by these hard constraints. \textit{In my model the lender is backed by a zero profit condition. This means that borrowing is limited in firms' willingness to pay the external finance premium. To make this shift, I need to argue that interest rates matter, not just debt covenants. This should not be hard.}  \vspace{3mm} \\
+The paper has the most added value in empirics. They can identify the liquidation value and the going-concern value for a few hundred firms. Then, construct a synthetic liquidation and reorganization value for Compustat firms. This allows them to study the effects of liquidation and going-concern value explicitly. They estimate an average liquidation recovery rate of 0.2-0.4 and reorganization recovery rate of 0.8. They document a pecking order, first firms use asset-based debt then they switch to CF-based. A lot of facts a documented here, I should come back later and see how many of them I can match. 
+
+\subsection*{Caglio, Darst and Kalemli-Ozcan, 2021}
+They have a connected dataset of firms, banks, debt contracts. They use this mainly to test some theories on the risk-taking channel on of monetary policy. They find little evidence of higher risk taking under lower interest rate on the bank side, but significant effects on the firms side. Especially through SMEs who are credit constrained and leverage up under lower interest rates. These results are not super relevant for me. \vspace{3mm} \\
+They also have information on collateral. They categorize accounts receivable, inventory and blanket liens as CF-based debt - they refer to it as going-concern value collateral. They also find that this is the best form of collateral for obtaining more credit which contradicts Luck and Santos. They find that SMEs often use CF-based debt (future claims on their enterprise value) rather than asset based debt (physical assets that can be liquidated). They also find a pecking order for collateral: the types of collateral that ease the borrowing constraint for SMEs the most are the ones that are backed by the going concern value of the firm. 
+
+\subsection*{Ivashina, Laeven, Moral-Benito, 2020}
+They identify different debt-groups: leases and trade-debt asset based and CF-based debt contracts. They show that these loan types react differently to different shocks and revisit some influential papers in light of this. They find that financial crises propagate through banks' balance sheet are mainly driven CF-based debt. It is not super relevant for me since it is much more about the bank side of the problem than the borrower side. 
+
+\subsection*{Rampnini and Viswanathan, 2022}
+They argue that unsecured loans are collateralized implicitly such that it places a lien on all assets of the firm that was is not secured in other debt. Explicitly securing debt allows firms to borrow more against their assets as it eases lender enforcement. However posting collateral incurs a cost, which they call asset-encumbrance. The intuition is that asset that is used as collateral cannot be sold or used or redeployed freely, which incurs a fixed cost for the lender. This two effect means that constrained (typically small) firms borrow against specific assets whereas large, unconstrained firms borrow unsecured. \vspace*{3mm} \\ 
+This paper used for reference by Gonzalez and Sy (2024) to justify the costs of pledging collateral - although the mechanism here contradicts the U-shape. They also contradict the interpretation of Lian and Ma (2021) who consider unsecured debt CF-based. In summary, Lian and Ma argues that for unsecured debt, collateral does not matter, while they argue that these loans are still collateralized, but implicitly. In can try to reconcile the two, collateral matter of unsecured debt but on if the firm gets liquidated. However, unsecured debt might reflect the liquidation that the firm will be reorganized in which case future cash flows matter rather than collateral. 
+
+\subsection*{Luck and Santos, 2020}
+Pledging collateral reduces borrowing costs by 23BPS on average. However not all collateral are valued equally by banks. Marketable securities are the most valuable, then follows real estate and account reveceivable and inventory. Only then fixed assets and blanket liens. This seems to be intuitive but it contradicts Caglio et al. (2021) to some extent. Their empirical strategy uses firm-bank-time fixed effects, so they only have firms that borrowed from the same bank, at the same time, multiple times, against different collateral.  They also argue that firms are borrow unsecured may do it because they are credit constrained and already ran out of collateral to pledge (or because they prefer to have their assets unencumbered). This contradicts Rampnini and Viswanathan (2022) who argue that it is the unconstrained firms that borrow unsecured. 
+
+\subsection*{Chodrow-Reich et al., 2021}
+Small firms obtain credit lines more frequently demandable, with much shorter maturity, post more collateral, have higher utilization rates and pay pay higher spreads even conditional on other firm characteristics. 
+
+\subsection*{Biguri, 2020}
+Access to unsecured debt increases investment. If there is a drop in unsecured debt supply, firms often first substitute to an other kind of unsecured debt. They typically switch to secured debt only if this is not possible. This is more on the lines of Rampnini and Viswanathan (2022) who argue that unsecured debt is preferred by firms. The drop in investments is even larger for these firms even if they do not appear constrained. This is explained by asset encumbrance effect. Taking stock, the availability of unsecured debt incentivizes investment. Other: large firms tend to diversify  across multiple debt types whereas small firms specialize in fewer ones. 
+
+\subsection*{Anderson and Cesa-Bianchi, 2020}
+It studies the effects of monetary policy surprises on credit spreads. It documents that all spreads rise after a contractionary shock but the reaction is heterogeneous across firms. For more leveraged firms, the increase is around 1.5 times higher than low-leveraged firms in the baseline speciation. They isolate two reasons for this increase. The first is the increased default risk of firms, the second is the higher risk aversion of intermediaries. The latter raises spreads for all firms irrespective of firm characteristics. Based on this they isolate the two effects and find that the latter effect dominates. Overall, it has a similar goal to Ottonello and Winberry, but it focuses on the credit spreads of bonds instead of investment. They argue that credit spreads are better because they are observed at a higher frequency which yields a cleaner identification. 
+
+\subsection*{Benmelech, Kumar and Rajan, 2020}
+It measures the 'premium on secured debt' - that is, the difference in credit spreads for unsecured and secured debt. This paper is similar to Luck and Santos. They argue that there is a selection mechanism that distorts results: firms that pledge collateral are typically more risky. To get around this, they use time and firm fixed effects, meanings that they compare secured and unsecured loans that have been made by the same firm within the same period. With this identification, they find that ceteris paribus unsecured debt have a higher spread. Question then remains, why large, unconstrained firms still borrow predominantly with no collateral. The authors argue that there is a precautionary motive behind this. When financial conditions worsen, the premium on secured debt increases. Firms that have enough pledgeable collateral can then still find cheap financing. However, if the firm's assets have been encumbered by previous debt contract the funding cost increases. \\
+For me, the mostly interesting thing here is endogeneity. Applied to my model, firms that face higher funding cost against assets or CF will decrease their demand for these. However, the lender may respond to this by offering a better interest rate on these debt contracts. Then, it would look like if the firm had cheap access to the loan type. 
+
+
+\newpage
+\subsection*{Notes on reference papers' estimation part}
+\subsubsection*{Khan and Thomas - 2013}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item They also match the debt-to-assets ratio
+    \item They set 7 productivity states for firms - they just calibrate the AR(1) parameters, not estimate them
+    \item They use X as a measure of size, calculated as K minus B, even though they have K and B separately in their model - look into this approach, it could be fitted using Compustat definitions and it max produce a better stationary distribution
+    \item Idiosyncratic productivity shocks a large and the process is nor persistent ($\rho = 0.659$, $\sigma = 0.118$)
+    \item Capital distribution between 0 and 4 - there's also some pretty big spikes in the stationary distribution of capital, so this might not be something I should worry about too much
+    \item Firm lifecycle plots, they simulate how firms of a certain starting productivity accumulate capital and financial saving - it would be interesting in my case to have a with and without access to CFL debt comparison - one great thing about these plots that you only need firm optimization for it!
+    \item The big point they are making is that productivity shocks have temporary and small effects, whereas credit shocks have larger and more lasting effects as they induce misallocation of capital
+\end{itemize} \normalsize
+
+\subsubsection*{Corbae and D'Erasmo}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item They do not match for distributions of absolute values such as capital or debt or assets - only for ratios such as leverage
+    \item Similar AR(1) process parameters to Khan and Thomas
+    \item They discuss recovery rates and q-s given debt and capital - it would be interesting to do this when firms have access to CFL debt versus when they do not
+    \item Some firms hold negative debt, these are low productivity firms with a lot of capital
+    \item They make a point out of matching debt/assets ratio
+    \item Their entry distribution is interesting. They set productivity to match the stationary distribution. Then, entrants can decide if they want to stay on the market given their productivity. If they do they have to obtain costly funding for capital investments in the next period. Basically, this is setting $x=0$ to every entrant, but it make sense intuitively - \textbf{consider adopting this.}. Also, I think they are not the only ones who assume this.
+    \item They look into the potential effects of a bankruptcy reform. They highlight that usually you find only very little TFP growth out of decreasing financial frictions - in their case the weighted productivity growth is 0.4\% which is low given that the reform is substantial
+\end{itemize} \normalsize
+
+\subsubsection*{Kaas, Di'Nola and Wang}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item They make a point out of making the small firm distribution in employment size fit the data and match exit rates as well, for me it is less important but still should be done
+    \item They have a very nice plot of debt on the x-axis, and productivity on the y-axis, and then they can color the firms that are staying, or exiting, or forcefully exiting the market - I would need to do this for X
+    \item They also find that even though the effects of the policy experiment is large on small firms, productivity improvements are small due to their low market share
+    \item They only need to set up productivity of entrants. They set the stationary distribution, but with a productivity shifter, $\ln(\varepsilon_0\overline{\varepsilon})$, where $\varepsilon_0 = 0.1$
+\end{itemize} \normalsize
+
+\subsubsection*{Öztürk - JMP}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item He considers the initial capital stock of entrants as 25\% of the average firm's capital stock, otherwise entry mass and decision is completely exogenous
+    \item A critique of this paper's approach is that it ignores the fact that liquidation probability, determined by or beyond the firm's control, influences CFL availability
+    \item Same colored graph as in Kaas, but now for liquidation and reorganization - could reproduce with different liquidation probabilities
+    \item Uses a different AR(1) process, with high persistence and small shock - same goes Kochen and Kaas et al.
+\end{itemize} \normalsize
+
+\subsubsection*{Kochen - JMP}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item He emphasizes that young, productive firms heavily rely on external financing. Financial frictions matter because they limit these dynamic firms - cashflow-based lending becomes relevant here as it enables young, productive firms to borrow against future cashflows
+    \item In contrast to other authors, he identifies substantial TFP losses, ranging from 10 to 20\% - this relates to point about considering both misallocation of the intensive versus the extensive margin
+    \item He considers 10\% of yearly depreciation rate
+    \item His focus isn't on matching the stationary distribution of firms; instead, he aims to capture the dynamics of individual firms
+    \item He measures misallocation by contrasting it with a perfect credit economy. You could technically replicate this by solving a model without financial frictions using the same calibration, revealing the true impact on TFP! - this approach requires two separate model solutions so its potentially cumbersome but at least the concept is clear. Also you could do an no frictions, frictions with ABL and frictions with CFL and ABL scenario
+    \item He looks into output differences due to capital deepening, misallocation on the intensive and on the extensive margin
+\end{itemize} \normalsize
+    
+\subsubsection*{The Determinants of Credit Spreads - and covenant limits}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item \textbf{Sy and Gonzalez} - They do credit spread regressions on the loan level with firm-level controls (no firm-level average spreads regressions). Also, no state contingent debt covenants.
+    \item \textbf{Choi, Drechsel, Öztürk} - Do not have state contingent debt covenants.
+    \item \textbf{Corbae and D'Erasmo} - Can model and actually looks into spreads - but only on a summary statistics level
+    \item \textbf{Lian and Ma, Kermani and Ma} - Barely mention credit spreads, entirely focused on debt covenants 
+    \item \textbf{Luck and Santos} - They look into how much credits spreads decrease when different kinds of collateral are in place (they also consider blanket liens as collateral so it connects to CF-based lending)
+    \item \textbf{Asset Specificity of Nonfinancial Firms} - They also look at credit spreads, but in the context of monetary policy shocks.
+\end{itemize} \normalsize
+
+\end{document}

@@ -1,0 +1,106 @@
+% !TEX program = pdflatex
+% !TEX enableSynctex = true
+% !BIB program = bibtex
+
+\documentclass[12pt]{article}
+
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{dsfont}
+\usepackage{natbib}
+\addtolength{\oddsidemargin}{-.7in}
+\addtolength{\evensidemargin}{-.7in}
+\addtolength{\textwidth}{1.4in}
+\usepackage{enumerate}
+\onehalfspacing
+\usepackage{geometry} % Required for customizing page layout
+\usepackage{ragged2e}
+
+\usepackage{caption}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartview = FitH,
+	pdfauthor = {...},
+	pdftitle = {...},
+	pdfkeywords = {...; ...; ...; ...},
+	colorlinks = true,
+	linkcolor = blue,
+	urlcolor = blue,
+	citecolor = blue,
+	linktocpage=true
+}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\title{Corporate Credit Frictions Under Heterogeneous Debt Contracts}
+\date{}
+
+\begin{document}
+
+\author{Barnabás Székely}
+\date{\today}
+\vspace{-1in}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+
+I study asset-based and cash flow-based borrowing in a heterogeneous firms model with in-equilibrium defaults. This framework yields soft borrowing constraints, allowing the analysis of credit spreads in a structural setting. One important, yet under-studied determinant of credit spreads for CF-based contracts is the ex-ante probability that borrower would be liquidated under financial distress. This puts small firms, which frequently opt for liquidation, at a double disadvantage. Their access to cash flow-backed debt is limited by high ex-ante liquidation probabilities, whereas their access to asset-based debt is constrained by a lack of pledgeable assets. Bankruptcy frameworks that facilitate and incentivise small firm reorganizations could alleviate this source of misallocation. 
+
+\bigskip{}
+\bigskip{}
+%\bigskip{}
+%\bigskip{}
+%\vspace{-0.5cm}
+
+Keywords: Heterogeneous firms, Credit market frictions, Cash flow-based lending, Earnings-based constraints
+
+\medskip{}
+% JEL Classification Code: E32, C22, E27.
+\end{abstract}
+\thispagestyle{empty}
+
+\pagebreak{}
+
+
+\section{Introduction \label{sec:introduction}} 
+
+
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item Previous literature uses no equilibrium model setup which gives rise to hard borrowing constraints - this model setup allows to study debt covenants
+    \item I propose an in-equilibrium default model setup which gives rise to soft borrowing constraints - this model setup allows me to credit spreads 
+    \item The determinants of the credit spreads of AB and CF based debt contracts are not yet studied in a structural model (and only scarcely studied empirically)
+    \item Why do we need a structural setup? Endogeneity issues and unobservable determinants
+    \item Endogeneity: Borrowing responds to credit spreads but credit spreads respond to borrowing
+    \item Unobservable variables: probability that the borrower would choose liquidation under financial distress affects lenders willingness to lend against future cash flows
+    \item The intuition is that liquidation terminates all future cash-flows. A lender that expected to retrieve in in-default payment from the continues operation of the firm would stand to lose most of his investment. 
+    \item I argue that the importance liquidation probability puts small firms at a disadvantage. The companies often choose liquidation which limits their access to CF-based debt. 
+    \item Since these asset poor firms also lack sufficient collateral, they are also limited in access to AB debt contracts
+    \item A bankruptcy code that facilitates and incentivises small firm reorganization may alleviate this source of misallocation by easing access to CF debt contracts. 
+\end{itemize} \normalsize
+
+
+\newpage
+
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item Out-of-equilibrium defaults model, where the lender sets maximum debt such that borrower never finds it optimal to default (dating back to Kiyotaki and Moore). 
+    \item Previous contributions associate asset based lending with asset based borrowing constraints and CF-based borrowing with earnings based constraints.    
+    \item One significant limitation of such no-default models they do not allow interest rate differences across firms - each firm pays the same risk free interest rates. Hence these model setup puts a lot of emphasis on debt covenants. 
+    \item Instead, I propose a heterogeneous firms model with in-equilibrium defaults which give rise to soft borrowing constraints. Hence, this model can incorporate firm-specific credits spreads. 
+    \item This allows me to study the determinants of credit spreads for asset based and CF-based debt contracts.
+    \item Why is an empirical setting not sufficient? Endogeneity issues. Firms adjust their AB and CF borrowing responding to credit spread. However, lenders adjust credit spreads responding to firms' credit demand. 
+    \item For instance, a firm that faces unfavorable credit-terms of CF-based debt would adjust towards borrowing against assets. However, this would allow the lender to relax the CF-based borrowing conditions for this firm. This mechanism flattens the observed relationship between credit demand and interest rates. 
+    \item Second certain unobservable factors could influence the credit terms offered by lenders. One such factor is lenders' perceived probability that the borrower would choose liquidation under financial distress. CF-based is not backed by 
+    \item (The two main vehicles creditors may use to control firms' borrowing are debt covenants and through interest rates. The no-equilibrium default setup has put and undue emphasis on the latter.)
+\end{itemize} \normalsize
+
+
+\end{document}

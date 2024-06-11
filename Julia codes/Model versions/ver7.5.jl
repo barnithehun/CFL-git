@@ -7,10 +7,10 @@ using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArr
 function gridsize()
     # grids sizes - x,k,b should be even numbers!!
     return(
-        x_size = 50,
-        e_size = 9,
-        k_size = 40,
-        b_size = 40)
+        x_size = 44,
+        e_size = 13,
+        k_size = 26,
+        b_size = 26)
 end
 
 function parameters()
@@ -25,13 +25,13 @@ function parameters()
     delta = 0.06
     pdef_exo = 0.04
     discount = beta
-    phi_a = 0.4
+    phi_a = 0.23
     tauchen_sd = 4
 
     kappa = 0.3               # capital recovery rate of CFL debt
-    zeta_R = 100               # fixed cost of reorganization
+    zeta_R = 15000               # fixed cost of reorganization
     tau_vec = 0:1             # vector of CFL reliances - optimal will be one or zero
-    zeta_L = 100
+    zeta_L = 0
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo = pdef_exo,
@@ -489,7 +489,7 @@ end
 ############ Results: calculation, only abl -> 0 ############ 
 wage = 1
 @elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
-@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.7)
+@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.8)
 
 c_e, f0 = EntryValue(SumPol, e_chain) 
 c_e0, f00 = EntryValue(SumPol0, e_chain0) 
@@ -504,6 +504,7 @@ mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00)
 PrintPol(SumPol, mu, SumPol0, mu0)    
 sumSS(SumPol0,Fmat0,f00)
 sumSS(SumPol,Fmat,f0)
+
 
 binnum = 20
 plot(plotPDF(binnum, 'k', SumPol), plotPDF(binnum, 'b', SumPol), plotPDF(binnum, 'l', SumPol),
