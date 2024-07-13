@@ -25,12 +25,12 @@ function parameters()
     delta = 0.06
     pdef_exo = 0.04
     discount = beta
-    phi_a = 0.23
+    phi_a = 0.4
     tauchen_sd = 4
 
     kappa = 0.3               # capital recovery rate of CFL debt
     zeta_R = 15000               # fixed cost of reorganization
-    tau_vec = 0:1             # vector of CFL reliances - optimal will be one or zero
+    tau_vec = 0:0.1:1             # vector of CFL reliances - optimal will be one or zero
     zeta_L = 0
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
@@ -488,8 +488,9 @@ end
 
 ############ Results: calculation, only abl -> 0 ############ 
 wage = 1
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
+
 @elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.8)
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
 
 c_e, f0 = EntryValue(SumPol, e_chain) 
 c_e0, f00 = EntryValue(SumPol0, e_chain0) 
@@ -497,13 +498,12 @@ c_e0, f00 = EntryValue(SumPol0, e_chain0)
 c_e0 / c_e 
 
 mu, m, xpol = stat_dist(SumPol, Fmat, f0)
-
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00)
 
 ############ Results: stationary distributions ############
 PrintPol(SumPol, mu, SumPol0, mu0)    
-sumSS(SumPol0,Fmat0,f00)
 sumSS(SumPol,Fmat,f0)
+sumSS(SumPol0,Fmat0,f00)
 
 
 binnum = 20

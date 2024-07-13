@@ -7,10 +7,10 @@ using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArr
 function gridsize()
     # grids sizes - x,k,b should be even numbers!!
     return(
-        x_size = 50,
-        e_size = 11,
-        k_size = 40,
-        b_size = 40)
+        x_size = 44,
+        e_size = 13,
+        k_size = 26,
+        b_size = 26)
 end
 
 function parameters()

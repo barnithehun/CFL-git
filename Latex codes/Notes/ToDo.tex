@@ -56,9 +56,11 @@
         \item Gonzalez and Sy - regressions on the interest rate spread. The they use bank, sector, year fixed effects, firm controls such as age, tangibility, profitability. Spread is defined as the loan rate minus the T-bill rate matched to the corresponding maturity. 
     \end{itemize}
     \item Re-read - Lian and Ma, Corbae and D'Erasmo \checkmark
-    \item Is there a variation in the debt covenants $\phi_k$, $\phi_\pi$? If there is no mention of this, then find some evidence that these vary across firms. 
-    \item Studies that have credit spreads in their regressions
-    \item Look at and mention the credit guarantee 
+    \item Is there a variation in the debt covenants $\phi_k$, $\phi_\pi$? If there is no mention of this, then find some evidence that these vary across firms - \textbf{NO} \checkmark 
+    \item Studies that have credit spreads in their regressions \checkmark
+    \item Check different calculations of capital misallocation \checkmark
+    \item Check the description of a partial equilibrium model  
+    \item The joint determinacy argument is a bit wobbly (try to see you would explain it) - this yields a self selection of firms which makes it hard to identify firm level determinants
 \end{itemize} \normalsize
 
 \newpage
@@ -97,11 +99,18 @@
         \item What explains the changes in net debt \checkmark
         \item What explains investment \checkmark
     \end{itemize}
-    \item Check if there is FISD data on WRDS
+    \item Check if there is FISD data on WRDS \checkmark
     \item Try firm level LSDV regressions \checkmark
-    \item Write an email about FJC 
-    \item \textbf{ERROR.} You should use the weighted average of spreads
+    \item \textbf{ERROR.} You should use the weighted average of spreads \checkmark
+    \item Re-do summary statistics without Canada in it \checkmark
+    \begin{itemize}
+        \item Summary stats \checkmark
+        \item Number of observations, firms etc \checkmark
+        \item Basic regressions \checkmark
+    \end{itemize}
+    \item Do additional plots on motivating evidence \checkmark
 \end{itemize} \normalsize
+
 
 \newpage
 
@@ -164,6 +173,10 @@
     \item \textbf{RUN.} See runs 9 productivity states - it works well, effect of CFL is large \checkmark
     \item \textbf{RUN.} 17 productivity states with no financial frictions \checkmark
     \item \textbf{RUN.} 17 productivity states and overall effects with the fixed gamma calibration \checkmark
+    \item Add a probability of default and a liquidation vs reorganization as a SS value to match
+    \item Check if the function of tau-q is defined flexibly for values between 0 and 1 \checkmark
+    \item Try rewriting the model with reorganization decision made by the firm. It is a much clearer exercise that way, although then it is not clear who pays the fixed costs
+    \item The fact that reorganizing firms do not exit is not implemented (probably would not change so much)
 \end{itemize} \normalsize
 \newpage
 \subsection*{To do and Notes - 04.18}
@@ -180,14 +193,13 @@
 \subsection*{Notes on comments and talk - 4.30}
 \begin{itemize} \setlength\itemsep{0em} \small
     \item Why do you need heterogenous firms (and structural model in general) - \textit{to be able to replicate how firms of different size, debt and productivity borrow against future cash-flows}
-    \item The RQ is way too general, it is better to focus on the 80\% the U-shape and the fact that hybrid borrowers exist - replicating hybrid borrowers would also be important, probably the easiest way to go about this is making liquidation probability depend CFl reliance, or to different debt maturity
     \item See alternative calibrations for the entry process. Higher productivity entries may increase the productivity gains from CF-based borrowing. 
     \item \textbf{ERROR.} The maximization over $\tau$ cannot be isolated from the rest of the firm decision (over $k'$ and $b'$) - so do not treat it as two separate optimizations
     \item Make the empirical analysis more precise, make regression not only on the stock of debt but also on the outflows of it. Identify all possible empirical determinants of CFL reliance and try to relate it to the model. Moreover, finds some proxies of ex-ante liquidation probability, if possible. 
     \item If you emphasize fixed costs in the default process, you need empirical support for it - \textit{This will be kind of hard to obtain because these costs are often non-monetary}
     \item People seem to be interested in accelerator mechanisms - look for some 
     \item Kill fixed costs from the lending side, you will not need them - enough to have them in the reorganization decision. 
-    \item Conceptually, do not de-couple default probability and liquidation probability, use the conditional probability - this would make the terminology easier, but it requires some revision of the model notation
+    \item Question what happens if firms had equal access to CF-based debt - no fixed cost or same liquidation probability
 \end{itemize} \normalsize
 
 

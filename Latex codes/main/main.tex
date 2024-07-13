@@ -99,32 +99,34 @@ In a broader context, this paper connects to the misallocation literature initia
 
 I study a total of 180388 debt contracts held by 8974 non-financial corporations between 2010Q1 and 2023Q2. Debt-level data is collected from S\&P's Capital IQ, and firm-level data is collected from Compustat North America. In the main body of this study, I analyze listed corporations, headquartered in the United States or Canada. Table 1. summarizes some firm and debt-level statistics over the observed time period. Later, I connect Capital IQ and ORBIS datasets to expand the cross-country coverage. The details of this analysis can be found in the appendix. \vspace{3mm} \\ 
 Let me first discuss certain limitations the analysis. Since Compustat is restricted to traded companies, SMEs are underrepresented in the sample. Only 22\% of firms in the sample fit the definition of SMEs (less than 250 employees and 50 millions USD of assets, or 38.5 million USD of revenue - this is EU definition). Another limitation is that I only observe firms that hold at least one debt contract. Therefore, I do not study the borrowing decisions on the extensive margin. Overall the dataset is not representative to the entire population of firms, but it includes the largest ones and those with a high potential for significant future growth.  Therefore, this analysis remains relevant for both the current and future performance of the production sector in the economy.
-
 \begin{table}[H] 
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{l|rrrrrr}
-\multicolumn{7}{l}{\textbf{Firm-Level Summary Statistics}} \\
-\hline
- & \textbf{Mean} & \textbf{p10} & \textbf{p25} & \textbf{Median} & \textbf{p75} & \textbf{p90} \\
-Total Assets (millions USD) & 4456.87 & 5.57 & 41.80 & 381.76 & 2136.15 & 8077.88 \\
-Qtr. Revenue (millions USD) & 893.06 & 0.00 & 3.47 & 65.17 & 417.56 & 1572.02 \\
-Employees (thousands) & 10.57 & 0.02 & 0.12 & 1.05 & 5.90 & 20.90 \\
-Equity (millions USD) & 1605.24 & 1.82 & 10.76 & 134.77 & 756.16 & 2774.05 \\
-Investment rate (\%) & 1.41 & 0.00 & 0.13 & 0.55 & 1.48 & 3.53 \\
-Firm Age (years) & 41.62 & 8.00 & 15.00 & 28.00 & 53.00 & 101.00 \\
-Asset growth rate (\%) & 2.41 & -10.48 & -3.60 & 0.21 & 4.19 & 13.78 \\
-Total debt value (millions USD) & 1569.56 & 0.60 & 5.05 & 72.10 & 702.12 & 3028.15 \\
-Leverage & 0.35 & 0.03 & 0.11 & 0.27 & 0.45 & 0.70 \\
-Debt to collateral & 0.51 & 0.11 &  0.26 &  0.52 & 0.75 & 0.89 \\ 
-Asset Pledgeability (\%) & 50.80 & 9.92 & 25.72 & 51.93 & 75.87 & 90.21 \\
-Liquidity & 0.16 & 0.01 & 0.03 & 0.08 & 0.20 & 0.44 \\
-\hline
-\end{tabular}%
-}
-\caption{\small Summary Statistics - all firms in the sample between 2010Q1 and 2023Q2}
-\label{tab:sumstat}
-\end{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{l|rrrrrr}
+    \multicolumn{7}{l}{\textbf{Firm-Level Summary Statistics}} \\
+    \hline
+     & \textbf{Mean} & \textbf{p10} & \textbf{p25} & \textbf{Median} & \textbf{p75} & \textbf{p90} \\
+    Total Assets (millions USD) & 4456.87 & 5.57 & 41.80 & 381.76 & 2136.15 & 8077.88 \\
+    Qtr. Revenue (millions USD) & 893.06 & 0.00 & 3.47 & 65.17 & 417.56 & 1572.02 \\
+    Employees (thousands) & 10.57 & 0.02 & 0.12 & 1.05 & 5.90 & 20.90 \\
+    Equity (millions USD) & 1605.24 & 1.82 & 10.76 & 134.77 & 756.16 & 2774.05 \\
+    Investment rate (\%) & 1.41 & 0.00 & 0.13 & 0.55 & 1.48 & 3.53 \\
+    Firm Age (years) & 41.62 & 8.00 & 15.00 & 28.00 & 53.00 & 101.00 \\
+    Asset growth rate (\%) & 2.41 & -10.48 & -3.60 & 0.21 & 4.19 & 13.78 \\
+    Total debt value (millions USD) & 1569.56 & 0.60 & 5.05 & 72.10 & 702.12 & 3028.15 \\
+    Leverage & 0.35 & 0.03 & 0.11 & 0.27 & 0.45 & 0.70 \\
+    Debt to collateral & 0.51 & 0.11 &  0.26 &  0.52 & 0.75 & 0.89 \\ 
+    Asset Pledgeability (\%) & 50.80 & 9.92 & 25.72 & 51.93 & 75.87 & 90.21 \\
+    Liquidity & 0.16 & 0.01 & 0.03 & 0.08 & 0.20 & 0.44 \\
+    \hline
+    \end{tabular}%
+    }
+    \caption{\small Summary Statistics - all firms in the sample between 2010Q1 and 2023Q2}
+    \label{tab:sumstat}
+    \end{table}
+    
+        
+    
 
 \subsection{Classification: asset-based and CF-based contracts \label{sec:classification}}
 Cash flow-based lending doesn't require borrowers to offer specific physical collateral. Instead, these loans may be unsecured or secured against the entire corporate entity (substantially all assets) or equity. In the absence of tangible collateral, lenders' in-default payoffs are chiefly determined by the borrower's going-concern value. Hence, to assess the risk inherent to each debt contract, lenders must monitor borrowers’ cash flows and evaluate their prospects on an ongoing basis.  \vspace{3mm} \\
@@ -179,54 +181,6 @@ All else fixed, firm age is also positively associated with CFL reliance. One wa
 Indicators of profitability are either insignificant or have a negative effect on CFL reliance.  One possible explanation to this is the prevalence of CFL for large companies that do not realize large cash flow relative to their size. Moreover, as figure \ref{chart:CFL} in the appendix indicates, certain companies that experience significant losses frequently maintain cash flow-based contracts. In any event, this evidence does not support the view lenders simply extrapolate current earnings to estimate future expected cash flows. \vspace{3mm} \\
 Instead, as I discuss in section \ref{sec:loan rates}, lenders must consider all discounted future cash flows. Hence, the perceived potential of the company matters more than its current profitability. Credit ratings can be interpreted as a proxy for this perception. Consistent with this view, results suggest that, firms with better credit rating (more favourable outsider perception) hold more CF-based debt. Another piece of evidence that points in this direction is that productivity, which measures the added value of the firm relative to its size, also consistently displays a positive and significant association with CFL reliance.  \vspace{3mm} \\
 Finally, the significant and robust difference between US and Canadian firms' CFL reliance can be interpreted as evidence that institutional factors, such as bankruptcy codes, legal environment and reporting standards have a considerable impact on lending choices - I study further cross country comparisons in section \ref{sec:A4} of the appendix.
-
-\begin{table}[H]
-    \centering
-    \label{tab:your_table_label}
-    \begin{tabular}{lcccccc}
-    \toprule
-    & \multicolumn{3}{c}{POLS} & \multicolumn{3}{c}{FE regression} \\
-    \cmidrule(lr){2-4} \cmidrule(lr){5-7}
-    \textbf{LHS}: CFL share & Value & SE & & Value & SE & \\
-    \midrule
-    Leverage & 0.176*** & (0.00662) & & 0.206*** & (0.0150) & \\
-    Pledgeability & -0.161*** & (0.0101) & & -0.174*** & (0.0297) & \\
-    Liquidity & 0.157*** & (0.0174) & & 0.0129 & (0.0256) & \\
-    Age & 0.00038*** & (4.96e-05) & & -0.011*** & (0.0014) & \\
-    Log of employees & -0.0118*** & (0.00229) & & 0.00753 & (0.00753) & \\
-    Log of revenue & -0.000854 & (0.00293) & & 0.00326 & (0.00391) & \\
-    Log of assets & -1.059*** & (0.0289) & & -0.550*** & (0.0987) & \\
-    Log of assets squared & 0.0701*** & (0.00168) & & 0.0353*** & (0.00588) & \\
-    Profit variance & & & & & & \\
-    Profitability & -0.44*** & (0.035) & & 0.035 & (0.033) & \\
-    Productivity & 0.511*** & (0.0757) & & & & \vspace{3mm} \\
-     \multicolumn{7}{l}{\textbf{Industries} - baseline: Agriculture and Fishing} \\
-    Construction  & -0.0836*** & (0.0266) & & & & \\
-    Manufacturing & -0.0182 & (0.0236) & & & & \\
-    Mining & 0.0611** & (0.0241) & & & & \\
-    Retail trade & -0.129*** & (0.0246) & & & & \\
-    Services  & -0.124*** & (0.0239) & & & & \\
-    Public Util., Transport & -0.0935*** & (0.0244) & & & & \\
-    Wholesale Trade & -0.0628** & (0.0249) & & & & \vspace{2mm} \\
-    \multicolumn{7}{l}{\textbf{Credit ratings}  - baseline: A} \\
-    A+ & 0.0539*** & (0.0149) & & & & \\
-    A- & -0.0606*** & (0.0143) & & & & \\
-    B+ & -0.174*** & (0.0118) & & & & \\
-    B & -0.109*** & (0.0119) & & & & \\
-    B- & -0.205*** & (0.0117) & & & & \\
-    C & -0.203*** & (0.0119) & & & & \\
-    D & -0.101*** & (0.0146) & & & &  \vspace{2mm} \\
-    Constant & 4.468*** & (0.128) & & 3.027*** & (0.428) & \\
-    \hline
-    Observations & 38,416 & & & 118,796 & & \\
-    R-squared & 0.261 & & & 0.041 & & \\
-    Number of companies & & & & 5,970 & & \\
-    \bottomrule
-    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
-    \end{tabular}%
-    \caption{\small Explaining CFL reliance in 3 regressions}
-\end{table}
-
 \begin{table}[H]
     \centering
     \label{tab:your_table_label}
@@ -299,7 +253,7 @@ Maintaining a cash flow-based debt contract may impose significant costs on the 
 \section{Model outline \label{sec:model}}
 \subsection{Firms and production \label{sec:production}}
 
-A mass of heterogeneous is firms producing a homogeneous consumption good, using labour, $n$ and capital, $k$. Firms are competitive, and face a decreasing returns to scale production technology:
+Heterogeneous firms produce a homogeneous consumption good, using labour, $n$ and capital, $k$. Firms are competitive, and face a decreasing returns to scale production technology:
 \begin{equation} \label{eq:prodf}
 y = \varepsilon k^{\alpha}n^{\nu}, \ \ \ \ \alpha,\nu \in (0,1),  \ \nu + \alpha \in (0,1)
 \end{equation}  

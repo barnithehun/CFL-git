@@ -7,10 +7,10 @@ using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArr
 function gridsize()
     # grids sizes - x,k,b should be even numbers!!
     return(
-        x_size = 50,
-        e_size = 11,
-        k_size = 40,
-        b_size = 40)
+        x_size = 44,
+        e_size = 13,
+        k_size = 26,
+        b_size = 26)
 end
 
 function parameters()
@@ -490,35 +490,38 @@ include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/StatDist_plot.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/sumSS.jl")
 
-
 ############ Results: calculation, only abl -> 0 ############ 
 wage = 1
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
-@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.7)
+
+@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.8)
+# @elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
 
 c_e, f0 = EntryValue(SumPol, e_chain) 
-c_e0, f00 = EntryValue(SumPol0, e_chain0) 
+# c_e0, f00 = EntryValue(SumPol0, e_chain0) 
 
-c_e0 / c_e 
+# c_e0 / c_e 
 
 mu, m, xpol = stat_dist(SumPol, Fmat, f0)
-mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00)
+# mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00)
 
 ############ Results: stationary distributions ############
-PrintPol(SumPol, mu, SumPol0, mu0)    
+#PrintPol(SumPol, mu, SumPol0, mu0)   
 
-sumSS(SumPol0,Fmat0,f00)
 sumSS(SumPol,Fmat,f0)
+sumSS(SumPol0,Fmat0,f00)
 
-binnum = 10
+
+binnum = 20
 plot(plotPDF(binnum, 'k', SumPol), plotPDF(binnum, 'b', SumPol), plotPDF(binnum, 'l', SumPol),
     plotPDF(binnum, 'y', SumPol), plotPDF(binnum, 'p', SumPol), plotPDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
 
+binnum = 10  
 plot(plotCDF(binnum, 'k', SumPol), plotCDF(binnum, 'b', SumPol), plotCDF(binnum, 'l', SumPol),
     plotCDF(binnum, 'y', SumPol), plotCDF(binnum, 'p', SumPol), plotCDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
 
 plotXE(SumPol, mu, e_chain)
 
+binnum = 10
 Ushape(binnum, SumPol, mu)
 
 ############ Results: dynamics simulations ##############
