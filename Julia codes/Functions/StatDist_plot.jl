@@ -73,6 +73,7 @@ function plotXE(SumPol, mu, e_chain)
 end
 
 
+
 # Production distribution
 function ProdDist(SumPol, mu, SumPol0, mu0)
 
@@ -80,6 +81,7 @@ function ProdDist(SumPol, mu, SumPol0, mu0)
     x_size, e_size, _, _ = gridsize()
     pdf_prod = zeros(e_size)
     cdf_prod = zeros(e_size)
+    
     for e_ind in 1:e_size
         
         pdf_intv = (e_ind-1)*x_size+1:e_ind*x_size
@@ -94,6 +96,7 @@ function ProdDist(SumPol, mu, SumPol0, mu0)
     x_size, e_size, _, _ = gridsize()
     pdf_prod0 = zeros(e_size)
     cdf_prod0 = zeros(e_size)
+
     for e_ind in 1:e_size
         
         pdf_intv = (e_ind-1)*x_size+1:e_ind*x_size
@@ -116,46 +119,37 @@ function ProdDist(SumPol, mu, SumPol0, mu0)
     
 end
 
+function plotTauDist(SumPol)
 
 
-function Ushape(binnum, SumPol, mu)
-
-    totalmass = sum(mu)
-    maxval = maximum(SumPol[:, 1] .+ SumPol[:, 3])
-    bins = [10; exp.(range(log(50), log(maxval+1), binnum-1))]
-    avg_CFL = zeros(binnum, 1)
-    mu_CFL = zeros(binnum, 1)
+    bins = 0:0.1:1
+    binfill = zeros(length(bins), 1)
     
-    n = size(SumPol,1)-1 
-    for bin = 1:binnum
+    n = size(SumPol,1)-1
+    for s_i = 1:n
 
-        for s_i = 1:n
-            val = SumPol[s_i, 1] + SumPol[s_i, 3]
+        val = SumPol[s_i,17] 
+        val_close = argmin(abs.(val .- bins))
 
-            if bin == 1
-
-                if  SumPol[s_i, 3] != 0 && val < bins[bin]
-                    avg_CFL[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
-                    mu_CFL[bin] += mu[s_i]/totalmass
-                end  
+        if SumPol[s_i, 3] != 0
+            if val_close != binnum
+                    
+                if val > bins[val_close]
+                    binfill[val_close + 1] += mu[s_i]
+                else
+                    binfill[val_close] += mu[s_i]
+                end
 
             else
-
-                if  SumPol[s_i, 3] != 0 && val > bins[bin-1] && val < bins[bin]
-                    avg_CFL[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
-                    mu_CFL[bin] += mu[s_i]/totalmass
-                end  
-
-
-            end  
-        end
-
+                binfill[val_close] += mu[s_i]
+            end   
+        end     
+    
     end
 
-    avg_CFL = avg_CFL ./ mu_CFL
-
-    plot(string.(round.(bins ./ 100)), avg_CFL, title = "Average CFL", xrotation=45, legend=false, linewidth = 3, size=(800, 600))
-
+    PDF = binfill ./ sum(binfill)
+    bin_labels = string.(bins)
+    plot = bar(bin_labels, PDF, title = "Histogram of CF-reliances", xrotation=45)
+    return ( plot )
     
 end
-
