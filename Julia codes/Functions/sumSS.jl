@@ -4,17 +4,15 @@ function sumSS(SumPol,Fmat,f0)
         n = size(SumPol,1)
         totalmass = sum(mu)
 
-        # THIS IS PRLY NOT CORRECT BUT IT ADDS UP AT LEAST
         # this contains firms that exit immidiately which are not counted in the model
         exitmass=transpose(mu)*xpol
         entrymass = m*(1-transpose(xpol)*f0) 
         exitshare = exitmass/totalmass 
 
-        totK =  transpose(mu)*SumPol[1:n,3]
-        totB =  transpose(mu)*SumPol[1:n,4]
-        totL =  transpose(mu)*SumPol[1:n,10] # Ns = Nd
-        totY =  transpose(mu)*SumPol[1:n,11]
-        totPi = transpose(mu)*SumPol[1:n,12]
+        totK =  transpose(mu[1:n-1])*SumPol[1:n-1,3]
+        totB =  transpose(mu[1:n-1])*SumPol[1:n-1,4]
+        totL =  transpose(mu[1:n-1])*SumPol[1:n-1,10] # Ns = Nd
+        totY =  transpose(mu[1:n-1])*SumPol[1:n-1,11]
 
         YtoL = totY/totL
 
@@ -24,7 +22,7 @@ function sumSS(SumPol,Fmat,f0)
 
         # here LIE does not work bc. Im averaging ratios - loop is more readible than the vectorized version
         avg_b2a, mu_b2a, avg_gam, mu_gam, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL, SMEshare = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        for s_i in 1:n
+        for s_i in 1:n-1
 
             if SumPol[s_i,4] != 0
                 avg_q += mu[s_i]/totalmass * SumPol[s_i,9]

@@ -65,7 +65,7 @@ The paper has the most added value in empirics. They can identify the liquidatio
 They have a connected dataset of firms, banks, debt contracts. They use this mainly to test some theories on the risk-taking channel on of monetary policy. They find little evidence of higher risk taking under lower interest rate on the bank side, but significant effects on the firms side. Especially through SMEs who are credit constrained and leverage up under lower interest rates. These results are not super relevant for me. \vspace{3mm} \\
 They also have information on collateral. They categorize accounts receivable, inventory and blanket liens as CF-based debt - they refer to it as going-concern value collateral. They also find that this is the best form of collateral for obtaining more credit which contradicts Luck and Santos. They find that SMEs often use CF-based debt (future claims on their enterprise value) rather than asset based debt (physical assets that can be liquidated). They also find a pecking order for collateral: the types of collateral that ease the borrowing constraint for SMEs the most are the ones that are backed by the going concern value of the firm. 
 
-\subsection*{Ivashina, Laeven, Moral-Benito, 2020}
+\subsection*{Ivashina, Laeven, Moral-Benito, 2020  \checkmark}
 They identify different debt-groups: leases and trade-debt asset based and CF-based debt contracts. They show that these loan types react differently to different shocks and revisit some influential papers in light of this. They find that financial crises propagate through banks' balance sheet are mainly driven CF-based debt. It is not super relevant for me since it is much more about the bank side of the problem than the borrower side. 
 
 \subsection*{Rampini and Viswanathan, 2022 \checkmark}
@@ -149,7 +149,7 @@ For me, the mostly interesting thing here is endogeneity. Applied to my model, f
     \item He looks into output differences due to capital deepening, misallocation on the intensive and on the extensive margin
 \end{itemize} \normalsize
     
-\subsubsection*{The Determinants of Credit Spreads - and covenant limits}
+\subsection*{The Determinants of Credit Spreads, and covenant limits}
 \begin{itemize}\setlength\itemsep{0em} \small
     \item \textbf{Sy and Gonzalez} - They do credit spread regressions on the loan level with firm-level controls (no firm-level average spreads regressions). Also, no state contingent debt covenants.
     \item \textbf{Choi, Drechsel, Öztürk} - Do not have state contingent debt covenants.
@@ -158,5 +158,34 @@ For me, the mostly interesting thing here is endogeneity. Applied to my model, f
     \item \textbf{Luck and Santos} - They look into how much credits spreads decrease when different kinds of collateral are in place (they also consider blanket liens as collateral so it connects to CF-based lending)
     \item \textbf{Asset Specificity of Nonfinancial Firms} - They also look at credit spreads, but in the context of monetary policy shocks.
 \end{itemize} \normalsize
+
+\newpage
+
+\subsection*{Calibration}
+
+Other papers: 
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item \textbf{Corbae and D'Erasmo}: They match a lot of moments, and these mostly relate to the liquidation and bankruptcy decisions. Parameters are estimated by simulated method of moments (SMM) that, in short, amount to minimizing the distance between model moments and data moments These distances are weighted by the optimal weighting matrix - I think this is needed when there are more moments than parameters. 
+    \item \textbf{Gonzalez and Sy}: As many moments as parameters (4-4). They do not explain the exact method of creating the loss function and minimizing it.
+    \item \textbf{Di Nola, Kaas and Wang}: Compute the model counterparts of the targets and choose parameter values to minimize the sum of squared percentage distances between model and data moments. 11 parameters match 13 moments. Some of the moments are exit rates at different firm sizes.
+    \item \textbf{Kochen}: Matches firm lifecycle moments  such as output growth and leverage, interest rate spread and equity financing at different age. He makes a big point out of also matching untargeted moments in the data - this is used for model validation. 
+\end{itemize} \normalsize
+
+\noindent Candidates for matching
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item EBITDA to Assets, Debt to EBITDA
+    \item Debt to Assets - bankrupt vs. non-bankrupt (reorganizing vs. liquidating)
+    \item Liquidation probability
+    \item Bankruptcy rate - the problem is that if you only use Compustat data you have to calibrate it to less than 1\%
+    \item Average (net) investment rate
+    \item Dividend to assets (do not have the data)
+    \item Recovery rates under reorganization and liquidation (do not have the data, and not sure how to get it)
+    \item Financial variables across firm sizes (mostly, the share CF-based lending would make sense)
+    \item Average probability of liquidation
+    \end{itemize} \normalsize
+
+
+
+
 
 \end{document}

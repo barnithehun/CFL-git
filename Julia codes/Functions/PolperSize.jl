@@ -1,3 +1,4 @@
+# For tau, this contains firms that wont default
 function Ushape(binnum, SumPol, mu)
 
     totalmass = sum(mu)
@@ -5,6 +6,7 @@ function Ushape(binnum, SumPol, mu)
     bins = [10; exp.(range(log(50), log(maxval+1), binnum-1))]
     
     avg_CFL = zeros(binnum, 1)
+    avg_pdef  = zeros(binnum, 1)
     mu_CFL = zeros(binnum, 1)
     
     n = size(SumPol,1)-1 
@@ -16,15 +18,17 @@ function Ushape(binnum, SumPol, mu)
 
             if bin == 1
 
-                if  SumPol[s_i, 3] != 0 && xval < bins[bin]
+                if  SumPol[s_i, 4] != 0 && xval < bins[bin]
                     avg_CFL[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
+                    avg_pdef[bin] += mu[s_i]/totalmass * SumPol[s_i,8]
                     mu_CFL[bin] += mu[s_i]/totalmass
                 end  
 
             else
 
-                if  SumPol[s_i, 3] != 0 && xval > bins[bin-1] && xval < bins[bin]
+                if  SumPol[s_i, 4] != 0 && xval > bins[bin-1] && xval < bins[bin]
                     avg_CFL[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
+                    avg_pdef[bin] += mu[s_i]/totalmass * SumPol[s_i,8]
                     mu_CFL[bin] += mu[s_i]/totalmass
                 end  
 
@@ -33,20 +37,22 @@ function Ushape(binnum, SumPol, mu)
     end
 
     avg_CFL = avg_CFL ./ mu_CFL
+    avg_pdef = avg_pdef ./ mu_CFL
 
-    plot(string.(round.(bins ./ 10)), avg_CFL, title = "Average CFL", xrotation=45, legend=false, linewidth = 3, size=(800, 600))
+    plot(string.(round.(bins ./ 10)), avg_CFL, title = "Average CFL", xrotation=45, label = "avg_tau", linewidth = 3, size=(800, 600))
+    plot!(string.(round.(bins ./ 10)), avg_pdef, label = "avg_pdef", linewidth = 3)
 
 end
 
 
-
+# For tau, this does not contain firms that wont default
 function Xcross(binnum, SumPol, mu)
 
     totalmass = sum(mu)
     maxval = maximum(SumPol[:, 1] .+ SumPol[:, 3])
     bins = [10; exp.(range(log(50), log(maxval+1), binnum-1))]
     
-    avg_t = zeros(binnum, 1)
+    avg_tau = zeros(binnum, 1)
     avg_gam = zeros(binnum, 1)
     mu_part = zeros(binnum, 1)
     
@@ -61,8 +67,8 @@ function Xcross(binnum, SumPol, mu)
 
                 if  SumPol[s_i, 4] != 0 && SumPol[s_i, 8] != 0 && xval < bins[bin]
 
-                    avg_t[bin] += mu[s_i]/totalmass * SumPol[s_i,14]
-                    avg_gam[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
+                    avg_tau[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
+                    avg_gam[bin] += mu[s_i]/totalmass * SumPol[s_i,14]
                     mu_part[bin] += mu[s_i]/totalmass
 
                 end  
@@ -71,8 +77,8 @@ function Xcross(binnum, SumPol, mu)
 
                 if  SumPol[s_i, 4] != 0 && SumPol[s_i, 8] != 0 && xval > bins[bin-1] && xval < bins[bin]
                     
-                    avg_t[bin] += mu[s_i]/totalmass * SumPol[s_i,14]
-                    avg_gam[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
+                    avg_tau[bin] += mu[s_i]/totalmass * SumPol[s_i,17]
+                    avg_gam[bin] += mu[s_i]/totalmass * SumPol[s_i,14]
                     mu_part[bin] += mu[s_i]/totalmass
 
                 end  
@@ -81,12 +87,13 @@ function Xcross(binnum, SumPol, mu)
         end
     end
 
-    avg_t = avg_t ./ mu_part
+    avg_tau = avg_tau ./ mu_part
     avg_gam = avg_gam ./ mu_part
 
 
-    plot(string.(round.(bins ./ 10)), avg_t, title = "Average CFL and liquidation Probability", xrotation=45, legend=false, linewidth = 3, size=(800, 600))
-    plot!(string.(round.(bins ./ 10)), avg_gam, title = "Average CFL and liquidation Probability", xrotation=45, legend=false, linewidth = 3, size=(800, 600))
+    plot(string.(round.(bins ./ 10)), avg_tau, title = "Average CFL and Liquidation Probability", 
+    xrotation = 45, label = "avg_tau", linewidth = 3, size = (800, 600))
+    plot!(string.(round.(bins ./ 10)), avg_gam, label = "avg_gam", linewidth = 3)
 
 end
 

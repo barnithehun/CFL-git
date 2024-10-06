@@ -1,8 +1,8 @@
 # Print policies
-function PrintPol(SumPol, mu, SumPol0, mu0)    
+function PrintPol(SumPol, mu)    
+# PrintPol(SumPol, mu, SumPol0, mu0)    
 
-
-    column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :l, :y, :Pi, :d, :gam, :Pi_liq, :Pi_reo, :tau, :val, :SSpercent]
+    column_names = [:x, :e, :k, :b, :next_x, :exit, :def, :pdef, :q, :l, :y, :Pi, :d, :gam, :Pi_liq, :Pi_reo, :tau, :Vdef, :Vliq, :Vreo, :liq, :val, :SSpercent]
 
     
     SumPoll = hcat(SumPol, round.(mu ./ sum(mu) .* 100, digits=4))

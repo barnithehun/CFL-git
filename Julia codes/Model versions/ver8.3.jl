@@ -1,9 +1,18 @@
 ###########################################################################
-############## VER 8.2 - Liquidation decision made by the firm ############
+############## VER 8.3 - Liquidation decision made by the firm ############
 ########### Does not work, it would introduce an extra state var ##########
 ###########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, SparseArrays, Dates, XLSX, DataFrames, Distributions, Random
+
+################ Importing result functions ###################
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim2.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPol.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/plotPol.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/StatDist_plot.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/sumSS.jl")
+####################################################################
 
 function gridsize()
     # grids sizes - x,k,b should be even numbers!!
@@ -16,23 +25,23 @@ function gridsize()
 end
 
 function parameters()
-    rho_e = 0.969
-    sigma_e = 0.146
-    nul_e = 1
-    DRS = 0.75
-    alpha = 1/3 * DRS
-    nu = 2/3 * DRS
-    pc = 15
-    beta = 0.96
-    delta = 0.06
-    pdef_exo = 0.04
-    discount = beta
-    phi_a = 0.4
-    tauchen_sd = 4
+    rho_e::Float64 = 0.969
+    sigma_e::Float64 = 0.146
+    nul_e::Int = 1
+    DRS::Float64 = 0.75
+    alpha::Float64 = 1/3 * DRS
+    nu::Float64 = 2/3 * DRS
+    pc::Float64 = 15.0
+    beta::Float64 = 0.96
+    delta::Float64 = 0.06
+    pdef_exo::Float64 = 0.03
+    discount::Float64 = beta
+    phi_a::Float64 = 0.4
+    tauchen_sd::Float64 = 4.0
 
-    kappa = 0.3               # capital recovery rate of CFL debt
-    zeta_R = 15000            # fixed cost of reorganization
-    zeta_L = 0
+    kappa::Float64 = 0.3               # capital recovery rate of CFL debt
+    zeta_R::Float64 = 15000            # fixed cost of reorganization
+    zeta_L::Float64 = 0
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo = pdef_exo,
@@ -254,6 +263,7 @@ function FirmOptim(wage; phi_c)
 
             # policies
             pol = policies[s_i]
+            
             k = a_vals[pol,1]
             b = a_vals[pol,2]
             t = a_vals[pol,3]
@@ -432,60 +442,50 @@ end
 ####### STATIONARY DISTRIBUTION ########
 function stat_dist(SumPol, Fmat, f0)
 
-# Exiting firms (voluntary + involuntary)
-n = size(SumPol,1)
-xpol = [SumPol[1:n-1,6] + SumPol[1:n-1,7] ; 1]
-Ident = Matrix(I,n,n)
+    # Exiting firms (voluntary + involuntary)
+    n = size(SumPol,1)
+    xpol = [SumPol[1:n-1,6] + SumPol[1:n-1,7] ; 1]
+    Ident = Matrix(I,n,n)
 
-xpol_mat = Ident - Diagonal(xpol)   # I - diag(X)
-f0 = xpol_mat*f0                    # (I - diag(X))f0 - entrants may quit immidiately
-Mmat = Fmat*xpol_mat                # M = F(I - diag(X))
+    xpol_mat = Ident - Diagonal(xpol)   # I - diag(X)
+    f0 = xpol_mat*f0                    # (I - diag(X))f0 - entrants may quit immidiately
+    Mmat = Fmat*xpol_mat                # M = F(I - diag(X))
 
-# unscaled stationary distribution
-mu_0 = inv(Ident - Mmat)*f0         # inv(I-M)*f0
+    # unscaled stationary distribution
+    mu_0 = inv(Ident - Mmat)*f0         # inv(I-M)*f0
 
-# ok, bc exit and default implies k = 0, n = 0
-Nd = transpose(SumPol[1:n,10])*mu_0
+    # ok, bc exit and default implies k = 0, n = 0
+    Nd = transpose(SumPol[1:n,10])*mu_0
 
-# This is given that labour supply is one (10000) inelastically
-m = 10000/Nd
-mu = m.*mu_0
+    # This is given that labour supply is one (10000) inelastically
+    m = 10000/Nd
+    mu = m.*mu_0
 
-return ( mu, m , xpol )
-    
+    return ( mu, m , xpol )    
 end
 
 function FindWage(wage; phi_c)  
 
-beta = parameters().beta
-SumPol, e_chain, _ = FirmOptim(wage, phi_c = phi_c)
+    beta = parameters().beta
+    SumPol, e_chain, _ = FirmOptim(wage, phi_c = phi_c)
 
-# productivities set to be equal to the stationary distribution of e_chain    
-e_entry  = reduce(+,stationary_distributions(e_chain))
+    # productivities set to be equal to the stationary distribution of e_chain    
+    e_entry  = reduce(+,stationary_distributions(e_chain))
 
-# entrant X distribution - x_e = 0  in every case 
-x_vals = unique(SumPol[:, 1])
-zero_index = findall(x -> x == 0.0, x_vals)
-x_entry = zeros(length(x_vals))
-x_entry[zero_index .+ 0] .= 1 # if x = 0 prob = 1 
+    # entrant X distribution - x_e = 0  in every case 
+    x_vals = unique(SumPol[:, 1])
+    zero_index = findall(x -> x == 0.0, x_vals)
+    x_entry = zeros(length(x_vals))
+    x_entry[zero_index .+ 0] .= 1 # if x = 0 prob = 1 
 
-# (x,e) are independent, the joint of the two distribution is their product
-xe_entry = [kron(e_entry, x_entry); 0] # also the f0 vector
+    # (x,e) are independent, the joint of the two distribution is their product
+    xe_entry = [kron(e_entry, x_entry); 0] # also the f0 vector
 
-# map the entry probabilities to values
-Ve = transpose(xe_entry) * (SumPol[:,end])*beta
+    # map the entry probabilities to values
+    Ve = transpose(xe_entry) * (SumPol[:,end])*beta
 
-return ( Ve )    
-
+    return ( Ve )    
 end
-
-################ Importing result functions ###################
-    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim.jl")
-    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim2.jl")
-    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPol.jl")
-    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/plotPol.jl")
-    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/StatDist_plot.jl")
-    include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/sumSS.jl")
 
 ############ Results: calculation, only abl -> 0 ############ 
 wage = 1

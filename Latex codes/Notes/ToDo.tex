@@ -59,11 +59,18 @@
     \item Is there a variation in the debt covenants $\phi_k$, $\phi_\pi$? If there is no mention of this, then find some evidence that these vary across firms - \textbf{NO} \checkmark 
     \item Studies that have credit spreads in their regressions \checkmark
     \item Check different calculations of capital misallocation \checkmark
-    \item Check the description of a partial equilibrium model  
-    \item The joint determinacy argument is a bit wobbly (try to see you would explain it) - this yields a self selection of firms which makes it hard to identify firm level determinants
-\end{itemize} \normalsize
+    \item Check the description of a partial equilibrium model  \checkmark
+    \item Try rewriting the model with reorganization decision made by the firm. It is a much clearer exercise that way, although then it is not clear who pays the fixed costs \checkmark
+    \item See about Leo-s comments - make a version where are his simple comments are fixed \checkmark
+    \item Rewrite the model such that it focuses more on lenders in default payoffs and treats the whole default resolution process as something that is important for model consistency but does not affect the central mechanism  \checkmark
+    \item Rewrite with alternative default decision  \checkmark
+    \item Rewrite with alternative pay-offs after default  \checkmark
+    \item Rewrite with the alternative productivity process  \checkmark
+    \item Rewrite with conditional probabilities on default - since defaults stay endogenous  \checkmark
+    \item Rewrite the introduction  such that it emphasizes the probability of liquidation more
+    \item Explain why the firm discounts the future by $\beta$ \checkmark
 
-\newpage
+\end{itemize} \normalsize
 
 \subsubsection*{ToDo - Empirics}
 \begin{itemize}\setlength\itemsep{0em} \small
@@ -75,7 +82,8 @@
     \item Are there non-linearities in reliance on CF based lending and leverage? - intuition is that it should pick up sharply after 0.3-0.4 when the debt cannot be fully collateralized anymore 
     \item Check if the interest rate of ABL debt is really lower that the interest rate of CFL debt \checkmark
     \item Gather interest rate data - make a dlevel data that has the interest rate spread \checkmark
-    \item Drop Canada observations! 
+    \item Drop Canada observations! \checkmark
+    \item Make credit spread data \checkmark
     \begin{itemize} 
         \item Check how many debt contracts have interest rate data \checkmark
         \item Check interest rate benchmarks - 80\% are NA and see most common benchmark types and how they are distributed across debt contracts  \checkmark
@@ -83,33 +91,43 @@
         \item Find/Calculate maturity in the data - (currmatu and maxmatu) \checkmark
         \item Collect T-bill info at different maturities for the past 12 years \checkmark
         \item Once you have credit spreads you can start running regressions (alternatively, you could look into studying interest rates without studying the credit spread) \checkmark
-        \item Look if you can collect data on the lender 
         \item There is an FJC defaults dataset - it is possible to connect but the quality of the connection is questionable \checkmark
     \end{itemize} 
     \item Alternative measures of EBITDA \checkmark - the overall picture is quite straightforward - ebitda decreases the spread, but more so for AB contracts than CF contracts - which is a bit of a puzzle 
-    \begin{itemize}
-        \item Try average growth of EBITDA in the past 4 quarters, also just try lagged EBITDA - they do not do much. \checkmark
-    \end{itemize}
+        \begin{itemize}
+            \item Try average growth of EBITDA in the past 4 quarters, also just try lagged EBITDA - they do not do much. \checkmark
+        \end{itemize}
     \item Make a regression of how much AB and CF debt firms have relative to their sizes (Firm-level regression, you need AB-val, CF-val, and truncation.) \checkmark
     \item Leverage should should be included with a lag - \textit{Maybe, actually it should not be if you do not put the debt volume in the regression.} \checkmark
     \item Study firm-level average external finance premium, for all 3 types of firms \checkmark
     \item Examine debt issuance as the outcome variable - not sure how to do this yet. The question is if the spread decreases issuance ceteris paribus. If it does that is evidence that the credit spread matters. \checkmark
-    \begin{itemize} \setlength\itemsep{0em} \small
-        \item What explains debt inflows (of AB or CF or both kind of debt) \checkmark
-        \item What explains the changes in net debt \checkmark
-        \item What explains investment \checkmark
-    \end{itemize}
+        \begin{itemize} \setlength\itemsep{0em} \small
+            \item What explains debt inflows (of AB or CF or both kind of debt) \checkmark
+            \item What explains the changes in net debt \checkmark
+            \item What explains investment \checkmark
+        \end{itemize}
     \item Check if there is FISD data on WRDS \checkmark
     \item Try firm level LSDV regressions \checkmark
     \item \textbf{ERROR.} You should use the weighted average of spreads \checkmark
     \item Re-do summary statistics without Canada in it \checkmark 
-    \begin{itemize} \setlength\itemsep{0em}
-        \item Summary stats \checkmark
-        \item Number of observations, firms etc \checkmark
-        \item Basic regressions \checkmark
-    \end{itemize}
+        \begin{itemize} \setlength\itemsep{0em}
+            \item Summary stats \checkmark
+            \item Number of observations, firms etc \checkmark
+            \item Basic regressions \checkmark
+        \end{itemize}
     \item Do additional plots on motivating evidence \checkmark
-\end{itemize} \normalsize
+    \item What did not work so far: \checkmark
+        \begin{itemize} \setlength\itemsep{0em}
+            \item Regressions when EBIDTA is positive or negative
+            \item Phat predictions - too unstable every results and their opposite too could be achieved
+            \item Probability of liquidations from FCJ is also pretty bad (works for dlevel but not for flevel)
+            \item Phat that is estimated by mean firm values is not robust enough either
+            \item Mean Phat is not robust enough either
+            \item Firm level regression - I am not a 100\% sure what it measures... I might just be the changes in the benchmark
+            \item Firm-level mean regressions for CF-based and AB-borrowers
+        \end{itemize}
+    \item What works: log-modulus transformation on EBITDA and then go with the original model interpretation \checkmark
+    \end{itemize} \normalsize
 
 
 \newpage
@@ -175,8 +193,20 @@
     \item \textbf{RUN.} 17 productivity states and overall effects with the fixed gamma calibration \checkmark
     \item Add a probability of default and a liquidation vs reorganization as a SS value to match
     \item Check if the function of tau-q is defined flexibly for values between 0 and 1 \checkmark
-    \item Try rewriting the model with reorganization decision made by the firm. It is a much clearer exercise that way, although then it is not clear who pays the fixed costs
-    \item The fact that reorganizing firms do not exit is not implemented (probably would not change so much) !!!!
+    \item The fact that reorganizing firms do not exit is not implemented! - not super important rn \checkmark
+    \item Rewrite with the double min in the lenders' payoff \checkmark
+    \item Rewrite with reorganization probabilities conditional on default \checkmark
+    \item Think about how to rewrite the productivity markov chain with the modifier   \checkmark
+    \item Update the liquidation decision  \checkmark
+    \item Do the calibration setup for 9.2 \checkmark
+    \item Add tau decision into 9.2
+    \item Go trough SumSS, see if you are really calibrating to the correct values 
+    \begin{itemize}
+        \item Consider the interest rate weighed by debt size - for now the avg. q is really low because some firm at zero cash on hand borrow a little at very high interest rates.
+        \item Note that you should not look at average liquidation probability for the summary stat but maybe for the share of liquidations vs reorganizations - there is a difference because Pdef is not equal across firms.  \checkmark
+        \item Debt to asset with also taking into account cash on hand is not the best idea in some cases. If firms with negative cash on hand and little capital hold debt their debt to asset may be negative. This messes up the average debt to asset values. In any case, if you really have a hard time matching it you can just redefine it.
+        \item Consider the moments candidates for estimation.
+    \end{itemize}
 \end{itemize} \normalsize
 \newpage
 \subsection*{To do and Notes - 04.18}
@@ -189,12 +219,10 @@
     \item One thing to try is to have a \textbf{productivity process that may jump from any point to a high productivity}. This would allow small firms to borrow against the possibility that they get this positive shock - there is one another paper that Marek has mentioned that does this. To keep firms from lingering on without producing anything, you would need to increase participation costs and default, costs. In this case small firms could have a decently high continuation value and borrow against future cash-flows but still stay small! 
 \end{itemize}  \normalsize
     
-
 \subsection*{Notes on comments and talk - 4.30}
 \begin{itemize} \setlength\itemsep{0em} \small
     \item Why do you need heterogenous firms (and structural model in general) - \textit{to be able to replicate how firms of different size, debt and productivity borrow against future cash-flows}
     \item See alternative calibrations for the entry process. Higher productivity entries may increase the productivity gains from CF-based borrowing. 
-    \item \textbf{ERROR.} The maximization over $\tau$ cannot be isolated from the rest of the firm decision (over $k'$ and $b'$) - so do not treat it as two separate optimizations
     \item Make the empirical analysis more precise, make regression not only on the stock of debt but also on the outflows of it. Identify all possible empirical determinants of CFL reliance and try to relate it to the model. Moreover, finds some proxies of ex-ante liquidation probability, if possible. 
     \item If you emphasize fixed costs in the default process, you need empirical support for it - \textit{This will be kind of hard to obtain because these costs are often non-monetary}
     \item People seem to be interested in accelerator mechanisms - look for some 
@@ -202,7 +230,4 @@
     \item Question what happens if firms had equal access to CF-based debt - no fixed cost or same liquidation probability
 \end{itemize} \normalsize
 
-
-
-
- \end{document}
+\end{document}
