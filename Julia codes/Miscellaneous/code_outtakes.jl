@@ -34,6 +34,16 @@ tau_vec = 0:0.1:1
     return q, tau
 
 
+# Sample data
+x = 1:10
+y1 = rand(10)
+y2 = rand(10)
+y3 = rand(10)
 
+# Create the three plots
+p1 = plot(x, y1, title="Plot 1", legend=false)
+p2 = plot(x, y2, title="Plot 2", legend=false)
+p3 = plot(x, y3, title="Plot 3", legend=false)
 
-fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+# Combine the plots into a single layout with a common x and y axis
+plot(p1, p2, p3, layout=(1,3), xlabel="X-axis label", ylabel="Y-axis label")

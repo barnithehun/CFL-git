@@ -4,23 +4,30 @@
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, SparseArrays, Dates, XLSX, DataFrames, Distributions, Random
 
-################ Importing result functions ###################
+################ Importing Result and Diagnostic Functions ###################
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim2.jl")
-include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPol.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPolOld.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/plotPol.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/StatDist_plot.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/sumSS.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PolperSize.jl")
-####################################################################
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/GamPol.jl")
+
+################ Importing Model Functions ###################
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/fn_Tau_Q.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/EntryValue.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/stat_dist.jl")
+
+##################################################################
+##
 
 function gridsize()
     # grid sizes - x, k, b should be even numbers!!
     x_size::Int = 44
-    e_size::Int = 17
+    e_size::Int = 13
     k_size::Int = 26
     b_size::Int = 26
-
     return (x_size = x_size, e_size = e_size, k_size = k_size, b_size = b_size)
 end
 
@@ -40,9 +47,9 @@ function parameters()
     tauchen_sd::Float64 = 4.0
 
     kappa::Float64 = 0.3           # capital recovery rate of CFL debt
-    zeta_R::Float64 = 25000.0      # fixed cost of reorganization
+    zeta_R::Float64 = 15000.0      # fixed cost of reorganization
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
-    zeta_L::Float64 = 0.0
+    zeta_L::Float64 = 100.0
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo = pdef_exo,
@@ -160,8 +167,6 @@ function FirmOptim(wage; phi_c)
                     if x_next < x_grid[end] && x_next > x_grid[1]
                         
                         x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
-
-                        
                         close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
             
                         # finding the correspoing indicies     
@@ -179,8 +184,8 @@ function FirmOptim(wage; phi_c)
                         
                 else
                     # this states two things: 
-                    # 1) if you are in an def state, you will be in an def state in the next period no matter the action
-                    # 2) if you choose and def action, you will be in an def state in the next period no matter the state
+                    # 1) if you are in an def state, you will be in an def state in the next period no matter the action (row of ones)
+                    # 2) if you choose def or exit action, you will be in an def state in the next period no matter the state (columns of ones)
                     Q[s_i, a_i, end] = 1
                             
                 end
@@ -204,7 +209,7 @@ function FirmOptim(wage; phi_c)
     while !isequal(kbexq_old,kbexq_new)
 
         iter += 1
-        if iter > 50
+        if iter >= 20
             println("Error: Iteration number exceeded $iter")
             break
         end
@@ -215,7 +220,7 @@ function FirmOptim(wage; phi_c)
          # actions
          next_b = a_vals[a_i,2]
          next_k = a_vals[a_i,1]
-         next_def =  a_i_vals[a_i,3]
+         next_def = a_i_vals[a_i,3]
          next_exit =  a_i_vals[a_i,4]
 
             for s_i in 1:n
@@ -293,12 +298,10 @@ function FirmOptim(wage; phi_c)
 
             # Summarise policies
             SumPol[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, l, y, Pi, d, gam, Pi_liq, Pi_reo, tau, val]    
-            
         end
         
         ###############################################################################
         # Probability of default, liquidation, PIliq and PIreo and implied q given optimal k', b' in each state
-        # @elapsed ThreadsX.foreach(1:n) do s_i
         for s_i in 1:n
 
             e_i = s_i_vals[s_i, 2]
@@ -356,13 +359,11 @@ function FirmOptim(wage; phi_c)
                 pdef_sa[s_i, a_i] = pdef
                 q_sa[s_i,a_i] = q
                 tau_sa[s_i,a_i] = tau
-                
                 gam_sa[s_i, a_i] = gam
                 Pi_liq_sa[s_i, a_i] = Pi_liq
                 Pi_reo_sa[s_i, a_i] = Pi_reo
             end
         end
-
         kbexq_new = SumPol[:, [3, 4, 7, 9]]
 
     end
@@ -467,30 +468,49 @@ end
 
 ############ Results: calculation, only abl -> 0 ############ 
 wage = 1
-
 @elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.8)
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
-
 c_e, f0 = EntryValue(SumPol, e_chain) 
-c_e0, f00 = EntryValue(SumPol0, e_chain0) 
-
-c_e0 / c_e 
-
 mu, m, xpol = stat_dist(SumPol, Fmat, f0)
+
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
+c_e0, f00 = EntryValue(SumPol0, e_chain0) 
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00)
 
-############ Results: stationary distributions ############
-PrintPol(SumPol, mu, SumPol0, mu0)    
+PrintPolOld(SumPol, mu)   
 
-zeta_R = parameters().zeta_R;
-zeta_L = parameters().zeta_L;
-
-println("Fixed costs: $zeta_R and $zeta_L")  
+############ Core results Results: stationary distributions ############
+println("The relative productivity of the ABL case is: ", round(c_e0 / c_e , digits=3))
+println("Fixed costs :", parameters().zeta_R, "and: ", parameters().zeta_L)  
 
 sumSS(SumPol,Fmat,f0)
-sumSS(SumPol0,Fmat0,f00)
+# sumSS(SumPol0,Fmat0,f00)
 
-############################################################
+binnum = 10
+# Pdef and CFL reliance
+Ushape(binnum, SumPol, mu) # in calculating tau, this contains firms with Pdef = 0
+# Gamma and CFL reliance
+Xcross(binnum, SumPol, mu) # in calculating tau, this does not contain firms with Pdef = 0
+# Average Debt policy and Interest rate across firm sizes
+QBplot(binnum, SumPol, SumPol0, mu, mu0) 
+
+# Q - against Gam this plot works well with x_size == 44 and e_size == 27 
+plot(GamPol(SumPol, 14, 22), GamPol(SumPol, 14, 23), GamPol(SumPol, 14, 25), 
+     GamPol(SumPol, 27, 22), GamPol(SumPol, 30, 23), GamPol(SumPol, 33, 25), 
+     layout = (2, 3), size = (1000, 800) )
+
+############ Results: dynamics simulations ##############
+
+# shows the average evolution of (X,K,B) and the share of esiting firms over 25 years
+_, e_size, _, _ = gridsize()
+# shows the average policies of firms of a given productivity across their lifecycle
+dynsim2(e_size - 2, 100000)
+
+# shows optimal policies of firms with a certain productivity, across x-sizes
+plotPol(SumPol0, SumPol, e_size - 3)
+
+
+
+############ Firm states and policies in stationary equilibrium ###########
 binnum = 20
 plot(plotPDF(binnum, 'k', SumPol), plotPDF(binnum, 'b', SumPol), plotPDF(binnum, 'l', SumPol),
     plotPDF(binnum, 'y', SumPol), plotPDF(binnum, 'p', SumPol), plotPDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))

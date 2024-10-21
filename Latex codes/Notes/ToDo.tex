@@ -197,16 +197,26 @@
     \item Rewrite with the double min in the lenders' payoff \checkmark
     \item Rewrite with reorganization probabilities conditional on default \checkmark
     \item Think about how to rewrite the productivity markov chain with the modifier   \checkmark
-    \item Update the liquidation decision  \checkmark
-    \item Do the calibration setup for 9.2 \checkmark
-    \item Add tau decision into 9.2
-    \item Go trough SumSS, see if you are really calibrating to the correct values 
+    \item Update the liquidation decision \checkmark
+    \item Go trough SumSS, see if you are really calibrating to the correct values \checkmark
     \begin{itemize}
-        \item Consider the interest rate weighed by debt size - for now the avg. q is really low because some firm at zero cash on hand borrow a little at very high interest rates.
+        \item Consider the interest rate weighed by debt size - for now the avg. q is really low because some firm at zero cash on hand borrow a little at very high interest rates - this sort of double weighed average is really hard to do based on the model - for now I let it go. \checkmark
         \item Note that you should not look at average liquidation probability for the summary stat but maybe for the share of liquidations vs reorganizations - there is a difference because Pdef is not equal across firms.  \checkmark
-        \item Debt to asset with also taking into account cash on hand is not the best idea in some cases. If firms with negative cash on hand and little capital hold debt their debt to asset may be negative. This messes up the average debt to asset values. In any case, if you really have a hard time matching it you can just redefine it.
-        \item Consider the moments candidates for estimation.
+        \item Debt to asset with also taking into account cash on hand is not the best idea in some cases. If firms with negative cash on hand and little capital hold debt their debt to asset may be negative. This messes up the average debt to asset values. In any case, if you really have a hard time matching it you can just redefine it - \textbf{Now, I am pretty sure that the correct way would be not taking x into account for assets.} \checkmark
+        \item Consider the moments candidates for estimation. \checkmark
     \end{itemize}
+    \item Update 8.2 such that it is `state of the art' \checkmark
+    \item Put the update part of the Findwage in a function
+    \item Create all diagnostics that you should make for the end model and then see how well they work for 8.2
+    \item See if the model could be work endogenous defaults and large Q matrices - saving the exo default in the description in the model would be a great - to do this, you need to check the conditional probability of default calculation is ok
+    \begin{itemize}
+        \item Commit to a liquidation decision function
+        \item Implement the probability of default function from ver 10 - see the average gam and CFL reliance it produces
+        \item See if it is possible to implement default shocks without multiplying the size of the Q matrix
+        \item 
+    \end{itemize}
+    \item Try to adapt exogenous defaults with zero value in 8.2 - Fmat matrix, change in the discount etc - keep in mind that you need to keep the model description believable
+    \item 
 \end{itemize} \normalsize
 \newpage
 \subsection*{To do and Notes - 04.18}

@@ -1,7 +1,7 @@
 # In this version, there are productivity shocks, you could consider a setup absent of them
 function auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, var::Char, simn_length, simt_length)
 
-    char_to_number = Dict('x' => 1, 'e' => 2, 'k' => 3, 'b' => 4, 'q' => 9, 'l' => 10, 'y' => 11, 'p' => 12, 'd' => 13, 't' => 17, 'v' => 18)
+    char_to_number = Dict('x' => 1, 'e' => 2, 'k' => 3, 'b' => 4, 'q' => 9, 'l' => 10, 'y' => 11, 'p' => 12, 'd' => 13, 'g' => 14, 't' => 17, 'v' => 18)
 
     varnum = get(char_to_number, var, 0)
 
@@ -97,7 +97,10 @@ function auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, var::Char, simn_length, simt_
 
 end
 
-function dynsim2(e_i, simn_length, simt_length)
+function dynsim2(e_i, simn_length)
+
+
+    simt_length = 15
     
     plot(auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 'x', simn_length, simt_length),
         auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 'k', simn_length, simt_length),

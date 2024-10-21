@@ -12,7 +12,7 @@ function plotPol(SumPolabl, SumPolcfl, e_val)
         
     end
     
-    x_size, _, _, _ = gridsize()
+    x_size = gridsize().x_size
     e_ind = e_val*x_size
     
     plott1 = plot(xvals, SPabl[e_ind-x_size+1:e_ind, 3], label="K", linewidth=3, alpha=0.8, xrotation=45)

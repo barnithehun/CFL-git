@@ -98,7 +98,6 @@ function Xcross(binnum, SumPol, mu)
 end
 
 
-
 function QBplot(binnum, SumPol, SumPol0, mu, mu0)
 
     totalmass = sum(mu)
@@ -144,7 +143,6 @@ function QBplot(binnum, SumPol, SumPol0, mu, mu0)
     avg_q8 = avg_q ./ mu_part
 
     # same for sumpol 0
-
     maxval = maximum(SumPol0[:, 1] .+ SumPol0[:, 3])
     bins = [10; exp.(range(log(50), log(maxval+1), binnum-1))]
     
@@ -186,13 +184,23 @@ function QBplot(binnum, SumPol, SumPol0, mu, mu0)
     avg_b0 = log10.(avg_b ./ mu_part)
     avg_q0 = avg_q ./ mu_part
 
-    plota = plot(string.(round.(bins ./ 10)), avg_b8, title = "Average debt", xrotation=45, legend=false, linewidth = 3, size=(600, 300))
-    plot!(string.(round.(bins ./ 10)), avg_b0, title = "Average debt", xrotation=45, legend=false, linewidth = 3, size=(600, 300))
+    # First plot: Average Log Debt
+    plota = plot(string.(round.(bins ./ 10)), avg_b8,
+        title = "Average Log Debt", xrotation = 45, legend = true,
+        linewidth = 3, label = "ABL + CFL", size = (600, 300), color = :blue)
 
-    plotb = plot(string.(round.(bins ./ 10)), avg_q8, title = "Average interest rates", xrotation=45, legend=false, linewidth = 3, size=(600, 300))
-    plot!(string.(round.(bins ./ 10)), avg_q0, title = "Average interest rates", xrotation=45, legend=false, linewidth = 3, size=(600, 300))
+    plot!(string.(round.(bins ./ 10)), avg_b0, 
+        linewidth = 3, linestyle = :dash, label = "ABL only", color = :red)  # Dashed line
 
-    plot(plota,plotb)
+    # Second plot: Average Interest Rates
+    plotb = plot(string.(round.(bins ./ 10)), avg_q8, 
+        title = "Average Interest Rates", xrotation = 45, legend = true, 
+        linewidth = 3, label = "ABL + CFL", size = (600, 300), color = :blue)
 
+    plot!(string.(round.(bins ./ 10)), avg_q0, 
+        linewidth = 3, linestyle = :dash, label = "ABL only", color = :red)  # Dashed line
+
+    # Combine the two plots
+    plot(plota, plotb)
 end
 
