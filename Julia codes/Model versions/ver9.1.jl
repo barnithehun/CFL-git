@@ -228,7 +228,7 @@ function FirmOptim(wage; phi_c)
         ddp = QuantEcon.DiscreteDP(R, Q, discount);
         results = QuantEcon.solve(ddp, PFI)
 
-        values = results.v;
+        Values = results.v;
         policies = results.sigma;  # optimal policy     
 
         ###################################################################
@@ -271,7 +271,7 @@ function FirmOptim(wage; phi_c)
             d = def == 0 ? fn_D(k, b, x, q) : 0
 
             # value
-            val = values[s_i]
+            val = Values[s_i]
 
             # Summarise policies
             SumPol[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, l, y, Pi, d, gam, Pi_liq, Pi_reo, tau, val]    
@@ -292,17 +292,16 @@ function FirmOptim(wage; phi_c)
                 gam = 0
                 Pi_reo = 0
                 Pi_liq = max(0, phi_a*(1-delta)*next_k - zeta_L)
-    
                 for next_e_i in 1:e_size
     
                     p_trans = e_ptrans[e_i, next_e_i]
-                    x_next = fn_X(next_k,next_b,e_vals[next_e_i])
+                    x_next = fn_X(next_k, next_b, e_vals[next_e_i])
     
                     x_close = argmin(abs.(x_next .- x_grid))   
                     xe_close = x_close + (next_e_i-1)*x_size
                     
                     next_def_close = a_i_vals[policies[xe_close], 3]
-                    val_close = values[xe_close]
+                    val_close = Values[xe_close]
     
                     if x_next < x_grid[end] && x_next > x_grid[1]
                         
@@ -311,7 +310,7 @@ function FirmOptim(wage; phi_c)
                         xe_far = x_far + (next_e_i-1)*x_size
     
                         next_def_far = a_i_vals[policies[xe_far], 3]
-                        val_far = values[xe_far]
+                        val_far = Values[xe_far]
                         
                         close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
                         
@@ -320,19 +319,20 @@ function FirmOptim(wage; phi_c)
     
                         pdef += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
                         gam += p_trans * fn_Gam(next_k, val) 
-                        Pi_reo += p_trans * max(phi_c*val - zeta_R, 0)
-    
+                        Pi_reo += p_trans * phi_c*val
+
                     else # close_weight = 1
                         val = val_close
                         pdef += p_trans * next_def_close                  
                         gam += p_trans * fn_Gam(next_k, val)
-                        Pi_reo += p_trans * max(phi_c*val - zeta_R, 0)                        
+                        Pi_reo += p_trans * phi_c*val                       
                     end  
                 
                 end 
     
-                # saving results for summary
                 q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+
+                # saving results for summary
                 pdef_sa[s_i, a_i] = pdef
                 q_sa[s_i,a_i] = q
                 tau_sa[s_i,a_i] = tau
@@ -427,12 +427,10 @@ plot(GamPol(SumPol, 14, 22), GamPol(SumPol, 14, 23), GamPol(SumPol, 14, 25),
 
 # Q - against Leverage this plot works well with x_size == 44 and e_size == 27 
 p1, p2 = DebtScedule(SumPol, 25, 20; phi_c = 0.8)
-p3, p4 = DebtScedule(SumPol, 25, 26; phi_c = 0.8)
+p3, p4 = DebtScedule(SumPol, 25, 23; phi_c = 0.8)
 p5, p6 = DebtScedule(SumPol, 25, 26; phi_c = 0.8)
 plot(p1, p2, p3, p4, p5, p6,
      layout = (3, 2), size = (800, 1000) )
-
-
 
 ############ Results: dynamics simulations ##############
 

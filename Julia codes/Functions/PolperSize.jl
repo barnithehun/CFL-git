@@ -91,9 +91,10 @@ function Xcross(binnum, SumPol, mu)
     avg_gam = avg_gam ./ mu_part
 
 
-    plot(string.(round.(bins ./ 10)), avg_tau, title = "Average CFL and Liquidation Probability", 
-    xrotation = 45, label = "avg_tau", linewidth = 3, size = (800, 600))
-    plot!(string.(round.(bins ./ 10)), avg_gam, label = "avg_gam", linewidth = 3)
+    plot(string.(round.(bins ./ 10)), avg_tau, title = "Average CFL and Liquidation Probability",
+         xrotation = 45, color=:blue, label = "Avg CFL rel.", linewidth = 3, size = (800, 600), legend = :bottomleft)
+    plot!(string.(round.(bins ./ 10)), avg_gam, color=:red, label = "Avg Pr. Liq.", linewidth = 3)
+
 
 end
 

@@ -90,8 +90,8 @@ function auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, var::Char, simn_length, simt_
 
     
     x_axis = 1:simt_length
-    plott = plot(x_axis, meanv_0, label= var*"_ab", linewidth=3)
-            plot!(x_axis, meanv, label= var*"_cf", linestyle=:dash, linewidth=3) 
+    plott = plot(x_axis, meanv_0, label= var*"_ab", color=:blue, linewidth=3)
+            plot!(x_axis, meanv, label= var*"_cf",  color=:red, linewidth=3) 
   
  return ( plott )
 
@@ -100,14 +100,16 @@ end
 function dynsim2(e_i, simn_length)
 
 
-    simt_length = 15
+    simt_length = 12
     
-    plot(auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 'x', simn_length, simt_length),
+    p = plot(auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 'x', simn_length, simt_length),
         auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 'k', simn_length, simt_length),
         auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 'b', simn_length, simt_length),
         auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 'q', simn_length, simt_length),
         auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 't', simn_length, simt_length),
         auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, 'v', simn_length, simt_length), layout=(2,3), size=(1200, 800))
+    plot!(p, suptitle="Firm Lifecycle Comparision", suptitlefontsize=20)
+
     
 end
 

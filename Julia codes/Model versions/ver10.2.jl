@@ -217,7 +217,7 @@ function FirmOptim(wage; phi_c)
     while !isequal(kbexq_old,kbexq_new)
 
         iter += 1
-        if iter > 30
+        if iter > 20
             println("Error: Iteration number exceeded $iter")
             break
         end
@@ -228,7 +228,7 @@ function FirmOptim(wage; phi_c)
          # actions
          next_b = a_vals[a_i,2]
          next_k = a_vals[a_i,1]
-         next_def =  a_i_vals[a_i,3]
+         next_def = a_i_vals[a_i,3]
          next_exit =  a_i_vals[a_i,4]
 
             for s_i in 1:n

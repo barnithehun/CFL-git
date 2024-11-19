@@ -277,7 +277,7 @@ I discretize the log-process via Tauchen's method, then take the exponents of th
 \subsection*{Calibration}
 \begin{itemize}\setlength\itemsep{0em} \small
     \item First find the data moments that you want to match - must be reproducible in the data and in the model
-    \item Then find the parameters you are that affect these moments the most without affecting other moments too much - you must have at least as many moments to match as the number of parameters (otherwise there are infinite solutions)
+    \item Then find the parameters that affect these moments the most without affecting other moments too much - you must have at least as many moments to match as the number of parameters (otherwise there are infinite solutions)
     \item Then, set a function that transforms the deviation of model values from their targets into a single value - sum of percentage deviations seem perfect
     \item Take the entire model as a function that takes the parameter values and produces the target values into the loss value defined by the function above. 
     \item Finally, send it into a solver. `Optim' package is good, you can use Nelder-Mead algorithm that requires no differentiation or LBFGS which differentiates which makes it faster but less robust.
@@ -431,18 +431,38 @@ The honest thing would be to add exit, liquidation and reorganization as separat
     \item Learning frictions in the model would be interesting: lenders would have to learn borrowers' productivity - this would allow them to lend against future cash flows (in general, she seems to be interested in information frictions, she has something similar with firms and workers). 
 \end{itemize} \normalsize 
 
-\subsection*{Nicolo's comments:} 
-\begin{itemize} \setlength\itemsep{0em} \small
-    \item \textbf{Intro}: Introduction is too long - move the literature slide to the intro of the intro, try to rephrase the first slides in a flow chart that explains what you do vs. the literature
-    \item \textbf{Intro}: Drop the formulas from the intro, its too early for those (use `only' in Latex)
-    \item \textbf{Intro}: Then research question - one at a time: first discuss micro level optimal policies, then on the next slide move on to aggregate implications 
-    \item \textbf{Empirical part}: Do not highlight in red because that usually implies mistakes - use some light blue
-    \item \textbf{Empirical part}: Probably best to talk little of the empirical results since it invites a lot of questions and you probably want to focus on the model part.  Just a quick summary of the main results, and then justify focusing on the structural model. You still should have backup slides though. 
-    \item \textbf{Model part}: Describe the environment: agents, GE, discrete time 
-    \item \textbf{Model part}: Model summary can stay as is, but for each bullet you need to have a hyperref that points to a backup slide and explains that part of the model
-    \item \textbf{Model part}: Have a slide that describes the model results, only then you can turn to results. 
-    \item \textbf{Results part}: make sure that you reflect on the RQs separately. Point out some untargeted moments. 
-\end{itemize} \normalsize 
+\subsection*{Brownbag comments - 2024 november} 
+\begin{itemize} \small
+    \item Motivation slides do not serve a purpose - why do we care about CF-AB lending and the liquidation probability jointly?
+    \item On liquidation and reorganization
+    \begin{itemize}
+    \item How to think of liquidation risk as completely exogenous, when it is in fact a decision of the borrower (and in some cases the lender) 
+    \item Emphasize the exogenous part in liquidation risk, which is the economies of scale in reorganization rather than the decreasing liquidation probability
+    \item Make it clear who decides on liquidation. Why lenders cannot decide on liquidation?
+    \item Why would firms choose liquidation when it can reorganize? (this comes from not introducing economies of scale)
+    \item Why would firms choose ever reorganization? (this comes from not introducing the exogenous default shock properly)
+    \item Who gets what after liquidation and reorganization. It should be consistent what the household pays and the lender get. This is the ($1-\phi_a$) issue. 
+    \item In case of reorganization what happens to $b'$ of the firm? - \textit{There are one period debt contracts: b' is what the firm would obtain optimally in the future.} 
+\end{itemize}
+    \item Need to introduce data sources, where you got them from how many observations etc. 
+    \item Just reflecting on existing literature is not a good motivation
+    \item Policy recommendation: not the best use of the model. Corbae and D'Erasmo also has this mechanism that higher liquidation probability changes access to CF-based debt
+    \item All four outcomes (exit, liquidation, reorganization, continuation) should show up in the value function
+    \item Color code equation, and  do not omit variables for brevity
+    \item Introduce the flow chart later
+    \item Existing literature not focusing on something is not a good motivation, just presenting fact about the literature will not cut it
+    \item Has to make it clear what is the outcome of the model and what is an inputs
+\end{itemize}
+
+\subsection*{Research meeting - 2024 november} 
+\begin{itemize} \small
+    \item There is still to much info before before the RQ
+    \item Make the RQ more 'macro' - how does 
+    \item Do not mention the SBRA in the beginning, it would be enough to bring it up later
+    \item Focus less on the empirics - its not the point of the paper, so it should have minimal weight on it
+    \item Talk about what you would do with the model, you calibrate it and the policy experiment
+    \item Probably better to get rid of the numbering (N1,2,3) on the bottom of the 3rd slide
+\end{itemize}
 
 
 \end{document}

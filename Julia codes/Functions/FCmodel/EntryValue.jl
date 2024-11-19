@@ -2,7 +2,7 @@
 function EntryValue(SumPol, e_chain)  
 
     # entrant ln(e) distribution - equal to the stationary distribution of e_chain    
-    e_entry  = reduce(+,stationary_distributions(e_chain))
+    e_entry  = reduce(+, stationary_distributions(e_chain))
 
     # entrant X distribution - x_e = 0  in every case 
     x_vals = unique(SumPol[:, 1])

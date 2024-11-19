@@ -23,7 +23,7 @@ function GamPol(SumPol, x_i, e_i)
         tauCgam[ind] = tau
     end
 
-    plot(title= "TFP = $e_val; x = $x_val", titlefont=font(12), legend=:topright, xlabel="Liquidation probability", ylabel="Inverse interest rate")
+    plot(title= "TFP = $e_val; CoH = $x_val", titlefont=font(12), legend=:topright, xlabel="Liquidation probability", ylabel="Inverse interest rate",  ylim=(0.96, 0.98))
     # Plot qCgam with dynamic line style based on tauCgam value
     for i in 2:length(gam_vec)
 
@@ -136,13 +136,14 @@ function DebtScedule(SumPol, x_i, e_i; phi_c)
         levrg[ind] =  next_b / next_k
     end
 
-    p1 = plot(title= "TFP = $e_val; k = $k_val", titlefont=font(12), legend=:topright, xlabel="Leverage", ylabel="Values")
-    plot!(levrg, q_a, label="q", lw=3)
+    p1 = plot(title= "TFP = $e_val", titlefont=font(12), legend=:topright, xlabel="Leverage", ylabel="Values")
+    plot!(levrg, q_a, label="q", color=:blue, lw=3)
     plot!(levrg, pdef_a, label="pdef", color=:red, linestyle=:dash, lw=3)
-
-    p2 = plot(title= "TFP = $e_val; k = $k_val", titlefont=font(12), legend=:topright, xlabel="Leverage", ylabel="Values")
-    plot!(levrg, gam_a, label="gam", lw=3)
+    
+    p2 = plot(title= "TFP = $e_val", titlefont=font(12), legend=:topright, xlabel="Leverage", ylabel="Values")
+    plot!(levrg, gam_a, label="gam", color=:blue, lw=3)
     plot!(levrg, tau_a, label="tau", color=:red, linestyle=:dash, lw=3)
+    
 
     return p1, p2
     

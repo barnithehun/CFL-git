@@ -1,28 +1,33 @@
 ###########################################################################
-############### VER 8.2 - Optimal liquidation decision  ###################
-#### 'gam' calculated as such is consistent with the exo default shocks ###
-# firm value calculated as such is consistent with zero value in default #
+############### VER 9.3 - Optimal liquidation decision  ###################
+######### Endogeneous default decisions, zero value in default ############
 ###########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, SparseArrays, Dates, XLSX, DataFrames, Distributions, Random
 
-################ Importing result functions ###################
+################ Importing Result and Diagnostic Functions ###################
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/dynsim2.jl")
-include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPol.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PrintPolNew.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/plotPol.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/StatDist_plot.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/sumSS.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/PolperSize.jl")
-####################################################################
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/GamPol.jl")
+################ Importing Model Functions ###################
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/fn_Tau_Q.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/EntryValue.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/stat_dist.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/FindWage.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/GridMake.jl")
+##################################################################
 
 function gridsize()
     # grid sizes - x, k, b should be even numbers!!
     x_size::Int = 44
-    e_size::Int = 17
+    e_size::Int = 27
     k_size::Int = 26
     b_size::Int = 26
-
     return (x_size = x_size, e_size = e_size, k_size = k_size, b_size = b_size)
 end
 
@@ -36,27 +41,26 @@ function parameters()
     pc::Float64 = 15.0
     beta::Float64 = 0.96
     delta::Float64 = 0.06
-    pdef_exo::Float64 = 0.04
+    pdef_exo::Float64 = 0.03
     discount::Float64 = beta
     phi_a::Float64 = 0.4
     tauchen_sd::Float64 = 4.0
 
     kappa::Float64 = 0.3           # capital recovery rate of CFL debt
-    zeta_R::Float64 = 25000.0      # fixed cost of reorganization
+    zeta_R::Float64 = 15000.0      # fixed cost of reorganization
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
-    zeta_L::Float64 = 200.0
+    zeta_L::Float64 = 0.0
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo = pdef_exo,
             discount = discount, phi_a = phi_a, tauchen_sd = tauchen_sd,
             kappa = kappa, zeta_R = zeta_R, zeta_L = zeta_L, tau_vec = tau_vec)
 end
-
 ####### FIRM OPTIM #######
 function FirmOptim(wage; phi_c)
 
     # calling parameters
-    rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo, discount, phi_a, tauchen_sd, kappa, zeta_R, zeta_L, tau_vec = parameters()
+    rho_e, sigma_e, nul_e, alpha, nu, pc, _, delta, pdef_exo, discount, phi_a, tauchen_sd, kappa, zeta_R, zeta_L, tau_vec = parameters()
 
     # calling grid size
     x_size, e_size, k_size, b_size = gridsize()
@@ -67,33 +71,13 @@ function FirmOptim(wage; phi_c)
         fn_Pi(k, e) = (1-nu)*fn_Y(k,e)-pc
         fn_X(k,b,e) =  fn_Pi(k, e) + (1-delta) * k - b
         fn_D(next_k, next_b, x, q) =  x - next_k + q * next_b
+        fn_Gam(k,val) = Int( (phi_a*(1-delta)*k - zeta_L) >= (phi_c*val - zeta_R)) # optimal liquidation
+        # fn_Gam(b,Pi_liq, Pi_reo, val) = Int( max(0, Pi_liq - b) >= (val - min(b, Pi_reo) - zeta_R)) # firm-based liquidation
 
-        fn_Gam(k,val) = Int( (phi_a*(1-delta)*k - zeta_L) >= (phi_c*val - zeta_R)) # liquidation decision b)
-
-        function fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
-
-            # vectorized for efficiency
-            q_tau = zeros(length(tau_vec))
-            if next_b == 0   
-                fill!(q_tau, beta)
-            else
-                q_tau .= (beta ./ next_b) .* ((1 .- pdef) .* next_b .+
-                    pdef .* gam .* min.(next_b, ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* kappa .* Pi_liq)) .+ 
-                    pdef .* (1 .- gam) .* min.(next_b, ((1 .- tau_vec) .* Pi_liq .+ tau_vec .* Pi_reo)))
-            end
-
-            q, tau_index = findmax(q_tau)
-
-            if isapprox(q, maximum(q_tau), atol=0.001) # == won't work here, there will always be a small numerical diff
-                tau = (1-gam)*Pi_reo > gam*Pi_liq ? 1 : 0
-            else
-                tau = tau_vec[tau_index]
-            end
-
-            return q, tau
-        end
-
-    # Setting the state-space
+        # calling grid size
+        x_size, e_size, k_size, b_size = gridsize()
+        
+        # Setting the state-space
         # productivity process
         e_chain = tauchen(e_size, rho_e, sigma_e, (1-rho_e)*nul_e, tauchen_sd)
         e_vals = exp.(e_chain.state_values) 
@@ -131,7 +115,7 @@ function FirmOptim(wage; phi_c)
         # adjusting the gridsize
         n = n+1
         m = m+2
-        
+
     #################################### 
     Q = zeros(n, m, n); 
     for a_i in 1:m
@@ -161,9 +145,7 @@ function FirmOptim(wage; phi_c)
                     # find the second closest
                     if x_next < x_grid[end] && x_next > x_grid[1]
                         
-                        x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
-
-                        
+                        x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1            
                         close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
             
                         # finding the correspoing indicies     
@@ -181,8 +163,8 @@ function FirmOptim(wage; phi_c)
                         
                 else
                     # this states two things: 
-                    # 1) if you are in an def state, you will be in an def state in the next period no matter the action
-                    # 2) if you choose and def action, you will be in an def state in the next period no matter the state
+                    # 1) if you are in an def state, you will be in an def state in the next period no matter the action (row of ones)
+                    # 2) if you choose def or exit action, you will be in an def state in the next period no matter the state (columns of ones)
                     Q[s_i, a_i, end] = 1
                             
                 end
@@ -193,20 +175,23 @@ function FirmOptim(wage; phi_c)
     # initital (!) endogeneous default probability for each state
     kbexq_old::Array{Float64, 2} = zeros(n, 4)
     kbexq_new::Array{Float64, 2} = fill(1.0, n, 4)
-    SumPol::Array{Float64, 2} = zeros(n, 18)
-    # q_sa::Array{Float64, 2} = fill(0.97, n, m)
+    SumPol::Array{Float64, 2} = zeros(n, 22)
     q_sa::Array{Float64, 2} = zeros(n, m)
     pdef_sa::Array{Float64, 2} = zeros(n, m)
     gam_sa::Array{Float64, 2} = zeros(n, m)
     Pi_liq_sa::Array{Float64, 2} = zeros(n, m)
     Pi_reo_sa::Array{Float64, 2} = zeros(n, m)
+    V_def_sa::Array{Float64, 2} = zeros(n, m)
+    V_liq_sa::Array{Float64, 2} = zeros(n, m)
+    V_reo_sa::Array{Float64, 2} = zeros(n, m)
+    liq_sa::Array{Float64, 2} = zeros(n, m)
     tau_sa::Array{Float64, 2} = zeros(n, m)
     iter::Int = 0
     ################ 
     while !isequal(kbexq_old,kbexq_new)
 
         iter += 1
-        if iter > 50
+        if iter >= 20
             println("Error: Iteration number exceeded $iter")
             break
         end
@@ -217,7 +202,7 @@ function FirmOptim(wage; phi_c)
          # actions
          next_b = a_vals[a_i,2]
          next_k = a_vals[a_i,1]
-         next_def =  a_i_vals[a_i,3]
+         next_def = a_i_vals[a_i,3]
          next_exit =  a_i_vals[a_i,4]
 
             for s_i in 1:n
@@ -248,12 +233,15 @@ function FirmOptim(wage; phi_c)
         ddp = QuantEcon.DiscreteDP(R, Q, discount);
         results = QuantEcon.solve(ddp, PFI)
 
-        values = results.v;
+        Values = results.v;
         policies = results.sigma;  # optimal policy     
 
         ###################################################################
         # summarising results
         for s_i in 1:n
+
+            # value
+            val = Values[s_i]
 
             # states
             x = s_vals[s_i, 1]
@@ -274,6 +262,9 @@ function FirmOptim(wage; phi_c)
             l = fn_L(k,e)  # n is taken by gridsizefun
             y = fn_Y(k,e)
             Pi = fn_Pi(k,e)
+            V_def = V_def_sa[s_i, pol]  
+            V_liq = V_liq_sa[s_i, pol]  
+            V_reo = V_reo_sa[s_i, pol]  
 
             # if the firm defaults or exits these cannot be interpreted
             if def == 0 && exit == 0
@@ -284,28 +275,59 @@ function FirmOptim(wage; phi_c)
                 Pi_liq = Pi_liq_sa[s_i, pol] 
                 Pi_reo = Pi_reo_sa[s_i, pol] 
             else
-                q = gam = Pi_liq = Pi_reo = tau = pdef = 0 
+                q = gam = Pi_liq = Pi_reo = tau = pdef =  0 
             end
 
             # if the firm defaults these cannot be interpreted
             d = def == 0 ? fn_D(k, b, x, q) : 0
 
-            # value
-            val = values[s_i]
+            # can only be interpreted if the firm defaults
+            liq = liq_sa[s_i, pol]
+            # liq = (def == 1) ? liq_sa[s_i, pol] : 0
 
             # Summarise policies
-            SumPol[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, l, y, Pi, d, gam, Pi_liq, Pi_reo, tau, val]    
+            SumPol[s_i, :] .= [x, e, k, b, next_x, exit, def, pdef, q, l, y, Pi, d, gam, Pi_liq, Pi_reo, tau, V_def, V_liq, V_reo, liq, val]    
             
         end
         
         ###############################################################################
         # Probability of default, liquidation, PIliq and PIreo and implied q given optimal k', b' in each state
-        # @elapsed ThreadsX.foreach(1:n) do s_i
+
+        # deterministic: V_def 
+        # what the firm takes after bankruptcy: V_liq and V_reo
+        for s_i in 1:n
+
+            # the problem is that this is current value not the future value given default and policies
+            val = Values[s_i]
+
+            for a_i in 1:m
+                # policies given (x,e)
+                k = a_vals[a_i,1]
+                b = a_vals[a_i,2]
+
+                # deterministic V_liq and V_reo and V_def
+                V_liq = max(0, phi_a * (1-delta) * k - b)
+                
+                V_reo = val - min(b, phi_c * val) - zeta_R
+                V_def = max(V_reo, V_liq)
+                liq = argmax([V_reo, V_liq]) - 1 # they will never be equal
+
+                # saving results
+                V_def_sa[s_i, a_i] = V_def 
+                V_liq_sa[s_i, a_i] = V_liq
+                V_reo_sa[s_i, a_i] = V_reo                  
+                liq_sa[s_i, a_i] = liq  
+            end
+        end
+
+        # stochastic (depending next prod.): gam, pdef, q
+        # what the lender takes after bankruptcy:  Pi_reo, Pi_liq
         for s_i in 1:n
 
             e_i = s_i_vals[s_i, 2]
 
             for a_i in 1:m
+
                 # policies given (x,e)
                 next_k = a_vals[a_i,1]
                 next_b = a_vals[a_i,2]
@@ -314,17 +336,16 @@ function FirmOptim(wage; phi_c)
                 gam = 0
                 Pi_reo = 0
                 Pi_liq = max(0, phi_a*(1-delta)*next_k - zeta_L)
-
                 for next_e_i in 1:e_size
 
                     p_trans = e_ptrans[e_i, next_e_i]
-                    x_next = fn_X(next_k,next_b,e_vals[next_e_i])
-
+                    x_next = fn_X(next_k, next_b, e_vals[next_e_i])
+                    
                     x_close = argmin(abs.(x_next .- x_grid))   
                     xe_close = x_close + (next_e_i-1)*x_size
                     
                     next_def_close = a_i_vals[policies[xe_close], 3]
-                    val_close = values[xe_close]
+                    val_close = Values[xe_close]
 
                     if x_next < x_grid[end] && x_next > x_grid[1]
                         
@@ -333,32 +354,43 @@ function FirmOptim(wage; phi_c)
                         xe_far = x_far + (next_e_i-1)*x_size
 
                         next_def_far = a_i_vals[policies[xe_far], 3]
-                        val_far = values[xe_far]
+                        val_far = Values[xe_far]
                         
                         close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
                         
-                        # value needed only for Pi_reo and gam
+                        # value needed only for Pi_reo
                         val = close_weight*val_close + (1-close_weight)*val_far    
-
+                        
                         pdef += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
-                        gam += p_trans * fn_Gam(next_k, val) 
-                        Pi_reo += p_trans * max(phi_c*val - zeta_R, 0)
+                        Pi_reo += p_trans * phi_c*val
+
+                        # probability of liq conditional on default
+                        if next_def_close == 1
+                            gam += p_trans * close_weight * liq_sa[xe_close, a_i] 
+                         elseif next_def_far == 1
+                            gam += p_trans * (1-close_weight) * liq_sa[xe_far, a_i] 
+                        end
+
 
                     else # close_weight = 1
                         val = val_close
-                        pdef += p_trans * next_def_close                  
-                        gam += p_trans * fn_Gam(next_k, val)
-                        Pi_reo += p_trans * max(phi_c*val - zeta_R, 0)                        
+                        pdef += p_trans * next_def_close 
+                        Pi_reo += p_trans * phi_c*val
+
+                        if next_def_close == 1
+                            gam += p_trans * liq_sa[xe_close, a_i]
+                        end
                     end  
                 
                 end 
 
-                # saving results for summary
+                gam = pdef == 0 ? 0 : gam/pdef
                 q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+
+                # saving results
                 pdef_sa[s_i, a_i] = pdef
                 q_sa[s_i,a_i] = q
                 tau_sa[s_i,a_i] = tau
-                
                 gam_sa[s_i, a_i] = gam
                 Pi_liq_sa[s_i, a_i] = Pi_liq
                 Pi_reo_sa[s_i, a_i] = Pi_reo
@@ -417,82 +449,54 @@ function FirmOptim(wage; phi_c)
 
 end
 
-####### ENTRANTS #######
-function EntryValue(SumPol, e_chain)  
-
-    # entrant ln(e) distribution - equal to the stationary distribution of e_chain    
-    e_entry  = reduce(+,stationary_distributions(e_chain))
-
-    # entrant X distribution - x_e = 0  in every case 
-    x_vals = unique(SumPol[:, 1])
-    zero_index = findall(x -> x == 0.0, x_vals)
-    x_entry = zeros(length(x_vals))
-    x_entry[zero_index .+ 0] .= 1 # if x = 0 prob = 1 
-
-    # (x,e) are independent, the joint of the two distribution is their product
-    xe_entry = [kron(e_entry, x_entry); 0] # also the f0 vector
-
-    # map the entry probabilities to values
-    beta = parameters().beta
-    Ve = transpose(xe_entry) * (SumPol[:,end])*beta
-
-    return ( Ve, xe_entry )    
-
-end
-
-####### STATIONARY DISTRIBUTION ########
-function stat_dist(SumPol, Fmat, f0)
-
-    # Exiting firms + defaulting firms
-    n = size(SumPol,1)
-    xpol = [SumPol[1:n-1,6] + SumPol[1:n-1,7] ; 1]
-    Ident = Matrix(I,n,n)
-
-    xpol_mat = Ident - Diagonal(xpol)   # I - diag(X)
-    f0 = xpol_mat*f0                    # (I - diag(X))f0
-    Mmat = Fmat*xpol_mat                # M = F(I - diag(X))
-
-    # unscaled stationary distribution
-    mu_0 = inv(Ident - Mmat)*f0         # inv(I-M)*f0
-
-    # ok, bc exit and default implies k = 0, n = 0
-    Nd = transpose(SumPol[1:n,10])*mu_0
-    Ns = 10000
-
-    # This is given that labour supply is one (10000) inelastically
-    m = Ns/Nd
-    mu = m.*mu_0
-
-    return ( mu, m , xpol )
-
-end
-
-############ Results: calculation, only abl -> 0 ############ 
+############ Results: ABL vs CFL  ##############
 wage = 1
-
 @elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c = 0.8)
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
-
 c_e, f0 = EntryValue(SumPol, e_chain) 
-c_e0, f00 = EntryValue(SumPol0, e_chain0) 
-
-c_e0 / c_e 
-
 mu, m, xpol = stat_dist(SumPol, Fmat, f0)
+
+
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c = 0)
+c_e0, f00 = EntryValue(SumPol0, e_chain0) 
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00)
 
-############ Results: stationary distributions ############
-# PrintPol(SumPol, mu, SumPol0, mu0)    
+PrintPolNew(SumPol, mu)   
 
-zeta_R = parameters().zeta_R;
-zeta_L = parameters().zeta_L;
-
-println("Fixed costs: $zeta_R and $zeta_L")  
-
+############ Core results Results: stationary distributions ############
+println("The relative productivity of the ABL case is: ", round(c_e0 / c_e , digits=3))
+println("Fixed costs :", parameters().zeta_R, "and: ", parameters().zeta_L)  
 sumSS(SumPol,Fmat,f0)
-sumSS(SumPol0,Fmat0,f00)
+# sumSS(SumPol0,Fmat0,f00)
 
-############################################################
+binnum = 10
+# Pdef and CFL reliance
+Ushape(binnum, SumPol, mu) # in calculating tau, this contains firms with Pdef = 0
+# Gamma and CFL reliance
+Xcross(binnum, SumPol, mu) # in calculating tau, this does not contain firms with Pdef = 0
+# Average Debt policy and Interest rate across firm sizes
+QBplot(binnum, SumPol, SumPol0, mu, mu0) 
+
+# Q - against Gam this plot works well with x_size == 44 and e_size == 27 
+plot(GamPol(SumPol, 14, 22), GamPol(SumPol, 14, 23), GamPol(SumPol, 14, 25), 
+     GamPol(SumPol, 27, 22), GamPol(SumPol, 30, 23), GamPol(SumPol, 33, 25), 
+     layout = (2, 3), size = (1000, 800) )
+
+# Q - against Leverage this plot works well with x_size == 44 and e_size == 27 
+p1, p2 = DebtScedule(SumPol, 25, 20; phi_c = 0.8)
+p3, p4 = DebtScedule(SumPol, 25, 26; phi_c = 0.8)
+p5, p6 = DebtScedule(SumPol, 25, 26; phi_c = 0.8)
+plot(p1, p2, p3, p4, p5, p6,
+     layout = (3, 2), size = (800, 1000) )
+
+############ Results: dynamics simulations ##############
+_, e_size, _, _ = gridsize()
+# shows the average policies of firms of a given productivity across their lifecycle
+dynsim2(e_size - 10, 100000)
+
+# shows optimal policies of firms with a certain productivity, across x-sizes
+plotPol(SumPol0, SumPol, e_size - 3)
+
+############ Firm states and policies in stationary equilibrium ###########
 binnum = 20
 plot(plotPDF(binnum, 'k', SumPol), plotPDF(binnum, 'b', SumPol), plotPDF(binnum, 'l', SumPol),
     plotPDF(binnum, 'y', SumPol), plotPDF(binnum, 'p', SumPol), plotPDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
@@ -501,71 +505,20 @@ binnum = 10
 plot(plotCDF(binnum, 'k', SumPol), plotCDF(binnum, 'b', SumPol), plotCDF(binnum, 'l', SumPol),
     plotCDF(binnum, 'y', SumPol), plotCDF(binnum, 'p', SumPol), plotCDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
 
-plotXE(SumPol, mu, e_chain)
-
-binnum = 10
-Ushape(binnum, SumPol, mu)
-Xcross(binnum, SumPol, mu)
+plotXE(SumPol, mu, e_chain)     
 plotTauDist(SumPol)
-QBplot(binnum, SumPol, SumPol0, mu, mu0)
-
-############ Results: dynamics simulations ##############
-x_size, e_size, _, _ = gridsize()
-plot(dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size-2),
-     dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size-1),
-     dynsim(SumPol, Fmat, simn_length = 100000, e_i = e_size), layout=(4,1), size=(1000, 800))
 
 
-############ Results: compariaion of policies and firm dynamics ##############
-plotPol(SumPol0, SumPol, 16)
-dynsim2(15, 100000, 15)
-ProdDist(SumPol, mu, SumPol0, mu0)
-
-############ General equilibrium: solving for wage ##############
-function FindWage(wage; phi_c)  
-
-    beta = parameters().beta
-    SumPol, e_chain, _ = FirmOptim(wage, phi_c = phi_c)
-
-    # entrant productivities set to be equal to the stationary distribution of e_chain    
-    e_entry  = reduce(+,stationary_distributions(e_chain))
-
-    # entrant X distribution - x_e = 0  in every case 
-    x_vals = unique(SumPol[:, 1])
-    zero_index = findall(x -> x == 0.0, x_vals)
-    x_entry = zeros(length(x_vals))
-    x_entry[zero_index .+ 0] .= 1 # if x = 0 prob = 1 
-
-    # (x,e) are independent, the joint of the two distribution is their product
-    xe_entry = [kron(e_entry, x_entry); 0] # also the f0 vector
-
-    # map the entry probabilities to values
-    Ve = transpose(xe_entry) * (SumPol[:,end])*beta
-
-    return ( Ve )    
-
-end
-
-#Finding wage given entry cost, using bisection 
+###### GENERAL EQUILIBRIUM: Finding wage given entry cost, using bisection ####
 tolerance = 1
 wage_0 = 1
 @elapsed SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c = 0)
 c_e, f0 = EntryValue(SumPol, e_chain) # free entry condition
 sumSS(SumPol,Fmat,f0)
 
-phi_c = 0.7
+phi_c = 0.8
 @elapsed wage_cfl = find_zero(wage -> FindWage(wage, phi_c = phi_c) - c_e, (0.99, 1.2), Bisection(), rtol=tolerance, verbose=true)
-wage_cfl = 1.0763
 SumPol, e_chain, Fmat = FirmOptim(wage_cfl, phi_c = phi_c)
 c_e, f0 = EntryValue(SumPol, e_chain)
 
 results_cfl = sumSS(SumPol,Fmat,f0)
-
-
-# wage_cfl = 1.0055664062499996   # e_size = 15, zeta = {15000,200}
-# wage_cfl = 1.0117187499999998   # e_size = 11, zeta = {15000,0}
-
-# wage_cfl = 1.0133691406249996   # e_size = 9, zeta = {15000,200}
-# wage_cfl = 1.0348437499999998   # e_size = 9, zeta = {1000,200}
-
-

@@ -125,10 +125,10 @@
             \item Mean Phat is not robust enough either
             \item Firm level regression - I am not a 100\% sure what it measures... I might just be the changes in the benchmark
             \item Firm-level mean regressions for CF-based and AB-borrowers
+            \item What liqprob to match to? What would be the liqprob according to IDB data if firms had the Compustat firm distribution - will be a very low number, around 10\%
         \end{itemize}
     \item What works: log-modulus transformation on EBITDA and then go with the original model interpretation \checkmark
     \end{itemize} \normalsize
-
 
 \newpage
 
@@ -206,17 +206,19 @@
         \item Consider the moments candidates for estimation. \checkmark
     \end{itemize}
     \item Update 8.2 such that it is `state of the art' \checkmark
-    \item Put the update part of the Findwage in a function
-    \item Create all diagnostics that you should make for the end model and then see how well they work for 8.2
-    \item See if the model could be work endogenous defaults and large Q matrices - saving the exo default in the description in the model would be a great - to do this, you need to check the conditional probability of default calculation is ok
+    \item Put the update loop of the FirmOptim in a function - \textbf{this could potentially save time but the implementation is very messy. I dropped it after a day but it may worth revisiting if I have runtime issues.} \checkmark
+    \item Create all diagnostics that you should make for the end model and then see how well they work for 8.2 \checkmark
+    \item See if the model could be work endogenous defaults and large Q matrices - saving the exo default in the description in the model would be a great - to do this, you need to check the conditional probability of default calculation is ok \checkmark
     \begin{itemize}
-        \item Commit to a liquidation decision function
-        \item Implement the probability of default function from ver 10 - see the average gam and CFL reliance it produces
-        \item See if it is possible to implement default shocks without multiplying the size of the Q matrix
-        \item 
+        \item Implement the probability of default function from ver 10 - see the average gam and CFL reliance it produces \checkmark
+        \item See if it is possible to implement default shocks without multiplying the size of the Q matrix \checkmark
     \end{itemize}
-    \item Try to adapt exogenous defaults with zero value in 8.2 - Fmat matrix, change in the discount etc - keep in mind that you need to keep the model description believable
-    \item 
+    \item Try to adapt exogenous defaults with zero value in 8.2 - Fmat matrix, change in the discount etc - keep in mind that you need to keep the model description believable \checkmark
+    \item Try implementing zero productivity in Q matrix instead of the exogenous defaults
+    \item Rewrite $\phi_c$ in the liquidation function
+    \item You can argue that you wanna give zero values to firms in default because if you do not then higher reorg. probability would affect firm values outside of reasons of debt finance. But, you want to shut down that channel
+    \item Actually the model where households pay to keep firms alive seems quite realistic - could be sold instead of firms doing the same
+    \item Think about making DRS intro a calibrated variable
 \end{itemize} \normalsize
 \newpage
 \subsection*{To do and Notes - 04.18}

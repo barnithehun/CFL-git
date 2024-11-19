@@ -3,7 +3,8 @@ function stat_dist(SumPol, Fmat, f0)
 
     # Exiting firms + defaulting firms
     n = size(SumPol,1)
-    xpol = [SumPol[1:n-1,6] + SumPol[1:n-1,7] ; 1]
+    # here it states that a firm in default state exits the market, it means that it need no updating after Fmat is changed to reflect Q
+    xpol = [SumPol[1:n-1,6] + SumPol[1:n-1,7] ; 1] 
     Ident = Matrix(I,n,n)
 
     xpol_mat = Ident - Diagonal(xpol)   # I - diag(X)
