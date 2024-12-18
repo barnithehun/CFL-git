@@ -1,25 +1,35 @@
-function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
+###########################################################################
+#############  UPDATE FIRM OPTIM TO YOUR LATEST VERSION !!! ################
+###########################################################################
 
-    # calling parameters
-    rho_e::Float64 = 0.967
+function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_a, iphi_c;  )
+
+    rho_e::Float64 = 0.969
     sigma_e::Float64 = 0.146
     nul_e::Int = 1
     DRS::Float64 = 0.75
     alpha::Float64 = 1/3 * DRS
     nu::Float64 = 2/3 * DRS
-    pc::Float64 = ipc
-    beta::Float64 = 0.98
-    delta::Float64 = idelta
-    pdef_exo::Float64 = ipdef_exo    
+    pc::Float64 =   ipc
+    beta::Float64 = 0.96
+    delta::Float64 = 0.1
+    pdef_exo_l::Float64 =  ipdef_exo
+    pdef_exo_s::Float64 =  pdef_exo_l
     discount::Float64 = beta
-    phi_a::Float64 = 0.4
-    tauchen_sd::Float64 = 4
-    kappa::Float64 = 0.3           # capital recovery rate of CFL debt
-    zeta_R::Float64 = izeta_R      # fixed cost of reorganization
-    tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
-    zeta_L::Float64 = izeta_L
+    phi_a::Float64 =  iphi_a
+    tauchen_sd::Float64 = 3
 
-    # calling grid size
+    kappa::Float64 = 0.1       # capital recovery rate of CFL debt
+    # zeta_Rl::Float64 =   4000
+    zeta_Rs::Float64 =  izeta_Rl
+    tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
+    zeta_L::Float64 = 0
+    phi_c_hh::Float64 =  0.4
+    Fcut::Float64 = 250
+    
+    phi_c::Float64 = iphi_c
+    zeta_Rl::Float64 = izeta_Rl
+
     x_size, e_size, k_size, b_size = gridsize()
 
     # setting optimization functions
@@ -28,8 +38,9 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
     fn_Pi(k, e) = (1-nu)*fn_Y(k,e)-pc
     fn_X(k,b,e) =  fn_Pi(k, e) + (1-delta) * k - b
     fn_D(next_k, next_b, x, q) =  x - next_k + q * next_b
-    fn_Gam(k,val) = Int( (phi_a*(1-delta)*k - zeta_L) >= (phi_c*val - zeta_R)) # optimal liquidation
-    # fn_Gam(b,Pi_liq, Pi_reo, val) = Int( max(0, Pi_liq - b) >= (val - min(b, Pi_reo) - zeta_R)) # firm-based liquidation
+    
+    # Liquidation policies
+    fn_Gam(val, zeta_R) = Int( 0 >= ((1-phi_c)*val - zeta_R)) # optimal liquidation
 
     # calling grid size
     x_size, e_size, k_size, b_size = gridsize()
@@ -38,12 +49,11 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
     # productivity process
     e_chain = tauchen(e_size, rho_e, sigma_e, (1-rho_e)*nul_e, tauchen_sd)
     e_vals = exp.(e_chain.state_values) 
-    # adding exogeneous default shocks
     e_ptrans = e_chain.p 
 
     # Log-grids
-    k_grid = [0;exp.(range(log(10), log(10*10^5), k_size-1))]
-    b_grid = [0;exp.(range(log(10), log(10*10^5), b_size-1))]  # no savings
+    k_grid = [0;exp.(range(log(10), log(10^5), k_size-1))]
+    b_grid = [0;exp.(range(log(10), log(10^5), b_size-1))]  # no savings
 
     x_low = fn_X(k_grid[1],b_grid[end], e_vals[1])
     x_high = fn_X(k_grid[end], b_grid[1], e_vals[end])
@@ -73,14 +83,23 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
     m = m+2
 
     #################################### 
+    # Collecting the probabilities of endogenous default in a matrix
+    Pdefmat = zeros(n, m);
+    for a_i in 1:m
+        for  s_i in 1:n 
+            next_k = a_vals[a_i, 1]   
+            Pdefmat[s_i, a_i] = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
+        end
+    end
+
+    
     Q = zeros(n, m, n); 
-    # exogeneous default - no matter the state or action you will have a P_exo chance to end up in default the next period
-    Q[:,:,end] .= pdef_exo 
-            
+    # exogenous default - no matter the state or action you will have a P_exo chance to end up in default the next period
+    Q[:,:,end] = Pdefmat
     for a_i in 1:m
         for  s_i in 1:n 
 
-            # productivities (indicies)
+            # productivities (indices)
             e = s_i_vals[s_i, 2]  # enough to save e, current x does not matter, since there are no financial frictions
 
             # actions (values)
@@ -98,7 +117,8 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
                     # where x falls on the grid - closer
                     x_close = argmin(abs.(x_next .- x_grid))
             
-                    # probability of transition from e_i to next_e_j 
+                    # probability of transition from e_i to next_e_j - conditional on no def
+                    pdef_exo = k >= Fcut ? pdef_exo_l : pdef_exo_s
                     p_trans = e_ptrans[e, next_e_i] * (1-pdef_exo)
             
                     # find the second closest
@@ -131,7 +151,7 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
         end
     end
 
-    # initital (!) endogeneous default probability for each state
+    # initial (!) endogenous default probability for each state
     kbexq_old::Array{Float64, 2} = zeros(n, 4)
     kbexq_new::Array{Float64, 2} = fill(1.0, n, 4)
     SumPol::Array{Float64, 2} = zeros(n, 18)
@@ -146,7 +166,7 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
     while !isequal(kbexq_old,kbexq_new)
 
         iter += 1
-        if iter >= 20
+        if iter >= 25
             println("Error: Iteration number exceeded $iter")
             break
         end
@@ -241,12 +261,17 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
         # Probability of default, liquidation, PIliq and PIreo and implied q given optimal k', b' in each state
         for s_i in 1:n
 
+            x_i = s_i_vals[s_i, 1]
             e_i = s_i_vals[s_i, 2]
     
             for a_i in 1:m
                 # policies given (x,e)
                 next_k = a_vals[a_i,1]
                 next_b = a_vals[a_i,2]
+
+                # exo probability of default and reorganization costs change with size
+                zeta_R = next_k >= Fcut ? zeta_Rl : zeta_Rs
+                pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
     
                 pdef_endo = 0
                 gam = 0
@@ -267,7 +292,7 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
                     if x_next < x_grid[end] && x_next > x_grid[1]
                         
                         x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
-                        # finding the correspoing indicies     
+                        # finding the corresponding indices     
                         xe_far = x_far + (next_e_i-1)*x_size
     
                         next_def_far = a_i_vals[policies[xe_far], 3]
@@ -279,13 +304,13 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
                         val = close_weight*val_close + (1-close_weight)*val_far    
     
                         pdef_endo += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
-                        gam += p_trans * fn_Gam(next_k, val) 
+                        gam += p_trans * fn_Gam(val, zeta_R) 
                         Pi_reo += p_trans * phi_c*val
     
                     else # close_weight = 1
                         val = val_close
                         pdef_endo += p_trans * next_def_close                  
-                        gam += p_trans * fn_Gam(next_k, val)
+                        gam += p_trans * fn_Gam(val, zeta_R)
                         Pi_reo += p_trans * phi_c*val         
                     end  
                 
@@ -298,7 +323,7 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
                 # adjusting the Pi_reo to the possibility of exo. default shock
                 Pi_reo = Pi_reo * (1-pdef_exo)
 
-                # updating Gamma: probability of liquidation either through endogeneous or exogeneous
+                # updating Gamma: probability of liquidation either through endogenous or exogenous
                 # gam = (gam*pdef_exo + pdef_endo - ( gam*pdef_exo * pdef_endo)) / pdef
 
                 # q and tau
@@ -316,21 +341,25 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
         kbexq_new = SumPol[:, [3, 4, 7, 9]]
 
     end
-    # println("Total 'main loop' iterations: ", iter)
-
+    println("Total 'main loop' iterations: ", iter)
+    
     ### Incumbent dynamics ### 
     # Fmat - from state n, what is the probability of ending up in state n', given optimal policy
     Fmat = zeros(n-1,n-1)
+    Fmat_bottom = zeros(n-1)
     for s_i in 1:(n-1)
                
         # policies imported from SumPol
         next_k = SumPol[s_i, 3]
         next_b = SumPol[s_i, 4]
-        
+
+        pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
+        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
+
         e_i = Int(floor( (s_i-1) / x_size) + 1) 
         for next_e_i in 1:e_size
 
-            p_trans = e_ptrans[e_i, next_e_i]
+            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo+SumPol[s_i, 8]))
             x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
             x_close = argmin(abs.(x_next .- x_grid))
@@ -357,8 +386,7 @@ function FirmOptim_Ext(wage, ipc, ipdef_exo, idelta, izeta_R, izeta_L; phi_c, )
     end
     
     # Taking defaults into account - makes Fmat nXn
-    Fmat = Fmat .* (1 .- SumPol[1:end-1, 8]) #this already takes into account def endo and def exo
-    Fmat = hcat(Fmat, SumPol[1:end-1, 8])
+    Fmat = hcat(Fmat, Fmat_bottom)
     Fmat = vcat(Fmat,  [zeros(1,n-1) 1] )
 
    return ( SumPol, e_chain, transpose(Fmat) )

@@ -8,7 +8,9 @@ function GamPol(SumPol, x_i, e_i)
     xe_i = x_i + (e_i-1)*x_size
 
     x_val = Int(round(SumPol[xe_i, 1],digits = 0))
-    e_val = round(SumPol[xe_i, 2],digits = 3)
+    e_val = round(SumPol[xe_i, 2],digits = 1)
+    b_val = Int(round(SumPol[xe_i, 4],digits = 0))
+
     next_b = SumPol[xe_i, 4]
     pdef = SumPol[xe_i, 8]
     Pi_liq = SumPol[xe_i, 15]
@@ -23,7 +25,7 @@ function GamPol(SumPol, x_i, e_i)
         tauCgam[ind] = tau
     end
 
-    plot(title= "TFP = $e_val; CoH = $x_val", titlefont=font(12), legend=:topright, xlabel="Liquidation probability", ylabel="Inverse interest rate",  ylim=(0.96, 0.98))
+    plot(title= "TFP = $e_val; CoH = $x_val, Debt = $b_val", titlefont=font(12), legend=:topright, xlabel="Liquidation probability", ylabel="Inverse interest rate",  ylim=(parameters().beta-0.022, parameters().beta))
     # Plot qCgam with dynamic line style based on tauCgam value
     for i in 2:length(gam_vec)
 
@@ -47,17 +49,20 @@ function DebtScedule(SumPol, x_i, e_i; phi_c)
     fn_Y(k, e) =  e*k^alpha*fn_L(k,e)^nu
     fn_Pi(k, e) = (1-nu)*fn_Y(k,e)-pc
     fn_X(k,b,e) =  fn_Pi(k, e) + (1-delta) * k - b
-    fn_Gam(k,val) = Int( (phi_a*(1-delta)*k - zeta_L) >= (phi_c*val - zeta_R)) # optimal liquidation
+    fn_Gam(val, zeta_R) = Int( 0 >= ((1-phi_c_hh)*val - zeta_R)) # optimal liquidation
 
     # parameters and grid
-    _,_, e_vals,_,e_ptrans, x_grid, _,s_i_vals, a_vals,a_i_vals = GridMake()
-    rho_e, sigma_e, nul_e, alpha, nu, pc, _, delta, pdef_exo, discount, phi_a, tauchen_sd, kappa, zeta_R, zeta_L, tau_vec = parameters()
+    _,_, e_vals,_, e_ptrans, x_grid, _, s_i_vals, a_vals,a_i_vals = GridMake()
+    rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, tauchen_sd, kappa, zeta_Rs, zeta_Rl, zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
+
+    # calling grid size
     x_size, e_size, k_size, b_size = gridsize()
 
 
     # setting up the grid 
     x_size = gridsize().x_size    
     xe_i = x_i + (e_i-1)*x_size    
+    
     # for later, to label the plot
     x_val = Int(round(SumPol[xe_i, 1],digits = 0))
     e_val = round(SumPol[xe_i, 2],digits = 3)
@@ -67,7 +72,7 @@ function DebtScedule(SumPol, x_i, e_i; phi_c)
     k_val = Int(round(next_k, digits = 0))
 
     # taking the possible values of debt 
-    b_vec  = 0:100:5*next_k
+    b_vec  = 0:100:8*next_k
     n = length(b_vec)
 
 
@@ -82,6 +87,9 @@ function DebtScedule(SumPol, x_i, e_i; phi_c)
     for (ind, next_b) in enumerate(b_vec)
         # policies given (x,e)
 
+        zeta_R = next_k >= Fcut ? zeta_Rl : zeta_Rs
+        pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
+
         pdef = 0
         gam = 0
         Pi_reo = 0
@@ -90,7 +98,7 @@ function DebtScedule(SumPol, x_i, e_i; phi_c)
         for next_e_i in 1:e_size
 
             p_trans = e_ptrans[e_i, next_e_i]
-            x_next = fn_X(next_k,next_b,e_vals[next_e_i])
+            x_next = fn_X(next_k, next_b, e_vals[next_e_i])
 
             x_close = argmin(abs.(x_next .- x_grid))   
             xe_close = x_close + (next_e_i-1)*x_size
@@ -113,13 +121,13 @@ function DebtScedule(SumPol, x_i, e_i; phi_c)
                 val = close_weight*val_close + (1-close_weight)*val_far    
 
                 pdef += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
-                gam += p_trans * fn_Gam(next_k, val) 
+                gam += p_trans *  fn_Gam(val, zeta_R) 
                 Pi_reo += p_trans * max(phi_c*val - zeta_R, 0)
 
             else # close_weight = 1
                 val = val_close
                 pdef += p_trans * next_def_close                  
-                gam += p_trans * fn_Gam(next_k, val)
+                gam += p_trans *   fn_Gam(val, zeta_R) 
                 Pi_reo += p_trans * max(phi_c*val - zeta_R, 0)                        
             end  
         

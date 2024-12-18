@@ -1,3 +1,5 @@
+#### UPDATE THIS TO THE LATEST VER IF YOU USE IT ####
+
 function GridMake()
 
         fn_L(k,e) =  (nu*e*k^alpha / wage)^(1/(1-nu))
@@ -16,8 +18,7 @@ function GridMake()
         e_chain = tauchen(e_size, rho_e, sigma_e, (1-rho_e)*nul_e, tauchen_sd)
         e_vals = exp.(e_chain.state_values) 
         # adding exogeneous default shocks
-        e_ptrans = e_chain.p .* (1-pdef_exo) 
-        e_ptrans[:,1] = e_ptrans[:,1] .+ pdef_exo
+        e_ptrans = e_chain.p
 
         # Log-grids
         k_grid = [0;exp.(range(log(10), log(10*10^5), k_size-1))]

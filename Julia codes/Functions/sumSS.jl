@@ -19,11 +19,9 @@ function sumSS(SumPol,Fmat,f0)
     totY =  transpose(mu[1:n-1])*SumPol[1:n-1,11]
 
     YtoL = totY/totL
-
-    # meanL = totL / totalmass 
-    # meanK = totK / totalmass 
-    # meanY = totY / totalmass 
-
+    KtoL = totK/totL
+    meanL = totL / totalmass 
+    
     # here LIE does not work bc. Im averaging ratios - loop is more readible than the vectorized version
     avg_b2a, mu_b2a, avg_gam, mu_gam, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL, SMEshare = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     for s_i in 1:n-1
@@ -33,7 +31,7 @@ function sumSS(SumPol,Fmat,f0)
             mu_q += mu[s_i]/totalmass
         end
 
-        if SumPol[s_i,8] != 0
+        if SumPol[s_i,8] != 0 && SumPol[s_i,4] != 0
             avg_gam += mu[s_i]/totalmass * SumPol[s_i,14]
             mu_gam += mu[s_i]/totalmass
         end
@@ -54,7 +52,7 @@ function sumSS(SumPol,Fmat,f0)
             mu_CFL += mu[s_i]/totalmass
         end  
 
-        if SumPol[s_i, 4] != 0 && (SumPol[s_i, 3]+SumPol[s_i, 1]) <= 5000 # if SumPol[s_i, 3] != 0 && (SumPol[s_i, 3]+SumPol[s_i, 1]) <= 5000 
+        if (SumPol[s_i, 3] + SumPol[s_i, 1]) <= 2000 
             SMEshare += mu[s_i]/totalmass
         end
         
@@ -65,13 +63,13 @@ function sumSS(SumPol,Fmat,f0)
     avg_gam = avg_gam / mu_gam
     avg_prod = avg_prod / mu_prod # sanity check
     avg_CFL = avg_CFL / mu_CFL
-    SMEshare = SMEshare / mu_CFL # mu_CFL has the same condition in the denominator
+    SMEshare = SMEshare # mu_CFL has the same condition in the denominator
 
     CFshare = (transpose(mu)*(SumPol[1:n,4] .* SumPol[1:n,17]))  /  totB
 
-    results = zeros(13,1)
-    results[:,1] = vcat(totalmass, exitmass, entrymass, exitshare, defshare, YtoL, avg_b2a, avg_q, avg_spread, avg_gam, avg_prod, CFshare, avg_CFL )
-    varnames = ["totalmass", "exitmass", "entrymass", "exitshare", "defshare", "YtoL", "avg_b2a", "avg intrate", "avg_spread",  "avg_liqprob","avg_prod", "CFshare", "avg_CFL"];
+    results = zeros(14,1)
+    results[:,1] = vcat(totalmass, exitmass, exitshare, YtoL, KtoL, meanL, avg_b2a, avg_q, avg_spread, avg_gam, avg_prod, CFshare, avg_CFL, SMEshare )
+    varnames = ["totalmass", "exitmass", "exitshare", "YtoL", "KtoL", "meanL", "avg_b2a", "avg intrate", "avg_spread",  "avg_liqprob","avg_prod", "CF share", "CF reliance", "SME share"];
     results = NamedArray(results, names=( varnames, ["values"] ) ,  dimnames=("Res", "ParamVal"))
 
   return ( results )

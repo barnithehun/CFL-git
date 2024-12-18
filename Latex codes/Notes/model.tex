@@ -67,7 +67,6 @@ The shortcoming is you have 3 state variables and 2 action variables, which mean
 \newpage
 \setcounter{equation}{0}
 
-
 \subsection*{Ver 2 - Fixed Qs - cash on hand - two-state productivity}
 Productivity process: two-state markov chain \vspace{3mm} \\
 Labour policy: 
@@ -274,7 +273,7 @@ $$ \ln(\varepsilon_{t+1}) = (1-\rho) \ln(\varepsilon_0) + \rho \ln(\varepsilon_t
 \end{itemize} \normalsize
 I discretize the log-process via Tauchen's method, then take the exponents of the productivity values. This process does have some mean reversion in it, due to the first term on the RHS - however not every paper have this term, KT13 for instance does not. Moreover, I found two calibration approach: in Kaas, Öztürk and Kochen it is high persistence with $\rho$ close to one and small innovations whereas with KT13 and CandD, $\rho$ is around $2/3$ and innovations are large. In these papers there is no reversion to the mean in the AR process. Overall, I am not a hundred percent sure how to best set it. 
 
-\subsection*{Calibration}
+\subsection*{Calibration in General}
 \begin{itemize}\setlength\itemsep{0em} \small
     \item First find the data moments that you want to match - must be reproducible in the data and in the model
     \item Then find the parameters that affect these moments the most without affecting other moments too much - you must have at least as many moments to match as the number of parameters (otherwise there are infinite solutions)
@@ -345,7 +344,7 @@ Allowing $b$ to be negative means that a lot of firms with low productivity but 
 \textbf{Firm dynamics - Fmat fix} \\ 
 Earlier model version Fmat does not take into account exits in firm dynamics. This does not affect optimal firms choices (those are informed by Q and R) but it affects stationary distribution. Big masses of firms pile up in weird steady states that are associated with high liquidation probability. In later versions (up from ver7.2) this is fixed. Transition values in Fmat are scaled down with the endogeneous default probability, and a separate column for default-state is added. Overall the differences after the update are not large, but still visible. \vspace{3mm} \\
 \textbf{The determinants of firm size} \\
- The Lukas type span of control parameter, and the price of the final good are the best to limit firm size. If you want more firms to participate (and firms participate from a lower cash on hand level) decrease the participation cost of entering. \vspace{3mm} \\
+ The Lukas type span of control parameter, and the price of the final good are the best to limit firm size. The `Tauchen sd' parameter is also good to limit the productivities, and hence the dispersion of firm sizes. If you want more firms to participate (and firms participate from a lower cash on hand level) decrease the participation cost of entering. \vspace{3mm} \\
 \textbf{Fixed costs} \\
 Cost of reorganization is pretty much a given in the model. However, it is not clear whether it should be imposed on the lender or on the borrower. If the liquidation decision is made optimally by a third party, it should not matter who pays for it. But, you might be able to get a more direct effect on the  availability of CF-based debt if the lender is directly affected by this fixed cost and not just through the liquidation probability. Fixed costs of liquidation are used by Corbae and D'Erasmo. It is not necessary for the model mechanism but it may help to reproduce some moments in the data. These are the U-shape, meaning that small firms often borrow against cash flows, and the average CF-reliance. \vspace{3mm} \\
 \textbf{Default shocks} \\
@@ -362,17 +361,18 @@ The big problem is that the model does not react monotonously to changes in $\ze
 \textbf{How to rewrite code when Vdef is not equal to zero?} \\
 It now seems that it is not possible to calculate these in the QuantEcon setup without considering $(k,b,\varepsilon)$ as state variables. The problem is that to decide if a firm would choose liquidation or reorganization, you would have to know $k,b$ in default. However this is not possible to calculate with only $x,\varepsilon$ as state variables. Added complication is that for reorganization you also need to know the value of the firm, but the value in reorganization affects the value in the first place. This can be embedded in the main loop but the convergence properties are questionable. \vspace{3mm} \\ 
 Furthermore, if you make the either liquidation or reorganization value dependent on $\tau$, it is no longer true that the $\tau$ that maximizes $q$ is the optimal. In this case, you need to consider an additional decision variable, as in ver8.3. This might add too much computation cost. Alternatively, you can consider a setup where the value of liquidation for the firm is always zero and the value of reorganization is fraction of the continuation value minus the fixed cost. This can be made consistent with the lenders payoffs by assuming that whatever is not taken by the lender and not gained by the firm is simply a welfare loss. This way, default value does not depend on $\tau$, so it is enough to search for optimal CF-reliance in a simple loop.  \vspace{3mm} \\
+Note that having zero value in reorganization can be a feature. If this was not the case, higher ex-ante liquidation probability would decrease firm value even in the absence of external finance, simply through increasing the chance of inefficient liquidation. I want to shut down this channel. \vspace{3mm} \\
 \textbf{Issue of reorganizations} \\
 \textit{Note that you do not have this issue if reorganizations happen only exogenously! Moreover, since it only affects the stationary distribution of firms and there are very few reorganizing firms to begin with, this is the kind of issue that would change the results very little once fixed.} \vspace{3mm} \\ The model assumes that with default, the firm decision on future values of $k$ and $b$ does not matter. This eases the computational burden, since you do not have to multiply the size of the decision matrix - the [k,b] grid - only add two lines to the bottom. One for default and one for exit. However, this is not true when firms may choose reorganization in default. In this case, they continue to the next period and they must make decisions on (k,b). \vspace{3mm} \\
 The honest thing would be to add exit, liquidation and reorganization as separate decision variables, and then allow reorganizing firms to choose any value of (k,b). But this would double the size of the (k,b) grid for reorganization \{0,1\}. This would probably be too much computationally. One way around this would be to assume that reorganizing firms do not exit but they must choose $k',b' = 0$. This would imply a next period cash on hand close to zero and a productivity that is defined by the AR(1) process. This could work but it is a bit patchy and it would complicate the Vdef issue. \vspace{3mm} \\ 
-\textbf{Big problems right now}
-\begin{itemize}
-    \item How would it be possible to decide between liquidation or reorganization without adding an extra state variables
-    \item How to match the share of reorganizations without making the default decision and productivity shocks too complicated
-    \item How to solve the VFI in the QuantEcon package if the value of default is not zero universally.
-\end{itemize}
- 
 \newpage
+
+
+\section*{Calibration} 
+\textbf{Calibrating CF share} It is possible to calibrate liquidation probability and CF-share at the same time, by setting a low $\phi_c$, around 0.2-0.3. \textit{Note that there was an error in the fnQ function before which made matching both very hard.} This invites a different kind of problem: if $\phi_c$ is very low, large firms may choose to borrow against assets since they have a huge capital stock and their continuation value is not that large in relative terms. \\
+\textbf{Calibrating liquidation probability}. You can adjust the average liquidation probability quite flexibly. So, the question is what to calibrate towards. If you project the Compustat distribution to IDB firms, you get an average liquidation probability of 0.23. The problem is that in this case liquidation risk is not a major impediment for most firms so you cannot get a large improvement by decreasing the reorganization cost. So it is probably better to project the IDB distribution to the Compustat firms. This leads to an around 50\% liquidation probability, and allows larger improvements from decreasing reorganization costs. 
+\textbf{Current Calibration}.
+
 
 \section*{Comments}
 \subsection*{Leo's comments}
@@ -391,36 +391,19 @@ The honest thing would be to add exit, liquidation and reorganization as separat
     \item Try to shorten lenders' expected payoffs section
     \item The values in the table are misleading - they actually should be expressed per unit of debt
 \end{itemize} \normalsize
-\textbf{Options to consider}:
-\begin{itemize}\setlength\itemsep{0em} \small
-    \item When a firm is reorganized the asset-based lender still liquidates assets and the CF-based lenders receives only the continuation value of the firm with reduced assets: this has some merits since liens on all assets are set up like this, on the other hand it invalidates a lot of what I argue before with the best interest of creditor test
-    \item To make the model internally consistent, use an exogenous default shock and two options under default: liquidation and reorganization; and two options under no default: exit or continuation. It would be possible to avoid an extra state variable in the main optimization, since $b$ would only matter for the firm when it was in default. Therefore maximizing $V_{cont}$ would be unaffected by current $b$ but firms could take into account that $b'$ affects the value in default - \textit{this is what Leo refers to as well.} \vspace{3mm} \\
-    Maybe, this could be done with just negative shocks - in this case the borrower would only choose reorganization if it could not repay its debt!
-    \item Consider a model where the borrower has to pay some share of the debt to the lender in case of reorganization
-    \item Maybe it would be better to emphasize the two most important simplification assumptions: there is only a single lender and only two types of debt contracts. It would be easy to argue that any deviation from this would increase the complexity of the model a lot. 
-    \item Probably it would be best to start with the assumptions of lenders in-default payoffs. 
-\end{itemize} \normalsize
 
 \subsection*{Marek's comments}
 \begin{itemize}\setlength\itemsep{0em} \small
     \item For faster convergence, try relaxing the convergence criteria in the while loop. Do not deed to do it until numerical precision - \textit{not sure it would help too much but worth a try}
     \item Check Julia Profilers 
-    \item Do typesetting for every variable not just the parameters
     \item You need at least as many moments as parameters, otherwise you parameters are not well defined - \textit{this should be especially important when it comes to solving the calibration with a solver, see below}
     \item When you do calibration, just put the entire model as a function, with parameter values as inputs. Then set a distance from target as an output of this function. Finally, choose a solver that minimizes this distance. 
     \item When setting moments to target, look at BDS and Compustat values. Then choose a linear combination of these targets depending on how close the firm distribution in your model is to BDS versus Compustat. 
     \item You could match to average size - \textit{although measuring anything in efficiency units of productivity you can scale up or down the entire as much as you want}
-    \item Consider not reporting wages at all - same for exit rates. These would just invite some unwelcome questions.
-    \item The model is actually dynamic, it just lack aggregate shocks 
+    \item The model is actually dynamic, it just lacks aggregate shocks 
     \item Firm age is actually important in the model! - even though you do not have this in explicitly in the model, it matters because as there is really no other way for a firm to be young and productive at the same time - \textit{maybe add extreme positive shock to reduce this issue}
     \item Think about the story you are telling, not just the results - what happens and why!
-    \item Is this a GE or a PE? In PE prices should be the same so it is not consistent with talking about wages in this case. Wage changes in the model is possible because actually there is an equilibrium for this market the only assumption is that labour supply is fixed. On the other hand, consumption and savings just react passively such that prices are 1 and savings react passively such that the risk free rate is 0.03\%. However, this is not good. If you really want a PE you cannot just have them adjust passively.  
-    \begin{itemize}\setlength\itemsep{0em} 
-        \item How to set B - value: Khan and Thomas 
-        \item How to set consumption
-        \item How to set PE? - Kochen; C\&D; Credit Growth
-    \end{itemize}
-    \item Low cost of reorganization may also be good because it allows small firms to stay on the market when they experience financial distress. How is this calculated in the model? Is it even taken into account. This should be considered but it could be turned into a feature. 
+    \item Low cost of reorganization may also be good because it allows small firms to stay on the market when they experience financial distress. How is this calculated in the model? This can be turned to my advantage, saying that it is small firms that 
 \end{itemize} \normalsize
 
 \subsection*{Seula Kim's comments:} 
@@ -457,12 +440,27 @@ The honest thing would be to add exit, liquidation and reorganization as separat
 \subsection*{Research meeting - 2024 november} 
 \begin{itemize} \small
     \item There is still to much info before before the RQ
-    \item Make the RQ more 'macro' - how does 
+    \item Make the RQ more 'macro' - how does it affect misallocation, SME financing gap and productivity  (not just access to CF-based debt)
     \item Do not mention the SBRA in the beginning, it would be enough to bring it up later
     \item Focus less on the empirics - its not the point of the paper, so it should have minimal weight on it
     \item Talk about what you would do with the model, you calibrate it and the policy experiment
     \item Probably better to get rid of the numbering (N1,2,3) on the bottom of the 3rd slide
 \end{itemize}
+
+
+\subsection*{Further Notes on Writing a Paper} 
+Title:
+\begin{itemize} \small
+    \item Probably better to not mention the SME financing gap since that is more of a development economics question
+    \item Liquidation Risk and Access to Cash Flow-Based Debt Finance - Liquidation Risk as a Barrier to Cash Flow-Based Borrowing - Liquidation Risk Hinders Borrowing Against Future Cash Flows - How Small Firms' Tendency to Liquidate in Financial Distress Impedes Borrowing Against Future Cash Flows
+\end{itemize} \normalsize
+Introduction:
+\begin{itemize} \small
+    \item First paragraph: needs to hook the audience, relate to the real world not the literature - SMEs are important and it is also widely acknowledged that they have insufficient access to external finance. Substantial effort is going into narrowing the SME financing gap. This paper highlight that small firms tendency to liquidate under financial distress limits their access to borrowing against future cash-flows. This novel mechanism 
+    \item Second paragraph - the first contribution of this paper is to highlight and quantify the effects of reorganization costs and the resulting differences in the ex-ante liquidation risk on access to external finance. Maybe you could discuss the 
+    \item The second contribution of the paper is to evaluate the effects of policies that aim to facilitate and incentivize the reorganization of small enterprises on small firms' access to borrowing against cash-flows. Examples. These policies are typically mentioned in the context of avoiding inefficient liquidations rather than improving access to external finance.  The proposed model framework is calibrated to the US economy, separately for firms that are eligible for the SBRA. Then, it is used as a laboratory. 
+    \item 
+\end{itemize} \normalsize
 
 
 \end{document}

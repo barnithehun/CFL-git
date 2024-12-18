@@ -15,7 +15,7 @@ function fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
 
     q, tau_index = findmax(q_tau)
 
-    if isapprox(q, maximum(q_tau), atol=0.001) # == won't work here, there will always be a small numerical diff
+    if isapprox(q, minimum(q_tau), atol=0.001) # == won't work here, there will always be a small numerical diff
         tau = (1-gam)*Pi_reo > gam*Pi_liq ? 1 : 0
     else
         tau = tau_vec[tau_index]

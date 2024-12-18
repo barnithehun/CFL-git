@@ -1,8 +1,8 @@
 ############ General equilibrium: solving for wage ##############
-function FindWage(wage; phi_c)  
+function FindWage(wage, phi_c, zeta_Rl;)  
 
     beta = parameters().beta
-    SumPol, e_chain, _ = FirmOptim(wage, phi_c = phi_c)
+    SumPol, e_chain, _ = FirmOptim(wage, phi_c, zeta_Rl)
 
     # entrant productivities set to be equal to the stationary distribution of e_chain    
     e_entry  = reduce(+,stationary_distributions(e_chain))
