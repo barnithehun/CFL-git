@@ -233,9 +233,9 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                     q = q_sa[s_i,a_i]
                     d = fn_D(next_k, next_b, x, q)
 
-                    #if d >= 0
+                    if d >= 0
                         R[s_i, a_i] = d 
-                    # end
+                    end
 
                 elseif next_def == 1 
                     R[s_i, a_i] = -5 
@@ -449,17 +449,18 @@ mu, m, xpol = stat_dist(SumPol, Fmat, f0);
 
 wage = 1.0246252441406245
 zeta_Rl = 960 # ( ~= zeta_Rl/3)
+# zeta_Rl = 288 # ( ~= zeta_Rl/10)
 @elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c, zeta_Rl)
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
-mu0, m0, xpol0 = stat_dist(SumPol, Fmat, f0);
+mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f0);
 
-PrintPolOld(SumPol, mu)   
+PrintPolOld(SumPol0, mu0)   
 
 ############ Core results Results: stationary distributions ############
 println("The relative productivity of the ABL case is: ", round(c_e0 / c_e , digits=3))
 #println("Fixed costs :", parameters().zeta_Rl, " and: ", parameters().zeta_Rs)  
-sumSSsme(SumPol,Fmat,f0)
-sumSS(SumPol,Fmat,f0)
+sumSSsme(SumPol0,Fmat0,f00)
+sumSS(SumPol0,Fmat0,f00)
 
 ############ Untargeted Moments ############
 binnum = 10
@@ -525,6 +526,7 @@ c_e_baseline = c_e
 zeta_Rl = 960
 @elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (0.97, 1.25), Bisection(), rtol=tolerance, verbose=true)
 #  wage_alt = 1.0246252441406245  - where zeta_Rl  = zeta_Rl/3
+#  wage_alt = 1.1640234374999998  - perfect credit economy 
 SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
 c_e0, f00 = EntryValue(SumPol, e_chain)
 

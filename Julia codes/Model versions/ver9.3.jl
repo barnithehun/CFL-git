@@ -74,8 +74,7 @@ function FirmOptim(wage; phi_c)
     fn_X(k,b,e) =  fn_Pi(k, e) + (1-delta) * k - b
     fn_D(next_k, next_b, x, q) =  x - next_k + q * next_b
     fn_Gam(k,val) = Int( (phi_a*(1-delta)*k - zeta_L) >= (phi_c*val - zeta_R)) # optimal liquidation
-    fn_Gam(k,val) = Int( 0 >= ((1-phi_c)*val - zeta_R)) # optimal liquidation
-
+    fn_Gam(k,val) = Int( 0 >= ((1-phi_c)*val - zeta_R)) # optimal liquidationkz
 
     # fn_Gam(k,val) = Int( ((1-phi_a)*(1-delta)*k - zeta_L) >= ((1-phi_c)*val - zeta_R)) # optimal liquidation
 
@@ -83,7 +82,7 @@ function FirmOptim(wage; phi_c)
     x_size, e_size, k_size, b_size = gridsize()
     
     # Setting the state-space
-    # productivity process
+    # productivity processk
     e_chain = tauchen(e_size, rho_e, sigma_e, (1-rho_e)*nul_e, tauchen_sd)
     e_vals = exp.(e_chain.state_values) 
 

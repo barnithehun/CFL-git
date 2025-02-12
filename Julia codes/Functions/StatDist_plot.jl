@@ -119,6 +119,7 @@ function ProdDist(SumPol, mu, SumPol0, mu0)
     
 end
 
+# CFL reliance distribution
 function plotTauDist(SumPol)
 
 

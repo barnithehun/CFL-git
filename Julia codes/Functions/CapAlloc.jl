@@ -22,8 +22,11 @@ function CapAlloc(SumPol,SumPol0,mu,mu0)
 
     end
 
-    CapShare =  cumsum(CapShare ./  totK)
-    CapShare0 = cumsum(CapShare0 ./ totK0)
+    CapShare =  CapShare ./ totK
+    CapShare0 = CapShare0 ./ totK0
+
+     # CapShare =  cumsum(CapShare ./  totK)
+     # CapShare0 = cumsum(CapShare0 ./ totK0)
 
     # Logical mask: where both CapShare and CapShare0 are non-zero
     non_zero_indices = (CapShare .!= 0) .& (CapShare0 .!= 0)

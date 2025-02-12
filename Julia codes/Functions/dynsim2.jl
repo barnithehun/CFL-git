@@ -94,8 +94,8 @@ function auxfun(SumPol0, Fmat0, SumPol, Fmat, e_i, var::Char, simn_length, simt_
             plot!(x_axis, meanv, label= var*"_cf",  color=:red, linewidth=3) 
 
 
-    plott = plot(x_axis,  meanv_0 ./ meanv, label= var*"_ab", color=:blue, linewidth=3)
-                 hline!([1], linestyle=:dash, color=:gray, label="")
+    #plott = plot(x_axis,  meanv_0 ./ meanv, label= var*"_ab", color=:blue, linewidth=3)
+    #             hline!([1], linestyle=:dash, color=:gray, label="")
   
  return ( plott )
 

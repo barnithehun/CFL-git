@@ -40,6 +40,7 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 \begin{document}
+
 \section*{Partial equilibrium model - firms' problem}
 \subsection*{Ver 1 - PE model - Fixed q-s - 3 state variables}
 Productivity process: two-state markov chain \vspace{3mm} \\
@@ -371,7 +372,18 @@ The honest thing would be to add exit, liquidation and reorganization as separat
 \section*{Calibration} 
 \textbf{Calibrating CF share} It is possible to calibrate liquidation probability and CF-share at the same time, by setting a low $\phi_c$, around 0.2-0.3. \textit{Note that there was an error in the fnQ function before which made matching both very hard.} This invites a different kind of problem: if $\phi_c$ is very low, large firms may choose to borrow against assets since they have a huge capital stock and their continuation value is not that large in relative terms. \\
 \textbf{Calibrating liquidation probability}. You can adjust the average liquidation probability quite flexibly. So, the question is what to calibrate towards. If you project the Compustat distribution to IDB firms, you get an average liquidation probability of 0.23. The problem is that in this case liquidation risk is not a major impediment for most firms so you cannot get a large improvement by decreasing the reorganization cost. So it is probably better to project the IDB distribution to the Compustat firms. This leads to an around 50\% liquidation probability, and allows larger improvements from decreasing reorganization costs. 
-\textbf{Current Calibration}.
+
+
+\section{Results}
+
+\begin{itemize} \setlength\itemsep{0em}  \small
+    \item Untargeted moments - no need for charts, just introduce the cutoff and then show how these moments relate to similar data moments (not sure if can be done well)
+    \item The effects of liquidation probability in isolation (capital, profitability and leverage can be done in the appendix). 
+    \item Steady state runs - baseline and small liquidation cost 
+    \item Showing to which firms are affected the most: best would be small, middle and large firms with lifecycle dynamics, where large and small firms are relatively unaffected and firms in the middle are the most affected
+    \item Decomposition of the productivity growth following Kochen
+\end{itemize} \normalsize
+
 
 
 \section*{Comments}
@@ -415,7 +427,7 @@ The honest thing would be to add exit, liquidation and reorganization as separat
 \end{itemize} \normalsize 
 
 \subsection*{Brownbag comments - 2024 november} 
-\begin{itemize} \small
+\begin{itemize} \setlength\itemsep{0em}  \small
     \item Motivation slides do not serve a purpose - why do we care about CF-AB lending and the liquidation probability jointly?
     \item On liquidation and reorganization
     \begin{itemize}
@@ -438,8 +450,8 @@ The honest thing would be to add exit, liquidation and reorganization as separat
 \end{itemize}
 
 \subsection*{Research meeting - 2024 november} 
-\begin{itemize} \small
-    \item There is still to much info before before the RQ
+\begin{itemize}\setlength\itemsep{0em}  \small
+    \item There is still to much info before the RQ
     \item Make the RQ more 'macro' - how does it affect misallocation, SME financing gap and productivity  (not just access to CF-based debt)
     \item Do not mention the SBRA in the beginning, it would be enough to bring it up later
     \item Focus less on the empirics - its not the point of the paper, so it should have minimal weight on it
@@ -448,18 +460,37 @@ The honest thing would be to add exit, liquidation and reorganization as separat
 \end{itemize}
 
 
-\subsection*{Further Notes on Writing a Paper} 
-Title:
-\begin{itemize} \small
-    \item Probably better to not mention the SME financing gap since that is more of a development economics question
-    \item Liquidation Risk and Access to Cash Flow-Based Debt Finance - Liquidation Risk as a Barrier to Cash Flow-Based Borrowing - Liquidation Risk Hinders Borrowing Against Future Cash Flows - How Small Firms' Tendency to Liquidate in Financial Distress Impedes Borrowing Against Future Cash Flows
-\end{itemize} \normalsize
+\subsection*{Brownbag - 2025 February} 
+\begin{itemize} \setlength\itemsep{0em}  \small
+    \item Title does not tie in well with the first introduction slides. I do not really mention bankruptcy regime in the beginning
+    \item Begin the presentation with evidence that motivate your paper. Do not turn to discuss the mechanism so early. 
+    \item You also need to provide more evidence on SMEs - \textit{Maybe it would be best to talk of small firms (young firms)}
+    \item Are the paper shown on slide 3 causal results - \textit{I think this is relevant because they interpret my first few bullet points as evidence, I think this ties back into not discussing the dynamics at the beginning of the model.} 
+    \item Put the policy at the end when you do the counterfactual analysis, do not mention it with the research question - or maybe you could just mention it in the beginning as a motivating factor
+    \item Put state variables of firms on slide 8 (the flow chart). This comment is about how interest rate is really determined. The fact that capital and productivity affects interest rates is not explained by the chart. 
+    \item Try to build on a benchmark model that people know and then discuss the additional mechanism - \textit{this might not be feasible because people do not know KT13 but it still worth reflecting on somehow}
+    \item If you do alternative model comparison you have to re-calibrate the model every time
+    \item The result on the focusing on small firms is mechanical - yes it is to some extent
+    \item Is the policy really reducing fixed costs? Or does it reduce both type of cost? - \textit{I think quantitatively there would not be much difference.}
+    \item If they wanna see evidence I have to show them the interest rate on CF based debt or the decreasing probability of liquidation
+\end{itemize}
+
+
+\subsection*{General Notes on Writing} 
 Introduction:
-\begin{itemize} \small
-    \item First paragraph: needs to hook the audience, relate to the real world not the literature - SMEs are important and it is also widely acknowledged that they have insufficient access to external finance. Substantial effort is going into narrowing the SME financing gap. This paper highlight that small firms tendency to liquidate under financial distress limits their access to borrowing against future cash-flows. This novel mechanism 
-    \item Second paragraph - the first contribution of this paper is to highlight and quantify the effects of reorganization costs and the resulting differences in the ex-ante liquidation risk on access to external finance. Maybe you could discuss the 
-    \item The second contribution of the paper is to evaluate the effects of policies that aim to facilitate and incentivize the reorganization of small enterprises on small firms' access to borrowing against cash-flows. Examples. These policies are typically mentioned in the context of avoiding inefficient liquidations rather than improving access to external finance.  The proposed model framework is calibrated to the US economy, separately for firms that are eligible for the SBRA. Then, it is used as a laboratory. 
-    \item 
+\begin{itemize} \setlength\itemsep{0em}  \small
+    \item The final version of the paper should not be more than 40 pages
+    \item Abstract should not be more than 100-150 words (do not mention other literature)
+    \item First paragraph: needs to hook the audience, relate to the real world not the literature  - do not start with citing other literature, do not write a long motivation about how important it is for policy
+    \item Get to the research question as fast as possible, should be stated by the end of the second paragraph at least
+    \item Empirical work: start with the main results, do not discuss preliminary results before getting to that, explain the economic significance of the results
+    \item Do not restate findings and motivation, if you need to say `as mentioned earlier' or `as I will de discuss later' then you have an issue with the structure
+    \item Do not use footnote for parenthetical comments - if it is important, write it if it is not do not
+    \item Each table and chart should have a self-contained description so it could be understood if for someone who just skimming the paper
+    \item The model is `in which' not `where' - where relates to places
+    \item Avoid using passive, avoid using sentences like `it should be noted', avoid using `this' on its own, `this result etc.' instead
+    \item Footnotes always go to the end of the sentence, after the period
+    \item Do not mention limitations in advance of the empirical or structural model - make them into a footnote, or leave it to the discussion for later
 \end{itemize} \normalsize
 
 

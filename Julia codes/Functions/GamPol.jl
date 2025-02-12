@@ -2,7 +2,7 @@
 # interest rate and debt financing strategy across different liquidation probability
 function GamPol(SumPol, x_i, e_i)
 
-    gam_vec = 0:0.1:1
+    gam_vec = 0:0.01:1
     tau_vec = 0:1.0:1
     x_size = gridsize().x_size    
     xe_i = x_i + (e_i-1)*x_size
@@ -25,19 +25,21 @@ function GamPol(SumPol, x_i, e_i)
         tauCgam[ind] = tau
     end
 
-    plot(title= "TFP = $e_val; CoH = $x_val, Debt = $b_val", titlefont=font(12), legend=:topright, xlabel="Liquidation probability", ylabel="Inverse interest rate",  ylim=(parameters().beta-0.022, parameters().beta))
+    qCgam = (( 1 ./ qCgam ) .- 1) .* 100
+
+    plot(title= "TFP = $e_val; CoH = $x_val, \n Debt = $b_val", titlefont=font(10), legend=:bottomright, xlabel="Liquidation probability", ylabel="Interest rate %", guidefont = font(9),  ylim=(3.9, 6.7))
     # Plot qCgam with dynamic line style based on tauCgam value
-    for i in 2:length(gam_vec)
+    for i in 1:length(gam_vec)-1
 
         if tauCgam[i] == 1
-            plot!(gam_vec[i-1:i], qCgam[i-1:i], label="", color=:blue, linestyle=:solid, lw=3)
+            plot!(gam_vec[i:i+1], qCgam[i:i+1], label="", color=:blue, linestyle=:solid, lw=3)
         elseif tauCgam[i] == 0
-            plot!(gam_vec[i-1:i], qCgam[i-1:i], label="", color=:red, linestyle=:solid, lw=3)
+            plot!(gam_vec[i:i+1], qCgam[i:i+1], label="", color=:red, linestyle=:solid, lw=3)
         end
-    end
+    end  
 
-    plot!([], [], color=:blue, linestyle=:solid, label="CF borrowing", lw=3)
-    plot!([], [], color=:red, linestyle=:solid, label="AB borrowing", lw=3)
+    plot!([], [], color=:blue, linestyle=:solid, label="τ = 1", lw=3)
+    plot!([], [], color=:red, linestyle=:solid, label="τ = 0", lw=3)
 
 end
 
@@ -53,7 +55,7 @@ function DebtScedule(SumPol, x_i, e_i; phi_c)
 
     # parameters and grid
     _,_, e_vals,_, e_ptrans, x_grid, _, s_i_vals, a_vals,a_i_vals = GridMake()
-    rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, tauchen_sd, kappa, zeta_Rs, zeta_Rl, zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
+    rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, tauchen_sd, kappa, zeta_Rs, zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
 
     # calling grid size
     x_size, e_size, k_size, b_size = gridsize()

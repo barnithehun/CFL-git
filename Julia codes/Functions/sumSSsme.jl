@@ -34,7 +34,7 @@ function sumSSsme(SumPol,Fmat,f0)
             CFdebt += mu[s_i] * SumPol[s_i,4] * SumPol[s_i,17]
             Totdebt += mu[s_i] * SumPol[s_i,4]
 
-            if SumPol[s_i,4] != 0
+            if SumPol[s_i,4] != 0 && SumPol[s_i,9] >= 0.6
                 avg_q += mu[s_i]/totalmass * SumPol[s_i,9]
                 mu_q += mu[s_i]/totalmass
             end
@@ -86,7 +86,7 @@ function sumSSsme(SumPol,Fmat,f0)
             CFdebt += mu[s_i] * SumPol[s_i,4] * SumPol[s_i,17]
             Totdebt += mu[s_i] * SumPol[s_i,4]
 
-            if SumPol[s_i,4] != 0
+            if SumPol[s_i,4] != 0 && SumPol[s_i,9] >= 0.6
                 avg_q += mu[s_i]/totalmass * SumPol[s_i,9]
                 mu_q += mu[s_i]/totalmass
             end
