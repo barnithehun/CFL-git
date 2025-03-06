@@ -26,7 +26,7 @@ function sumSS(SumPol,Fmat,f0)
     avg_b2a, mu_b2a, avg_gam, mu_gam, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL, SMEshare = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     for s_i in 1:n-1
 
-        if SumPol[s_i,4] != 0 && SumPol[s_i,9] >= 0.6
+        if SumPol[s_i,4] != 0  && SumPol[s_i,9] >= 0.5
             avg_q += mu[s_i]/totalmass * SumPol[s_i,9]
             mu_q += mu[s_i]/totalmass
         end
@@ -36,7 +36,7 @@ function sumSS(SumPol,Fmat,f0)
             mu_gam += mu[s_i]/totalmass
         end
 
-        if SumPol[s_i,3] != 0 
+        if SumPol[s_i,3] != 0 && SumPol[s_i,9] >= 0.5
             avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / (SumPol[s_i, 3] + SumPol[s_i, 1])
             # avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / (SumPol[s_i, 3] )
             mu_b2a += mu[s_i]/totalmass

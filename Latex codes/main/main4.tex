@@ -54,7 +54,7 @@
 \begin{abstract}
 \noindent
 
-\textit{Even though CF-based lending is widespread small and medium enterprises still face significant collateral constraints.} This paper studies asset-based and cash flow-based lending in a heterogeneous firms model, where bankrupt firms may file for liquidation or reorganization. Creditors impose stricter terms on cash flow-based debt contracts if the borrower is expected to liquidate under financial distress. This puts small firms at a disadvantage, as large reorganization costs often force the liquidation of these businesses. Since small firms also lack sufficient pledgeable assets, they have limited access to both loan-types. This yields misallocation of capital and aggregate productivity losses. However, regulations that facilitate the reorganization of small firms - such as the  U.S. Small Business Reorganization Act introduced in 2019 - can significantly reduce this source of misallocation, by improving access to cash flow-based debt.
+This paper argues that reorganization costs raise liquidation risks and limit access to cash flow-based debt for small but productive firms, which has significant consequences for broader macroeconomic outcomes. Creditors restrict lending against future cash flows if they expect the borrower to be liquidated under financial distress. This puts moderately-sized firms at a disadvantage, as the administrative and time costs of reorganization often force the liquidation of these businesses. Small but productive firms have inadequate access to cash flow-based debt finance, which suppresses entry rates and yields aggregate productivity losses. However, streamlining the reorganization process can mitigate this source of misallocation. I find that reducing reorganization costs can considerably improve aggregate productivity through limiting liquidation risk and improving access to cash flow-based debt. 
 
 \bigskip{}
 \bigskip{}
@@ -62,7 +62,7 @@
 %\bigskip{}
 %\vspace{-0.5cm}
 
-Keywords: Heterogeneous firms, Credit market frictions, Cash flow-based lending, SME financing gap
+Keywords: Heterogeneous firms, Credit market frictions, Cash flow-based lending, SME financing
 \medskip{}
 % JEL Classification Code: E32, C22, E27.
 \end{abstract}
@@ -72,87 +72,47 @@ Keywords: Heterogeneous firms, Credit market frictions, Cash flow-based lending,
 
 
 \section{Introduction \label{sec:introduction}} 
-Small and medium enterprises (SMEs) are often recognized as key drivers of job creation, innovation, and economic growth. Despite their importance, these firms regularly report difficulties in obtaining sufficient external finance (OECD, 2006). Given that small (young) firms typically lack sufficient collateral, borrowing against physical assets can provide them only limited access to external finance. Borrowing against future cash flows could offer a promising alternative, since this form of lending focuses on future earning potential rather than the accumulated collateral. However, as this paper argues, small firms' tendency to liquidate (rather than reorganize) under financial distress represents a significant limitation on their access to cash flow-based debt. \vspace{3mm} \\
-Liquidation terminates all future cash flows, which drives lenders to impose stricter terms on cash flow-based debt contracts if the borrowers is expected to liquidate in default. This puts smalls firms at a disadvantage, since the legal and time costs of the reorganization process often force the liquidation of these businesses. Motivated by this dynamic, this paper studies the extent to which large reorganization costs exacerbate the SME financing gap, create misallocation of credit, and lead to a loss of aggregate productivity. Additionally, it evaluates regulations that aim to facilitate small firm reorganizations, such Small Business Reorganization Act\footnote{Small Business Reorganization Act (SBRA) introduced Subchapter V into Chapter 11 of the U.S. bankruptcy code in 2019. It aims to simplify and streamline the reorganization process for small businesses. See more detailed description in section \ref{sec:A2} the appendix. } for their potential to improve access to debt finance for small firms. \vspace{3mm} \\
-The main contribution of this paper is a heterogenous firms model that consolidates structural models of bankruptcy resolution (Tamayo, 2017; Corbae and D'Erasmo, 2021) and market frictions associated with asset-based and CF-based lending (Drechsel, 2023; Öztürk, 2024; Gonzalez and Sy, 2024). Firms finance their investments by net wealth and borrowing against assets or future cash flows (Lian and Ma, 2021). A positive share of firms experience financial distress in equilibrium, which leads them to file for liquidation (Chapter 7) or reorganization (Chapter 11).
-Reorganization allows firms to continue, but it incurs a fixed cost, which introduces economies of scale in the bankruptcy resolution process. Lenders set interest rates based on their exposure to default risk. In the case of CF-based contracts, the absence of physical collateral increases exposure liquidation risk. Hence, lenders must anticipate borrowers' bankruptcy resolution decisions and adjust the terms of the debt contract accordingly. As a result, firms that are expected to liquidate under financial distress may be shut out of the CF-based debt market entirely. \vspace{3mm} \\
-This model is brought to the data using a combined dataset on US non-financial corporations and their debt financing strategies. The default resolution process is informed by a comprehensive dataset of US bankruptcy filings over the same period. The calibrated model suggests that... (\textit{add a description of results}) \vspace{3mm} \\
-My analysis also presents a novel emphasis on the role of credit spreads in regulating borrowing behavior. Prior structural analyses of asset-based and cash flow-based lending impose borrowing limits such that firms always choose to meet their debt obligations. This yields `hard constraints' to borrowing: firms that borrow against assets are constrained by the value of their collateral, whereas those borrowing against cash flows are limited by current earnings. Since debt contracts are always honored under this framework, all firms face the same risk-free interest rate. As a result, prior structural analyses in this literature typically focus on debt covenants,\footnote{These are legally binding agreements imposed by the creditor on the lender, that typically take the form of hard constraints similar to those implied by the `no equilibrium defaults framework'.} while credit spreads receive considerably attention. \vspace{3mm} \\
-The model presented in this paper, departs from this approach by also considering in-equilibrium defaults and default resolution decisions. This generates endogenous variation in the cost of external finance, as individual borrowers face different interest rates depending on their current state and debt financing decisions - i.e. `soft constraints' to borrowing. Therefore, this approach allows me to complement prior structural analysis by focusing on credit spreads rather than debt covenants. \vspace{3mm} \\
-The structural analysis is also supported by an empirical analysis of debt contracts held by U.S. non-financial corporations between 2010 and 2023. This shows that size and profitability are important determinants of credit spreads for both type of debt contracts. This is in contrast with prior analyses that interpret credit market frictions as either asset-based or earings-based borrowing limits. Moreover, higher pledgeability of assets (defined as the share of collateralizable assets to total assets) is associated with lower credit spreads for asset-based debt but shows no significant impact on cash flow-based debt contracts. This is in line with the model prediction that lenders of CF-based debt consider the value of total assets as an indicator of liquidation probability rather than a direct determinant of in-default payoffs. \vspace{3mm} \\
-The paper is organized as follows. Section 2 reviews the related literature. Section 3 addresses the empirical analysis, section 4 introduces the structural model framework, section 5 details the calibration of the model, and section 6 discusses the results. Section 7 concludes.
+
+Collateral constraints represent major barriers to firm growth (Beck et al., 2006; Schmalz et al., 2017, Catherine et al., 2021). Borrowing limits defined by the value of collateralizable assets can be particularly restrictive, since these create self-perpetuating cycle: limited collateral restricts access to external finance, which in turn limits firm growth and delays the accumulation of collateral.\footnote{This notion traces back to Bernanke et al. (1999), originally applied to credit cycles, but it extends across the life cycles of firms as well.} Cash flow-based debt contracts allow firms to borrow against future cash flows rather than specific physical assets (Lian and Ma, 2021). This form of lending could, in principle, alleviate collateral constraints for small, but productive firms as it evaluates future earning potential rather than the accumulated collateral. However, for moderately-sized firms, borrowing against future cash flows (CF-based debt) remains significantly more expensive than borrowing against physical assets (asset-based debt).\footnote{US non-financial corporations under $100$M USD of assets pay an average credit spread of $7.19\%$ on CF debt and only $5.25\%$ on AB-debt. This result is robust to multivariate analysis. For the same set of firms, CF-based debt is associated with a 0.8pp higher spread (S\$P Capital IQ).}  \vspace{3mm}  \\
+In this paper, I argue that a key factor contributing to the high cost of CF-based debt for moderately-sized is ex-ante liquidation risk. These firms are significantly more likely to liquidate under financial distress than large enterprises.\footnote{Data published by the Federal Judicial Center (FJC) show that 57.9\% of US firms with assets under $100$M USD liquidate in default, compared to just 5.7\% for larger firms.} This disparity reflects the large administrative and time expenses of the reorganization process, which often force the liquidation of smaller firms (Antill and Grenadier, 2019; Corbae and D'Erasmo, 2021). Since liquidation terminates all future cash flows, lenders must impose higher spreads on CF-based debt allocated to these firms to offset the elevated liquidation risk. This dynamics limits access to CF-based debt for productive, but small firms that seek external finance to scale up. Motivated by these observations, I study the extent to which high reorganization costs limit access to CF-based debt, create misallocation of credit, and yield a loss of productivity. \vspace{3mm}  \\
+First, using a dataset of debt contracts held by US non-financial corporations between 2010 and 2023, I present indirect empirical evidence that liquidation risk increases credit spreads for CF-based debt contracts. A wide body of literature argues that the presence of multiple creditors exacerbates coordination failures in reorganization, increasing the likelihood of liquidation (Brunner and Krahnen, 2008; Zhong, 2021). Consistent with this argument, I find that the number of debt contracts held by a firm  (proxy for the number of lenders) raises the credit spreads on CF-based debt, but has no significant effect on asset-based contracts - which are not exposed to liquidation risk. Moreover, I document that total asset value reduces credit spreads for both loan-types, but the pledgeability of these assets has no significant effect on CF-based debt contracts.\footnote{Pledgeability is defined as the share of collateralizable assets to total assets.} This further supports the idea that for CF-based debt, lenders consider the value of total assets (firm size) as an indicator of liquidation risk rather than a direct determinant of their payoffs in the event of default.\footnote{The multivariate analyses include firm age and credit rating to control for the effects of information asymmetries as much as possible.} \vspace{3mm} \\
+The primary contribution of this paper is the development of a heterogeneous firms model that quantifies the general equilibrium effects of reorganization costs on liquidation risk, access to debt fiance, and firms' optimal debt financing strategies, along with macroeconomic implications such as misallocation and productivity. This necessitates a rich model framework that incorporates in-equilibrium defaults (Khan, Senga and Thomas, 2017), bankruptcy resolution decisions (Tamayo, 2017; Antill and Grenadier, 2019; Corbae and D'Erasmo, 2021) and heterogeneity in debt contracts (Lian and Ma, 2021; Drechsel, 2023; Gonzalez and Sy, 2024). To the best of my knowledge, this is the first model that studies the macroeconomic effects of asset-based and CF-based debt financing in the presence of in-equilibrium defaults and heterogeneous bankruptcy resolution decisions. \vspace{3mm} \\
+In the model, firms finance their investments by net wealth and borrowing against assets or future cash flows. A fraction of firms experience financial distress in equilibrium, which results in liquidation or reorganization (Chapter 7 and Chapter 11 of the US bankruptcy code respectively). Reorganization allows firms to continue operating, but incurs a significant fixed cost. This introduces economies of scale in the bankruptcy resolution process: large firms typically reorganize while smaller firms often liquidate. The lender sets firm-specific interest rates based on default risk. In the case of cash flow-based debt, the lack of physical collateral increases potential losses incurred in the event of liquidation. Hence, if the ex-ante liquidation probability is high, the lender must compensate the elevated risks by raising credit spreads on CF-based debt contracts. As a result, small, but productive firms that are expected to liquidate in default due to their size have limited access to CF-based debt. This mechanism forces them to fall back to asset-based borrowing, which perpetuates credit misallocation, suppresses firm entry and yields to a loss of productivity.   \vspace{3mm} \\
+The model is brought to the data using combined dataset on US non-financial corporations and their debt financing strategies. Moreover, the default resolution process is informed by a comprehensive dataset of US bankruptcy filings over the same period. The calibrated model suggests that... (\textit{add a description of results}) \vspace{3mm} \\
+Recent policy efforts to streamline the reorganization process for small firms highlight the relevance of the results presented above. The Small Business Reorganization Act (SBRA), introduced in 2020, aims to make bankruptcy reorganizations more accessible and cost-effective for small businesses. The model provides additional insights into the SBRA’s impact on access to CF-based debt finance. First, I find that targeting small and medium enterprises yields nearly identical effects to those of a universal program. However, the SBRA also seeks to reduce costs for small firms by shifting them to lenders. I find that this aspect of the policy restricts access to CF-based debt, as lenders preemptively raise credit spreads.  \vspace{3mm} \\
+The paper is organized as follows. Section 2 reviews the related literature. Section 3 addresses the empirical analysis, section 4 introduces the structural model framework, section 5 details the calibration of the model, and section 6 discusses the effects of policy reform that reduces reorganization costs. Section 7 discusses the potential effects of the SBRA firms' access to CF-based debt finance and section 8 concludes.
 
 \section{Related Literature \label{sec:literature}} 
-This paper contributes the most closely to the literature that separates asset-based and cash flow-based lending and considers their implications for credit market frictions. Corporate credit market frictions have traditionally been characterized as borrowing constraints defined the by value of pledgeable assets.\footnote{This dates back to the seminal works of Kiyotaki and Moore (1997) and Bernanke, Gertler, and Gilchrist (1999).} Recent research challenged this view based on more granular analyses of credit contracts. Most prominently, Lian and Ma (2021) finds that most of US corporate debt is backed by future cash flows rather than specific physical assets, suggesting that credit frictions are better described as earnings-based constraints. They support this by documenting the extensive use of earnings-based covenants in US corporate debt contracts. \vspace{3mm} \\
-This result has prompted several studies to re-evaluate the role of credit market frictions in structural models. Drechsel and Kim (2022) argues that firms subject to earnings based constraints under-borrow, while those facing asset based constraints over-borrow. Drechsel (2023) demonstrates that the effects of investment shocks\footnote{There are exogenous shocks that move the price of the capital countercyclically.} are heterogeneous across firms depending on debt contract in place. Öztürk (2023) identifies quantitative differences in firms' reaction to a contractionary monetary shocks. He finds that asset-based borrowers experience sharper declines in borrowing and investment compared to cash flow-based borrowers. Gonzalez and Sy (2024) documents on Spanish data that reliance to CF-based borrowing (CF-based debt to total debt) is U-shaped across firms size. \vspace{3mm} \\
-This study makes two distinct contributions to this literature. - \textit{here you should say that prior analyses are incomplete as they assume that lenders receive borrowers CFs if the debt is backed by future cash flows} - First, it considers equilibrium defaults and a liquidation decision, mostly drawing on Corbae and D'Erasmo (2021). This highlights liquidation risk as a key determinant of access to cash flow-based debt. Second, it deviates from prior structural analyses that impose borrowing limits, such that firms always meet their debt obligation. This assumption leads to `hard constraints' to borrowing where access to asset-based debt is limited by collateral value and cash flow-based borrowing is limited by current earnings. In contrast, considering equilibrium defaults yields `soft constraints' to borrowing, which  allows for the structural analysis of credit spreads in the context of asset-based and CF-based lending. \vspace{3mm} \\
-I also contribute to the literature on credit market frictions and their role in capital misallocation and aggregate productivity losses (Banerjee and Moll, 2010; Buera, Kaboski, and Shin, 2011; Midrigan and Xu, 2014).\footnote{For a comprehensive review of the misallocation literature, see Restuccia and Rogerson (2012) and Hopenhayn (2014).} Even though the option to borrow against future cash flows could be expected to have a significant impact on credit allocation, few studies consider CF-based debt for quantifying misallocation caused by limited access to external finance (Gonzalez and Sy, 2024). This paper assesses productivity losses from misallocation in two distinct scenarios. In the baseline case, firms have access both asset-based and cash flow-based debt, but high reorganization costs often lead to the liquidation of small (young) firms. This is compared to a model calibration where reorganization costs are lower, limiting the liquidation risk of small firms. \vspace{3mm} \\
-Finally, by highlighting liquidation risk as a major impediment to access to CF-based debt, this paper also contributes to the widespread literature on SME financing. For comprehensive overview of this literature see Esho and Verhoef (2018) and Rao et al. (2021). The majority of contributions in this literature assess specific policy programmes that aimed to enhance small firms' access to external finance, such as credit guarantee schemes and public-private partnerships. This paper argues that a bankruptcy framework supportive of small of reorganization may also improve small firms' access to CF-based debt finance. Moreover, it evaluates policies that facilitate small firm reorganizations (such the Small Business Reorganization Act) in light of this mechanism. 
+This paper contributes the most to the rapidly expanding literature on the impact of CF-based lending on credit market frictions and their macroeconomic effects. Corporate credit frictions have traditionally been characterized as borrowing constraints defined the by value of pledgeable assets. Recent research challenged this view based on more granular analyses of credit contracts. Prominently, Lian and Ma (2021) finds that most of US corporate debt is backed by future cash flows rather than specific physical assets, suggesting that credit frictions are better described as earnings-based borrowing constraints. They support this claim by documenting the extensive use of earnings-based debt covenants in US corporate debt contracts.\footnote{Debt covenants are legally binding agreements imposed by the creditor on the lender. These typically take the form of hard constraints similar to those implied by the `no equilibrium defaults' model framework.}   \vspace{3mm} \\
+This result prompted several studies to re-evaluate the role of credit market frictions in structural models. Drechsel and Kim (2022) argues that firms subject to earnings based constraints under-borrow, while those facing asset-based constraints over-borrow. Drechsel (2023) demonstrates that the effects of investment shocks are heterogeneous across firms depending on debt contract in place.\footnote{Investment shocks move the price of the capital countercyclically.} Öztürk (2023) identifies quantitative differences in firms' reaction to a contractionary monetary policy shocks, with asset-based borrowers experiencing sharper decline in borrowing. Gonzalez and Sy (2024) documents that reliance to CF-based borrowing is U-shaped across firms size, in Spain.\footnote{CF-reliance is defined as the share of CF-based debt to total debt} Similarly, Caglio et al. (2021) documents that in the US, SMEs often borrow against enterprise value. My analysis contributes to this literature in two distinct ways.  \vspace{3mm} \\
+First, considering default resolution decisions highlights liquidation risk as a key determinant of credit spreads for CF-based debt contracts.  While previous studies have alluded to the importance of this factor, it has not yet been examined in a structural manner (Lian and Ma, 2021). Second, my analysis presents a novel emphasis on the role of credit spreads in regulating borrowing behavior. Prior structural analyses of asset-based and cash flow-based lending impose borrowing limits such that firms always choose to meet their debt obligations.\footnote{This yields `hard constraints' to borrowing: firms that borrow against assets are constrained by the value assets, whereas those borrowing against cash flows are limited by current earnings.} Since debt contracts are always honored in this framework, every firm faces the same risk-free interest rate. As a result, prior structural analyses typically focus on debt covenants, while credit spreads receive much less attention. Incorporating in-equilibrium defaults in the model generates endogenous variation in the cost of external finance, as individual borrowers face different credit spreads depending on their current state and debt financing decisions. This allows me to study the determinants of credit spreads. \vspace{3mm} \\
+A large body of research studies the factors influencing SME financing.\footnote{For a comprehensive overview, see Esho and Verhoef (2018) and Rao et al. (2021).} Moreover, many studies highlight the role of institutional factors, such as the protection of creditor rights, court enforceability and the efficiency of the legal system in shaping SMEs' access to debt finance (Beck et al., 2006; OECD, 2006; Rao et al., 2021). This is reinforced by evidence that `country effects' play a significant role in determining the severity the financial constraints SMEs face (Beck and Demirguc-Kunt, 2006). I extend this discussion by emphasizing that bankruptcy frameworks that facilitate and incentivize the reorganization of small firms alleviate borrowing constraints for SMEs, by improving their access to CF-based debt. \vspace{3mm} \\
+Finally, I contribute to the literature on credit market frictions and their role in capital misallocation and aggregate productivity losses (Banerjee and Moll, 2010; Buera, Kaboski, and Shin, 2011; Midrigan and Xu, 2014).\footnote{For a comprehensive overview of the misallocation literature, see Restuccia and Rogerson (2012) and Hopenhayn (2014).} Despite the clear link to credit misallocation, few studies examine CF-based debt in quantifying misallocation caused by limited access to external finance (Gonzalez and Sy, 2024). The main result of this paper quantifies productivity losses from misallocation in two distinct scenarios. In the baseline case, firms have access both asset-based and cash flow-based debt, but high reorganization costs often lead to the liquidation of smaller firms. This is compared to a model calibration where reorganization costs are lower, limiting the liquidation risks and improving small firms access to debt finance. 
 
-\section{Data Analysis \label{sec:empirical analysis}}
-This section presents the empirical analysis of the debt financing strategies, and liquidation decisions of US non-financial corporations. Then, it explores the empirical determinants of credit spreads for asset-based and cash flow-based debt contracts. Finally, it provides indirect evidence that lenders consider the probability of liquidation when extending loans backed by future cash flows. \vspace{3mm} \\
-I study a total of 113,774 debt contracts held by 6,925 non-financial corporations between 2010Q1 and 2023Q2. Debt-level data is provided by S\&P's Capital IQ and firm-level data is from Compustat North America. This yields and broad, but not representative sample of US non-financial corporations and their debt financing strategies. Moreover, I study Federal Judicial Center's Integrated Database (IDB), which contains a total of 160,367 Chapter 7 and Chapter 11 bankruptcy filings over the same period. Table 1. presents firm-level summary statistics for indicators of size, financial position, and borrowing conditions. Table 2. presents debt-level summary statistics, for contract value, maturity interest rates and spreads - \textit{Move to appendix.}
+\section{Empirical Analysis \label{sec:empirical analysis}}
 
-\begin{table}[H] 
-    \centering
-    \resizebox{0.95\textwidth}{!}{%
-    \begin{tabular}{lrrrrrr}
-    \multicolumn{7}{l}{\textbf{Firm-Level Summary Statistics}} \\
-    \hline
-        & \textbf{Mean} & \textbf{p10} & \textbf{p25} & \textbf{Median} & \textbf{p75} & \textbf{p90} \vspace{1mm} \\
-    Total Assets (millions USD) & 5235.16 & 11.39 & 73.11 & 582.60 & 2696.20 & 9567.60 \\
-    Qtr. Revenue (millions USD) & 1073.75 & 0.18 & 8.77 & 109.62 & 551.79 & 1891.00 \\
-    Employees (thousands) & 11.93 & 0.03 & 0.15 & 1.37 & 6.91 & 22.85 \\
-    Firm Age (years) & 44.61 & 9 & 16 & 30 & 59 & 109 \\
-    Cash to Assets (Liquidity) & 0.17 & 0.01 & 0.03 & 0.09 & 0.21 & 0.46 \\
-    Debt to Assets (Leverage) & 0.30 & 0.03 & 0.12 & 0.27 & 0.43 & 0.61 \\
-    Debt to Collateral & 0.51 & 0.11 &  0.26 &  0.52 & 0.75 & 0.89 \\ 
-    Asset Pledgeability (\%) & 47.21 & 9.32 & 23.48 & 46.91 & 70.53 & 85.81 \\
-    Total debt (millions USD) & 1817.35 & 1.06 & 8.33 & 132.69 & 960.90 & 3562.65 \\
-    CF-share & 0.45 & 0.00 & 0.00 & 0.40 & 0.92 & 1.00 \\
-    Average Maturity (years) & 6.7 & 1.4 & 4.0 & 6.1 & 8.6 & 12.2 \\
-    Average Interest Rate (\%) & 4.9 & 0.3 & 2.7  & 4.6 & 6.8 & 9.2 \\
-    Average Spread & 2.9  & 0 & 0.6 & 2.3 & 4.4 & 6.9 \\
-    \hline
-    \end{tabular}%
-    }
-    \caption{\small Summary Statistics - non-financial corporations between 2010Q1 and 2023Q2}
-    \label{tab:sumstat}
-\end{table}
-\begin{table}[H]
-    \centering
-    \resizebox{0.95\textwidth}{!}{%
-    \begin{tabular}{lrrrrrr}
-    \multicolumn{7}{l}{\textbf{Debt-Level Summary Statistics}} \\
-    \toprule
-      	& \textbf{Mean} & \textbf{p10} & \textbf{p25} & \textbf{Median} & \textbf{p75} & \textbf{p90} \vspace{1mm}\\
-    Contract Value (millions USD) & 334.53  & 0.16 & 2.24 & 48.24 & 396.00 & 859.22 \\ 
-    Maturity (years) & 9.275 & 2.50 & 4.50 & 7.00 & 10.00 & 20.00 \\
-    Interest Rate (\%) & 5.79 & 2.12 & 3.60 & 5.25 & 7.38 & 10.00 \\
-    Credit Spread & 4.03  & 0.87 & 1.88 & 3.45 & 5.49 & 8.06  \\
-	\bottomrule
-    \end{tabular}%
-    }
-    \caption{\small Summary Statistics - debt contracts between 2010Q1 and 2023Q2}
-    \label{tab:sumstat}
-\end{table}
+\subsection{Reorganization Costs and Liquidation Probability \label{sec:emp liqprob}} 
 
-\noindent The classification strategy adopted here follows the principles outlined by Lian and Ma (2021) - this is described in detail in section \ref{sec:classification} of the appendix. I find that $52.7\%$ of debt contracts can be classified cash flow-based. Since these are often large in terms of value, they collectively constitute 76.7\% of the total debt by volume - this aligns well with the aggregate values reported by Lian and Ma.\footnote{Nevertheless, it should be noted that due to data limitations, my approach is likely to yield a cruder classification, as I have considerably less data at my disposal.} The share of CF-based debt remains relatively stable (fluctuating within the range of 71.8\% to 79.8\%). However, it declines significantly in the year 2019 and remains subdued until the end of the sample period - see figure \ref{chart:CFLshare} in the appendix. 
+I study bankruptcy resolution decisions using the Federal Judicial Center's Integrated Database (IDB), which contains a total of 160,367 Chapter 7 and Chapter 11 bankruptcy filings between 2010 and 2023. Panel A of Figure \ref{chart:liqprob_emp} documents all Chapter 7 (liquidation) and Chapter 11 (reorganization) filings across firm sizes, measured by total assets. Panel B shows that the share of firms liquidating under financial distress declines sharply with firm size.  This trend has been documented before on various datasets by Bris et al. (2006), Yu and He (2018) and Corbae and D'Erasmo (2021). 
 
-\subsection{Determinants of Credit Spreads \label{sec:credit spreads}} 
-In this section, I study the firm-level determinants of credit spreads for asset-based and cash flow-based debt contracts. As noted in the introduction, the structural model proposed in this paper accounts for endogenous variation in external finance premia, meaning that the empirical results presented here can be studied against predictions of the structural model. Credit spreads are calculated as the difference of the interest rate and the treasury rate at the corresponding maturity. To ensure that the observed credit spread reflects the original terms of the debt contract, I only consider the time of issuance. The regression analysis is carried out on sub-samples of asset-based and CF-based debt contracts as well as the entire sample and all specifications include period fixed effects. The results are summarized by table 3. \vspace{3mm} \\
-Firms with higher EBITDA\footnote{For the estimation, I take the log-modulus transformation of of EBITDA values.} and larger total asset value benefit from lower credit spreads on both loan-types. Prior analyses that interpret credit market frictions as either asset-based or earings-based limits to borrowing. In contrast, this result suggests that size and profitability are important determinants of these frictions no matter the form of borrowing. Another important determinant of credit spreads is leverage, which has a large, positive effect on credit spreads for both loan-types. Firm age has a significant, negative effect on credit spreads, suggesting that strong creditor-debtor relationships can help reduce the cost of external finance.  \vspace{3mm} \\
-The coefficient estimates for number of employees are not consistent across specifications. This variable has limited economic impact, which indicates that total assets is a sufficient measure of firms size. Consistent with the idea that lender perception plays a key role in cash flow-based borrowing, worse credit ratings significantly increase credit spreads for this type of debt. In contrast, credit spreads for asset-based debt are influenced only when credit ratings signal the state default or a high risk of it. Sector fixed effects have mostly insignificant impact on credit spreads for asset based debt, which is partly due to accounting for pledgeability in the model. For cash flow based debt, sector differences are more significant, yet they remain relatively unimportant determinants of credit spread variations. \vspace{3mm} \\
-`CF-share' measures the extent to which a firm relies on cash flow-based debt as a fraction of total debt. It is defined as 
-\begin{equation*}
-    \text{CF-share} = \text{CF-based Debt Value} \  / \  \text{Total Debt Value}.
-\end{equation*}
-CF-share is correlated negatively with spreads of cash flow-based debt and positively with spreads of asset-based debt, suggesting that firms self-select into these loan-types based on their relative costs. This underlines that debt financing is jointly determined with the credit spreads that firms eventually face. To give a complete account of firms' optimization, section \ref{sec:CFshare} in the appendix present results on how firm characteristics correlate with firms' decisions on CF-share.
+\begin{figure}[H]  % [H] indicates placing the image here
+    \centering  
+    \textbf{\large Liquidation Share Across Firm Sizes \vspace{2mm} } \\  % This acts as a title
+    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/liqprob2.png}
+    \caption{ \small Panel A. shows all Chapter 7 and 11 instances between 2010 and 2023 across firm sizes. Panel B. shows the proportion of Chapter 7 filings as a share of total bankruptcies.}
+    \label{chart:liqprob_emp}
+\end{figure}
+
+\noindent Resolving default via reorganization often entails lengthy negotiations between debt-ors, creditors and courts, which imposes large time costs as well as administrative and legal expenses on the affected parties. Evidence suggests that a significant share of these costs is independent of firm size. For instance, LoPucki and Doherty (2004, 2011) find that professional fees as a percentage of assets decrease with firm size. Bris et al. (2006) finds similar trend for the total costs of reorganization. The declining probability of liquidation can be attributed to these costs, as small and medium-sized enterprises often lack the resources to cover these expenses. Consistent with these observations, Antill and Grenadier (2018) and Corbae and D'Erasmo (2021) replicate the decreasing liquidation probability in structural models by incorporating large \textit{fixed costs} of reorganization.
+
+\subsection{Credit Spreads and Liquidation Risk \label{sec:emp liqrisk}} 
+
+I study the determinants of credit spreads on a total of 113,774 debt contracts held by 6,925 non-financial corporations between 2010Q1 and 2023Q2.\footnote{Debt-level data is provided by S\&P's Capital IQ and firm-level data is from Compustat North America.} This is a broad, but not representative sample of US non-financial corporations and their debt financing strategies. Section \ref{sec:sumstat} of the appendix presents firm-level firm-level summary statistics. Classification into asset-based and CF-based debt contracts follows the principles outlined by Lian and Ma (2021) - see section \ref{sec:classification} of the appendix. I find that $52.7\%$ of debt contracts can be classified cash flow-based. Since these are often large in terms of value, they collectively constitute 76.7\% of the total debt by volume, which aligns well with the aggregate values reported by Lian and Ma (2021).\footnote{Note however, that my approach is likely to yield a cruder classification, as I have considerably less data at my disposal.}   \vspace{3mm} \\ 
+Table \ref{tab:spread_table} summarizes the main determinants of credit spreads for asset-based and CF-based debt contracts as well as the entire sample. Credit spreads are calculated as the difference between interest rates and the treasury rate at the corresponding maturity. To ensure that the observed spread reflects the original contract terms of the loan, I consider debt contracts only at the time of issuance. All three specifications include period fixed effects, sector and credit rating dummies, the logarithm of firm age and employment as well as the share of CF-based debt relative to total debt. Section \ref{sec:credit spreads} of the appendix discusses these factors in more detail and table \ref{tab:spread_table_full} in the appendix presents the full regression output. \vspace{3mm} \\
+To test the robustness of my results, I repeat these analyses using interest rates as the dependent variable and at a firm-level, using average credit spread as the dependent variable. These results are reported in \ref{sec:robustness}. 
 
 \begin{table}[H]
     \centering
-    \caption{The Determinants of Credit Spreads}
-    \label{tab:spread_table_new}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccccc}
     \toprule
@@ -160,57 +120,31 @@ CF-share is correlated negatively with spreads of cash flow-based debt and posit
     \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
     \textbf{LHS}: Spread & Value & SE & Value & SE & Value & SE \\
     \midrule
-    Log of EBITDA & -0.161*** & (0.0106) & -0.112*** & (0.0121) & -0.203*** & (0.0203) \\
-    Log of Assets & -0.375*** & (0.0473) & -0.381*** & (0.0583) & -0.308*** & (0.0838) \\
-    Pledgeability & -0.467*** & (0.0867) & -0.0297 & (0.108) & -0.990*** & (0.144) \\
-    Leverage & 1.783*** & (0.103) & 2.278*** & (0.134) & 0.985*** & (0.168) \\
-    Log of Age & -0.136*** & (0.0255) & -0.132*** & (0.0300) & -0.149*** & (0.0447) \\
-    Log of Employees & -0.0118 & (0.0198) & -0.0974*** & (0.0252) & 0.0838*** & (0.0310) \\
-    CF-share & 0.450*** & (0.0642) & -0.335*** & (0.112) & 0.748*** & (0.112) \vspace{3mm} \\
-    \multicolumn{7}{l}{\textbf{Industries} - baseline: Agriculture and Fishing} \\
-    Construction  & 0.739*** & (0.269) & 1.200*** & (0.461) & 0.275 & (0.375) \\
-    Manufacturing  & 0.278 & (0.242) & 0.613 & (0.446) & 0.126 & (0.310) \\
-    Mining & 0.847*** & (0.250) & 0.986** & (0.455) & 0.716** & (0.333) \\
-    Retail Trade  & 0.677*** & (0.255) & 1.228*** & (0.455) & 0.0613 & (0.338) \\
-    Services & 0.278 & (0.247) & 0.729 & (0.448) & -0.172 & (0.320) \\
-    Public Utilities & 0.603** & (0.247) & 0.908** & (0.449) & 0.314 & (0.330) \\
-    Wholesale Trade & 0.663** & (0.262) & 0.716 & (0.461) & 0.561 & (0.345)  \vspace{3mm} \\
-    \multicolumn{7}{l}{\textbf{Credit Ratings} - baseline: Rating: A} \\
-    Rating: A+ & 0.163* & (0.0928) & 0.391*** & (0.0857) & -0.417 & (0.568) \\
-    Rating: A- &  0.170** & (0.0765) & 0.197*** & (0.0653) & -0.0652 & (0.361) \\
-    Rating: B+ & 0.723*** & (0.0713) & 0.726*** & (0.0653) & 0.157 & (0.325) \\
-    Rating: B & 0.213*** & (0.0679) & 0.140** & (0.0583) & -0.0439 & (0.329) \\
-    Rating: B- & 0.986*** & (0.0718) & 1.180*** & (0.0687) & 0.206 & (0.323) \\
-    Rating: C  & 1.711*** & (0.0812) & 1.679*** & (0.0896) & 1.108*** & (0.326) \\
-    Rating: D & 2.023*** & (0.140) & 2.434*** & (0.185) & 1.073*** & (0.362)  \\
-    \midrule
+    Log of EBITDA & -0.163*** & (0.011) & -0.119*** & (0.012) & -0.205*** & (0.020) \\
+    Leverage & 1.759*** & (0.105) & 2.189*** & (0.136) & 0.963*** & (0.176) \\
+    Log of Assets & -0.394*** & (0.049) & -0.452*** & (0.060) & -0.321*** & (0.086) \\
+    Pledgeability & -0.479*** & (0.087) & -0.046 & (0.107) & -1.013*** & (0.153) \\
+    Num. Contracts  & 0.003** & (0.002) & 0.012*** & (0.002) & 0.003 & (0.004) \vspace{3mm} \\
+    \midrule 
+    Firm-level controls & Yes & & Yes & & Yes & \\
     Period fixed effects & Yes & & Yes & & Yes & \\
-    Observations & 17,668 & & 10,676 & & 6,992 & \\
-    R-squared & 0.286 & & 0.403 & & 0.173 & \\
+    Observations & 17,601 & & 10,620 & & 6,981 & \\
+    R-squared & 0.285 & & 0.404 & & 0.174 & \\
     \bottomrule
-    \multicolumn{7}{c}{Robust standard errors in parentheses} \\
-    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
     \end{tabular}%
     }
+    \caption{\small The main determinants of credit spreads of new issuances. Firm level controls include sector and credit rating dummies, the logarithm of firm age and employment, and the share of CF-based debt relative to total debt. Robust standard errors are reported in parentheses, *** p$<$0.01, ** p$<$0.05, * p$<$0.1. The full regression table is reported in section \ref{sec:credit spreads} of the appendix.}
+    \label{tab:spread_table}
+
 \end{table}
 
-
-\subsection{Liquidation Risk and Credit Spreads \label{sec:emp liqprob}} 
-The structural analysis suggests that in the case of cash flow-based debt, the ex-ante liquidation probability is an important determinant of credit spreads. Although this variable is not directly observable, the empirical analysis suggests that it is taken into consideration by creditors. Table 3. shows that the credit spread decreases with total assets for both loan-types. In the case of asset-based debt, pledgeability\footnote{Defined as the proportion of collateralizable assets to total assets - see precise variable definitions in section \ref{sec:A3} of the Appendix.} also has a considerable negative effects on credit spreads. However, for CF-based debt contracts it remains insignificant, indicating that for these contracts lenders do not value assets as collateral. Rather, they view firm size (measured by the value of assets) as an intrinsic advantage. \vspace{3mm} \\
-Figure 1 shows that the probability of liquidation under financial distress decreases sharply with firms size. Hence, this finding supports the idea that for cash flow-based debt, lenders consider the value of total assets as an indicator of liquidation probability rather than a direct determinant of in-default payoff. An alternative explanation could be that larger firms’ superior accounting practices help reduce information asymmetries between borrowers and lenders. However, the model controls for firm age, which often regarded as the most important determinant of information frictions. Additionally, the inclusion of credit ratings, which are likely a key determinant of creditor perceptions, further weakens this point.
-\begin{figure}[H]  % [h] indicates placing the image here
-    \centering  \label{chart:mixplot}
-    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/liqprob2.png}
-    \caption{ \small Panel A. shows the all chapter 7 and 11 instances between 2010 and 2023 across firm sizes. Panel B. shows the proportion of chapter 7 filings as a share to total bankruptcies.}
-\end{figure}
-
-
-\subsection{Robustness and Limitations \label{sec:limitations}} 
-I test the robustness of these results in alternative model specifications - these are published in section \ref{sec:robustness} of the appendix. Since, calculating credit spreads is subject to uncertainty, the analyses presented in table 3 are repeated with interest rate as the dependent variable - in this case, maturity is also considered in the regression. Moreover, limiting the analysis to new issuances reduces the sample size. By using a weighted average of firm-level credit spreads as the outcome variable, it is possible to explore the variables that influence external finance premia beyond the time of issuance. Here, I consider three sub-samples: firms with CF-share over 90\%, less than 10\% and all firms. The central findings of this section remain largely unchanged across all specifications. \vspace{3mm} \\
-Empirical analyses of credit spreads and firm characteristics face significant limitations. Firms adjust their debt financing strategies based on credit conditions, which are influenced by firm characteristics. In turn, this affects the external finance premia they eventually face. This feedback effect is likely to introduce endogeneity bias. Moreover, certain determinants of credit frictions are difficult to observe. In this paper, I highlight the probability of liquidation as an important determinant. However, other factors such as assets specificity (Kermani and Ma, 2020) or the quality of accounting practices and court enforceability (Lian and Ma, 2021) are similarly hard to measure. Therefore, identification of causal relationships between firm characteristics and credit spreads is not possible without relying on natural experiments. The structural model discussed below aims to make up for these limitations. 
+\noindent 
+Lenders perceptions of ex-ante liquidation probability is not directly observable. Therefore, I present \textit{indirect} empirical evidence suggesting that liquidation risk raises credit spreads for CF-based debt contracts. Prior research suggests that higher number of creditors increase the coordination failures in reorganization, thus raising the likelihood that default is eventually resolved by liquidation (Gilson et al., 1990; Brunner and Krahnen, 2008; Zhong, 2021). Applied to CF-based debt financing, these contributions imply that the number of creditors increases spreads on CF-based debt contracts. In contrast, asset-based debt is largely unaffected liquidation risk, hence the number of creditors is expected to have little to no effect on the credit spreads these contracts. \vspace{3mm} \\
+This is confirmed by the empirical analysis. The number of debt contracts held by a firm, which is used as a proxy for the number of creditors, is associated with significantly higher spreads on CF-based debt contract - a one standard deviation increase in the number of debt contracts raises credit spreads by 0.168 percentage points. In contrast, this effect is much smaller and statistically insignificant on asset-based debt contracts. Moreover, secured creditors are incentivized to obstruct the reorganization process (Ayotte and Morrison, 2009; Blazy and Choppard, 2010), which amplifies ex-ante liquidation risk further. Consistent with this argument, I find that the number of \textit{secured} debt contracts increases spreads for CF-based debt contracts to an even greater extent - see table \ref{tab:spread_table_new} in the appendix.  \vspace{3mm} \\
+The final piece of evidence on the relevance of liquidation risk concerns the relationship between asset pledgeability and credit spreads. Table \ref{tab:spread_table} shows that greater total asset value is associated with lower credit spreads for both loan types.\footnote{Pledgeability is defined as the ratio of collateralizable assets to total assets—see Section \ref{sec:A3} of the Appendix for precise variable definitions.} However, for CF-based debt contracts, asset pledgeability has no significant effect on spreads, suggesting that lenders do not view asset values as a direct determinant of in-default payoffs. Instead, they perceive firm size as a virtue in itself, which may reflect the declining probability of liquidation across firms sizes. Alteratively, this observation could reflect that information asymmetries are typically less severe for large firms.\footnote{For instance, larger firms may follow superior accounting practices, which could mitigate information asymmetries between borrowers and lenders (Zhou, 2007).} To control for the effects of information asymmetries as much as possible, I include firm age and credit rating dummies in the estimation
 
 \section{Model outline} \label{sec:model}
-This section introduces a discrete-time general equilibrium model with firms that are heterogeneous in productivity, own capital and may borrow against assets or cash-flows. Firms may experience financial distress, which is resolved either through liquidation or reorganization. Reorganization incurs a fixed costs, making larger firms better positioned to avoid liquidation in default. The competitive lender must adjust the terms of the debt contract accounting for credit risk. CF-based debt is not secured by physical collateral, meaning that it exposes the lender to liquidation risk. Finally, the representative household that provide an inelastic labour supply, chooses a stream of consumption and one-period, noncontingent bonds to maximize expected discounted utility. 
+This section introduces a discrete-time general equilibrium model with firms that are heterogeneous in productivity, own capital and may borrow against assets or cash-flows. Firms may experience financial distress, which is resolved either through liquidation or reorganization. Reorganization incurs a fixed costs, making larger firms better positioned to escape liquidation in default. The competitive lender must adjust the terms of the debt contract accounting for credit risk. CF-based debt is not secured by physical collateral, meaning that it exposes the lender to liquidation risk. Finally, the representative household that provide an inelastic labour supply, chooses a stream of consumption and one-period, noncontingent bonds to maximize expected discounted utility. 
 \subsection{Heterogenous Firms \label{sec:firms}}
 Firms produce a homogeneous consumption good, using labour $n$ and capital $k$, with a decreasing returns to scale production technology:
 \begin{equation} \label{eq:prodf}
@@ -245,7 +179,7 @@ Production takes place at the beginning of the period. Firms set their labour de
 \begin{equation} \label{eq:default decision}
     V_0(k,b,\varepsilon) = \max \{V_{def}, \  V_{exit}(k,b,\varepsilon),  \ V_{cont}(k,b,\varepsilon) \}.
 \end{equation}
-Default is associated with zero value to the firm. This assumption implies that changes in the cost of reorganization only affects firm values through access to debt finance.\footnote{It also serves a practical purpose as it keep the computation burden of the model manageable.} \textit{Support this further using Bris, Welch and Zhu.}
+Default is associated with zero value independent of the default resolution, such that reorganization costs only affect firm values through their effects on credit market conditions,\footnote{Jostarndt and Sautner (2008) and Ayotte and Morrison (2009) find that the management of the firm is typically replaced under the reorganization process, meaning that this assumption could be interpreted as the management being indifferent between reorganization and liquidation after default occurs.} 
 \begin{equation}
     V_{def} = 0.
 \end{equation}
@@ -311,7 +245,6 @@ Firms may default endogenously, following decision rule specified in equation \r
 where $\chi_{endo}(x, \varepsilon) = 1$ if the firms defaults endogenously. \vspace{3mm} \\ 
 Defaults can be resolved through liquidation or reorganization. In the case of liquidation, the firm exits, and all its undepreciated capital stock is resold at a discounted value, $\phi_l(1-\delta)k$, where $\phi_l \in (0,1)$. The rest of the stock cannot be recovered, which indicates that corporate assets are often highly specialized and illiquid (Kermani and Ma, 2020). The proceeds from selling the capital stock are distributed between the lender and the household. The exact allocation depends on the debt contract in place, this is further discussed in following section. \vspace{3mm} \\
 Reorganization allows the firm to continue, but it incurs a variable $\phi_r V_{cont}(x,\varepsilon)$ and a fixed cost $\zeta_r$ as well, which are borne by the household.\footnote{The incidence of these cost has a minimal effect credit market frictions. Lenders' expenses directly raise the external finance premium, whereas households' costs limit access to external finance indirectly by raising liquidation risk.} This fixed cost introduces economies of scale into the reorganization process, hence it crucial in replicating the decreasing liquidation probability in the function of firm size - I discuss the sources of these costs in section \ref{sec:fixed costs} of the appendix. Moreover, the household pays a fraction of the firms' continuation value to the lender as a lump-sum transfer. This represents the renegotiation of the debt contract.\footnote{Corbae and D'Erasmo also model the reorganization process as a lump-sum transfer between the lender and the borrower. However, their approach is richer, as they model the Nash Bargaining process that determines the value of the transfer.} The exact value of this transfer depends on the debt contract in place, and it is further discussed in the following section. \vspace{3mm} \\
-\textit{Need to have a bit of additional discussion of these costs. References, sources of fixed costs. sources of variable costs. } \\
 To keep the model parsimonious, I assume that default resolution decision maximizes the value retained after bankruptcy, and does not consider the allocation of payoffs between the lender and the household. Hence, the default resolution decision can be summarized as: 
 \begin{equation} \label{eq:liquidation decision}
     \max \{ \phi_l (1-\delta) k; \ (1-\phi_r) V_{cont}(x,\varepsilon)- \zeta_r  \}
@@ -325,7 +258,7 @@ This highly stylized description of the default resolution process, is sufficien
  
 \subsubsection{Lenders' In-default Payoffs}   \label{sec:Default Payoffs}
 This section describes lenders' in-default pay-offs depending on the default resolution and the debt contract in place. These pay-offs are central to the analysis as they shape the debt schedule $q(a', \varepsilon)$, that firms must consider in choosing debt financing strategy. The model considers two loan-types (asset-based and cash flow-based) and two bankruptcy types (liquidation and reorganization), therefore the lender has four distinct cases to consider. \vspace{3mm} \\
-\textit{ 1.) The recovery of asset-based debt when the firm undergoes liquidation}. Since the debt contract is backed by physical assets, the lender can recover the entire liquidation value of the firm, $\phi_l(1-\delta)k$. Note that this case corresponds to the traditional assumption on lenders' in-default payoffs.  \vspace{3mm} \\
+\textit{ 1.) The recovery of asset-based debt when the firm undergoes liquidation}. Since the debt contract is backed by physical assets, the lender can recover the entire liquidation value of the firm, $\phi_l(1-\delta)k$. Note that this case corresponds to the traditional assumption on lenders' in-default payoffs when only asset-based debt is available.  \vspace{3mm} \\
 \textit{ 2.) The recovery of asset-based debt when the firm undergoes reorganization}. When the borrower undergoes reorganization secured lenders are protected by the ‘best interest of creditor’ test.\footnote{The EU Directive refers this principle as ‘best-interest-of-creditors’ test in OJ L 172/27, art. 49; whereas the US bankruptcy code establishes this principle in - see section \ref{sec:A1} in the appendix} This states that creditors cannot be worse off under the proposed reorganization plan than they would be under liquidation. Accordingly, I assume that the lender can retrieve the same $\phi_l(1-\delta)k$ as they would do under liquidation. \vspace{3mm} \\
 \textit{ 3.) The recovery of CF-based debt when the firm undergoes liquidation}. In this case, the debt is not backed by physical collateral, which makes the lender ill-equipped to recover the liquidation value.  As a result, the lender can only recover a small fraction of the total liquidation value, $\kappa \phi_l(1-\delta)k$, where $\kappa$ is close to zero. \vspace{3mm} \\
 \textit{ 4.) The recovery of CF-based debt if the firm undergoes reorganization}. In this case, the lender can claim a fraction of the continuation value such that its payoff is $\phi_c V_{cont}(x,\varepsilon)$. Hence, in this case the lender's payoff is determined by the continuation value of the firm - for an analogous description of lenders in-default payoffs after CF-based debt, see Drechsel (2023). In practice, this process may vary depending on specifics of the debt contract. When the debt is secured against the entire corporate entity, the lender may gain access to borrower's cash flows directly. When the debt is unsecured, higher continuation value of the firm allows the lender to negotiate better terms during reorganization - for a detailed description of this mechanism see Corbae and D'Erasmo (2021). \vspace{3mm} \\
@@ -392,11 +325,11 @@ $\Psi$ collects the fixed costs of operation and the costs of default resolution
 
 
 \section{Calibration and Model Fit}
-The model is calibrated at a yearly frequency. The first set of parameters are calibrated externally, based on comparable structural models, common values adopted in the literature and previous empirical results. Decreasing returns to scale parameter is set $DRS = 0.75$, the capital share of production is $\alpha$ is one-third and the labour share is $\nu$ is two-thirds. The subjective discount parameter of the household is $\beta = 0.96$ and depreciation is $\delta = 0.1$. These parameter parameter values are within the range of standard values adopted in the literature. The resale value of assets is, $\phi_l = 0.4$ calibrated based on Kermani and Ma (2020), who estimates the average recovery rate of assets after liquidation. If the debt is not secured by physical assets, the lender can only seize $\kappa = 0.1$ share of this value - since this variable has minimal impact on the steady state, it is not calibrated separately. \vspace{3mm} \\
-The productivity process is based on Di Nola, Kaas and Wang (2023).  Idiosyncratic firm productivity follows the AR(1) process,
-$$ \ln(\varepsilon_{t+1}) = (1-\rho) \ln(\varepsilon_0) + \rho \ln(\varepsilon_t) + \sigma \zeta_\varepsilon $$ where $\rho = 0.969$ is the persistence of productivity the shock, $\varepsilon_0 = 1$ is the normalized average productivity and $\sigma = 0.146$ is the standard deviation of idiosyncratic productivity shocks. The log-process is discretized using Tauchen's method.  \vspace{3mm} \\
-The rest of the parameters are calibrated internally, using a combined dataset of CapitalIQ and Compustat as well as the Federal Judicial Center's Integrated Database (IDB). This presents a challenge, as SMEs are underrepresented in Compustat-CapitalIQ and likely overrepresented in the IDB. To align these two datasets, I classify firms into two categorizes: small firms, with less than 10 million in liabilities and large firms than 10 million in liabilities. In Compustat, small firms add up to around 21\% of the sample, whereas in IDB these firms are 67\% of the sample.\footnote{Micro firms, that have less than 100k USD of total assets are not considered in the sample.} The model targeted moments are calculated by mapping Compustat values onto the IDB firm distribution. \vspace{3mm} \\
-The internally calibrated parameters are set to match facts about firms' debt financing strategies and default resolution decisions. Due to general equilibrium effects, parameters values cannot be set in isolation, but they can still be tied to closely related data moments. Fixed and variable costs of reorganization, set based on the average liquidation probability. Moreover, the fixed cost of reorganization is important in matching the decreasing liquidation probability across firms sizes. This is reflected in the model by the average CFL reliance being significantly lower than the share of CF-based debt in the economy - since large firms' face minimal liquidation risk, they typically borrow against cash flows. The average interest rate matched by the probability of exogenous default and the debt to collateral ratio is linked to the fixed cost of operation through average firms size. 
+I calibrate the model at a yearly frequency. The first set of parameters are set externally, based on comparable structural models, common values adopted in the literature and previous empirical results. Decreasing returns to scale parameter is set $DRS = 0.75$, the capital share of production is $\alpha$ is one-third and the labour share is $\nu$ is two-thirds. The subjective discount parameter of the household is $\beta = 0.96$ and depreciation is $\delta = 0.1$. These parameter parameter values are within the range of standard values adopted in the literature. The resale value of assets is, $\phi_l = 0.4$ calibrated based on Kermani and Ma (2020), who estimates the average recovery rate of assets after liquidation. If the debt is not secured by physical assets, the lender can only seize $\kappa = 0.1$ share of this value - since this variable has minimal impact on the steady state, it is not calibrated separately. \vspace{3mm} \\
+The productivity process is based on Di Nola, Kaas and Wang (2023). Idiosyncratic firm productivity follows the AR(1) process 
+$$ \ln(\varepsilon_{t+1}) = (1-\rho) \ln(\varepsilon_0) + \rho \ln(\varepsilon_t) + \sigma \zeta_\varepsilon, $$ where 
+$\rho = 0.969$ is the persistence of productivity the shock, $\varepsilon_0 = 1$ is the normalized average productivity and $\sigma = 0.146$ is the standard deviation of idiosyncratic productivity shocks.  The log-process is discretized using Tauchen's method.  \vspace{3mm} \\
+I calibrate the rest of the model parameters using a combined dataset of CapitalIQ, Compustat and Federal Judicial Center's Integrated Database (IDB). This presents a challenge, as smaller firms are underrepresented in Compustat-CapitalIQ and likely to be overrepresented in the IDB. To align these two datasets, I classify firms into two categorizes: small firms, with less than 10 million in liabilities and large firms than 10 million in liabilities.\footnote{This cutoff corresponds the largest firm category (by total liabilities) that could be covered by the SBRA.} In Compustat, small firms add up to around 21\% of the sample, whereas in IDB these firms are 67\% of the sample.\footnote{I do not consider `micro' firms that have less than 100k USD of total assets, as they are not represented in the Compustat.} The targeted moments are calculated by mapping Compustat values onto the IDB firm distribution.
 
 \begin{table}[h!]
     \centering
@@ -406,9 +339,9 @@ The internally calibrated parameters are set to match facts about firms' debt fi
     DRS & Decreasing returns & 0.75 \\
     $\alpha$ & Capital Share of Output & 0.33 \\
     $\beta$ & Discount Rate & 0.96 \\
-    $\delta$ & Depreciation & 0.06 \\
-    $\rho$ & Shock Persistence & 0.969 \\
-    $\sigma_{\varepsilon}$ & Shock SD & 0.146 \\
+    $\delta$ & Depreciation rate & 0.1 \\
+    $\rho$ & Produ . Shock Persistence & 0.969 \\
+    $\sigma_{\varepsilon}$ & Produ . Shock SD & 0.146 \\
     $\varepsilon_0$ & Average Productivity & 1 \\
     $\phi_l$ & Resale value of assets & 0.4 \\
     $\kappa$ & Unsecured discount & 0.1 \vspace{3mm} \\
@@ -425,6 +358,7 @@ The internally calibrated parameters are set to match facts about firms' debt fi
     \label{tab:external calib}
 \end{table}
 
+\noindent The internally calibrated parameters are set to match facts about firms' debt financing strategies and default resolution decisions. Due to general equilibrium effects, parameter values cannot be set in isolation. Yet, they can be associated with closely related data moments. Fixed and variable costs of reorganization are set based on the average liquidation probability. Moreover, the fixed cost of reorganization is important in matching the decreasing liquidation probability across firms sizes. On the targeted data moments, this is reflected by the difference between the CFL reliance and the share of outstanding CF-based debt to total debt. The former is significantly lower than the latter because large firms' face minimal liquidation risk and typically borrow against cash flows. Average interest rate is matched by the probability of exogenous default and the debt to collateral ratio is linked to the fixed cost of operation through average firms size. 
 
 \begin{table}[h!]
     \centering
@@ -443,7 +377,8 @@ The internally calibrated parameters are set to match facts about firms' debt fi
     \label{tab:targets}
 \end{table}
 
-\noindent The targeted moments and the corresponding model values are summarized in Table \ref{tab:targets}. The model can replicate closely the central facts about firms' debt financing strategy, default resolution decisions as well as the external finance premia they face. To further assess model performance, I compare untargeted moments to their data equivalents. The sample is divided into small and large firms based on total borrowing, with small firms accounting for the bottom two-thirds of the sample - this corresponds to the share of firms in IDB with liabilities under 10 million USD. Then, the same five moments are studied separately for small and large firms. These results are summarized in table \ref{tab:untargeted}.
+\noindent The targeted moments and their corresponding model values are summarized in table \ref{tab:targets}. The model closely replicates the central facts about firms' debt financing strategy, default resolution decisions as well as the external finance premia they face. To further assess model performance, I compare untargeted moments to their data equivalents. I divide the sample into small and large firms, based on total borrowing. Small firms account for the bottom 66\% of firm distribution, which corresponds to the share of firms in IDB with liabilities under 10 million USD. Table \ref{tab:untargeted}. presents the targeted moments and their corresponding model values separately, for small and large firms.\vspace{3mm} \\
+\noindent The model closely replicates the SME financing gap observed in the data. Small firms realize significantly lower debt to collateral ratio while facing higher external finance premia. The decreasing probability of liquidation across firm size is also captured well in the model, although this decline somewhat less pronounced in the data. On the other hand, the model falls short in matching the average CF-reliance. The CFL reliance is in fact U-shaped across firms, with the largest and the smallest firms borrowing most heavily against cash flow (Gonzalez and Sy, 2024). This imprecision arises because the model misses the left side of this U-shape, as it almost always assigns a liquidation probability near 1 to small firms. The ratio of CF-based debt to total debt value is again replicated closely by the model. 
 
 \begin{table}[h!]
     \centering
@@ -464,106 +399,139 @@ The internally calibrated parameters are set to match facts about firms' debt fi
     \label{tab:untargeted}
 \end{table}
 
-\noindent The model closely replicates the SME financing gap observed in the data: small firms realize significantly lower debt to collateral ratio while facing higher external finance premia. The decreasing probability of liquidation across firm size is also captured well in the model, although this decline somewhat less pronounced in the data. On the other hand, the model fall short in matching the average CF-reliance. This arises because the CFL reliance is in fact U-shaped across firms, with the largest and the smallest firms borrowing most heavily against cash flow - this phenomenon is studied by Gonzalez and Sy (2024). The model misses the left side of this U-shape, as it almost always assigns a liquidation probability near 1 to small firms. The ratio of CF-based debt to total debt value is again replicated closely by the model. 
 
+\section{Results and Discussion \label{sec:results}}
 
-\section{Results and Discussion}
+This section presents the main findings of the structural analysis. First, I examine the effects of a policy reform that lowers reorganization costs, significantly reducing liquidation risk. This reform improves access to CF-based debt financing, increasing the mass of active firms and improving credit allocation, which ultimately boosts aggregate productivity. Next, I assess the reform’s impact under alternative model specifications where only asset-based or CF-based lending is available. When asset-based debt is absent the effects of the reform are over-estimated. When CF-based debt contracts are absent, liquidation risk has no influence on financing conditions, which may explain why much of the literature overlooks the importance of high reorganization costs. 
 
-This section presents the key findings of the structural analysis. First, I discuss the effect of liquidation probability on the external finance premia, and firms' optimal use of cash flow-based debt financing. Then, I study an alternative model calibration in which reorganization costs are reduced, representing bankruptcy regime that is more supportive of reorganizations. This intervention would reduce the ex-ante probability of liquidation of small firms from 80\% to 37\%,  improving access to CF-based debt, significantly reducing the SME financing gap and improving aggregate productivity. Finally, I discuss the potential effects of the Small Business Reorganization Act. Policies that facilitate small firm reorganizations can yield substantial benefits, but if this is achieved by shifting reorganization costs to lenders, these effects are much weaker. 
+\subsection{The Effects of Reorganization Costs}
+In this section, I use the calibrated model as a laboratory to explore the effects of a policy reform that implements a more reorganization-friendly bankruptcy framework. In particular, I study an alternative model calibration in which the fixed cost of reorganization is half of the baseline value, while the variable costs remains unaffected. This represents a large intervention as average liquidation probability falls from 50\% in the baseline model to 32\% after the reform. Moreover, to see how the reform effects would scale, I also consider the effects of an `extreme reform', which reduces the fixed costs of reorganization to one-tenth of the baseline value, limiting average liquidation probability to just 8\%.  The general equilibrium effects of these reforms are summarized in table \ref{tab:SSvalues}. \vspace{3mm} \\ 
+Since large firms are relatively unaffected by the fixed cost due to their scale, the reform has the most substantial impact on small firms. Liquidation probability for small firms drops from 0.80 in the baseline calibration to just 0.57 after the reform, which fundamentally changes their debt financing strategy. Smail firms' average reliance on CF-based debt jumps from just 14\% to 50\% and the share of CF-based to total debt volume increases from 25\% to 82\%. Better access to CF-based debt, allows these firms to rely on external finance more intensively. The debt to collateral ratio increases by 4 percentage points, while the average interest rate declines by 0.65 percentage points. These effects point to the same direction for large firms, but are significantly smaller. As a result, the financing gap between small and large firms observed in the baseline calibration narrows considerably after the reform.  \vspace{3mm} \\ 
+Average productivity increases by 1.4\% after the reform, reflecting large changes in firms' access to CF-based debt. The total mass of firms increases, while the firm size (measured by labour demand) falls by 4.03\%. Since the production technology is decreasing returns to scale, the fall in average size boosts aggregate productivity. Capital deepening is not substantial, the capital to labour ratio increases only by 0.36\%. Two conflicting forces contribute to this change. When firms borrow against assets, capital serves both as collateral and a productive asset. Hence, when borrowing against cash flows is limited, firms tend to invest more than optimal (Drecshel and Kim, 2022). On the one hand, cheaper access to debt finance allows firms to reach their optimal size faster, which implies larger stock of total capital. Hence, the effect of CF-based debt financing on the capital stock is ambiguous.
 
-\subsection{Liquidation Risk and Credit Conditions}
-
-In this section, I demonstrate the effects of liquidation probability on the cost of external finance and firms' optimal debt financing strategy. In the general equilibrium model the ex-ante liquidation probability does not change exogenously. Therefore, I present a though-experiment based on the reduced form of the model. Based on equation \ref{eq:q}, I determine the interest rate that could support the equilibrium policies of ($k',b'$), under different liquidation probabilities. Moreover, I use equation \ref{eq:V_cont} to determine the optimal reliance on CF-based debt, to realize these policies. Figure \ref{chart:liqprob} presents these results for a high-productivity firm, for three different values of cash on hand. The lines are color-coded to represent the debt financing strategy of the firm, either borrowing only against assets (red) or only against cash flows (blue). \\
-
-\begin{figure}[H]  % [h] indicates placing the image here
-    \centering  
-    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/GamPol.png}
-    \caption{ \small External finance premium based and debt financing strategy necessary to support firms equilibrium policies. Panel A, corresponds to firms starting cash on hand, panel B. depicts expected cash on hand after one period, and panel C. is the steady-state cash on hand at the given productivity level.}
-    \label{chart:liqprob}
-\end{figure}
-
-\noindent Since firms start with zero cash on hand, panel A. corresponds to credit conditions upon entry. The effects of liquidation probability are largest for these firms, as they do not have private wealth to support their capital investments. Under zero liquidation probability, these firms may access CF-based financing at a 4.1\% rate. This rate increases monotonously until 75\% of liquidation probability, at which point firms transition to asset-based borrowing at a rate of 6.6\%. This represent an upper bound for interest rates, as asset based debt contracts are not affected by liquidation probability. Panel B. corresponds to firms' expected cash on hand after one period on the market. Having accumulated some wealth, these firms can access more future capital, which is associated with higher continuation value. Hence, these firms face lower interest rates across all liquidation probabilities. Moreover, higher capital stock allows these firms to fall back to asset based debt sooner. Panel C. shows the steady-state cash on hand for the given productivity. This panel shows the same progression, but the overall effects are even more pronounced. \vspace{3mm} \\
-Figure \ref{chart:liqprob} provides further insights into firms' debt financing challenges. First, even though age is not explicitly considered in the model, firms have a lifecycle that affects their credit conditions as well. Firms that are productive but have no wealth benefit the most from mitigating liquidation risk. These are almost invariably young firms in the model, within the first three years of entry. Thus, the results for small but productive firms implicitly reflect on the conditions faced by young firms. Second, although the model can accommodate any CF-reliance between zero and one, under the current assumption firms always choose a corner solution, either borrowing only against assets or entirely against cash-flows. Third, the value-maximizing debt financing strategy maximizes the inverse interest rate faced by the firm. Both of these results follow from firm value being in zero and default, as discussed in section ... of the appendix. 
-
-\subsection{The Consequences of Bankruptcy Regimes}
-In this section, I use the general equilibrium model as a laboratory to  to explore the effects of a more reorganization-friendly bankruptcy regime. In particular, I study an alternative model calibration of the where the fixed costs of reorganization is reduced to one-third of the baseline value, while the variable costs remains unaffected. This would represents the large reform in supporting reorganization as it would decrease the average liquidation probability from 50\% to 22\%. The general equilibrium effects of such a reform are summarized in table \ref{tab:SSvalues}. Moreover, I present the steady-state values of the perfect credit economy. This iteration of the model allows firms to negative dividends with additional costs, which can be interpreted as free equity financing. \vspace{3mm} \\
-Since large firms remain relatively unaffected by the fixed cost, the reform has the most substantial impact on small firms. Liquidation probability for these firms drops from 80\% in the baseline calibration to just 16\% in the `reform model'. This fundamentally changes small firms' optimal debt financing strategy. Average reliance on CF-based debt jumps from just 14\% to 66\% and CF-based to total debt value increases from 25\% to 89\%. Moreover, better access to CF-based debt, allows firms to rely on external finance more intensively. Borrowing relative to collateral increases by 20pp.; at the same time average interest falls by 0.76pp. The average effects on large firms are substantially lower. As a results the SME financing gap observed in the baseline calibration almost entirely disappears after the reform.  \\
 \begin{table}[h!]
     \centering
-    \begin{tabular}{lcc}
-    & \textbf{Baseline} & \textbf{Reform} \\    
+    \begin{tabular}{lccc}
+    & \textbf{Baseline} & \textbf{Reform} & \textbf{Extreme Reform} \\    
     \toprule
-    \multicolumn{1}{c}{FC of reorganization, $\zeta_{r}$} & 2590 & 860  \vspace{3mm} \\  
-    \multicolumn{3}{l}{\textbf{Aggregates}} \\ \hline
-    Total mass & 13.89 & 14.85  \\
-    Mean Employees & 720 & 673  \\
-    Small Firms Share  & 0.64 & 0.64  \\
-    Wage & 1.00 & 1.027  \\
-    Capital Intensity (K/L) & 2.74 & 2.81  \\
-    Productivity (Y/L) & 2.00 & 2.054  \vspace{3mm} \\  
-    \multicolumn{3}{l}{\textbf{Bankruptcy Resolution}} \\ \hline
-    Pr. Liquidation - Small Firms & 0.80 & 0.38  \\
-    Pr. Liquidation - Large Firms & 0.16 & 0.02  \vspace{3mm} \\  
-    \multicolumn{3}{l}{\textbf{Debt Financing Strategy}} \\ \hline
-    CF reliance - Small Firms & 0.14 & 0.66  \\
-    CF reliance - Large Firms & 0.94 & 0.97  \vspace{1mm} \\  
-    CF to total debt - Small Firms & 0.25 & 0.89  \\
-    CF to total debt - Large Firms & 0.81 & 0.83  \vspace{3mm} \\  
-    \multicolumn{3}{l}{\textbf{Access to Debt Finance}} \\ \hline
-    Debt/Collateral - Small Firms & 0.41 & 0.61  \\
-    Debt/Collateral - Large Firms & 0.55 & 0.56  \vspace{1mm} \\  
-    Interest rate - Small Firms & 5.83 & 5.07  \\
-    Interest rate - Large Firms & 4.84 & 4.59  \\  \bottomrule
+    \multicolumn{1}{c}{FC of reorganization, $\zeta_{r}$} & 2590 & 1295 & 259  \vspace{3mm} \\  
+    \multicolumn{4}{l}{\textbf{Aggregates}} \\ \hline
+    Total mass & 13.89 & 14.47 & 14.92  \\
+    Mean Employees & 720 & 691 & 670  \\
+    Small Firms Share  & 0.64 & 0.64 & 0.64  \\
+    Wage & 1.00 & 1.014 & 1.029  \\
+    Capital Intensity (K/L) & 2.74 & 2.75 & 2.83  \\
+    Productivity (Y/L) & 2.00 & 2.027 & 2.057  \vspace{3mm} \\  
+    \multicolumn{4}{l}{\textbf{Bankruptcy Resolution}} \\ \hline
+    Pr. Liquidation - Small Firms & 0.80 & 0.57 & 0.15  \\
+    Pr. Liquidation - Large Firms & 0.16 & 0.03 & 0.00  \vspace{3mm} \\  
+    \multicolumn{4}{l}{\textbf{Debt Financing Strategy}} \\ \hline
+    CF reliance - Small Firms & 0.14 & 0.50 & 0.83  \\
+    CF reliance - Large Firms & 0.94 & 0.97 & 0.97  \vspace{1mm} \\  
+    CF to total debt - Small Firms & 0.25 & 0.82 & 0.97  \\
+    CF to total debt - Large Firms & 0.81 & 0.84 & 0.83  \vspace{3mm} \\  
+    \multicolumn{4}{l}{\textbf{Access to Debt Finance}} \\ \hline
+    Debt/Collateral - Small Firms & 0.41 & 0.45 & 0.50 \\
+    Debt/Collateral - Large Firms & 0.55 & 0.56 & 0.56  \vspace{1mm} \\  
+    Interest rate - Small Firms & 5.83 & 5.18 & 4.85  \\
+    Interest rate - Large Firms & 4.84 & 4.60 & 4.54  \\  \bottomrule
     \end{tabular}
     \caption{Comparison of competitive equilibria}
     \label{tab:SSvalues}
 \end{table}
 
-\noindent Average productivity increases by 2.7\% after the reform, reflecing large changes in firms' access to CF-based debt due to the reform. Higher productivity increases wages proportionately, as it allows firms to pay higher wages. The total mass of firms increases, while the average number of employees falls by 6.3\%. This suggest that this productivity improvement comes from a decrease in average firm size, combined with the decreasing returns to scale production function. Capital deepening is not substantial. Capital to labour ratio increases only by 1.42\%. On the one hand, cheaper access to debt finance allows firms to reach their optimal size faster, which implies an increase in capital stock. On the other hand, when firms borrow against assets, capital serves both as collateral and a productive assets. Hence, when borrowing against cash flows is limited, firms tend to invest more than optimal (Drecshel and Kim, 2022). The model pick up these incentives well, meaning that better access to CF-based debt has an ambiguous effect on capital deepening. \vspace{3mm} \\
+\noindent The `extreme reform' scenario illustrates how the effects of this policy scale as fixed reorganization cost are reduced to a near-zero value. With this reform, liquidation probability is reduced to just 15\% for small firms and is effectively eliminated for large firms. This allows most firms to borrow against future cash flows, which is typically preferable in the absence of liquidation risk. The financing gap between small and large firms almost entirely disappears, and better access to external finance increases aggregate productivity by 2.9\%. \\
 
-
-
- Next, I study simulations of firms' lifecycle. In this exercise, I consider high productivity entrants and study their evolution over their lifecycle - while also allowing them to be affected by idiosyncratic productivity shocks. For each simulation, I study the first 15 time periods into the future. To make sure that results are not affected by idiosyncratic shocks, I take the average of 100000 simulations. Figure \ref{chart:dynsim}, summarizes these results. The solid blue line represents the prohibitive case and the dashed orange line is the baseline case. Firms behave similarly under both calibrations, accumulating comparable amounts of cash on hand, capital, and debt. However, their financing costs differ significantly between the cases. When firms have access to cash flow-based debt, they pay much lower interest rates (with $q$ closer to one). This enables them to pay more dividends and achieve higher values early in their lifecycle. \vspace{3mm} \\
-After five periods, there are no large differences between the baseline and the prohibitive case, which suggest that firms escape financial frictions induced by the lack of pledgeability assets relatively quickly. By this point, firms have accumulated sufficient wealth to fund themselves through asset-based contracts, without a raising their funding costs. The secular decline in most values is attributable to the mean reversion of the productivity process, since i this exercise I consider relatively productive new entrants who, on average, converge to the expected value of the productivity process.
-
-\begin{figure}[H]  % [h] indicates placing the image here
-    \centering
-    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/dynsim.png}
-    \caption{Firm lifecycle simulations} \label{chart:dynsim}
+\begin{figure}[H]
+    \centering  
+    \textbf{\large Reform Effects on Credit Conditions \vspace{2mm}} \\  % This acts as a title
+    \vspace{2mm}  % Optional space
+    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/reform.png}
+    \caption{\small The change in equilibrium outcomes following the reform. The y-axis represents the productivity state, and the x-axis the cash on hand value. The color intensity corresponds to the magnitude of the change. The non-colored tiles correspond to states in which the mass of firms is less than 0.01\% of the total in the stationary equilibrium. Panel A shows the change in liquidation probability, Panel B shows the change in reliance on CF-based debt, Panel C shows the change in debt-to-collateral ratio and Panel D shows the change in interest rates. }
+    \label{chart:poleffects}
 \end{figure}
 
-\noindent Figure \ref{chart:DnQ} present a similar piece of evidence. It shows that average optimal policies across firms sizes. On the left panel, I take the 10-base logarithm of average debt. Similarly to the previous exercise, this result indicates that while optimal values of debt do not change for either calibrations the external finance premium is much larger when firms have no access to CF-based debt. 
+\noindent Figure \ref{chart:poleffects} illustrates the impact of the smaller reform across different productivity states and cash-on-hand values - and figure \ref{chart:extpoleffects} in the appendix presents the effects of the 'extreme reform'. Non-colored tiles correspond to states in which the mass of firms is less than 0.01\% of the total in the stationary equilibrium. Panel A shows the change in liquidation probability following the reform. The most and least productive firms are largely unaffected by the reform. This pattern arises because former are unlikely to liquidate even before the implementation of the reform, whereas the latter are unlikely to reorganize even after the reduction of fixed costs. Hence the reform has the greatest impact on firms with relatively high productivity, though not at the very top of the distribution (the lowest 11 productivity states are omitted from Figure \ref{chart:poleffects}). For these firms, however, liquidation probability drops substantially, by 30 to 70 percentage points.   \vspace{3mm} \\
+The rest of the equilibrium outcomes reflect the changes in ex-ante liquidation probability. Panel B shows the change in reliance on CF-based debt. Although the model can, in principle, accommodate any CF-reliance between zero and one, under the current model assumptions firms always choose a corner solution. Hence, CF-reliance is either zero or one in the model and the bright yellow tiles correspond to firms that switch from asset-based borrowing to CF-based borrowing as a result of the reform. Panels C and D show changes in the debt-to-collateral ratio and interest rates, respectively. The firms most affected by the reform either borrow at a lower interest rate or realize higher debt-to-collateral ratios.  \vspace{3mm} \\
+Table \ref{tab:percentage_changes} summarizes the effects of the reform in alternative model specifications, in which firms can access only asset-based debt (AB-only) or only CF-based debt (CF-only). For reference, I also report the effects in the baseline model. The `AB-only' case is implemented by setting lenders' payoffs in reorganization to zero, while the `CF-only' case is implemented by setting lenders' payoffs after liquidation to zero. In both cases, the model is recalibrated to match the targeted moments of average liquidation probability, debt-to-collateral ratio and interest rate. 
 
-\begin{figure}[H]  % [h] indicates placing the image here
+\begin{table}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/DnQ.png}
-    \caption{The log of debt and the inverse gross interest rate across firm sizes} \label{chart:DnQ}
-\end{figure}
+    \begin{tabular}{lccc}
+    & \textbf{AB only} & \textbf{Baseline Model} & \textbf{CF only} \\    
+    \toprule
+    Total firm mass & 0\% & 4.2\%  & 20.91\%  \\  
+    Mean employees & 0\% & -4.04\%  & -17.29\%   \\  
+    Productivity (Y/L) & 0\% & 1.34\%  & 2.40\%  \\  
+    Capital Int. (K/L) & 0\% & 0.26\%  & 0.68\%  \\  
+    Wage & 0\% & 1.34\%  & 2.40\%  \vspace{2mm}  \\  
+    Pr. Liquidation & -18.06 pp & -18.43 pp  & -21.69 pp \\  
+    Debt/Collateral & 0 pp & 3.07 pp  & 5.82 pp  \\  
+    Interest rate & 0 pp & -0.45 pp  & 0.71 pp  \\  
+    CF reliance & 0 pp & 21.2 pp  & 0 pp  \\    
+    CF share & 0 pp & 6.83 pp  & 0 pp  \\  
+    \bottomrule
+    \end{tabular}
+    \caption{Reform effects in recalibrated model versions where only asset-based debt is available (AB only), and only CF-based debt is available (CF only). The baseline model is also reported as reference.}
+    \label{tab:percentage_changes}
+\end{table}
 
-\noindent Gonzalez and Sy (2024) documents on a comprehensive dataset of Spanish firms that the average reliance on CF-based debt is U-shaped across firms sizes. Interestingly, the US firms covered in Compustat display a similar behavior.  Moreover, as shown in figure \ref{chart:Ushape}, the structural setup proposed here replicates this pattern (even without specifically targeting this result). However, the explanation proposed by Gonzalez and Sy (2024) is fundamentally different to what is suggested by my model. Their explanation rest on the following four assumptions: \textit{1)} firms face a variable cost of pledging collateral; \textit{2)} asset-backed loans have lower interest rates; \textit{3)} there are microeconomic cost of capital adjustment and \textit{4)} the pledgeability of earnings is such that earings-based constraints are less restrictive for small firms. In their model, assumption \textit{1-3} are necessary to match the right hand side of the U-shape and assumption \textit{4} matches the left hand side. \vspace{3mm} \\
-In contrast, my model suggests that the optimal reliance on cash flow-based debt is determined by two factors: the relative value of continuation versus pledgeable assets and the probability of liquidation under financial distress. Firms on the left-hand side of the U-shape, typically productive entrants, with scarce pledgeable assets but high continuation values. This makes high reliance to on CF-based debt advantageous to them. On the right-hand side of the U-curve, large corporations face a near-zero probability of liquidation, which mitigates the risk of lending against future cash flows. This minimizes the downside of this type of debt, enabling these firms to heavily rely on CF-based debt.
+\noindent When only asset-based debt is available, the change in liquidation probability does not influence other equilibrium outcomes.\footnote{The reform’s effects are considered solely through credit frictions. Facilitating reorganizations may have broader implications beyond credit markets, which are not considered here.} Since most macro-finance models do not account for CF-based debt financing, this case illustrates the effects of the reform in `standard' models of credit frictions. This result may explain why ex-ante liquidation probability have received scant attention in prior research. In contrast, when only CF-based debt is available, the model overestimates the impact of the reform. In the baseline case, firms that are expected to liquidate under financial distress can fall back to asset-based borrowing, since this loan-type is not exposed to liquidation risk. In the absence of this backstop on the cost of external finance, the model over-emphasizes the effects of liquidation probability on equilibrium outcomes. For further discussion on how liquidation probability affects interest rates and debt financing strategies, see section \ref{sec:appliqrisk} in the appendix. 
 
-\begin{figure}[H]  % [h] indicates placing the image here
+\section{The Small Business Reorganization Act}
+In February 2020, the Small Business Reorganization Act (SBRA) introduced Subchapter V to Chapter 11 of the U.S. Bankruptcy Code. This reform was based on the recognition that traditional Chapter 11 bankruptcy is often prohibitively costly and time-consuming for small firms. The SBRA includes several provisions aimed at making the reorganization process more accessible for small businesses.
+\begin{enumerate}
+    \item \textit{Elimination of Creditor Committees}. No automatic requirement for a creditors' committee, reducing administrative costs and simplifying the bankruptcy process.   
+    \item \textit{Simplified Creditor Cramdown}. A reorganization plan can be confirmed without unanimous creditor approval (provided the Bankruptcy Court deems it fair and equitable), reducing delays and legal costs.
+    \item \textit{Elimination of the Absolute Priority Rule}. Firm owners can retain equity without fully repaying unsecured creditors, making restructuring more feasible.
+    \item \textit{Reduced Reporting and Disclosure Requirements}. Fewer financial disclosure obligations, lowering compliance costs.
+    \item \textit{Streamlined Reorganization Process}. Deadlines for filing and confirming a plan are shortened, reducing the time and expense of reorganization.
+    \item \textit{Appointment of a Subchapter V Trustee}. A trustee is assigned to assist the development of a consensual reorganization plan, without assuming control of the business.
+\end{enumerate}
+
+\noindent Evaluating the effects of these provisions is beyond the scope of this paper. However, the structural model offers valuable predictions about certain aspects of this reform. In particular, I assess SBRA's focus on small firms relative to a universal policy and the reduction of creditor control over the reorganization process.  \vspace{3mm} \\
+\textit{Eligibility is limited to small firms}. \\ 
+The reduced reporting requirements, streamlined reorganization process, and appointment of a Subchapter V trustee (provisions 4 to 6) lower the administrative and time costs of reorganization. These provisions are closely aligned with baseline reform discussed in section \ref{sec:results}. However, the debt limit for SBRA eligibility has never exceeded $\$7.5$ million, effectively excluding large firms from this type of bankruptcy.\footnote{At its introduction, Subchapter V eligibility was limited to businesses with no more than approximately $\$2.75$ million in debt. Shortly after, this debt limit was temporarily increased to $\$7.5$ million in response to the COVID-19 pandemic, and was later reduced to an original (inflation-adjusted) threshold of around $\$3$ million in June 2024.} I model this aspect of the SBRA as a targeted reduction in the fixed costs of reorganization. The second column of table \ref{tab:percentage_changes2} show the equilibrium effects of a targeted policy that reduces fixed reorganization costs by half for small firms only. \vspace{3mm} \\
+Compared to the universal reform, the equilibrium effects of the targeted policy are somewhat smaller but not significantly so. As discussed in the section \ref{sec:model}, fixed reorganization costs disproportionately burden small firms meaning that the reduction of these costs also chiefly benefits these firms. Hence, the results in table \ref{tab:percentage_changes2} confirm that exluding large firms from the SBRA has limited effects on the effectiveness of the reform. It is not likely that these reforms only affects the fixed costs of reorganization. Therefore in table ... in the appendix, I also consider a targeted reduction in variable costs. Since fixed costs are the primary barrier to reorganization for small firms, this change has negligible effects on equilibrium outcomes.  \vspace{3mm} \\
+\textit{Reducing creditor control over the reorganization process} \\
+The SBRA enhances debtor rights by limiting creditor control over the reorganization process. The elimination of creditor committees, allowing deveiations from absolute priority rule and the simplified creditor cramdown (provisions 1 to 3) all point to this direction. Since these measures reduce lenders' bargaining power, I represent these in the model as a reduction of lenders' ability to seize future cash flow through the debt-renegotiation process (reduction in $\phi_c$). Figure ... shows the effects of a targeted and a universal reduction in creditor control. 
+
+
+\begin{table}[H]
     \centering
-    \includegraphics[width=0.65\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/Ushape.png}
-    \caption{The U-shape: average reliance on CF-based debt across firm sizes} \label{chart:Ushape}
-\end{figure}
+    \begin{tabular}{lccc}
+     & \textbf{Universal} & \textbf{Targeted} & \textbf{Control Reduc.} \\    
+    \toprule
+    Total firm mass & 4.2\%  & 2.20\% & 1.55\%  \\  
+    Mean employees & -4.04\%  & -2.15\% & -1.58\%   \\  
+    Productivity (Y/L) & 1.34\%  & 0.97\% & 0.25\%  \\  
+    Capital Int. (K/L) & 0.26\%  & 1.25\% & 2.80\%  \\  
+    Wage & 1.34\%  & 0.97\% & 0.25\%  \vspace{2mm}  \\  
+    Pr. Liquidation & -18.43 pp  & -11.92 pp & -17.90 pp \\  
+    Debt/Collateral & 3.07 pp  &  1.53 pp & -0.86 pp  \\  
+    Interest rate & -0.45 pp  & -0.35 pp & -0.20 pp  \\  
+    CF reliance & 21.2 pp  & 20.58 pp & -3.47 pp  \\    
+    CF share & 6.83 pp  & 2.23 pp & -54.51 pp  \\  
+    \bottomrule
+    \end{tabular}
+    \caption{Reform effects in recalibrated model versions. Baseline refirm: fixed costs are halved. Targeted reform: the fixed costs of reorganization are halved only for small firms. Creditor control reducing reform: the fixed costs are halved but so is creditors ability to extract future cash flows.}
+    \label{tab:percentage_changes2}
+\end{table}
 
-\noindent Finally, consider the histogram of CF-reliances. One notable limitation of previous models is that they are unable to reproduce CF-reliance that is between zero and one. My model allows firms to choose any $\tau \in [0,1]$. This could be an nice innovation, but as figure \ref{chart:histog} shows, most firms still prefer to a CF-reliance relatively few firms choose CF-reliance between zero and one. \textit{I went out of my way to achieve this result, but I am not sure if it is worth it.}
 
-\begin{figure}[H]  % [h] indicates placing the image here
-    \centering
-    \includegraphics[width=0.8\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/histog.png}
-    \caption{The histogram for CF-reliances} \label{chart:histog}
-\end{figure}
 
+\section{Conclusion}
+
+This paper demonstrates that reorganization costs raise liquidation risks and limit access to cash flow-based debt for small but productive firms, which has significant consequences for broader macroeconomic outcomes. The empirical analysis establishes that ex-ante liquidation risk increases credit spreads on cash flow-based loans, limiting access to credit for firms that lack sufficient collateral. The structural model quantifies the macroeconomic implications of these credit frictions. High reorganization costs increase liquidation probability for small firms, limits their access to CF-based debt, which contributes to credit misallocation, suppresses firm entry and yield aggregate productivity losses. \vspace{3mm} \\
+The model findings also shed light on the broader implications of bankruptcy policy reforms, such as the Small Business Reorganization Act (SBRA). By reducing reorganization costs, policymakers can enhance credit allocation, alleviate financing constraints and ultimately improve aggregate productivity. While targeted policies that facilitate small firm reorganization help reduce liquidation risk and expand access to CF-based debt, shifting reorganization costs to lenders may have unintended effects, leading them to limit CF-based lending preemptively. These results highlight the importance of designing bankruptcy frameworks that promote borrower flexibility without compromising creditor protection.
 
 \newpage
 
 \appendix
+\section*{Appendix}
 \section{Model Solution \label{sec: qualitative analysis}}
 
-In the structural model discussed above, optimal firm policies and the interest rate schedule offered by the lender are jointly determined. That is, lenders adjust interest rates to firm policies, and firms choose these policies in light of the interest rate schedule offered to them. To address the computational issue this presents, I adopt the following solution algorithm:\footnote{I similar algorithm is proposed by Corbae and D'Erasmo (2021).}
+In the structural model discussed above, optimal firm policies and the interest rate schedule offered by the lender are jointly determined. That is, lenders adjust interest rates to firm policies, while firms choose these policies in light of the interest rate schedule offered to them. To address issue, I adopt the following solution algorithm:\footnote{This follows Corbae and D'Erasmo (2021).}
 \begin{enumerate}
     \item Set $q^0 = 0$ of inverse interest rate for all firm policies and calculate the value of the firm, $V_{cont}(k,b,\varepsilon)$, the optimal firm policies $k', b', \tau'$ as well as the exit and liquidation policies. 
     \item Calculate the following: the probability of default $P_D$, the probability of liquidation in default $\gamma$, the liquidation value; $\phi_A (1-\delta) k'$ and the reorganization value; $\phi_c V (x', \varepsilon')$ given $q^0$, for each state-policy pair
@@ -573,22 +541,15 @@ In the structural model discussed above, optimal firm policies and the interest 
 This algorithm is relatively robust, but it comes at a great computational cost. It usually takes around 15 to 20 iterations to converge, which implies the same number separate solutions of firm optimization (step number 1) and updating the interests rate schedule (step number 2 and 3). 
 
 \section{Costs of Lending against Future Cash Flows \label{sec:fixed costs}}
-In section \ref{sec: The lender's problem}, I adopt a highly stylized description of fixed costs: these are imposed only on households which allows me to match the high liquidation probability associated with small corporations. In the interest of keeping the model simple, I do not impose a separate fixed costs on lenders. In practice however, the default resolution process foten involves a lengthy negotiation between debtors, creditors, and courts, which imposes significant costs on every involved parties. Hence, when in-default payments are expected through reorganization, the lender must take into account the legal, personnel and time expenses of this process. \vspace{3mm} \\
+In section \ref{sec: The lender's problem}, I adopt a highly stylized description of fixed costs: these are imposed only on households which allows me to match the high liquidation probability associated with small corporations. In the interest of keeping the model simple, I do not impose a separate fixed costs on lenders. In practice however, the default resolution process often involves a lengthy negotiation between debtors, creditors, and courts, which imposes significant costs on every involved parties. Hence, when in-default payments are expected through reorganization, the lender must take into account the legal, personnel and time expenses of this process. \vspace{3mm} \\
 However, maintaining a cash flow-based debt contract may impose significant costs on the lender even in the normal course of business. Asset-based contracts only require occasional audits of the borrower's assets. In contrast, cash flow-based contracts necessitate that the lender carries out its `due diligence' on an ongoing basis. The apparatus to maintain this monitoring activity may impose significant expenses on creditors.\footnote{This type of cost shares some similarities with the costly state verification first proposed by Towsend (1979).} More generally, such costs could be thought of as all additional expenses lenders face on a regular basis, when they deviate from standardized asset-based contracts.
 \vspace{3mm} \\
 In summary, evidence would also support for imposing additional fixed costs on creditors for lending against future cash flows. In fact, it would be possible to coin the central trade-off of the model in terms of these fixed cost. In this scenario, asset-based debt would provide the benefit of not having to monitor borrower performance and would offer a quick and cost-effective way of retrieve in default payments. Conversely, CF-based contracts would allow to potentially retrieve a share of the continuation value, but it would impose significant fixed costs on the lender. I do not include this mechanism in the model, as it would produce very similar results to the baseline setup. However, it is important to note that these fixed costs may influence lenders to favor one loan type over another.
 
-\section{Bankruptcy Frameworks in the US}
-\subsection{Key Principles of Bankruptcy Practices  \label{sec:A1}}
 
-In this section, I outline key principles from the US bankruptcy code, focusing on those that inform the structural model, presented in section 4. \vspace{3mm} \\
-\textit{a) The decision to reorganize or liquidate initially lies with the debtor, but lenders may be able enforce the conversion of the case.} Bankruptcy codes typically expect the debtor to first file for liquidation or reorganization - hence, the initial decision is in the hand of the debtor. Creditors may apply for the conversion of the case, but this is approved only under special circumstances. Overall, the influence of a single lender over the default resolution is limited. In the model, I assume that the liquidation decision is made by a third party - the household. However, when making the liquidation decision the household does not take lenders payoffs into account . This reflects the fact that borrowers have more influence on the default resolution process. \vspace{3mm} \\
-\textit{b) Reorganizations must comply with the `best-interest-of-creditors' test.} This rule states that no dissenting creditor should be worse off under the proposed reorganization plan than it would be under the liquidation of the debtor. I refer to this principle as a basis to assume that can consistently expect to recover at least the liquidation value of the firm, when the debt contract is asset-based. \vspace{3mm} \\
-\textit{c) Special provisions to facilitate reorganization of SMEs}. Bankruptcy codes often attempt to alleviate the reorganization costs for small enterprises. The US bankruptcy code allows SMEs to file for a small business case (11 U.S.C. § 101(51C)) or under subchapter V of the Small Business Reorganization Act (SBRA), both of which are intended to streamline the reorganization process and reduce costs.\footnote{The EU directive allows member states to introduce special provisions to speed up and simplify the reorganization process for SMEs.} This is based on the recognition that these costs are often prohibitive for small corporations. However, it should be noted that despite of the special provisions in place, SMEs are still far more likely to choose liquidation. This could be interpreted as evidence that fixed costs of reorganization are still significant for small firms. 
+\section{The Small Business Reorganization Act \label{sec:A2}}
 
-\subsection{The Small Business Reorganization Act \label{sec:A2}}
-
-The Small Business Reorganization Act of 2019 (SBRA), effective February 19, 2020, introduced Subchapter V to Chapter 11 of the Bankruptcy Code aiming to make bankruptcy reorganizations more accessible and cost-effective for small businesses. Its' key reforms include granting debtors exclusive rights to propose reorganization plans, thereby barring creditors from submitting competing proposals. The SBRA also eliminates U.S. Trustee fees and the formation of creditor committees, further simplifying the process. Moreover, the removal of the absolute priority rule allows small business owners to retain equity even without fully repaying unsecured creditors, provided they commit projected disposable income to debt repayment over a three-to-five-year period. \vspace{3mm} \\
+The Small Business Reorganization Act (SBRA), effective February 19, 2020, introduced Subchapter V to Chapter 11 of the Bankruptcy Code aiming to make bankruptcy reorganizations more accessible and cost-effective for small businesses. Its' key reforms include granting debtors exclusive rights to propose reorganization plans, thereby barring creditors from submitting competing proposals. The SBRA also eliminates US Trustee fees and the formation of creditor committees, further simplifying the process. Moreover, the removal of the absolute priority rule allows small business owners to retain equity even without fully repaying unsecured creditors, provided they commit projected disposable income to debt repayment over a three-to-five-year period. \vspace{3mm} \\
 However, these debtor-friendly changes often come at the expense of creditors.  Eliminating the absolute priority rule reduces the bargaining power of unsecured (CF-based) creditors, while provisions for stretched administrative payments delay their compensation. In conclusion, the SBRA represents a policy shift aimed at incentivising and facilitating small business reorganizations, albeit at the expense of creditor interests in certain cases. In the model, I summarize SBRA as an exogenous reduction in the fixed costs of reorganization and also as a reallocation of these costs to the lender. Although this summary is highly stylized, it captures the effect of policies that aim to reduce the liquidation risk of small firms. 
 
 \section{Data appendix \label{sec:A3}}
@@ -596,14 +557,12 @@ However, these debtor-friendly changes often come at the expense of creditors.  
 Compustat is a comprehensive, financial database maintained by S\&P Global. It offers standardized firm-level information on publicly traded companies compiled from financial statements, regulatory filings and other financial reports. I use the quarterly tables in Compustat North America and drop firms that are not headquartered in the US. Moreover, I exclude financial corporations (SIC code 6000 to 6799) and utility providers (SIC code 4900-4999). \vspace{3mm} \\
 S\&P Capital IQ offers an extensive array of debt-level statistics. The two datasets can be connected via the unique firm a identifier (GVKEY), moreover Capital IQ covers most of the Compustat firms and yields consistent firm-level debt data after the aggregation of debt contracts. Although Capital IQ covers most major economies, I only focus on US corporations, due to limitations introduced by Compustat. Both of these datasets are accessed through Wharton Research Data Services (WRDS). \vspace{3mm} \\
 Although both datasets provide high quality reports, reporting differences necessitate some manipulation of the data. Since monetary variables are often reported in the native currency, I bring all observations to USD. Moreover, Capital IQ reports data points in different units (units, thousands or millions). To be consistent to Compustat, I bring all observations to millions of units. It must also be ensured that each observation is uniquely identified by the combination of year, quarter, and debt ID. This may be violated for various reasons, for instance, debt facilities are often reported twice (once with the total accessible debt and once with the currently outstanding amount). In these cases, I only consider the outstanding amount. Moreover, in some cases the parent firms nad the subsidiaries are both included in the data. In these cases, I only consider parents in order to maintain observations at the highest consolidation level. \vspace{3mm} \\
-In some instances, debt contracts go missing only to reappear a few quarters later. If this gap between observations is no more the 4 quarters, I use linear interpolation to fill up the data. These cases are relatively rare as they only amount to approximately 7\% of the total sample. To ensure the alignment of consistent observations, I aggregate debt-level data from CapitalIQ to the firm level and cross-reference it with the debt information reported by Compustat. I drop any observations where there is a disparity of more than 20\% between the two datasets. This discards around 8\% of the original sample. Tables \ref{tab:COMPS} and \ref{tab:CAPIQ} summarize Compustat and Capital IQ variables, including their original names and definitions in these datasets. \vspace{3mm} \\
-Moreover, I explore bankruptcy data drawn from the Integrated Database (IDB) maintained by the Federal Judicial Center (FJC). This is a comprehensive resource containing detailed records of federal court cases in the United States. It includes data on civil, criminal, bankruptcy, and appellate cases from the Administrative Office of the U.S. Courts. For this analysis, only bankruptcy cases under Chapters 7 and 11 are considered, focusing on the period from 2010 to 2023, which corresponds to the period covered by the Capital IQ - Compustat dataset. 
+In some instances, debt contracts go missing only to reappear a few quarters later. If this gap between observations is no more the 4 quarters, I use linear interpolation to fill up the data. These cases are relatively rare as they only amount to approximately 7\% of the total sample. To ensure the alignment of consistent observations, I aggregate debt-level data from CapitalIQ to the firm level and cross-reference it with the debt information reported by Compustat. I drop any observations where there is a disparity of more than 20\% between the two datasets. This discards around 8\% of the original sample. Tables \ref{tab:COMPS} and \ref{tab:CAPIQ} summarize Capital IQ and Compustat variables, including their original names and definitions in these datasets. \vspace{3mm} \\
+Moreover, I explore bankruptcy data drawn from the Integrated Database (IDB) maintained by the Federal Judicial Center (FJC). This is a comprehensive resource containing detailed records of federal court cases in the United States. It includes data on civil, criminal, bankruptcy, and appellate cases from the Administrative Office of the US Courts. For this analysis, only bankruptcy cases under Chapters 7 and 11 are considered, focusing on the period from 2010 to 2023, which corresponds to the period covered by the Capital IQ - Compustat dataset. 
 
 \begin{table}[htbp]    
 
     \centering
-    \caption{Capital IQ Variables}
-    \label{tab:CAPIQ}
     \begin{tabular}{ll}
     \toprule
     Variable & Capital IQ \\
@@ -624,13 +583,14 @@ Moreover, I explore bankruptcy data drawn from the Integrated Database (IDB) mai
     CF-share & CF value / Total debt \\
     \bottomrule
     \end{tabular}
+    \caption{\small Variables downloaded from Capital IQ and their corresponding name in WRDS.}
+    \label{tab:CAPIQ}
+
 \end{table}
 
 
 \begin{table}[htbp]    
 \centering
-\caption{Compustat variable definitions}
-\label{tab:COMPS}
 \renewcommand{\arraystretch}{1.5} % Increase the vertical spacing of rows
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lp{5cm}p{7cm}} 
@@ -658,11 +618,12 @@ Age & from Capital IQ & Current year - Year founded + 1 \\
 \bottomrule
 \end{tabular}
 }
+\caption{\small Variables downloaded from Compustat and their corresponding name in WRDS.}
+\label{tab:COMPS}
 \end{table}
 
 \begin{table}[h!]
     \centering
-    \caption{IDB Variables}
     \label{tab:IDB}
     \begin{tabular}{ll}
     \toprule
@@ -680,116 +641,250 @@ Age & from Capital IQ & Current year - Year founded + 1 \\
     ELBLTS & Estimated total liabilities \\ 
     \bottomrule
   \end{tabular}
+  \caption{\small Variables downloaded from IDB and their corresponding name in WRDS.}
 \end{table}
     
+\subsection{Summary Statistics \label{sec:sumstat}}
 
-\subsection{Classification of Debt Contracts \label{sec:classification}}
-Classification into asset based and CF-based debt is conceptually different from the notion of secured and unsecured debt.\footnote{Even though they may be strongly correlated. This leads Gonzalez and Sy (2024) to treat them as empirical equivalents. This approach is acceptable when blanket liens are rarely used  as is case for the Spanish corporate credit market.} Security establishes priority in bankruptcy, dictating who `queues first' to collect payments if the firm goes under. Conversely, the distinction between asset-based and cash flow-based debt refers to the economic determinants of lenders' in-default payoffs. When debt is backed by specific physical assets, lenders' in-default payoffs reflect the liquidation value of these items. In the case of CF-based debt, no specific physical asset serves as collateral meaning that in-default payoffs are chiefly determined by the future cash-flows of the borrower. \vspace{3mm} \\
-I follow the classification strategy of Lian and Ma (2021). Debt contracts that are not explicitly secured by specific physical assets are classified as cash flow-based debt. Hence, debentures and other unsecured debt contracts are counted towards this category. Bonds and notes are also considered cash flow-based debt, as they are typically unsecured or secured against future cash flows - through liens on substantially all assets or equity. The exceptions to this are mortgage bonds, which are backed by real estate, and thus fall under the category of asset-based debt. Similarly, capitalized leases are also classified asset-based. Finally, I consider debt contracts that are categorized as `term loans', `revolving credit' or `other borrowings' by Capital IQ. Depending on the specifics of the contract, these can be asset-based and cash flow-based debt as well. To remain conservative about the share of cash flow-based debt, I classify these instruments as asset-based, unless they are unsecured.  
+\begin{table}[H] 
+    \centering
+    \resizebox{0.95\textwidth}{!}{%
+    \begin{tabular}{lrrrrrr}
+    \multicolumn{7}{l}{\textbf{Firm-Level Summary Statistics}} \\
+    \hline
+        & \textbf{Mean} & \textbf{p10} & \textbf{p25} & \textbf{Median} & \textbf{p75} & \textbf{p90} \vspace{1mm} \\
+    Total Assets (millions USD) & 5235.16 & 11.39 & 73.11 & 582.60 & 2696.20 & 9567.60 \\
+    Qtr. Revenue (millions USD) & 1073.75 & 0.18 & 8.77 & 109.62 & 551.79 & 1891.00 \\
+    Employees (thousands) & 11.93 & 0.03 & 0.15 & 1.37 & 6.91 & 22.85 \\
+    Firm Age (years) & 44.61 & 9 & 16 & 30 & 59 & 109 \\
+    Cash to Assets (Liquidity) & 0.17 & 0.01 & 0.03 & 0.09 & 0.21 & 0.46 \\
+    Debt to Assets (Leverage) & 0.30 & 0.03 & 0.12 & 0.27 & 0.43 & 0.61 \\
+    Debt to Collateral & 0.51 & 0.11 &  0.26 &  0.52 & 0.75 & 0.89 \\ 
+    Asset Pledgeability (\%) & 47.21 & 9.32 & 23.48 & 46.91 & 70.53 & 85.81 \\
+    Total debt (millions USD) & 1817.35 & 1.06 & 8.33 & 132.69 & 960.90 & 3562.65 \\
+    CF-share & 0.45 & 0.00 & 0.00 & 0.40 & 0.92 & 1.00 \\
+    Average Maturity (years) & 6.7 & 1.4 & 4.0 & 6.1 & 8.6 & 12.2 \\
+    Average Interest Rate (\%) & 4.9 & 0.3 & 2.7  & 4.6 & 6.8 & 9.2 \\
+    Average Spread & 2.9  & 0 & 0.6 & 2.3 & 4.4 & 6.9 \\
+    \hline
+    \end{tabular}%
+    }
+    \caption{\small Summary Statistics - non-financial corporations between 2010Q1 and 2023Q2}
+    \label{tab:sumstat1}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \resizebox{0.95\textwidth}{!}{%
+    \begin{tabular}{lrrrrrr}
+    \multicolumn{7}{l}{\textbf{Debt-Level Summary Statistics}} \\
+    \toprule
+      	& \textbf{Mean} & \textbf{p10} & \textbf{p25} & \textbf{Median} & \textbf{p75} & \textbf{p90} \vspace{1mm}\\
+    Contract Value (millions USD) & 334.53  & 0.16 & 2.24 & 48.24 & 396.00 & 859.22 \\ 
+    Maturity (years) & 9.275 & 2.50 & 4.50 & 7.00 & 10.00 & 20.00 \\
+    Interest Rate (\%) & 5.79 & 2.12 & 3.60 & 5.25 & 7.38 & 10.00 \\
+    Credit Spread & 4.03  & 0.87 & 1.88 & 3.45 & 5.49 & 8.06  \\
+	\bottomrule
+    \end{tabular}%
+    }
+    \caption{\small Summary Statistics - debt contracts between 2010Q1 and 2023Q2}
+    \label{tab:sumstat2}
+\end{table}
 
 \section{Additional Empirical Analyses}
-\subsection{The Share of Cash Flow-based Debt \label{sec:aggCFshare}}
 
-\noindent In line with the previous findings of Lian and Ma (2021) and Öztürk (2022), the total outstanding debt volume that can be classified as CF-based is relatively stable around 75\%. However, starting from 2019, this share drops significantly - from 79\% in 2018Q4 to 71\% 2019Q4 - and it does not fully recover until the end of the sample. It is not clear what causes this abrupt shift in aggregate CF-share. One explanation could be the Covid-induced economic crisis. However, this leaves the initial drop, which happen before the pandemic had a substantial impact on North American economies unexplained. It is not feasible to compare these results with prior studies, as none have studied this time period.
+
+\subsection{Classification of Debt Contracts \label{sec:classification}}
+Classification into asset-based and CF-based debt is conceptually different from the notion of secured and unsecured debt.\footnote{Even though they may be strongly correlated. This leads Gonzalez and Sy (2024) to treat them as empirical equivalents. This approach is acceptable when blanket liens are rarely used  as is case for the Spanish corporate credit market.} Security establishes priority in bankruptcy, dictating who `queues first' to collect payments if the firm goes under. Conversely, the distinction between asset-based and cash flow-based debt refers to the economic determinants of lenders' in-default payoffs. When debt is backed by specific physical assets, lenders' in-default payoffs reflect the liquidation value of these items. In the case of CF-based debt, no specific physical asset serves as collateral meaning that in-default payoffs are chiefly determined by the future cash-flows of the borrower. \vspace{3mm} \\
+I follow the classification strategy of Lian and Ma (2021). Debt contracts that are not explicitly secured by specific physical assets are classified as cash flow-based debt. Hence, debentures and other unsecured debt contracts are counted towards this category. Bonds and notes are also considered cash flow-based debt, as they are typically unsecured or secured against future cash flows - through liens on substantially all assets or equity. The exceptions to this are mortgage bonds, which are backed by real estate, and thus fall under the category of asset-based debt. Similarly, capitalized leases are also classified asset-based. Finally, I consider debt contracts that are categorized as `term loans', `revolving credit' or `other borrowings' by Capital IQ. Depending on the specifics of the contract, these can be asset-based and cash flow-based debt as well. To remain conservative about the share of cash flow-based debt, I classify these instruments as asset-based, unless they are unsecured. \vspace{3mm} \\ 
+In line with the previous findings of Lian and Ma (2021) and Öztürk (2022), the total outstanding debt volume that can be classified as CF-based is relatively stable around 75\%. However, starting from 2019, this share drops significantly - from 79\% in 2018Q4 to 71\% 2019Q4 - and it does not fully recover until the end of the sample. It is not clear what causes this abrupt shift in aggregate CF-share. One explanation could be the Covid-induced economic crisis. However, this leaves the initial drop, which happen before the pandemic had a substantial impact on North American economies unexplained. It is not feasible to compare these results with prior studies, as none have studied this time period.
 
 \begin{figure}[H]  % [h] indicates placing the image here
     \centering
-    \caption{Aggregate share of cash flow-based debt to total debt} \label{chart:CFLshare}
+    \textbf{\large The Share of CF-based Debt Over Time \vspace{2mm}} \\  % This acts as a title
+    \label{chart:CFLshare}
     \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/CFshare.png} \\
-     \small The share CFL debt to total debt, by volume between 2010Q1 and 2023Q3
+     \caption{\small The share CFL debt to total debt, by volume between 2010Q1 and 2023Q3}
 \end{figure}
-\subsection{The Determinants of Reliance on Cash Flow-based Debt \label{sec:CFshare}}
-smth
-\subsection{Robustness tests \label{sec:robustness}}
-smth
+
+\subsection{Determinants of Credit Spreads \label{sec:credit spreads}} 
+In this section, I study the firm-level determinants of credit spreads for asset-based and cash flow-based debt contracts. The structural model proposed in this paper accounts for endogenous variation in external finance premia, meaning that the empirical results presented here can be studied against predictions of the structural model. Firms with higher EBITDA and larger total asset value benefit from lower credit spreads on both loan-types. Prior analyses that interpret credit market frictions as either asset-based or earings-based limits to borrowing. In contrast, this result suggests that size and profitability are important determinants of these frictions no matter the form of borrowing. Another important determinant of credit spreads is leverage, which has a large, positive effect on credit spreads for both loan-types. Firm age has a significant, negative effect on credit spreads, suggesting that strong creditor-debtor relationships can help reduce the cost of external finance.  \vspace{3mm} \\
+The coefficient estimates for number of employees are not consistent across specifications. This variable has limited economic impact, which indicates that total assets is a sufficient measure of firms size. Consistent with the idea that lender perception plays a key role in cash flow-based borrowing, worse credit ratings significantly increase credit spreads for this type of debt. In contrast, credit spreads for asset-based debt are influenced only when credit ratings signal the state default or a high risk of it. Sector fixed effects have mostly insignificant impact on credit spreads for asset-based debt, which is partly due to accounting for pledgeability in the model. For cash flow based debt, sector differences are more significant, yet they remain relatively unimportant determinants of credit spread variations. \vspace{3mm} \\
+`CF-share' measures the extent to which a firm relies on cash flow-based debt as a fraction of total debt. It is defined as 
+\begin{equation*}
+    \text{CF-share} = \text{CF-based Debt Value} \  / \  \text{Total Debt Value}.
+\end{equation*}
+CF-share is correlated negatively with spreads of cash flow-based debt and positively with spreads of asset-based debt, suggesting that firms self-select into these loan-types based on their relative costs. This underlines that debt financing is jointly determined with the credit spreads that firms eventually face. 
+
+\subsubsection{Limiations of Empirical Analyses \label{sec:credit spreads}} 
+Empirical analyses of credit spreads and firm characteristics face significant limitations. Firms adjust their debt financing strategies based on credit conditions, which are influenced by firm characteristics. In turn, this affects the external finance premia they eventually face. This feedback effect is likely to introduce endogeneity bias. Moreover, certain determinants of credit frictions are difficult to observe. In this paper, I highlight the probability of liquidation, but other factors such as assets specificity (Kermani and Ma, 2020) or the quality of accounting practices and court enforceability (Lian and Ma, 2021) are similarly hard to measure. Therefore, identification of causal relationships between firm characteristics and credit spreads is not possible without relying on natural experiments. The structural model discussed below aims to make up for these limitations. 
+
 \begin{table}[H]
     \centering
-    \caption{The Determinants of Interest rates}
-    \label{tab:interest_rate_determinants}
+    \caption{The Determinants of Credit Spreads}
+    \label{tab:spread_table_full}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccccc}
     \toprule
     & \multicolumn{2}{c}{All contracts} & \multicolumn{2}{c}{CF contracts} & \multicolumn{2}{c}{AB contracts} \\
     \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
-    \textbf{LHS}: Interest rate & Value & SE & Value & SE & Value & SE \\
+    \textbf{LHS}: Spread & Value & SE & Value & SE & Value & SE \\
     \midrule
-    Log of EBITDA & -0.127*** & (0.0106) & -0.0803*** & (0.0126) & -0.179*** & (0.0186) \\
-    Log of Assets & -0.345*** & (0.0512) & -0.337*** & (0.0679) & -0.227*** & (0.0818) \\
-    Pledgeability & -0.300*** & (0.0882) & 0.0104 & (0.116) & -0.680*** & (0.136) \\
-    Leverage & 1.975*** & (0.104) & 2.304*** & (0.141) & 1.495*** & (0.159) \\
-    Log of Age & -0.107*** & (0.0256) & -0.0983*** & (0.0326) & -0.113*** & (0.0409) \\
-    Log of Employees & -0.0487** & (0.0213) & -0.145*** & (0.0292) & 0.0562* & (0.0313) \\
-    CF-share & 0.503*** & (0.0638) & -0.0330 & (0.116) & 0.480*** & (0.0994) \\
-    Maturity & 0.0109*** & (0.0006) & 0.0129*** & (0.0006) & 0.00835*** & (0.0015) \vspace{3mm} \\
+    Log of EBITDA & -0.163*** & (0.011) & -0.119*** & (0.012) & -0.205*** & (0.020) \\
+    Log of Assets & -0.394*** & (0.049) & -0.452*** & (0.060) & -0.321*** & (0.086) \\
+    Pledgeability & -0.479*** & (0.087) & -0.046 & (0.107) & -1.013*** & (0.153) \\
+    Num. Contracts  & 0.003** & (0.002) & 0.012*** & (0.002) & 0.003 & (0.004) \\
+    Leverage & 1.759*** & (0.105) & 2.189*** & (0.136) & 0.963*** & (0.176) \\
+    Log of Age & -0.135*** & (0.026) & -0.133*** & (0.030) & -0.147*** & (0.045) \\
+    Log of Employees & -0.011 & (0.020) & -0.094*** & (0.025) & 0.084*** & (0.031) \\
+    CF-share & 0.446*** & (0.064) & -0.339*** & (0.112) & 0.737*** & (0.111) \vspace{3mm} \\
     \multicolumn{7}{l}{\textbf{Industries} - baseline: Agriculture and Fishing} \\
-    Construction & 0.750** & (0.306) & 0.820 & (0.586) & 0.516 & (0.371) \\
-    Manufacturing & 0.442 & (0.283) & 0.384 & (0.573) & 0.456 & (0.319) \\
-    Mining & 1.038*** & (0.293) & 0.946 & (0.585) & 0.852** & (0.337) \\
-    Retail Trade & 1.040*** & (0.294) & 1.139** & (0.578) & 0.758** & (0.344) \\
-    Services & 0.434 & (0.287) & 0.464 & (0.574) & 0.217 & (0.329) \\
-    Public Utilities & 0.820*** & (0.288) & 0.855 & (0.576) & 0.561* & (0.335) \\
-    Wholesale Trade & 0.720** & (0.296) & 0.569 & (0.584) & 0.634* & (0.340)  \vspace{3mm} \\
+    Construction  & 0.742*** & (0.269) & 1.246*** & (0.461) & 0.271 & (0.375) \\
+    Manufacturing  & 0.280 & (0.242) & 0.641 & (0.446) & 0.124 & (0.310) \\
+    Mining & 0.856*** & (0.251) & 1.020** & (0.455) & 0.728** & (0.333) \\
+    Retail Trade  & 0.676*** & (0.255) & 1.234*** & (0.455) & 0.057 & (0.338) \\
+    Services & 0.283 & (0.247) & 0.776* & (0.448) & -0.176 & (0.321) \\
+    Public Utilities & 0.586** & (0.247) & 0.878* & (0.449) & 0.290 & (0.330) \\
+    Wholesale Trade & 0.672** & (0.262) & 0.757 & (0.462) & 0.565 & (0.345) \vspace{3mm} \\
     \multicolumn{7}{l}{\textbf{Credit Ratings} - baseline: Rating: A} \\
-    Rating: A+ & -0.0643 & (0.104) & 0.187* & (0.103) & -0.723** & (0.340) \\
-    Rating: A- & 0.173** & (0.0882) & 0.216** & (0.0847) & -0.0675 & (0.267) \\
-    Rating: B+ & 0.531*** & (0.0813) & 0.581*** & (0.0833) & 0.0593 & (0.235) \\
-    Rating: B & 0.0344 & (0.0779) & -0.0203 & (0.0762) & -0.214 & (0.236) \\
-    Rating: B- & 0.755*** & (0.0816) & 0.887*** & (0.0850) & 0.241 & (0.234) \\
-    Rating: C & 1.562*** & (0.0902) & 1.533*** & (0.105) & 1.136*** & (0.238) \\
-    Rating: D & 2.011*** & (0.145) & 2.241*** & (0.187) & 1.430*** & (0.290) \\
+    Rating: A+ & 0.144 & (0.095) & 0.351*** & (0.087) & -0.418 & (0.570) \\
+    Rating: A- &  0.169** & (0.077) & 0.185*** & (0.065) & -0.059 & (0.363) \\
+    Rating: B+ & 0.715*** & (0.071) & 0.698*** & (0.065) & 0.149 & (0.326) \\
+    Rating: B & 0.207*** & (0.068) & 0.107* & (0.058) & -0.044 & (0.331) \\
+    Rating: B- & 0.976*** & (0.072) & 1.159*** & (0.069) & 0.195 & (0.325) \\
+    Rating: C  & 1.690*** & (0.082) & 1.613*** & (0.091) & 1.090*** & (0.327) \\
+    Rating: D & 2.020*** & (0.140) & 2.429*** & (0.185) & 1.072*** & (0.362) \\
     \midrule
+    Firm-level controls & Yes & & Yes & & Yes & \\
     Period fixed effects & Yes & & Yes & & Yes & \\
-    Observations & 22,652 & & 12,613 & & 10,039 & \\
-    R-squared & 0.235 & & 0.334 & & 0.143 & \\
+    Observations & 17,601 & & 10,620 & & 6,981 & \\
+    R-squared & 0.285 & & 0.404 & & 0.174 & \\
     \bottomrule
-    \multicolumn{7}{c}{Robust standard errors in parentheses} \\
-    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
     \end{tabular}%
     }
+    \caption{\small Determinants of credit spreads of new issuances. Robust standard errors are reported in parentheses,  *** p$<$0.01, ** p$<$0.05, * p$<$0.1.}
 \end{table}
+
+
+
+
+
+\subsection{Robustness tests \label{sec:robustness}}
+
+In this section, I test the robustness of the empirical results in alternative model specifications. First, I keep the same specification but replace the variable of interest with the number of \textit{secured} debt contracts. Table \ref{tab:spread_table_new} summarizes these results. Ayotte and Morrison (2009) and Blazy and Choppard (2010) argue that security backed by physical assets often incentivizes creditors to obstruct the reorganization process. This suggests that the number of secured creditors should have an even greater impact on CF-based debt contracts. Consistent with this notion, I find that the effect of secured debt contracts on credit spreads four times larger for CF-based debt, compared to the baseline case. The negative coefficient on AB-debt contract spreads is somewhat puzzling, which can be attributed to lower liquidation risk. Zhong (2021) argues that a greater threat of liquidation reduces default probability, as firms are less likely to strategically demand reorganization.
 
 
 \begin{table}[H]
     \centering
-    \caption{The Determinants of Firm-Level Average Credit Spreads}    \label{tab:interest_rate_determinants}
+    \caption{The Determinants of Credit Spreads}
+    \label{tab:spread_table_new}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccccc}
     \toprule
-    & \multicolumn{2}{c}{All Firms} & \multicolumn{2}{c}{CF Firms} & \multicolumn{2}{c}{AB Firms} \\
+    & \multicolumn{2}{c}{All contracts} & \multicolumn{2}{c}{CF contracts} & \multicolumn{2}{c}{AB contracts} \\
     \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
-    \textbf{LHS}: Avg. Spread & Value & SE & Value & SE & Value & SE \\
+    \textbf{LHS}: Spread & Value & SE & Value & SE & Value & SE \\
     \midrule
-    Log of EBITDA & -0.0744*** & (0.00483) & 0.00105 & (0.00848) & -0.204*** & (0.0101) \\
-    Log of Assets & -0.305*** & (0.0148) & -0.447*** & (0.0275) & -0.181*** & (0.0277) \\
-    Pledgeability & -0.162*** & (0.0393) & 0.953*** & (0.0751) & -1.048*** & (0.0677) \\
-    Leverage & 1.773*** & (0.0450) & 2.334*** & (0.0932) & 1.711*** & (0.0893) \\
-    Log of Age & -0.0544*** & (0.0109) & 0.0440** & (0.0186) & -0.193*** & (0.0229) \\
-    CF-share & 0.860*** & (0.0245) & -- & -- & -- & --    \vspace{3mm} \\
-    \multicolumn{7}{l}{\textbf{Industries} - baseline: Agriculture and Fishing} \\
-    Construction & 0.194* & (0.0993) & 0.269* & (0.160) & -0.214 & (0.181) \\
-    Manufacturing & -0.170** & (0.0838) & -0.396*** & (0.141) & -0.306** & (0.135) \\
-    Mining & 0.523*** & (0.0897) & 0.256* & (0.152) & 0.231 & (0.153) \\
-    Retail Trade & -0.580*** & (0.0868) & -0.280* & (0.153) & -1.010*** & (0.138) \\
-    Services & -0.500*** & (0.0859) & -0.671*** & (0.146) & -0.825*** & (0.139) \\
-    Public Utilities & -0.0916 & (0.0884) & 0.0467 & (0.151) & -0.608*** & (0.150) \\
-    Wholesale Trade & -0.399*** & (0.0887) & -0.734*** & (0.159) & -0.736*** & (0.141)   \vspace{3mm} \\
-    \multicolumn{7}{l}{\textbf{Credit Ratings} - baseline: Rating: A} \\
-    Rating: A+ & 0.170*** & (0.0403) & 0.179*** & (0.0517) & 0.572*** & (0.204) \\
-    Rating: A- & 0.201*** & (0.0321) & 0.0894** & (0.0435) & 0.471*** & (0.102) \\
-    Rating: B+ & 0.425*** & (0.0283) & 0.493*** & (0.0429) & 0.137 & (0.0837) \\
-    Rating: B & 0.190*** & (0.0272) & 0.217*** & (0.0381) & 0.0276 & (0.0841) \\
-    Rating: B- & 0.529*** & (0.0294) & 0.545*** & (0.0449) & 0.157* & (0.0839) \\
-    Rating: C & 1.101*** & (0.0317) & 1.092*** & (0.0556) & 0.700*** & (0.0860) \\
-    Rating: D & 1.504*** & (0.0511) & 1.685*** & (0.0963) & 0.945*** & (0.113) \\
+    Log of EBITDA & -0.160*** & (0.0106) & -0.108*** & (0.0121) & -0.205*** & (0.0203) \\
+    Log of Assets & -0.372*** & (0.0478) & -0.404*** & (0.0584) & -0.273*** & (0.0859) \\
+    Leverage & 1.826*** & (0.109) & 2.179*** & (0.137) & 1.146*** & (0.181) \\
+    Pledgeability & -0.427*** & (0.0904) & -0.0790 & (0.109) & -0.847*** & (0.157) \\
+    Secured contracts & 0.007 & (0.006) & 0.051*** & (0.011) & -0.021** & (0.009) \\
     \midrule
-    Period fixed effects & Yes & -- & Yes & -- & Yes & -- \\
-    Observations & 88,705 & -- & 26,203 & -- & 33,949 & -- \\
-    R-squared & 0.165 & -- & 0.244 & -- & 0.149 & -- \\
+    Firm-level controls & Yes & & Yes & & Yes & \\    
+    Period fixed effects & Yes & & Yes & & Yes & \\
+    Observations & 17,514 & & 10,640 & & 6,874 & \\
+    R-squared & 0.287 & & 0.406 & & 0.174 & \\
     \bottomrule
-    \multicolumn{7}{c}{Robust standard errors in parentheses} \\
-    \multicolumn{7}{c}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
     \end{tabular}%
     }
+    \caption{\small The main determinants of credit spreads of new issuances, when the number of secured debt contracts is taken into account. Robust standard errors are reported in parentheses,  *** p$<$0.01, ** p$<$0.05, * p$<$0.1.}
 \end{table}
+
+\noindent Calculating credit spreads is subject to uncertainty, as it is not clear interest rate the lender used as a refernce. Therefore the analyses presented in table 3 are repeated with interest rate as the dependent variable. In this specification, debt contract maturity is included alongside other firm-level controls. Table \ref{tab:intrate_table_new} summarizes these results.  The central findings remain unchanged, though the effect of the number of debt contracts on CF-based debt contracts is somewhat smaller. The negative coefficients for asset-based contracts likely reflect a stronger commitment to fulfilling the debt obligations.
+
+\begin{table}[H]
+    \centering
+    \caption{The Determinants of Interest Rates}
+    \label{tab:intrate_table_new}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{2}{c}{All contracts} & \multicolumn{2}{c}{CF contracts} & \multicolumn{2}{c}{AB contracts} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+    \textbf{LHS}: Interest Rate & Value & SE & Value & SE & Value & SE \\
+    \midrule
+    Log of EBITDA & -0.127*** & (0.0106) & -0.0870*** & (0.0126) & -0.178*** & (0.0186) \\
+    Leverage & 1.969*** & (0.105) & 2.218*** & (0.141) & 1.545*** & (0.164) \\
+    Log of Assets & -0.348*** & (0.0528) & -0.386*** & (0.0703) & -0.206** & (0.0833) \\
+    Pledgeability & -0.302*** & (0.0885) & 0.00467 & (0.116) & -0.640*** & (0.141) \\
+    Num. contracts & 0.001 & (0.001) & 0.009*** & (0.001) & -0.006* & (0.004) \\
+    \midrule
+    Firm-level controls & Yes & & Yes & & Yes & \\    
+    Period fixed effects & Yes & & Yes & & Yes & \\
+    Observations & 22,652 & & 12,613 & & 10,039 & \\
+    R-squared & 0.235 & & 0.335 & & 0.143 & \\
+    \bottomrule
+    \end{tabular}%
+    }
+    \caption{\small Determinants of interest rates of new issuances. Robust standard errors are reported in parentheses,  *** p$<$0.01, ** p$<$0.05, * p$<$0.1.}
+\end{table}
+
+\noindent Limiting the analysis to new issuances reduces the sample size. By using a weighted average of firm-level credit spreads as the outcome variable, it is possible to explore the variables that influence external finance premia beyond the time of issuance. Here, I consider three sub-samples: firms that borrow inly against assets, only against and cash flows as well as the entire sample. Despite relying on an entirely differnt approach to the analysis of credit spreads, the main results remain largely unchanged. 
+
+\begin{table}[H]
+    \centering
+    \caption{The Determinants of Credit Spreads}
+    \label{tab:spread_table_new}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{2}{c}{All contracts} & \multicolumn{2}{c}{CF contracts} & \multicolumn{2}{c}{AB contracts} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+    \textbf{LHS}: Spread & Value & SE & Value & SE & Value & SE \\
+    \midrule
+    Log of EBITDA & -0.058*** & (0.005) & -0.009 & (0.015) & -0.192*** & (0.012) \\
+    Log of Assets & -0.0286 & (0.0235) & -0.490*** & (0.0793) & -0.0338 & (0.0478) \\
+    Leverage & 2.049*** & (0.0484) & 1.942*** & (0.177) & 1.909*** & (0.112) \\
+    Pledgeability & -0.237*** & (0.0424) & 0.758*** & (0.154) & -0.940*** & (0.0832) \\
+    Num. Contracts & 0.006*** & (0.001) & 0.026*** & (0.005) & -0.038*** & (0.006) \\
+    \midrule
+    Firm-level controls & Yes & & Yes & & Yes & \\
+    Period fixed effects & Yes & & Yes & & Yes & \\
+    Observations & 78,714 & & 8,938 & & 26,604 & \\
+    R-squared & 0.144 & & 0.167 & & 0.157 & \\
+    \bottomrule
+    \end{tabular}%
+    }
+    \caption{\small The main determinants of credit spreads of new issuances, considering the number of secured debt contracts. Robust standard errors are reported in parentheses, *** p$<$0.01, ** p$<$0.05, * p$<$0.1.}
+\end{table}
+
+\section{Additional Model Results \label{sec:appmodelresults}}
+
+
+\begin{figure}[H]  % [h] indicates placing the image here
+    \centering  
+    \textbf{\large Extreme Reform Effects on Credit Conditions \vspace{3mm} \\}   % This acts as a title
+    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/large_reform.png}
+    \caption{\small The change in equilibrium outcomes following the \textit{extreme} reform. The y-axis represents the productivity state, while the x-axis represents the cash on hand value, the color intensity corresponds to the magnitude of the change. The non-colored tiles correspond to states in which the mass of firms is less than 0.01\% of the total in the stationary equilibrium. Panel A shows the change in liquidation probability, Panel B shows the change in reliance on CF-based debt, Panel C shows the change in debt-to-collateral ratio and Panel D shows the change in interest rates. }
+    \label{chart:extpoleffects}
+\end{figure}
+
+
+\subsection{Liquidation Risk and Credit Conditions \label{sec:appliqrisk}}
+
+In this section, I present model predictions on how liquidation risks affect the cost of external finance and firms' optimal debt financing strategy. In the general equilibrium model liquidation probability does not change exogenously, therefore this exercise is based on a reduced version of the model. Based on equation \ref{eq:q}, I determine the interest rate that would support the equilibrium policies of ($k',b'$), under different liquidation probabilities. Moreover, I define the corresponding optimal reline on CF-based debt ($\tau$), based on equation \ref{eq:V_cont}. Figure \ref{chart:liqprob} presents these results for a high-productivity firm, for three different values of cash on hand. The lines are color-coded to represent the debt financing strategy of the firm, either borrowing against assets (red) or against cash flows (blue). \\
+
+\begin{figure}[H]  % [h] indicates placing the image here
+    \centering  
+    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/GamPol.png}
+    \caption{ \small External finance premium based and debt financing strategy necessary to support firms equilibrium policies. Panel A, corresponds to firms starting cash on hand, panel B. depicts expected cash on hand after one period, and panel C. is the steady-state cash on hand at the given productivity level.}
+    \label{chart:liqprob}
+\end{figure}
+
+\noindent Firms enter with zero cash on hand, therefore panel A. corresponds to credit conditions upon entry. The effects of liquidation probability are largest for these firms, as they do not have private wealth to support their capital investments. Under zero liquidation probability, these firms may access CF-based financing at a 4.1\% rate. This rate increases monotonously until 75\% of liquidation probability, at which point firms transition to asset-based borrowing at a rate of 6.6\%. This represent an upper bound for interest rates, as asset-based debt contracts are not affected by liquidation probability. \vspace{3mm} \\
+Panel B. corresponds to firms' expected cash on hand after one period, given optimal policy decisions. Having accumulated some wealth, these firms can access more future capital, which is associated with higher continuation value. Hence, these firms face lower interest rates across all liquidation probabilities. Hence, accumulating cash on hand limits firms' exposure to liquidation risk and higher capital stock allows these firms to fall back to asset-based debt sooner. Panel C. corresponds to the steady-state cash on hand for the given productivity. This panel shows the same decline in external finance premia across liquidation probabilities, but the overall effects are even more pronounced. \vspace{3mm} \\
+Figure \ref{chart:liqprob} provides further insights into firms' debt financing frictions. First, even though age is not explicitly considered in the model, firms' lifecycle affects their credit conditions. Small but productive firms, who benefit the most from reducing liquidation risks, are almost invariably young firms, within the first three years of entry. Hence, the model predicts the reducing reorganization costs aids young firms the most. Second, although the model can accommodate any CF-reliance between zero and one, under the current assumption firms always choose a corner solution, either borrowing only against assets or entirely against cash-flows. Third, the value-maximizing debt financing strategy maximizes the inverse interest rate faced by the firm. Both of these results follow from firm value being in zero and default. 
+
 
 \end{document}
