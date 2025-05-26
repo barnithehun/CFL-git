@@ -9,6 +9,7 @@
 \usepackage{amsfonts}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{dsfont}
 \usepackage{natbib}
 \addtolength{\oddsidemargin}{-.7in}
 \addtolength{\evensidemargin}{-.7in}
@@ -34,25 +35,78 @@
 	linktocpage=true
 }
 
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\hbadness=10000
 
-
-\title{The interaction of Financial and Information Frictions}
-\author{}
+\title{Research and Literature}
 \date{}
 
-
 \begin{document}
+
 \maketitle
 
-Think cyclically - a tightening in financial conditions! 
-Plots: firm dynamics, productivity dynamics
 
-\subsection*{References}
-\begin{itemize}\setlength\itemsep{0em} \small
-    \item Sedlácek and Sterk (2017)
-    \item Farboodi and Veldkamp (2020)
+\section*{Literature}
+\subsection*{Rational Inattention Models} 
+
+Rational inattention models are about how agents allocate scarce attention to different signals. The main idea is that agents have a limited capacity to process information, and they must choose how to allocate their attention among various signals. This leads to a trade-off between the cost of acquiring information and the benefits of making better decisions based on that information. Models where there is costly information acquisition (or contracting), but agents do not have a attention allocation decision should not be considered RI models. Hence, RI models have limited use for explaining steady states or capital (mis)allocation literature. Instead, RI models are use to explain cyclical patterns in the economy, where how agents choose to reallocate their attention. 
+
+A good example of this is Mariathasan and Zhuk (2017), “Rational Inattention and Counter‐Cyclical Lending Standards”. Banks have limited processing capacity to evaluate borrowers, trading off screening many loans versus reviewing each carefully. In good times, banks can afford to be more lenient in their lending standards, as they can process more information about borrowers. In bad times, banks become more cautious and tighten their lending standards, as they have less capacity to process information. This leads to a counter-cyclical pattern in lending standards, where banks are more lenient in good times, which leads to a build of a potentially bad loans in good times. In bad times, banks become more cautious and tighten their lending standards, leading to a reduction in lending. 
+
+\section*{Research Ideas}
+
+\subsection*{Financing Firms in the Data Economy}
+
+\textbf{The problems with this project: limited understanding of the literature, observational issues} \vspace{3mm} \\
+Farboodi and Veldkamp (2020) argues that the data accumulation in production leads to a `data feedback loop'. Data is created as a by-product of production. This leads to a positive feedback loop where firms with higher production accumulate more data which allows them to produce even more. This force competes with diminishing returns on data. Under certain parameter values the forces lead to a S-shaped production, where the increasing return arise for some part of the production function, but diminishing returns always dominate eventually. Moreira (2016) has a similar process where consumer demand accumulates as a by-product of production. This leads to a similar feedback loop. Even in the absence of financial frictions, the S-shaped production function may lead data-traps where a small individual firm cannot cannot escape the low data-state (this is especially true if there is no data buying). 
+
+\textbf{In a data intensive economy the effects of financial frictions are amplified.} Firms with relatively high productivity but no data have trouble to scale up and escape the data trap. The reason behind this is that they have little capital, low profitability and low observable TFP. Hence, even in the absence of an S-shape, the data feedback loop amplifies the impact of financial frictions: a firm with high productivity but limited data faces difficulty in obtaining \textbf{asset-backed financing}. This limits firm growth through two distinct channels: reduced data accumulation and reduced capital accumulation. If the firm were able to \textbf{borrow against future cash flows}, collateral constraints would be less relevant. In this case, the key issue becomes whether the lender can distinguish between low data availability and low productivity. This raises the question, to what extent data is verifiable and measurable (for earnings based lenders) and how much it is collateralizable (for asset-based lenders). 
+
+In theory, if the lender could perfectly identify firms with high productivity but limited data, it could lend on the expectation of future data accumulation. However, this is highly unlikely in practice. \textbf{Equity financing} can alleviate these frictions but it ultimately faces these same problems as in the case of CF-based lending. If shareholders cannot distinguish between low data availability and low productivity, they will not be able to price in that the firm will be valuable down the line after it accumulates sufficient data.  
+
+How data is different from other intangible capital? The key distinction is that intangible capital is typically assumed to be the result of deliberate investment efforts, whereas data is a byproduct of economic activity, created by interaction with the consumer. This distinction is important as it can give rise to the data feedback loop. This the reason why, even under the generous assumption that data is fully collateralizable, asset-based financial frictions would still exert a substantially larger impact on the economy. \vspace{3mm} \\
+
+\noindent Notes: 
+\begin{itemize}
+	\item Observational issues: suppose you build a model around these frictions. How do you inform the model-parameters? To what extent data is observable, verifiable, collateralizable? These should be very hard to estimate, and there might be a lot of heterogeneity across sectors - maybe it could be identified on the sector level, there are data intensive and less data intensive sectors.
+	\item This framework would have interesting implications on the observed wedges and productivity dispersion. 
+	\item This model could yield a more realistic model dynamics, no matter how hard you try to impose frictions on firms they will typically grow in at most 5 periods. 
+
 \end{itemize}
 
+\subsection*{Data accumulation and the flexibility of small and young firms} 
+
+\textbf{Steady state comparison will not work, the transition dynamics would be interesting. The problems with this project: does not have much to do with financial frictions so I would drop it for now.} \vspace{3mm} \\
+Veldkamp and Farboodi (2018) argue that data accumulation improves the productivity of large, data rich companies, that can scrape a lot of data from their interactions with consumers. This implies that they know the consumer preferences better and can deliver higher quality products. But, what if there is a sudden large shift either in consumer sentiment or in the technology? In this case, small and young firms that are less constrained by existing data can adapt more easily to changing market conditions. Mathematically, their posterior is less tight around the old, inefficient technology or obsolete consumer preferences.  
+
+This result highlights the adaptability of small firms to large structural changes in the economy. There is some evidence that during the COVID-19 pandemic, where many small firms were able to pivot quickly to new business models, while larger firms struggled to adapt (Francom, Franco, Pina, Puy; OECD WP1779). Also, there is some evidence that highlight the adaptability of small firms \textit{Weaven et al., Surviving an economic downturn: Dynamic capabilities of SMEs}. On the macro level, this results could underpin statements that highlights the importance of small firms for the flexibility and adaptability economy.
+
+
+\section*{Data to gather}
+
+\begin{itemize} \setlength\itemsep{0em}
+	\item Hsieh-Klenow type productivities, and wedges 
+	\item Something on the data-stock on the firm level
+	\item 
+\end{itemize}
+
+
+\subsection*{Equity Finance in Macrofinance Heterogenous Agent Models}
+
+Although equity finance is a key source of external capital for firms, it is often highly simplified in Macro-Finance heterogenous firms models. In these models, firms can raise equity subject to some typically quadratic costs, such as in Hennessy and Whited (2007): 
+$$ \Lambda(e) = \lambda_0 + \lambda_1*|e| + \lambda_2*|e|^2 \qquad \text{if} \qquad e < 0  $$
+The fixed costs of raising equity replicate the fact that equity rasing episodes are lumpy events. The quadratic cost make FOCs tractable, and probably behave better then linear costs. There are more nuanced models involving an irreversible IPO decision, such Pete (2023), where the shareholders of the firm forgo a fraction of future dividends in exchange for a lump-sum payment, coming from outside investors. In this case the insider shareholders weigh the costs of ownership dilution against the benefits of raising capital. How much capital the firm can raise with the IPO depends on the outside investors' valuation of the firm, which is typically assumed to be the same as the insider's valuation. \vspace{3mm} \\
+One shortcoming of the literature that it considers raising equity as a one-time occasion, only occurring for a small subset of firms. In reality, private firms often raise equity, Kochen (2025) document that 12\% of private firms raised equity at least once between 2009-2013 and on average, equity injections increase available funds by 15\% of firms’ financial capital. Furthermore, he estimates that around 60\% of these funds come from insiders, and 40\% from outside investors. Hence, raising outsider equity by private firms is significantly more common than it is typically assumed. Firms can substitute debt for equity, consequently models that does not consider equity finance may overestimate the importance of credit market frictions. \vspace{3mm} \\
+
+\textbf{Related Ideas:}
+\begin{itemize}
+	\item Most papers assume that outside investors value firms based on the same information as insiders, which gives them an exact account of firms value - typically this info in current productivity and some measure of firm wealth. Find some measure of how much share a firm has to give up to raise a certain amount of capital. For public firms this is the share price, but for private firms this would require a lot of work. If you find that even after conditioning of some measure of productivity and wealth, there is a high dispersion of share price, this suggests a more complicated setup. Then you could find other determinants of this share price, and build a model around it - \textbf{It seems like there is lot of literate on valuing private firms.}
+	\item You could tie this to the data economy, where firms with high productivity but low data have a hard time raising equity. If data is indistinguishable from productivity, outside financiers would have a hard time telling apart low-data firms from low-productivity firms equity finance would be less efficient. Hence, the extent to which the data stock of the firms is observable (verifiable if firms are willing to disclose), is a key determinant of the equity financing. - \textbf{One problem here is that firms would have an incentive to under-report their data stick, which does not seem realistic.}
+	\item If lenders could not observe how much data a firm has, it could even lead to increasing equity costs with firm age. - \textbf{Sure, it would be super interesting to show this, but what are the chances you find this in the data?}
+	\item Maybe you could show that the quadratic costs that are typically assumed are imply a higher costs per share for large companies - which is the exact opposite of what the data suggests. Although if the equity raising cost function also has and a fixed and a linear component, this might not be the case. 
+\end{itemize}
+
+
 \end{document}
-
-
