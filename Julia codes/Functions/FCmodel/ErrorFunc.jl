@@ -16,7 +16,7 @@ function ErrorFunc1(initvec)
     SumRes = sumSS(SumPol,Fmat,f0)   
 
     ResultValues = SumRes[[7, 8, 10, 12, 13],1] |> Vector
-    TargetValues = [ 0.49, 5.3, 0.48, 0.77, 0.43 ]
+    TargetValues = [ 0.49, 5.3, 0.48, 0.76, 0.43 ]
     ModelError = sum( abs.((ResultValues .- TargetValues)) ./ TargetValues )
 
     return ( ModelError )

@@ -395,12 +395,12 @@ function FirmOptim(wage, phi_c, zeta_Rl)
         next_b = SumPol[s_i, 4]
 
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
+        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
 
         e_i = Int(floor( (s_i-1) / x_size) + 1) 
         for next_e_i in 1:e_size
 
-            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo+SumPol[s_i, 8]))
+            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
             x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
             x_close = argmin(abs.(x_next .- x_grid))
@@ -445,7 +445,7 @@ c_e, f0 = EntryValue(SumPol, e_chain) ;
 mu, m, xpol = stat_dist(SumPol, Fmat, f0);
 
 zeta_Rl = 1437 # 
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c, zeta_Rl)
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(wage, phi_c, zeta_Rl) 
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f0);
 
@@ -507,27 +507,6 @@ zeta_R_vec = 0:1000:8000
 # SumPolZeta = ZetaGam(zeta_R_vec)  # runtime around 1 hour 
 ZetaGamPlot(SumPolZeta, zeta_R_vec, 23, 15)
 
-###### GENERAL EQUILIBRIUM: Finding wage given entry cost, using bisection ####
-tolerance = 0.001
-wage_0 = 1
-phi_c = 0.2810
-zeta_Rl = 2590.7608
-
-SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
-c_e, f0 = EntryValue(SumPol, e_chain)
-results_baseline = sumSS(SumPol,Fmat,f0)
-c_e_baseline = c_e
-
-zeta_Rl = 860
-@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (0.9, 1.1), Bisection(), rtol=tolerance, verbose=true)
-
-#  wage_alt =  - where zeta_Rl  = zeta_Rl/3
-SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
-c_e0, f00 = EntryValue(SumPol0, e_chain0)
-
-sumSS(SumPol,Fmat,f0) # wage_alt = 1.025
-sumSSsme(SumPol,Fmat,f0)
-
 ########## CALIBRATION ################
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/ErrorFunc.jl")
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/FirmOptim_Ext.jl")
@@ -551,5 +530,23 @@ ABrel_calib = CalRes.minimizer
 ErrorFunc_CF(CalRes.minimizer)
 
 
+###### GENERAL EQUILIBRIUM: Finding wage given entry cost, using bisection ####
+tolerance = 0.001
+wage_0 = 1
+phi_c = 0
+zeta_Rl = 2873.538999697744
 
+SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
+c_e, f0 = EntryValue(SumPol, e_chain)
+results_baseline = sumSS(SumPol,Fmat,f0)
+c_e_baseline = c_e
 
+zeta_Rl = 1437
+@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (0.9, 1.1), Bisection(), rtol=tolerance, verbose=true)
+
+#  wage_alt =  - where zeta_Rl  = zeta_Rl/3
+SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
+c_e0, f00 = EntryValue(SumPol0, e_chain0)
+
+sumSS(SumPol,Fmat,f0) # wage_alt = 1.025
+sumSSsme(SumPol,Fmat,f0)

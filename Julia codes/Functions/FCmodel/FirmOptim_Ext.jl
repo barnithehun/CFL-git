@@ -1,6 +1,8 @@
 ###########################################################################
-#############  UPDATE FIRM OPTIM TO YOUR LATEST VERSION !!! ################
+#############  UPDATE FIRM OPTIM TO YOUR LATEST VERSION !!! ###############
 ###########################################################################
+############################  BASELINE CASE !!! ###########################
+
 
 function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
 
@@ -353,12 +355,12 @@ function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
       next_b = SumPol[s_i, 4]
 
       pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-      Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
+      Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
 
-      e_i = Int(floor( (s_i-1) / x_size) + 1) 
-      for next_e_i in 1:e_size
+        e_i = Int(floor( (s_i-1) / x_size) + 1) 
+        for next_e_i in 1:e_size
 
-          p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo+SumPol[s_i, 8]))
+          p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
           x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
           x_close = argmin(abs.(x_next .- x_grid))
@@ -391,6 +393,11 @@ function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
  return ( SumPol, e_chain, transpose(Fmat) )
 
 end
+
+
+#######################################################################################################
+#######################################  CF CASE !!! ##################################################
+#######################################################################################################
 
 
 function FirmOptim_Ext_CF(wage, ipc, ipdef_exo, izeta_Rl)
@@ -782,7 +789,6 @@ function FirmOptim_Ext_CF(wage, ipc, ipdef_exo, izeta_Rl)
    return ( SumPol, e_chain, transpose(Fmat) )
 
 end
-
 
 
 function FirmOptim_Ext_AB(wage, phi_c, ipc, ipdef_exo, izeta_Rl)

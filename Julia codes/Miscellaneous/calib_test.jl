@@ -5,7 +5,7 @@
 # e_vec
 pvec = [7 11 13 19 23 27 33] 
 
-pvec = 0.1:0.3:1
+pvec = 0.1:0.1:1
 resultsTOT = zeros(8,length(pvec));
 resultsSME = zeros(7,length(pvec));
 resultsLE = zeros(6,length(pvec));
@@ -23,8 +23,8 @@ resultsLE = zeros(6,length(pvec));
 end
 
     wage = 1;
-    phi_c = 0.15;
-    zeta_Rl = 2000;
+    phi_c = 0.2810
+    zeta_Rl = 2590.7608
 
 function parameters()
     rho_e::Float64 = 0.969
@@ -33,33 +33,33 @@ function parameters()
     DRS::Float64 = 0.75
     alpha::Float64 = 1/3 * DRS
     nu::Float64 = 2/3 * DRS
-    pc::Float64 =   20
+    pc::Float64 =  30.2019
     beta::Float64 = 0.96
-    delta::Float64 = 0.05
-    pdef_exo_l::Float64 =  0.015
+    delta::Float64 = 0.1
+    pdef_exo_l::Float64 = 0.02485
     pdef_exo_s::Float64 =  pdef_exo_l
     discount::Float64 = beta
-    phi_a::Float64 =  0.4
+    phi_a::Float64 =   0.4
+    phi_af::Float64 =   0.4
     tauchen_sd::Float64 = 3
 
     kappa::Float64 = PVAL       # capital recovery rate of CFL debt
-    # zeta_Rl::Float64 =   4000
-    zeta_Rs::Float64 =  zeta_Rl
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
     zeta_L::Float64 = 0
-    phi_c_hh::Float64 =  0.4073866012405985
-    Fcut::Float64 = 250
+    phi_c_hh::Float64 =  0.7960 # (1 - phi_r in the paper) 
+    Fcut::Float64 = 1200
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
-            discount = discount, phi_a = phi_a, tauchen_sd = tauchen_sd,
-            kappa = kappa, zeta_Rs = zeta_Rs, zeta_L = zeta_L, tau_vec = tau_vec,
+            discount = discount, phi_a = phi_a, phi_af = phi_af, tauchen_sd = tauchen_sd,
+            kappa = kappa, zeta_L = zeta_L, tau_vec = tau_vec,
              phi_c_hh = phi_c_hh, Fcut = Fcut)
 end
+
 ####### FIRM OPTIM #######
 function FirmOptim(wage, phi_c, zeta_Rl)
 
-    rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, tauchen_sd, kappa, zeta_Rs, zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
+    rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, phi_af, tauchen_sd, kappa,  zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
 
     # calling grid size
     x_size, e_size, k_size, b_size = gridsize()
@@ -72,7 +72,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     fn_D(next_k, next_b, x, q) =  x - next_k + q * next_b
     
     # Liquidation policies
-    fn_Gam(val, zeta_R) = Int( 0 >= ((1-phi_c)*val - zeta_R)) # optimal liquidation
+    fn_Gam(val,k,zeta_R) = Int( (phi_a*(1-delta)*k) >= (phi_c_hh*val - zeta_R)) # optimal liquidation
 
     # calling grid size
     x_size, e_size, k_size, b_size = gridsize()
@@ -124,10 +124,11 @@ function FirmOptim(wage, phi_c, zeta_Rl)
         end
     end
 
-
+    
     Q = zeros(n, m, n); 
     # exogenous default - no matter the state or action you will have a P_exo chance to end up in default the next period
     Q[:,:,end] = Pdefmat
+
     for a_i in 1:m
         for  s_i in 1:n 
 
@@ -186,7 +187,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     # initial (!) endogenous default probability for each state
     kbexq_old::Array{Float64, 2} = zeros(n, 4)
     kbexq_new::Array{Float64, 2} = fill(1.0, n, 4)
-    SumPol = zeros(n, 18)
+    SumPol::Array{Float64, 2} = zeros(n, 18)
     q_sa::Array{Float64, 2} = zeros(n, m)
     pdef_sa::Array{Float64, 2} = zeros(n, m)
     gam_sa::Array{Float64, 2} = zeros(n, m)
@@ -302,13 +303,13 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                 next_b = a_vals[a_i,2]
 
                 # exo probability of default and reorganization costs change with size
-                zeta_R = next_k >= Fcut ? zeta_Rl : zeta_Rs
+                zeta_R = zeta_Rl
                 pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
     
                 pdef_endo = 0
                 gam = 0
                 Pi_reo = 0
-                Pi_liq = max(0, phi_a*(1-delta)*next_k - zeta_L)
+                Pi_liq = max(0, phi_af*(1-delta)*next_k - zeta_L)
 
                 for next_e_i in 1:e_size
     
@@ -336,14 +337,14 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                         val = close_weight*val_close + (1-close_weight)*val_far    
     
                         pdef_endo += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
-                        gam += p_trans * fn_Gam(val, zeta_R) 
+                        gam += p_trans * fn_Gam(val, next_k, zeta_R) 
                         Pi_reo += p_trans * phi_c*val
     
                     else # close_weight = 1
                         val = val_close
                         pdef_endo += p_trans * next_def_close                  
-                        gam += p_trans * fn_Gam(val, zeta_R)
-                        Pi_reo += p_trans * phi_c*val         
+                        gam += p_trans * fn_Gam(val, next_k, zeta_R)
+                        Pi_reo += p_trans * phi_c*val
                     end  
                 
                 end
@@ -356,7 +357,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                 Pi_reo = Pi_reo * (1-pdef_exo)
 
                 # updating Gamma: probability of liquidation either through endogenous or exogenous
-                gam = (gam*pdef_exo + pdef_endo - ( gam*pdef_exo * pdef_endo)) / pdef
+                # gam = (gam*pdef_exo + pdef_endo - ( gam*pdef_exo * pdef_endo)) / pdef
 
                 # q and tau
                 q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
@@ -374,7 +375,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
 
     end
     println("Total 'main loop' iterations: ", iter)
-
+    
     ### Incumbent dynamics ### 
     # Fmat - from state n, what is the probability of ending up in state n', given optimal policy
     Fmat = zeros(n-1,n-1)
@@ -385,8 +386,8 @@ function FirmOptim(wage, phi_c, zeta_Rl)
         next_k = SumPol[s_i, 3]
         next_b = SumPol[s_i, 4]
 
+        # probability that you will end up in default state
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-
         Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
 
         e_i = Int(floor( (s_i-1) / x_size) + 1) 
@@ -417,7 +418,6 @@ function FirmOptim(wage, phi_c, zeta_Rl)
         end
 
     end
-
     
     # Taking defaults into account - makes Fmat nXn
     Fmat = hcat(Fmat, Fmat_bottom)
@@ -571,7 +571,7 @@ for s_i in 1:n-1
 
         if SumPol[s_i,3] != 0 
             avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / (SumPol[s_i, 3] + SumPol[s_i, 1])
-            # avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / (SumPol[s_i, 3] )
+            #ké avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / (SumPol[s_i, 3] )
             mu_b2a += mu[s_i]/totalmass
         end  
 

@@ -7,8 +7,6 @@ library(RPostgreSQL)
 library(RPostgres)
 library(tictoc)
 library(haven)
-library(dataMaid)
-library(DataExplorer)
 
 rm(list = ls())
 

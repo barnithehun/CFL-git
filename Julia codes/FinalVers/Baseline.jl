@@ -55,7 +55,7 @@ function parameters()
     kappa::Float64 = 0.1       # capital recovery rate of CFL debt
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
     zeta_L::Float64 = 0
-    phi_c_hh::Float64 =  0.7960
+    phi_c_hh::Float64 =  0.7960 # (1 - phi_r in the paper) 
     Fcut::Float64 = 1200
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
@@ -137,6 +137,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     Q = zeros(n, m, n); 
     # exogenous default - no matter the state or action you will have a P_exo chance to end up in default the next period
     Q[:,:,end] = Pdefmat
+
     for a_i in 1:m
         for  s_i in 1:n 
 
@@ -394,6 +395,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
         next_k = SumPol[s_i, 3]
         next_b = SumPol[s_i, 4]
 
+        # probability that you will end up in default state
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
         Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
 
@@ -444,8 +446,7 @@ c_e, f0 = EntryValue(SumPol, e_chain) ;
 mu, m, xpol = stat_dist(SumPol, Fmat, f0);
 
 zeta_Rl = 1295
-phi_c = 0.14
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1, phi_c, zeta_Rl)
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0133, phi_c, zeta_Rl)
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f0);
 
@@ -455,7 +456,7 @@ c_e0, f00 = EntryValue(SumPol0, e_chain0);
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f0);
 
 
-PrintPolOld(SumPol, mu)   
+PrintPolOld(SumPol0, mu0)   
 
 ############ Core results Results: stationary distributions ############
 println("The relative productivity of the ABL case is: ", round(c_e0 / c_e , digits=3))
