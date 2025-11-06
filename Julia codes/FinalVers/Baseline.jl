@@ -34,7 +34,6 @@ function gridsize()
     b_size::Int = 32
     return (x_size = x_size, e_size = e_size, k_size = k_size, b_size = b_size)
 end
-
 function parameters()
     rho_e::Float64 = 0.969
     sigma_e::Float64 = 0.146
@@ -42,12 +41,12 @@ function parameters()
     DRS::Float64 = 0.75
     alpha::Float64 = 1/3 * DRS
     nu::Float64 = 2/3 * DRS
-    pc::Float64 =  30.2019
+    pc::Float64 = 28.564
     beta::Float64 = 0.96
     delta::Float64 = 0.1
-    pdef_exo_l::Float64 = 0.02485
+    pdef_exo_l::Float64 =  0.02633
     pdef_exo_s::Float64 =  pdef_exo_l
-    discount::Float64 = beta
+    discount::Float64 = beta            
     phi_a::Float64 =   0.4
     phi_af::Float64 =   0.4
     tauchen_sd::Float64 = 3
@@ -55,8 +54,8 @@ function parameters()
     kappa::Float64 = 0.1       # capital recovery rate of CFL debt
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
     zeta_L::Float64 = 0
-    phi_c_hh::Float64 =  0.7960 # (1 - phi_r in the paper) 
-    Fcut::Float64 = 1200
+    phi_c_hh::Float64 =    0.7597
+    Fcut::Float64 = 1400
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
@@ -320,42 +319,41 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                 Pi_reo = 0
                 Pi_liq = max(0, phi_af*(1-delta)*next_k - zeta_L)
 
+                # ChatGPT made this loop more efficient, not a 100% what it does but it cuts comp time in half - see older versions for the original
                 for next_e_i in 1:e_size
     
                     p_trans = e_ptrans[e_i, next_e_i]
-                    x_next = fn_X(next_k, next_b, e_vals[next_e_i])
-    
-                    x_close = argmin(abs.(x_next .- x_grid))   
-                    xe_close = x_close + (next_e_i-1)*x_size
-                    
-                    next_def_close = a_i_vals[policies[xe_close], 3]
-                    val_close = Values[xe_close]
-    
-                    if x_next < x_grid[end] && x_next > x_grid[1]
+                    x_next  = fn_X(next_k, next_b, e_vals[next_e_i])
+                    base    = (next_e_i - 1) * x_size
+
+                    j = searchsortedlast(x_grid, x_next)  # j ∈ 0:x_size
+
+                    if 1 ≤ j < x_size
+                        t   = (x_next - x_grid[j]) / (x_grid[j+1] - x_grid[j])
+                        xe0 = j + base
+                        xe1 = j + 1 + base
+
+                        @inbounds begin
+                            val      = (1 - t) * Values[xe0] + t * Values[xe1]
+                            next_def = (1 - t) * a_i_vals[policies[xe0], 3] +
+                                    t * a_i_vals[policies[xe1],  3]
+                        end
+
+                    else
+
+                        # clamp to nearest edge
+                        i  = (j ≤ 0) ? 1 : x_size
+                        xe = i + base
                         
-                        x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
-                        # finding the corresponding indices     
-                        xe_far = x_far + (next_e_i-1)*x_size
-    
-                        next_def_far = a_i_vals[policies[xe_far], 3]
-                        val_far = Values[xe_far]
-                        
-                        close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
-                        
-                        # value needed only for Pi_reo and gam
-                        val = close_weight*val_close + (1-close_weight)*val_far    
-    
-                        pdef_endo += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
-                        gam += p_trans * fn_Gam(val, next_k, zeta_R) 
-                        Pi_reo += p_trans * phi_c*val
-    
-                    else # close_weight = 1
-                        val = val_close
-                        pdef_endo += p_trans * next_def_close                  
-                        gam += p_trans * fn_Gam(val, next_k, zeta_R)
-                        Pi_reo += p_trans * phi_c*val
-                    end  
-                
+                        @inbounds begin
+                            val      = Values[xe]
+                            next_def = a_i_vals[policies[xe], 3]
+                        end
+                    end
+
+                    pdef_endo += p_trans * next_def
+                    gam       += p_trans * fn_Gam(val, next_k, zeta_R)
+                    Pi_reo    += p_trans * (phi_c * val)
                 end
 
                 # now default is a decision and a shock at the same time
@@ -397,12 +395,12 @@ function FirmOptim(wage, phi_c, zeta_Rl)
 
         # probability that you will end up in default state
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
+        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] 
 
         e_i = Int(floor( (s_i-1) / x_size) + 1) 
         for next_e_i in 1:e_size
 
-            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo+SumPol[s_i, 8]))
+            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8]))
             x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
             x_close = argmin(abs.(x_next .- x_grid))
@@ -439,24 +437,25 @@ end
 ############ Results: ABL vs CFL  ##############
 # calibration values
 wage = 1;
-phi_c = 0.2810
-zeta_Rl = 2590.7608
+phi_c =  0.3934
+zeta_Rl =  2759.45
 @elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c, zeta_Rl)
 c_e, f0 = EntryValue(SumPol, e_chain) ;
 mu, m, xpol = stat_dist(SumPol, Fmat, f0);
 
-zeta_Rl = 1295
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0133, phi_c, zeta_Rl)
+zeta_Rl = 1370
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.016, phi_c, zeta_Rl)
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
-mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f0);
+mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
+
 
 zeta_Rl = 259
 @elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.02864151, phi_c, zeta_Rl)
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
-mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f0);
+mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
 
 
-PrintPolOld(SumPol0, mu0)   
+PrintPolOld(SumPol, mu)   
 
 ############ Core results Results: stationary distributions ############
 println("The relative productivity of the ABL case is: ", round(c_e0 / c_e , digits=3))
@@ -478,6 +477,7 @@ Xcross(binnum, SumPol, mu) # in calculating tau, this does not contain firms wit
 QBplot(binnum, SumPol, SumPol0, mu, mu0) 
 # Capital Allocation 
 CapAlloc(SumPol, SumPol0, mu, mu0) 
+
 
 # Q - against Leverage this plot works well with x_size == 46 and e_size == 23 
 p1, p2 = DebtScedule(SumPol, 25, 17; phi_c = phi_c)
@@ -526,24 +526,22 @@ ZetaGamPlot(SumPolZeta, zeta_R_vec, 23, 15)
 
 ###### GENERAL EQUILIBRIUM: Finding wage given entry cost, using bisection ####
 tolerance = 0.01
-wage_0 = 1
-phi_c = 0.2810
-zeta_Rl = 2590.7608
+wage_0 = 1;
+phi_c =  0.33057888644219274
+zeta_Rl =  2851.230119196035
 
 SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
 c_e, f0 = EntryValue(SumPol, e_chain)
 results_baseline = sumSS(SumPol,Fmat,f0)
 c_e_baseline = c_e
 
-zeta_Rl = 1295
-@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (1.01, 1.02), Bisection(), rtol=tolerance, verbose=true)
+phi_c =  0.33057888644219274
+zeta_Rl = 900
 
-#  wage_alt = 1.0268374633789055 - where zeta_Rl  = zeta_Rl/3
-#  wage_alt = 1.0133978235407433 - where zeta_Rl  = zeta_Rl/2
-#  wage_alt = 1.0286415100097654 - where zeta_Rl  = zeta_Rl/10
+@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (1.01, 1.04), Bisection(), rtol=tolerance, verbose=true)
 
-#  wage_inf = 0.9915985107421872 - where zeta_Rl  = inf
-#  wage_alt = 1.1635513305664058 - perfect credit economy 
+#  wage_alt = 1.0150781249999998 - where zeta_Rl  = zeta_Rl/2 - 1400
+#  wage_alt = 1.0291748046874996 - where zeta_Rl  = zeta_Rl/3 - 900
 
 SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
 c_e0, f00 = EntryValue(SumPol0, e_chain0)
@@ -556,10 +554,10 @@ include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/FirmOptim_Ext.jl")
 
 # initital values ipc, ipdef_exo_l, ipdef_exo_s, izeta_Rl, izeta_Rs, iphi_a, iphi_c, iFcut)
-initvec = [ 33, 0.02, 2200, 0.8, 0.3]
+initvec = [ 28.564, 0.02633, 2759.45, 0.7597, 0.3934]
 options = Optim.Options(
     iterations = 200,
-    time_limit = 10*3600.0,
+    time_limit = 5*3600.0,
     f_tol = 0.002,
     show_trace = true,
     store_trace = true,
@@ -570,10 +568,10 @@ println(CalRes)
 
 
 # CFshare_calib = CalRes.minimizer
- CFrel_calib = CalRes.minimizer
-
-ErrorFunc2(initvec)
-ErrorFunc2(CalRes.minimizer)
+CFrel_calib = CalRes.minimizer
+# how much the calibration helped
+ErrorFunc1(initvec)
+ErrorFunc1(CalRes.minimizer)
 
 
 

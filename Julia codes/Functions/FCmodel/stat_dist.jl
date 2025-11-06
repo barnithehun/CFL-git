@@ -8,10 +8,12 @@ function stat_dist(SumPol, Fmat, f0)
     phi_a = parameters().phi_a
     phi_c_hh = parameters().phi_c_hh
     delta = parameters().delta
+
+    # liq decision works with policies works bc. of stationary distribution
     liq = Int.( (phi_a .* (1-delta) .* SumPol[1:n-1, 3]) .>= (phi_c_hh .* SumPol[1:n-1, end] .- zeta_Rl) )
 
     # a default state exits the market, it means that its need no updating after Fmat is changed to reflect Q
-    xpol = [SumPol[1:n-1,6] .+ SumPol[1:n-1,7] .* liq ; 1] 
+    xpol = [SumPol[1:n-1,6] .+ SumPol[1:n-1,7] .* liq ; 1]
     Ident = Matrix(I,n,n)
 
     xpol_mat = Ident - Diagonal(xpol)   # I - diag(X)

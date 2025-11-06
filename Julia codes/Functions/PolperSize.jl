@@ -188,18 +188,18 @@ function QBplot(binnum, SumPol, SumPol0, mu, mu0)
     # First plot: Average Log Debt
     plota = plot(string.(round.(bins ./ 10)), avg_b8,
         title = "Average Log Debt", xrotation = 45, legend = true,
-        linewidth = 3, label = "ABL + CFL", size = (600, 300), color = :blue)
+        linewidth = 3, label = "Baseline", size = (600, 300), color = :blue)
 
     plot!(string.(round.(bins ./ 10)), avg_b0, 
-        linewidth = 3, linestyle = :dash, label = "ABL only", color = :red)  # Dashed line
+        linewidth = 3, linestyle = :dash, label = "Alternative", color = :red)  # Dashed line
 
     # Second plot: Average Interest Rates
     plotb = plot(string.(round.(bins ./ 10)), avg_q8, 
         title = "Average Interest Rates", xrotation = 45, legend = true, 
-        linewidth = 3, label = "ABL + CFL", size = (600, 300), color = :blue)
+        linewidth = 3, label = "Baseline", size = (600, 300), color = :blue)
 
     plot!(string.(round.(bins ./ 10)), avg_q0, 
-        linewidth = 3, linestyle = :dash, label = "ABL only", color = :red)  # Dashed line
+        linewidth = 3, linestyle = :dash, label = "Alternative", color = :red)  # Dashed line
 
     # Combine the two plots
     plot(plota, plotb)

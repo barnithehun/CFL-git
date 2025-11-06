@@ -5,7 +5,7 @@ function sumSS(SumPol,Fmat,f0)
     mu, m, xpol = stat_dist(SumPol, Fmat, f0)
     n = size(SumPol,1)
     totalmass = sum(mu)
-
+ 
     # this contains firms that exit immidiately which are not counted in the model
     exitmass=transpose(mu)*xpol
     entrymass = m*(1-transpose(xpol)*f0) 

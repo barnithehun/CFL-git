@@ -25,8 +25,8 @@ function CapAlloc(SumPol,SumPol0,mu,mu0)
     CapShare =  CapShare ./ totK
     CapShare0 = CapShare0 ./ totK0
 
-     # CapShare =  cumsum(CapShare ./  totK)
-     # CapShare0 = cumsum(CapShare0 ./ totK0)
+    # CapShare =  cumsum(CapShare)
+    # CapShare0 = cumsum(CapShare0)
 
     # Logical mask: where both CapShare and CapShare0 are non-zero
     non_zero_indices = (CapShare .!= 0) .& (CapShare0 .!= 0)
@@ -40,7 +40,7 @@ function CapAlloc(SumPol,SumPol0,mu,mu0)
 
     # Plot the filtered data
     plott = plot(filtered_x, filtered_CapShare, label="baseline", color=:blue, linewidth=3)
-    plot!(filtered_x, filtered_CapShare0, label="lowcost", color=:red, linewidth=3)
+    plot!(filtered_x, filtered_CapShare0, label="alternative", color=:red, linewidth=3)
 
 
 end

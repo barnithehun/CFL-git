@@ -399,6 +399,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
         next_k = SumPol[s_i, 3]
         next_b = SumPol[s_i, 4]
 
+        # probability that you will end up in default state
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
         Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
 

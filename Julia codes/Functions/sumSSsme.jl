@@ -2,7 +2,6 @@ function sumSSsme(SumPol,Fmat,f0)
         
     beta = parameters().beta 
     Fcut = parameters().Fcut  
-    # Fcut = 1200
     results = zeros(13,2)
     
     mu, m, xpol = stat_dist(SumPol, Fmat, f0)

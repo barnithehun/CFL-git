@@ -1,5 +1,6 @@
 ###########################################################################
-############### VER 10.2 - Optimal liquidation decision  ##################
+############# Baseline version for studying misallocation #################
+####### Updating loop is rewritten with more efficient interpolation ###### 
 ###########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, SparseArrays, Dates, XLSX, DataFrames, Distributions, Random, Optim, Measures
@@ -30,8 +31,8 @@ function gridsize()
     # grid sizes - x, k, b should be even numbers!!
     x_size::Int = 46
     e_size::Int = 23
-    k_size::Int = 46
-    b_size::Int = 46
+    k_size::Int = 32
+    b_size::Int = 32
     return (x_size = x_size, e_size = e_size, k_size = k_size, b_size = b_size)
 end
 
@@ -42,10 +43,10 @@ function parameters()
     DRS::Float64 = 0.75
     alpha::Float64 = 1/3 * DRS
     nu::Float64 = 2/3 * DRS
-    pc::Float64 = 42.03135921
+    pc::Float64 =  30.2019
     beta::Float64 = 0.96
-    delta::Float64 = 0.065
-    pdef_exo_l::Float64 =  0.029176179
+    delta::Float64 = 0.1
+    pdef_exo_l::Float64 = 0.02485
     pdef_exo_s::Float64 =  pdef_exo_l
     discount::Float64 = beta
     phi_a::Float64 =   0.4
@@ -55,8 +56,8 @@ function parameters()
     kappa::Float64 = 0.1       # capital recovery rate of CFL debt
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
     zeta_L::Float64 = 0
-    phi_c_hh::Float64 = 0.803835125
-    Fcut::Float64 = 2000
+    phi_c_hh::Float64 =  0.7960 # (1 - phi_r in the paper) 
+    Fcut::Float64 = 1200
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
@@ -66,7 +67,7 @@ function parameters()
 end
 
 ####### FIRM OPTIM #######
-function FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
+function FirmOptim(wage, phi_c, zeta_Rl, PerfCred)
 
     rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, phi_af, tauchen_sd, kappa,  zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
 
@@ -137,6 +138,7 @@ function FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
     Q = zeros(n, m, n); 
     # exogenous default - no matter the state or action you will have a P_exo chance to end up in default the next period
     Q[:,:,end] = Pdefmat
+
     for a_i in 1:m
         for  s_i in 1:n 
 
@@ -232,10 +234,11 @@ function FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
                     q = q_sa[s_i,a_i]
                     d = fn_D(next_k, next_b, x, q)
 
-                    if d >= 0
-                        R[s_i, a_i] = d 
-                    end
-
+                # if Perfect Credit is turned on negative dividens have no costs (free equity injections)
+                if PerfCred == 1 || (PerfCred == 0 && d > 0)
+                    R[s_i, a_i] = d
+                end
+                
                 elseif next_def == 1 
                     R[s_i, a_i] = -5 
                 elseif next_exit == 1
@@ -311,7 +314,7 @@ function FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
                 next_b = a_vals[a_i,2]
 
                 # exo probability of default and reorganization costs change with size
-                zeta_R = next_k >= Fcut ? zeta_Rl : zeta_Rs
+                zeta_R = zeta_Rl
                 pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
     
                 pdef_endo = 0
@@ -321,7 +324,7 @@ function FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
 
                 # ChatGPT made this loop more efficient, not a 100% what it does but it cuts comp time in half - see older versions for the original
                 for next_e_i in 1:e_size
-    
+
                     p_trans = e_ptrans[e_i, next_e_i]
                     x_next  = fn_X(next_k, next_b, e_vals[next_e_i])
                     base    = (next_e_i - 1) * x_size
@@ -376,6 +379,7 @@ function FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
                 gam_sa[s_i, a_i] = gam
                 Pi_liq_sa[s_i, a_i] = Pi_liq
                 Pi_reo_sa[s_i, a_i] = Pi_reo
+
             end
         end
         kbexq_new = SumPol[:, [3, 4, 7, 9]]
@@ -395,13 +399,12 @@ function FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
 
         # probability that you will end up in default state
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
+        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
 
         e_i = Int(floor( (s_i-1) / x_size) + 1) 
         for next_e_i in 1:e_size
 
-            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
-            x_next = fn_X(next_k,next_b,e_vals[next_e_i])
+            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8]))
             x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
             x_close = argmin(abs.(x_next .- x_grid))
@@ -438,219 +441,169 @@ end
 ############ Results: ABL vs CFL  ##############
 # calibration values
 wage = 1;
-phi_c =  0.360542276
-zeta_Rl =  2753.229657
-zeta_Rs =  2753.229657
-@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
+phi_c = 0.2810
+zeta_Rl = 2590.7608
+@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c, zeta_Rl , 0) 
 c_e, f0 = EntryValue(SumPol, e_chain) ;
 mu, m, xpol = stat_dist(SumPol, Fmat, f0);
 
-zeta_Rl = 1350
-zeta_Rs = 1350
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0175, phi_c, zeta_Rl, zeta_Rs)  # perfcred w is about 1.14
+# reform 
+zeta_Rl = 1295
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0133, phi_c, zeta_Rl, 0)
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
+
+
+# Perfect credit 
+zeta_Rl = 2590.7608
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.1635513, phi_c, zeta_Rl , 1) 
+c_e0, f00 = EntryValue(SumPol0, e_chain0) ;
+mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
+
+PrintPolOld(SumPol, mu)   
+PrintPolOld(SumPol0, mu0) 
 
 
 ############ Core results Results: stationary distributions ############
 println("The relative productivity of the ABL case is: ", round(c_e0 / c_e , digits=3))
 
-sumSS(SumPol,Fmat,f0)
-sumSS(SumPol0,Fmat0,f00)
-
 sumSSsme(SumPol, Fmat,f0)
 sumSSsme(SumPol0, Fmat0,f00)
 
-
-###### FINDING THE CORRECT ZETA REDUCTION #######
-include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FindZeta.jl")
-
-tolerance = 0.001
-wage = 1
-phi_c =  0.360542276
-zeta_Rl =  2753.229657
-zeta_Rs =  2753.229657
-TargetLiqprob = 0.76
-
-# @elapsed zeta_Rs_alt = find_zero(zeta_Rs -> FindZeta(wage, phi_c, zeta_Rl, zeta_Rs) - TargetLiqprob, (1900, 2700), Bisection(), rtol=tolerance, verbose=true)
-# This does not work for some reason, probably due to the function not being monotnous  - lets just do a simple gridsearch
-
-for z in 2000:20:2100
-    println(z, "  ", FindZeta(wage, phi_c, zeta_Rl, z))
-end
-
-@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
-c_e, f0 = EntryValue(SumPol, e_chain) ;
-mu, m, xpol = stat_dist(SumPol, Fmat, f0);
-
-sumSS(SumPol,Fmat, f0)
-sumSSsme(SumPol, Fmat, f0)
-
-zeta_Rs_alt = 2030
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0081, phi_c, zeta_Rl, zeta_Rs_alt)
-c_e0, f00 = EntryValue(SumPol0, e_chain0); 
-mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
-
-sumSS(SumPol,Fmat, f0)
-sumSS(SumPol0,Fmat0, f00)
+sumSS(SumPol,Fmat,f0)
+sumSS(SumPol0,Fmat0,f00)
 
 
-sumSSsme(SumPol0, Fmat0, f00)
+############ Untargeted Moments ############
+binnum = 10
+# Pdef and CFL reliance
+Ushape(binnum, SumPol, mu) # in calculating tau, this contains firms with Pdef = 0
+# Gamma and CFL reliance
+Xcross(binnum, SumPol, mu) # in calculating tau, this does not contain firms with Pdef = 0
+# Average Debt policy and Interest rate across firm sizes
+QBplot(binnum, SumPol, SumPol0, mu, mu0) 
+# Capital Allocation 
+CapAlloc(SumPol, SumPol0, mu, mu0) 
 
-###### GENERAL EQUILIBRIUM:Reducing Costs for Small firms ####
-tolerance = 0.1
+
+# Q - against Leverage this plot works well with x_size == 46 and e_size == 23 
+p1, p2 = DebtScedule(SumPol, 25, 17; phi_c = phi_c)
+p3, p4 = DebtScedule(SumPol, 25, 20; phi_c = phi_c)
+p5, p6 = DebtScedule(SumPol, 25, 22; phi_c = phi_c)
+plot(p3, p4, p5, p6, layout = (2, 2), size = (900, 700))
+#savefig(plot(p3, p4, p5, p6, layout = (2, 2), size = (900, 700) ), "DebtScedule.png")
+
+############ Results: dynamics simulations ##############
+_, e_size, _, _ = gridsize()
+# shows the average policies of firms of a given productivity across their lifecycle
+dynsim2(e_size - 6, 10000)
+dynsim2(e_size - 3, 10000)
+dynsim2(e_size - 1, 10000)
+# savefig(dynsim2(e_size - 2, 100000), "Simul.png")
+
+# shows optimal policies of firms with a certain productivity, across x-sizes
+plotPol(SumPol0, SumPol, e_size-6)
+
+############ Firm states and policies in stationary equilibrium ###########
+binnum = 20
+plot(plotPDF(binnum, 'k', SumPol), plotPDF(binnum, 'b', SumPol), plotPDF(binnum, 'l', SumPol),
+    plotPDF(binnum, 'y', SumPol), plotPDF(binnum, 'p', SumPol), plotPDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
+plot(plotCDF(binnum, 'k', SumPol), plotCDF(binnum, 'b', SumPol), plotCDF(binnum, 'l', SumPol),
+    plotCDF(binnum, 'y', SumPol), plotCDF(binnum, 'p', SumPol), plotCDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
+
+plotXE(SumPol, mu, e_chain)     
+plotTauDist(SumPol)
+
+
+# Q - against Gam this plot works well with x_size == 44 and e_size == 27 
+pGamPol = plot(GamPol(SumPol, 15, 21), GamPol(SumPol, 26, 21), GamPol(SumPol, 35, 21), layout = (1, 3), size = (900, 300) , margin = 5mm)
+# Plots.savefig(pGamPol, "GamPol.png")
+
+# Reform effects
+# include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/improve.jl")
+reformplot = plotPolHeatmaps(SumPol, SumPol0, mu, 1)
+# Plots.savefig(reformplot, "large_reform.png")
+# Plots.savefig(reformplot, "reform.png")
+
+
+### Optimal policies over different reorganization costs ###
+zeta_R_vec = 0:1000:8000
+# SumPolZeta = ZetaGam(zeta_R_vec)  # runtime around 1 hour 
+ZetaGamPlot(SumPolZeta, zeta_R_vec, 23, 15)
+
+###### GENERAL EQUILIBRIUM: Finding wage given entry cost, using bisection ####
+tolerance = 0.01
 wage_0 = 1
 phi_c = 0.2810
 zeta_Rl = 2590.7608
-zeta_Rs = 2590.7608
 
-SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl, zeta_Rs)
-c_e, f0 = EntryValue(SumPol, e_chain)
-results_baseline = sumSS(SumPol,Fmat,f0)
-c_e_baseline = c_e
-
-zeta_Rs = 1295
-
-@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl, zeta_Rs) - c_e_baseline, (1, 1.02), Bisection(), rtol=tolerance, verbose=true)
-SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl, zeta_Rs)
-c_e0, f00 = EntryValue(SumPol0, e_chain0)
-
-sumSS(SumPol,Fmat,f0) # wage = 1
-sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.0096874999999998
-
-
-
-###### GENERAL EQUILIBRIUM: Reducing lenders' bargaining power ######
-tolerance = 0.1
-wage_0 = 1
-phi_c = 0.2810
-zeta_Rl = 2590
-zeta_Rs = 2590
-
-SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl, zeta_Rs)
+SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
 c_e, f0 = EntryValue(SumPol, e_chain)
 results_baseline = sumSS(SumPol,Fmat,f0)
 c_e_baseline = c_e
 
 zeta_Rl = 1295
-zeta_Rs = 1295
-phi_c = 0.15
+@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (1.01, 1.02), Bisection(), rtol=tolerance, verbose=true)
 
-@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl, zeta_Rs) - c_e_baseline, (1.0, 1.02), Bisection(), rtol=tolerance, verbose=true)
-SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl, zeta_Rs)
+#  wage_alt = 1.0268374633789055 - where zeta_Rl  = zeta_Rl/3
+#  wage_alt = 1.0133978235407433 - where zeta_Rl  = zeta_Rl/2
+#  wage_alt = 1.0286415100097654 - where zeta_Rl  = zeta_Rl/10
+
+#  wage_inf = 0.9915985107421872 - where zeta_Rl  = inf
+#  wage_alt = 1.1635513305664058 - perfect credit economy 
+
+SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
 c_e0, f00 = EntryValue(SumPol0, e_chain0)
+
+sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025
+sumSSsme(SumPol0,Fmat0,f00)
+
+########## CALIBRATION ################
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/ErrorFunc.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/FirmOptim_Ext.jl")
+
+# initital values ipc, ipdef_exo_l, ipdef_exo_s, izeta_Rl, izeta_Rs, iphi_a, iphi_c, iFcut)
+initvec = [ 33, 0.02, 2200, 0.8, 0.3]
+options = Optim.Options(
+    iterations = 200,
+    time_limit = 4*3600.0,
+    f_tol = 0.002,
+    show_trace = true,
+    store_trace = true,
+    show_every = 1)
+@elapsed CalRes = optimize(ErrorFunc1, initvec, NelderMead(), options)
+
+println(CalRes)
+
+
+# CFshare_calib = CalRes.minimizer
+CFrel_calib = CalRes.minimizer
+
+ErrorFunc2(initvec)
+ErrorFunc2(CalRes.minimizer)
+
+
+###### GENERAL EQUILIBRIUM: Shifting Costs ####
+tolerance = 1
+wage_0 = 1
+phi_c = 0.2810
+zeta_Rl = 2590
+
+SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
+c_e, f0 = EntryValue(SumPol, e_chain)
+results_baseline = sumSS(SumPol,Fmat,f0)
+c_e_baseline = c_e
+
+zeta_Rl = 1295
+phi_c = 0.14
+@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (0.99, 1.02), Bisection(), rtol=tolerance, verbose=true)
+
+
+SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
+c_e0, f00 = EntryValue(SumPol0, e_chain0)
+
+sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025
+sumSSsme(SumPol0,Fmat0,f00)
 
 sumSS(SumPol,Fmat,f0) # wage = 1
 sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025
-
-
-
-######################## Targeted vs Universal policy effects ##########################
-
-c_e_baseline = 537.5330125606192
-zeta_Rs_vec = 200:200:2600
-
-
-prodimp =  zeros( length(zeta_Rs_vec),2);
-liqprob = zeros( length(zeta_Rs_vec),2);
-d2c =  zeros( length(zeta_Rs_vec),2);
-CFrel =  zeros( length(zeta_Rs_vec),2);
-intrate =  zeros( length(zeta_Rs_vec),2);
-
-prodimp = zeros( length(zeta_Rs_vec),2);
-liqprob_SME = zeros( length(zeta_Rs_vec),2);
-liqprob_LE = zeros( length(zeta_Rs_vec),2);
-d2c_SME = zeros( length(zeta_Rs_vec),2);
-d2c_LE = zeros( length(zeta_Rs_vec),2);
-intrate_SME = zeros( length(zeta_Rs_vec),2);
-intrate_LE = zeros( length(zeta_Rs_vec),2);
-CFrel_SME = zeros( length(zeta_Rs_vec),2);
-CFrel_LE = zeros( length(zeta_Rs_vec),2);
-
-for (ind_s, zeta_Rs) in enumerate(zeta_Rs_vec)
-
-    # targeted policy
-    zeta_Rl = 2600
-
-    SumPol, e_chain, Fmat = FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
-    c_e, f0 = EntryValue(SumPol, e_chain) ;
-    mu, m, xpol = stat_dist(SumPol, Fmat, f0);
-
-
-    prodimp[ind_s,1] = (c_e / c_e_baseline) 
-    liqprob[ind_s,1] = sumSS(SumPol,Fmat,f0)[10,1]
-    d2c[ind_s,1] = sumSS(SumPol,Fmat,f0)[7,1]
-    CFrel[ind_s,1] = sumSS(SumPol,Fmat,f0)[13,1]
-    intrate[ind_s,1] = sumSS(SumPol,Fmat,f0)[8,1]
-
-    liqprob_SME[ind_s,1] = sumSSsme(SumPol,Fmat,f0)[10,1]
-    liqprob_LE[ind_s,1] = sumSSsme(SumPol,Fmat,f0)[10,2]
-    d2c_SME[ind_s,1] = sumSSsme(SumPol,Fmat,f0)[7,1]
-    d2c_LE[ind_s,1] = sumSSsme(SumPol,Fmat,f0)[7,2]
-    intrate_SME[ind_s,1] = sumSSsme(SumPol,Fmat,f0)[8,1]
-    intrate_LE[ind_s,1] = sumSSsme(SumPol,Fmat,f0)[8,2]
-    CFrel_SME[ind_s,1] = sumSSsme(SumPol,Fmat,f0)[12,1]
-    CFrel_LE[ind_s,1] = sumSSsme(SumPol,Fmat,f0)[12,2]
-
-
-    # universal policy    
-    zeta_Rl = zeta_Rs
-
-    SumPol, e_chain, Fmat = FirmOptim(wage, phi_c, zeta_Rl, zeta_Rs)
-    c_e, f0 = EntryValue(SumPol, e_chain) ;
-    mu, m, xpol = stat_dist(SumPol, Fmat, f0);
-
-    prodimp[ind_s,2] = (c_e / c_e_baseline) 
-    liqprob[ind_s,2] = sumSS(SumPol,Fmat,f0)[10,1]
-    d2c[ind_s,2] = sumSS(SumPol,Fmat,f0)[7,1]
-    CFrel[ind_s,2] = sumSS(SumPol,Fmat,f0)[13,1]
-    intrate[ind_s,2] = sumSS(SumPol,Fmat,f0)[8,1]
-
-    prodimp[ind_s,2] = c_e / c_e_baseline
-    liqprob_SME[ind_s,2] = sumSSsme(SumPol,Fmat,f0)[10,1]
-    liqprob_LE[ind_s,2] = sumSSsme(SumPol,Fmat,f0)[10,2]
-    d2c_SME[ind_s,2] = sumSSsme(SumPol,Fmat,f0)[7,1]
-    d2c_LE[ind_s,2] = sumSSsme(SumPol,Fmat,f0)[7,2]
-    intrate_SME[ind_s,2] = sumSSsme(SumPol,Fmat,f0)[8,1]
-    intrate_LE[ind_s,2] = sumSSsme(SumPol,Fmat,f0)[8,2]
-    CFrel_SME[ind_s,2] = sumSSsme(SumPol,Fmat,f0)[12,1]
-    CFrel_LE[ind_s,2] = sumSSsme(SumPol,Fmat,f0)[12,2]
-
-end
-
-
-
-################################################
-using StatsPlots, Random
-
-
-
-xticks_labels = 400:200:2600
-colors = [:lightsalmon :deepskyblue2]  # First column red, second column blue
-label = ["Targeted" "Universal"]
-
-# Function to get y-limits dynamically
-function get_ylims(data)
-    ymin, ymax = extrema(data)  # Get min and max of the data
-    return (ymin - 0.1 * abs(ymax - ymin), ymax + 0.1 * abs(ymax - ymin))  # Add some padding
-end
-
-# Create a grouped bar plot for each dataset with free y-axis limits
-plot2 = groupedbar(liqprob[2:end,:], bar_position=:dodge, title="A: Liquidation Probability", labels=label,
-                   xticks=(1:12, xticks_labels), fill=colors, ylims=get_ylims(liqprob[2:end,:]), xrotation=45, xlabelfontsize=12, 
-                   ylabelfontsize=12, tickfontsize=9,  titlefontsize=13)
-plot3 = groupedbar(d2c[2:end,:], bar_position=:dodge, title="B: Debt to Collateral", labels=label,
-                   xticks=(1:12, xticks_labels), fill=colors, ylims=get_ylims(d2c[2:end,:]), xrotation=45, xlabelfontsize=12, 
-                   ylabelfontsize=12, tickfontsize=9,  titlefontsize=13)
-plot4 = groupedbar(CFrel[2:end,:], bar_position=:dodge, title="C: CF reliance", labels=label,
-                   xticks=(1:12, xticks_labels), fill=colors, ylims=get_ylims(CFrel[2:end,:]), xrotation=45, xlabelfontsize=12, 
-                   ylabelfontsize=12, tickfontsize=9,  titlefontsize=13)
-plot5 = groupedbar(intrate[2:end,:], bar_position=:dodge, title="D: Interest Rate", labels=label,
-                   xticks=(1:12, xticks_labels), fill=colors, ylims=get_ylims(intrate[2:end,:]), xrotation=45, xlabelfontsize=12, 
-                   ylabelfontsize=12, tickfontsize=9,  titlefontsize=13)
-
-
-# Arrange all plots in a grid layout
-finplot = plot( plot2, plot4, plot5, plot3, layout=(2,2), size=(900,600))
-
-Plots.savefig(finplot, "smallcosts.png")

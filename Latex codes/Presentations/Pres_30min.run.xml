@@ -41,14 +41,14 @@
   >
 ]>
 <requests version="1.0">
-  <internal package="biblatex" priority="9" active="1">
+  <internal package="biblatex" priority="9" active="0">
     <generic>latex</generic>
     <provides type="dynamic">
-      <file>epitch2.aux</file>
-      <file>epitch2-blx.bib</file>
+      <file>Pres_30min.aux</file>
+      <file>Pres_30min-blx.bib</file>
     </provides>
     <requires type="dynamic">
-      <file>epitch2.bbl</file>
+      <file>Pres_30min.bbl</file>
     </requires>
     <requires type="static">
       <file>blx-dm.def</file>
@@ -62,25 +62,25 @@
       <file>english.lbx</file>
     </requires>
   </internal>
-  <external package="biblatex" priority="5" active="1">
+  <external package="biblatex" priority="5" active="0">
     <generic>bibtex</generic>
     <cmdline>
       <binary>bibtex</binary>
       <option>-min-crossrefs 2</option>
-      <infile>epitch2</infile>
+      <infile>Pres_30min</infile>
     </cmdline>
     <input>
-      <file>epitch2.aux</file>
+      <file>Pres_30min.aux</file>
     </input>
     <output>
-      <file>epitch2.bbl</file>
+      <file>Pres_30min.bbl</file>
     </output>
     <provides type="dynamic">
-      <file>epitch2.bbl</file>
+      <file>Pres_30min.bbl</file>
     </provides>
     <requires type="dynamic">
-      <file>epitch2.aux</file>
-      <file>epitch2-blx.bib</file>
+      <file>Pres_30min.aux</file>
+      <file>Pres_30min-blx.bib</file>
     </requires>
     <requires type="editable">
     </requires>

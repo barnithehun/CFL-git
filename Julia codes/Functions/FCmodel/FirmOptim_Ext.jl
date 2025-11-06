@@ -1,5 +1,5 @@
 ###########################################################################
-#############  UPDATE FIRM OPTIM TO YOUR LATEST VERSION !!! ###############
+############  UPDATE FIRM OPTIM TO YOUR LATEST VERSION !!! ###############
 ###########################################################################
 ############################  BASELINE CASE !!! ###########################
 
@@ -14,11 +14,12 @@ function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
     nu::Float64 = 2/3 * DRS
     pc::Float64 =   ipc
     beta::Float64 = 0.96
-    delta::Float64 = 0.1
+    delta::Float64 = 0.065
     pdef_exo_l::Float64 =  ipdef_exo
     pdef_exo_s::Float64 =  pdef_exo_l
     discount::Float64 = beta
     phi_a::Float64 =  0.4
+    phi_af::Float64 =  0.4
     tauchen_sd::Float64 = 3
 
     kappa::Float64 = 0.1       # capital recovery rate of CFL debt
@@ -27,7 +28,7 @@ function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
     zeta_L::Float64 = 0
     phi_c_hh::Float64 =  iphi_c_hh
-    Fcut::Float64 = 250
+    Fcut::Float64 = 1200
     
     phi_c::Float64 = iphi_c
 
@@ -271,51 +272,48 @@ function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
               next_b = a_vals[a_i,2]
 
               # exo probability of default and reorganization costs change with size
-              zeta_R = next_k >= Fcut ? zeta_Rl : zeta_Rs
+                zeta_R = zeta_Rl
               pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
   
               pdef_endo = 0
               gam = 0
               Pi_reo = 0
-              Pi_liq = max(0, phi_a*(1-delta)*next_k - zeta_L)
+                Pi_liq = max(0, phi_af*(1-delta)*next_k - zeta_L)
 
-              for next_e_i in 1:e_size
-  
-                  p_trans = e_ptrans[e_i, next_e_i]
-                  x_next = fn_X(next_k, next_b, e_vals[next_e_i])
-  
-                  x_close = argmin(abs.(x_next .- x_grid))   
-                  xe_close = x_close + (next_e_i-1)*x_size
-                  
-                  next_def_close = a_i_vals[policies[xe_close], 3]
-                  val_close = Values[xe_close]
-  
-                  if x_next < x_grid[end] && x_next > x_grid[1]
-                      
-                      x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
-                      # finding the corresponding indices     
-                      xe_far = x_far + (next_e_i-1)*x_size
-  
-                      next_def_far = a_i_vals[policies[xe_far], 3]
-                      val_far = Values[xe_far]
-                      
-                      close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
-                      
-                      # value needed only for Pi_reo and gam
-                      val = close_weight*val_close + (1-close_weight)*val_far    
-  
-                      pdef_endo += p_trans*(close_weight*next_def_close + (1-close_weight)*next_def_far)
-                      gam += p_trans * fn_Gam(val, next_k, zeta_R) 
-                      Pi_reo += p_trans * phi_c*val
-  
-                  else # close_weight = 1
-                      val = val_close
-                      pdef_endo += p_trans * next_def_close                  
-                      gam += p_trans * fn_Gam(val, next_k, zeta_R)
-                      Pi_reo += p_trans * phi_c*val         
-                  end  
-              
-              end
+                # ChatGPT made this loop more efficient, not a 100% what it does but it cuts comp time in half - see older versions for the original
+                for next_e_i in 1:e_size
+                    p_trans = e_ptrans[e_i, next_e_i]
+                    x_next  = fn_X(next_k, next_b, e_vals[next_e_i])
+                    base    = (next_e_i - 1) * x_size
+
+                    j = searchsortedlast(x_grid, x_next)  # j ∈ 0:x_size
+
+                    if 1 ≤ j < x_size
+                        t   = (x_next - x_grid[j]) / (x_grid[j+1] - x_grid[j])
+                        xe0 = j + base
+                        xe1 = j + 1 + base
+
+                        @inbounds begin
+                            val      = (1 - t) * Values[xe0] + t * Values[xe1]
+                            next_def = (1 - t) * a_i_vals[policies[xe0], 3] +
+                                    t * a_i_vals[policies[xe1],  3]
+                        end
+
+                    else
+                        # clamp to nearest edge
+                        i  = (j ≤ 0) ? 1 : x_size
+                        xe = i + base
+                        
+                        @inbounds begin
+                            val      = Values[xe]
+                            next_def = a_i_vals[policies[xe], 3]
+                        end
+                    end
+
+                    pdef_endo += p_trans * next_def
+                    gam       += p_trans * fn_Gam(val, next_k, zeta_R)
+                    Pi_reo    += p_trans * (phi_c * val)
+                end
 
               # now default is a decision and a shock at the same time
               # prob. of either pdef of pdef exo occurs- these are independent events
@@ -342,7 +340,7 @@ function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
       kbexq_new = SumPol[:, [3, 4, 7, 9]]
 
   end
-  println("Total 'main loop' iterations: ", iter)
+  # println("Total 'main loop' iterations: ", iter)
   
   ### Incumbent dynamics ### 
   # Fmat - from state n, what is the probability of ending up in state n', given optimal policy
@@ -361,6 +359,7 @@ function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
         for next_e_i in 1:e_size
 
           p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
+          x_next = fn_X(next_k,next_b,e_vals[next_e_i])
           x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
           x_close = argmin(abs.(x_next .- x_grid))
@@ -405,7 +404,7 @@ function FirmOptim_Ext_CF(wage, ipc, ipdef_exo, izeta_Rl)
     phi_c::Float64 = 0.2810
     rho_e::Float64 = 0.969
     sigma_e::Float64 = 0.146
-    nul_e::Int = 1
+    nul_e::Int = 10
     DRS::Float64 = 0.75
     alpha::Float64 = 1/3 * DRS
     nu::Float64 = 2/3 * DRS
@@ -416,7 +415,7 @@ function FirmOptim_Ext_CF(wage, ipc, ipdef_exo, izeta_Rl)
     pdef_exo_s::Float64 =  pdef_exo_l
     discount::Float64 = beta
     phi_a::Float64 =   0.4
-    phi_af::Float64 =   0
+    phi_af::Float64 =   0.4
     tauchen_sd::Float64 = 3
     zeta_Rl::Float64 = izeta_Rl
 
@@ -751,12 +750,12 @@ function FirmOptim_Ext_CF(wage, ipc, ipdef_exo, izeta_Rl)
         next_b = SumPol[s_i, 4]
 
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
+        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
 
         e_i = Int(floor( (s_i-1) / x_size) + 1) 
         for next_e_i in 1:e_size
 
-            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo+SumPol[s_i, 8]))
+            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
             x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
             x_close = argmin(abs.(x_next .- x_grid))
@@ -1141,12 +1140,12 @@ function FirmOptim_Ext_AB(wage, phi_c, ipc, ipdef_exo, izeta_Rl)
         next_b = SumPol[s_i, 4]
 
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8]
+        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
 
         e_i = Int(floor( (s_i-1) / x_size) + 1) 
         for next_e_i in 1:e_size
 
-            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo+SumPol[s_i, 8]))
+          p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
             x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
             x_close = argmin(abs.(x_next .- x_grid))

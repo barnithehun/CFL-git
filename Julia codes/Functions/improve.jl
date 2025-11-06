@@ -149,9 +149,8 @@ plotPolHeatmaps(SumPol, SumPol0, mu, 1)
 
 
 
-
 ########################## Shifting variable costs 
-
+#=
 wage = 1;
 zeta_Rl =  1295       # reform fixed costs
 c_e_baseline = 537.53 # entry value in the baseline case
@@ -207,3 +206,5 @@ p11 = bar(shift_vec, CFrel_LE, title="CFRel_LE", xlabel="Shift Vec", legend=fals
 
 # Arrange plots in a grid (4 rows, 3 columns)
 plot(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, layout=(4, 3), size=(1200, 900))
+
+=#

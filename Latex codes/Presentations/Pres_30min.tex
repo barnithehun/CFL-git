@@ -1,0 +1,1188 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[aspectratio=169]{beamer}
+
+%Cheat-Sheet: https://www.cpt.univ-mrs.fr/~masson/latex/Beamer-appearance-cheat-sheet.pdf
+
+%-- Layout --%
+% font size
+\usepackage[fontsize=11pt]{scrextend}
+\usepackage{amsmath}
+\usepackage{lscape} % or pdflscape for PDF output
+\usepackage{tcolorbox}
+\usepackage{appendixnumberbeamer} 
+\usepackage[short]{optidef}
+\usepackage[backend=bibtex,style=authoryear]{biblatex}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{colortbl}
+% for the indicator function
+% page
+
+\setbeamersize{text margin left=1cm, text margin right=1cm}
+\setbeamercolor{button}{bg=blue, fg=white}
+% line space 
+% footline
+\addtobeamertemplate{navigation symbols}{}{
+    \usebeamerfont{footline}
+    % \usebeamercolor[fg]{footline}
+    \hspace{2em}
+    \insertframenumber/\inserttotalframenumber    }
+% headline
+\setbeamercovered{transparent}
+\setbeamertemplate{itemize item}{\raisebox{0.2ex}{\small\textbullet}}
+\setbeamertemplate{itemize subitem}{--} % Second level
+
+\usetheme[progressbar=frametitle]{metropolis}
+
+\makeatletter
+\setlength{\metropolis@titleseparator@linewidth}{1.25pt}
+\setlength{\metropolis@progressonsectionpage@linewidth}{1.25pt}
+\setlength{\metropolis@progressinheadfoot@linewidth}{1.25pt}
+\makeatother
+
+\setbeamertemplate{frame numbering}[fraction]
+\setbeamercovered{invisible}
+
+\definecolor{primary}{RGB}{0, 150, 255}
+\setbeamercolor{palette primary}{bg=white, fg=black}
+\setbeamercolor{background canvas}{parent=palette primary}
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{progress bar}{use=palette primary,fg=primary}
+
+%-- Figure --%
+\usepackage{graphicx}
+% \usepackage{subfig}
+
+\DeclareMathOperator*{\argmin}{arg\,min} % Jan Hlavacek
+\DeclareMathOperator*{\argmax}{arg\,max} % Jan Hlavacek
+\DeclareMathOperator{\E}{\mathbb{E}}
+\def\boxit#1{%
+  \smash{\color{red}\fboxrule=1pt\relax\fboxsep=2pt\relax%
+  \llap{\rlap{\fbox{\vphantom{0}\makebox[#1]{}}}~}}\ignorespaces
+}
+
+%-- Table --%
+\usepackage{tabularx,booktabs}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+%-- Text --%
+\usepackage{xcolor}
+
+% \usepackage{tikz}
+
+%-- Math --%
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+%-- Caption --%
+\usepackage{caption}
+\usepackage{subcaption}
+
+%-- Effects --%
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,         % Color of internal links
+    filecolor=blue,         % Color of file links
+    urlcolor=blue}
+
+\newcommand{\smallbullet}{\raisebox{0.3ex}{\scalebox{0.7}{$\bullet$}}}
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+\title[]{Cash Flow-Based Lending, Bankruptcy Resolution, \\ and the Macroeconomy} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Barnab\'as Sz\'ekely} % Your name
+
+\date{\today } % Date, can be changed to a custom date
+
+\begin{document}
+\renewcommand{\arraystretch}{1.4}
+\setlist[itemize]{label=\smallbullet, noitemsep, topsep=0pt, parsep=0pt, partopsep=0pt}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+%%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%---------------------------------------------------------------------------------
+
+%---------------------------------------------------------------------------------
+\begin{frame}[label=motivation1]
+    \frametitle{Motivation}
+
+Collateral constraints are major impediments to firm growth \footnotesize  - Beck et al. (2006)  \small
+\begin{itemize} \small
+    \item Yield credit misallocation and output losses \footnotesize - Catherine et al. (2021)
+\end{itemize} \normalsize  \vspace{5mm} \\
+
+Cash flow-based (CF-based) lending could alleviate collateral constraints 
+\begin{itemize} \small
+    \item \textbf{Backed by future cash flows} rather than physical assets    \hfill \hyperlink{LandM}{\beamergotobutton{Details}}
+\end{itemize} \normalsize  \vspace{5mm} \\
+
+\pause
+
+Yet, CF-based debt remains expensive for most firms  \hfill \hyperlink{spreads}{\beamergotobutton{Visually}}
+ 
+ \small
+ \begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \begin{tabular}{lcc}
+        \hline
+        & \multicolumn{2}{c}{\textbf{Total Asset Value}} \\ 
+        \textbf{Credit Spread} &  $\leq$ 100M USD  &  $>$ 100M USD \\
+        \hline
+        CF-based debt  & 7.19\%  & 3.12\%  \\
+        Asset-based debt  & 5.25\%  & 3.93\%  \\
+         \hline
+         & \multicolumn{2}{c}{ \hfill \textit{\scriptsize Source: Compustat, CapitalIQ \normalsize}} \\
+    \end{tabular}
+    \label{tab:credit_spread}
+\end{table}
+
+\normalsize
+
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[label=motivation2]
+    \frametitle{Motivation}
+
+ Probability of liquidation in default decreases with firm size  \hfill \hyperlink{liqprob}{\beamergotobutton{Data}}
+ \small
+ \begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \begin{tabular}{lcc}
+        \hline
+        \textbf{Total Asset Value} &  \textbf{$\leq$ 100M USD}  &  \textbf{$>$ 100M USD} \\
+        Share Liquidated  & 57.9\%  & 5.7\%   \\
+        \hline
+        & \multicolumn{2}{c}{ \hfill \textit{\scriptsize Source: FJC Integrated Database \normalsize}} \\
+    \end{tabular}
+    \label{tab:credit_spread}
+\end{table} \normalsize \vspace{-1mm} \\
+
+\textbf{Reorganization costs} often force the liquidation of small firms  \hfill \hyperlink{FCreorg}{\beamergotobutton{Details}} \vspace{3mm} \\
+
+\pause
+
+Liquidation (exit) terminates all future cash flows 
+\begin{itemize}  \small
+    \item CF-based debt: lenders must offset liquidation risk by imposing higher spreads   
+\end{itemize} \normalsize  \vspace{3mm} \\
+
+\pause
+
+ \textbf{Macroeconomic effects}: 
+\begin{itemize}  \small
+    \item Small firms: High liquidation risk $\rightarrow$ high spreads on CF-based debt \\
+    \hspace{18mm} Insufficient collateral $\rightarrow$ limited access to asset-based debt \\
+    \item Suppressed firm entry and credit misallocation yield \textbf{productivity losses}
+\end{itemize} \normalsize   
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=RQ] \frametitle{Research Question}
+
+To what extent do reorganization costs, limit access to cash flow-based debt and contribute to the loss of aggregate productivity?
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=What I do] \frametitle{What I do}
+
+Discrete time, \textbf{general equilibrium model} 
+\begin{itemize} 
+    \item Representative household, heterogeneous firms, competitive lender
+    \item Heterogeneous debt contracts and default resolution  \vspace{1mm}
+\begin{itemize} \small
+    \item Asset-based vs. Cash flow-based debt 
+    \item Liquidation vs. Reorganization, subject to \textbf{fixed costs}  \hfill \hyperlink{FCreorg}{\beamergotobutton{Details}}
+\end{itemize}
+\end{itemize} \normalsize  \vspace{3mm} \\
+
+\textbf {Calibrated} to U.S non-financial corporations (2010 - 2023)  \vspace{3mm} \\
+\textbf{Contributions}
+\begin{itemize} \small
+    \item[1.] Evaluate the effects of a reduction of reorganization costs
+    \item[2.] \textcolor{gray}{Evaluate the Small Business Reorganization Act of 2019} \hfill \hyperlink{SBRA}{\beamergotobutton{Details}}
+\end{itemize} \normalsize
+
+\end{frame} 
+
+%------------------------------------------------
+\begin{frame}[label=lit] \frametitle{Related Literature \& \textcolor{red}{Contribution} \hfill \hyperlink{What I do}{\beamergotobutton{Back}}}
+
+\textbf{Heterogeneous firms and credit market frictions}: \\
+\footnotesize \textit{Khan and Thomas (2013), Khan Senga and Thomas (2020), Azaridis, Kaas and Wen (2016), 
+Ottonello and Winberry (2020), Corbae and D'Erasmo (2021), Kochen (2022)} \normalsize \\ 
+\qquad $\Rightarrow$ \textcolor{red}{Heterogeneity of debt contract and default resolution} \vspace{3mm} \\
+
+
+\textbf{Heterogeneous debt contracts and borrowing constraint}: \\
+\footnotesize \textit{Drechsel (2023), Choi (2022), Lian and Ma (2021), Ivashina, Laeven, Moral-Benito (2020), Drechsel and Kim (2022), Öztürk (2023), Caglio, Darst and Kalemli-Ozcan (2021) González and Sy (2024)} \normalsize \\ 
+\qquad $\Rightarrow$ \textcolor{red}{In equilibrium defaults, liquidation risk, firm-specific credit spreads} \vspace{3mm} \\
+
+\textbf{Misallocation and SME finance}: \\
+\footnotesize \textit{Rao et al. (2021), Beck and Demirguc-Kunt (2006), Beck et al. (2006), OECD (2006), Banerjee and Moll (2010), Buera, Kaboski, and Shin (2011), Midrigan and Xu (2014), Hopenhayn (2014)} \\ \normalsize 
+\qquad $\Rightarrow$ \textcolor{red}{The role of bankruptcy frameworks}
+\end{frame} 
+
+\section{Model}
+
+
+%------------------------------------------------
+\begin{frame}[label=Model Summary] \frametitle{Model Summary}
+
+
+- \textbf{Representative Household }  \hfill \hyperlink{Household}{\beamergotobutton{Details}}
+\begin{itemize} \small
+    \item  Chooses consumption and saving, provides labor inelastically, Owns firms
+\end{itemize} \normalsize \vspace{2mm}
+
+\pause 
+
+-  \textbf{Heterogeneous Firms} \hfill \hyperlink{Firms}{\beamergotobutton{Details}}
+\begin{itemize} \small
+    \item Described by, capital ($k$), debt ($b$), idiosyncratic productivity ($\varepsilon$)
+    \item Pay dividends, invest into capital ($k'$), borrow ($b'$) against cash-flows or assets ($\tau'$)
+    \item Endogenous entry, exit and default decisions 
+\end{itemize} \normalsize \vspace{2mm}
+
+\pause
+
+- \textbf{Competitive Lender} \hfill \hyperlink{payoffs}{\beamergotobutton{Details}}
+\begin{itemize} \small
+    \item Redistributes household savings to firms in one-period debt contracts
+    \item Offers interest rate to firms s.t. a zero profit condition
+\end{itemize} \normalsize \vspace{2mm}
+
+\pause
+
+- \textbf{Bankruptcy Courts}: decide liquidation or reorganization
+
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=outline1] \frametitle{Model Outline: Financial Intermediation}
+
+\only<1>{\includegraphics[width=0.95\textwidth]{Plots/min60_t1.png}}
+\only<2>{\includegraphics[width=0.95\textwidth]{Plots/min60_t2.png}}
+\only<3>{\includegraphics[width=0.95\textwidth]{Plots/min60_t3.png}}
+
+\end{frame}
+
+\begin{frame}[label=LiqReorg] \frametitle{Liquidation and Reorganization  \hfill \hyperlink{LiqReorg_backup}{\beamergotobutton{Details}}} 
+
+
+\textbf{Liquidation}
+\begin{itemize} \small
+    \item The firm exits and its capital is resold at a discount (asset-specificity)
+    \item Retained value: the resale value of assets
+\end{itemize} \normalsize 
+
+
+\textbf{Reorganization}
+\begin{itemize} \small
+    \item  The debt is renegotiated at a variable and a \textbf{fixed cost} \hfill \hyperlink{FCreorg}{\beamergotobutton{Reorganization Costs}}
+    \item  The lender receives a transfer from the household, the firm continues
+    \item  Retained value: going-concern value of the firm net of reorg. costs 
+\end{itemize} \normalsize \vspace{3mm}
+
+Default resolution by bankruptcy courts: maximizes value retanined in bankruptcy
+$$ \underbrace{\text{Firm value} - \text{Reorganization costs}}_{\textcolor{red}{Reorganization}} \qquad \lessgtr \qquad \underbrace{\text{Resale value of assets}}_{\textcolor{red}{Liquidation}}  $$
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}[label=outline2] \frametitle{Model Outline: Financial Intermediation} 
+
+\only<1>{\includegraphics[width=0.95\textwidth]{Plots/min60_t3.png}}
+\only<2>{\includegraphics[width=0.95\textwidth]{Plots/min60_t5.png}}
+\only<3>{\includegraphics[width=0.95\textwidth]{Plots/min60_t7.png}}
+
+\vspace{-1.5mm}
+\centering
+\hyperlink{payoffs}{\beamergotobutton{Lenders' Payoffs}} \qquad
+\hyperlink{interest_rate}{\beamergotobutton{Interest rate}}
+
+
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}[label=mechanism] \frametitle{Summary of the Model Mechanism}
+
+CF-based debt is exposed to liquidation risk, asset-based debt is not 
+
+Lender considers,
+\begin{itemize} \small
+    \item Ex-ante probability of default \textit{and} liquidation in default
+    \item Expected pay-offs under liquidation or reorganization, given debt contract
+    \end{itemize} \normalsize \vspace{3mm} 
+
+
+Economies of scale in default resolution
+\begin{itemize} \small
+    \item Fixed reorganization cost: small firms often liquidate, large firms mostly reorganize 
+\end{itemize} \normalsize \vspace{3mm} 
+
+Misallocation of credit:
+\begin{itemize} \small
+    \item Ex-ante liquidation risk limits small firms' access to CF-based debt
+    \item Small but productive firms (young) firms operate below efficient scale 
+\end{itemize} \normalsize
+
+
+\end{frame}
+
+
+
+
+\section{Model Fit}
+
+%------------------------------------------------
+\begin{frame}[label=datasources] \frametitle{Model Fit - Targeted Moments \hfill \hyperlink{Calibration}{\beamergotobutton{Calibration}}}
+
+
+
+Data: US non-financial firms, 2010-2023
+\begin{itemize} \small
+    \item Firm- and Debt-level data: Compustat connected to Capital IQ
+    \item Bankruptcy resolution: Federal Judicial Center, Integrated Database (IDB)
+\end{itemize} \normalsize
+
+
+
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{0.8}
+    \begin{tabular}{c|c|c}
+    \multicolumn{3}{l}{\textbf{Targeted moments}} \\ 
+    \toprule
+    \textbf{SS value} & \textbf{Target value} & \textbf{Model value} \\ 
+    \midrule
+    Liquidation prob. & 0.48 & 0.51 \\ 
+    Debt to Collateral & 0.49 & 0.47 \\ 
+    Interest rate & 5.3 & 5.37 \\ 
+    Reliance on CF-debt & 0.43 & 0.49 \\ 
+    CF-based to total debt & 0.76 & 0.76 \\ 
+    \bottomrule
+    \end{tabular}
+    \label{tab:targets}
+\end{table}
+
+
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}[label=3] \frametitle{Model Fit - Untargeted Moments}
+
+
+Small vs. Large firms \qquad \small - Based on borrowing, approx. 64\% are small \normalsize   \hfill \hyperlink{targets}{\beamergotobutton{Details}}  \vspace{4mm} \\
+Data moments and \textcolor{red}{Model Values}
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{0.9}
+        \begin{tabular}{c|c|c}
+        \multicolumn{3}{l}{\textbf{Untargeted moments}} \\ 
+        \toprule
+         Data - \textcolor{red}{Model} & Small firms &  Large firms  \\
+         \midrule
+         Liquidation Probability  & 0.70 - \textcolor{red}{0.80}  & 0.32 - \textcolor{red}{0.16}  \\
+         Debt to Collateral & 0.42 - \textcolor{red}{0.41}  & 0.59 - \textcolor{red}{0.54}  \\
+         Interest Rate  & 5.89 - \textcolor{red}{5.83}  & 4.63 - \textcolor{red}{4.84}  \\
+         Reliance on CF-debt  &  0.40 - \textcolor{red}{0.13}  &  0.47 - \textcolor{red}{0.94}  \\
+         CF-based to total debt & 0.32 - \textcolor{red}{0.25}  & 0.77 - \textcolor{red}{0.80}  \\
+        \bottomrule
+        \end{tabular}
+    \label{tab:external calib} 
+\end{table}
+
+\end{frame}
+
+\section{Model Results}
+
+%------------------------------------------------
+\begin{frame}[label = Pexp]  \frametitle{Cutting Reorganization Costs}
+
+\small
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{0.85}
+    \begin{tabular}{l|c|c}
+    \multicolumn{3}{l}{\textbf{ Reduction of fixed reorganization costs}} \\ 
+    \toprule
+     & \textbf{Baseline} & \textbf{Reform $\zeta \rightarrow \zeta/2$} \\ 
+    \midrule
+     Liquidation Probability  & 0.51 & 0.32   \\
+     Debt to Collateral & 0.47 & 0.50  \\
+     Interest Rate  & 5.37 & 4.92 \\
+     Reliance on CF-debt  &  0.49 &  0.72  \\
+     CF-based to total debt & 0.76  & 0.84  \\
+     \midrule
+     Total Firm Mass & 13.89 & 14.47 \\ 
+     Mean Employees & 720 & 691 \\
+     Capital Intensity (K/L) & 2.74 & 2.75 \\ 
+     Productivity (Y/L) & 2.00 & 2.027 \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:targets}
+\end{table} 
+
+\begin{itemize} \small
+    \item Lower liquidation risk $\rightarrow$ greater reliance on CF-based debt
+    \item Higher borrowing at lower interest rates
+    \item Higher capital intensity, smaller firm size $\rightarrow$ productivity gains
+\end{itemize} \normalsize
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label = Pexp]  \frametitle{Cutting Reorganization Costs - Effects by Firm Size}
+
+
+
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{0.85}
+    \begin{tabular}{l|c|c}
+    \multicolumn{3}{l}{\textbf{Steady State Moments}} \\ 
+    \toprule
+     Baseline - \textcolor{red}{Reform} & Small Firms & Large Firms \\
+    \midrule
+    Pr. Liquidation & 0.80 - \textcolor{red}{0.57} & 0.16 - \textcolor{red}{0.03} \\ 
+    Debt/Collateral & 0.41 - \textcolor{red}{0.47} & 0.55 - \textcolor{red}{0.56} \\ 
+    Interest Rate & 5.83 - \textcolor{red}{5.18} & 4.84 - \textcolor{red}{4.60} \\  
+    CF Reliance & 0.14 - \textcolor{red}{0.50} & 0.94 - \textcolor{red}{0.97} \\ 
+    CF-based to Total Debt & 0.25 - \textcolor{red}{0.82} & 0.81 - \textcolor{red}{0.84} \\ 
+    \bottomrule
+    \end{tabular}
+    \label{tab:SSvalues_compact}
+\end{table}
+
+
+\begin{itemize} \small
+    \item Small firms: lower liquidation risk $\rightarrow$ higher borrowing at lower rates
+    \item Large firms: already low liquidation risk $\rightarrow$ limited impact
+    \item Overall: financing gap narrows
+\end{itemize} \normalsize
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=Aggeffects] \frametitle{The Effects of Reorganization Costs - Alternative Models \hfill  \hyperlink{liqrisk}{\beamergotobutton{Liquidation Risk Effects}}}
+
+\small
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{0.85}
+    \begin{tabular}{lccc}
+    & \textbf{Baseline Calib.} & \textbf{Only asset-based} & \textbf{Only CF-based} \\    
+    \toprule
+    Total firm mass & 4.2\% & 1.14\% & 20.91\%  \\  
+    Mean employees & -4.04\% & -1.13\% & -17.29\%   \\  
+    Productivity (Y/L) & 1.34\% & 0\% & 2.40\%  \\  
+    Capital Int. (K/L) & 0.26\% & 0.17\% & 0.68\%  \\  
+    Wage & 1.34\% & 0 \% & 2.40\%  \vspace{2mm}  \\  
+    Pr. Liquidation & -18.43 pp & -18.32 pp & -21.69 pp \\  
+    Debt/Collateral & 3.07 pp & -0.87 pp & 5.82 pp  \\  
+    Interest rate & -0.45 pp & -0.03 pp & -0.71 pp  \\  
+    CF reliance & 21.2 pp & 0 pp & 0 pp  \\    
+    CF share & 6.83 pp & 0 pp & 0 pp  \\  
+    \bottomrule
+    \end{tabular}
+    \label{tab:percentage_changes}
+\end{table}
+\normalsize
+
+\begin{itemize} 
+    \item Only Asset-based debt is available $\rightarrow$ negligible effects
+    \item Only CF-based debt is available $\rightarrow$ over-estimated effects
+\end{itemize} 
+
+\centering \hyperlink{SBRA}{\beamergotobutton{Assessing the effects of the SBRA}}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=3] \frametitle{Conclusions}
+
+Reorganization costs amplify credit frictions
+\begin{itemize} \small
+    \item Raise liquidation risk and limit small firms' access to CF-based debt
+\end{itemize} \normalsize \vspace{3mm}
+
+Reducing reorganization costs alleviate financing constraints
+\begin{itemize} \small
+    \item Improve access to external finance
+    \item Promote firm entry, improve credit allocation, and boost productivity
+\end{itemize} \normalsize \vspace{3mm}
+
+\textcolor{gray}{Targeted reforms, such as the SBRA, can improve credit markets and productivity}
+
+\end{frame}
+
+
+\appendix
+\section{Appendix}
+
+
+%------------------------------------------------
+\begin{frame}[label = LandM] \frametitle{Cash Flow-Based and Asset-Based Lending \hfill \hyperlink{motivation1}{\beamergotobutton{Back}}}
+
+Asset-based lending:
+\begin{itemize} \small
+\item Secured against borrowers' physical  assets
+\item Creditors in-default payoffs:\textbf{ value of physical collateral}
+\end{itemize} \normalsize 
+Cash flow-based lending:
+\begin{itemize} \small
+\item No specific assets pledged as collateral
+\item Secured against the entire corporate entity, or unsecured
+\item Creditors in-default payoffs:\textbf{ expected future cash flows}
+\end{itemize} \normalsize
+Lian and Ma (2021): 80\% of US corporate debt is backed by future cash-flows \vspace{3mm}
+
+Different from security: 
+\begin{itemize} \small
+    \item Secured vs. Unsecured: priority in bankruptcy
+    \item Asset vs CF-based: economic determinants of lenders' in-default payoffs
+\end{itemize} \normalsize
+
+\end{frame}
+
+
+%------------------------------------------------
+
+
+
+\begin{frame}
+
+\centering{\textbf{\LARGE{EMPIRICS}}}
+
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}[label = spreads] \frametitle{Spreads Over Size \hfill  \hyperlink{motivation1}{\beamergotobutton{Back}}}
+
+    \begin{figure}
+       \includegraphics[width=0.85\textwidth]{Plots/spreads.png} 
+     \end{figure} \vspace{-4mm}
+
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label = liqprob] \frametitle{Bankruptcy Resolutions \hfill  \hyperlink{motivation2}{\beamergotobutton{Back}}}
+
+    \begin{figure}
+       \includegraphics[width=0.80\textwidth]{Plots/liqprob2.png} 
+     \end{figure} \vspace{-4mm}
+
+
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}[label=slide2] \frametitle{Empirical Analysis}
+
+\begin{table}[H]
+    \centering
+    \resizebox{0.8\textwidth}{!}{%
+    \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{2}{c}{All contracts} & \multicolumn{2}{c}{CF contracts} & \multicolumn{2}{c}{AB contracts} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+    \textbf{LHS}: Spread & Value & SE & Value & SE & Value & SE \\
+    \midrule
+    Log of EBITDA & -0.161*** & (0.0106) & -0.112*** & (0.0121) & -0.203*** & (0.0203) \\
+     \rowcolor{blue!10} Log of Assets & -0.375*** & (0.0473) & -0.381*** & (0.0583) & -0.308*** & (0.0838) \\
+    \rowcolor{blue!10} Pledgeability & -0.467*** & (0.0867) & -0.0297 & (0.108) & -0.990*** & (0.144) \\
+    Leverage & 1.783*** & (0.103) & 2.278*** & (0.134) & 0.985*** & (0.168) \\
+    Log of Age & -0.136*** & (0.0255) & -0.132*** & (0.0300) & -0.149*** & (0.0447) \\
+    Log of Employees & -0.0118 & (0.0198) & -0.0974*** & (0.0252) & 0.0838*** & (0.0310) \\
+    CF Share & 0.450*** & (0.0642) & -0.335*** & (0.112) & 0.748*** & (0.112) \\
+    \midrule
+    Period, Sector, Rating FE & Yes & & Yes & & Yes & \\
+    Observations & 17,668 & & 10,676 & & 6,992 & \\
+    R-squared & 0.286 & & 0.403 & & 0.173 & \\
+    \bottomrule
+    \end{tabular}%
+    }
+\end{table}
+
+\end{frame}
+\begin{frame}
+
+\centering{\textbf{\LARGE{REPRESENTATIVE HOUSEHOLD}}}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=Household] \frametitle{Representative Household \hfill \hyperlink{Model Summary}{\beamergotobutton{Back}}}
+
+Unit measure of identical households, choose
+\begin{itemize} \small
+    \item Stream of consumption $C$ 
+    \item One-period, bonds $B$ which yield the risk free interest rate $q_0$
+\end{itemize} \normalsize
+
+$$ V_h(B, \mu_0) = \max_{C,B'} U(C) + \beta V_h(B',\mu_0') $$
+subject to: 
+$$ C + B \leq w N^s + q_0 B' + T $$
+where $N^s$ is the labour supply, $\beta$ is the discount factor \vspace{3mm} \\
+$T$ consolidates expenses and revenues from the firm sector
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=HH_T] \frametitle{Representative Household - The Transfer \hfill \hyperlink{Lpayoff}{\beamergotobutton{Back}}}
+
+$T$ consolidates expenses and revenues from the firm sector \vspace{-5mm} 
+
+\begin{equation*} \label{eq:T}
+    \begin{split}
+        & T = \int (1 - \chi_l - \chi_{ex}) \left( x - k'(k,b,\varepsilon) + qb'(k,b,\varepsilon) \right) d \mu_0(k,b,\varepsilon) \\
+        & \qquad + \int \chi_{ex} \ x \ d \mu_0(k,b,\varepsilon) \\
+        & \qquad + \int \chi_d \chi_{l} [ \phi_a (1-\delta) k -  \min\{b, \Pi_{r}(a,\varepsilon) \} ] \ d \mu_0(k,b,\varepsilon)  \\
+        & \qquad  - \int \chi_d (1-\chi_{l}) \ \min\{b, (1-\tau) \phi_a (1-\delta) k +\tau \theta V_{cont} (x, \varepsilon)        \} \ d \mu_0(k,b,\varepsilon) \\
+        & \qquad  - \int \chi_d (1-\chi_{l}) \  [ \gamma V_{cont} (x, \varepsilon) + \zeta] \ d \mu_0(k,b,\varepsilon) - M \int (1-\chi_{ex}) c_e \ d \Phi(\varepsilon) .
+    \end{split}
+\end{equation*}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+
+\centering{\textbf{\LARGE{HETEROGENEOUS FIRMS}}}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=Firms] \frametitle{Heterogeneous Firms - Production \hfill \hyperlink{Model Summary}{\beamergotobutton{Back}}}
+
+Heterogeneous firms: 
+\begin{itemize} \small
+    \item Capital ($k$), Debt ($b$), Idiosyncratic productivity ($\varepsilon$)
+\end{itemize} \normalsize
+Firm productivity follows an AR(1) process, with \textit{i.i.d.} innovations \vspace{3mm}
+
+Produce a homogeneous good, using labor $n$ and capital $k$,
+$$ y = \varepsilon k^{\alpha}n^{\nu}, \ \ \ \ \alpha,\nu \in (0,1),  \ \nu + \alpha < 1 $$
+Every firm $(k,\varepsilon)$ faces the same optimization w.r.t. labor:
+$$ \pi(k,\varepsilon) = \max_{n} \ \  \varepsilon k^{\alpha}n^{\nu} - wn - c$$ 
+Fixed cost of production: $c$
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=Firmvalues] \frametitle{Heterogeneous Firms - Values \hfill \hyperlink{Model Summary}{\beamergotobutton{Back}}}
+
+Incumbents may decide to exit, default or continue production: 
+\begin{equation*} \label{eq:default decision}
+    V_0(k,b,\varepsilon) = \max \{V_{def}, \  V_{exit}(k,b,\varepsilon),  \ V_{cont}(k,b,\varepsilon) \}
+\end{equation*}
+Default has zero value
+$$ V_{def} = 0 $$ 
+Voluntarily exit allows to keep the cash on hand, $x$ 
+ $$    V_{exit}(k, b, \varepsilon) = \pi(k,\varepsilon) + (1-\delta)k - b  = x $$
+Exiting firms are balanced by a mass $M$ of potential entrants 
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=3] \frametitle{Continuing Firms \hfill \hyperlink{Model Summary}{\beamergotobutton{Back}}}
+
+Continuing firms maximize the discounted sum of dividends $(d)$ choosing
+\begin{itemize} \small
+    \item Capital $k'$; One-period debt $b'$; CF-based to Total debt, $\tau' \in [0,1]$
+\end{itemize} \normalsize
+
+
+\begin{equation*} \label{eq:V_cont}
+    V_{cont}(x,\varepsilon) = \max_{k',b', \tau'} \left( d + q_f \E_{\varepsilon'|\varepsilon} V_0(k',b', \varepsilon') \right)
+\end{equation*}
+subject to: 
+$$ d = x - k' +  \textcolor{red}{q(k',b',\varepsilon, \tau')}b' $$
+\begin{equation*} \label{eq:budget}
+x' = \pi(k',\varepsilon')+(1-\delta)k'-b' \hspace{5mm} \text{and} \hspace{5mm} d \geq 0
+\end{equation*} 
+
+\begin{itemize} \small
+    \item where $q(a',\varepsilon) $ is the inverse gross interest rate, and $a' = (k',b',\tau')$
+\end{itemize} \normalsize
+Continuing firms: no equity finance, $d \geq 0$
+ 
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=Entrants] \frametitle{Entrants \hfill \hyperlink{Model Summary}{\beamergotobutton{Back}}}
+
+Every period, there is a mass $M$ of potential entrants
+\begin{itemize} \small
+    \item Begin with zero cash on hand (asset-poor startups)  
+    \item Do not produce, draw initial productivity, $\varepsilon_0 \sim \Phi(\varepsilon)$  
+    \item Pay entry cost $c_e$ and continue, or exit within the period, w/o paying $c_e$
+\end{itemize} \normalsize \vspace{5mm}
+
+Analogous decision to continuing firms, with zero CoH,
+\begin{equation*} \label{eq:entrant decision}
+V_e(\varepsilon_0) = \max \{0, \ V_{cont}(0,\varepsilon_0) - c_e \}
+\end{equation*}
+
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}
+
+\centering{\textbf{\LARGE{COMPETITIVE LENDER}}}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label = payoffs]
+\frametitle{The Lender's Recovery \hfill \hyperlink{outline2}{\beamergotobutton{Back}}}
+
+Zero Profit Condition: interest rates defined by the lender's \textbf{in-default payoffs}
+
+\only<1->{
+\begin{table}[h!]
+\centering
+\resizebox{0.57\textwidth}{!}{% 0.75 times the text width
+\begin{tabular}{l|cc}
+& Asset-based debt & CF-based debt  \\  
+  \midrule
+Liquidation & $ \only<1>{\textcolor{red}{\phi_a (1-\delta)k}} $  $ \only<2->{\phi_a (1-\delta)k} $ &  \only<3>{\textcolor{red}{$ \kappa\phi_a (1-\delta) k$}} \only<4>{$ \kappa\phi_a (1-\delta) k$} \\ 
+Reorganization & \only<4->{\textcolor{red}{ $\phi_a (1-\delta) k $}} & \only<2>{\textcolor{red}{$\theta V_{cont}(x, \varepsilon)$}} \only<3->{$\theta V_{cont}(x, \varepsilon)$} \\ 
+\bottomrule
+\end{tabular}
+}
+\label{tab:shares}
+\end{table}}
+
+\only<1-2>{ 
+Recovery of asset-based debt under liquidation: 
+\begin{itemize} \small
+    \item Backed by physical collateral, recovers:  $ \phi_a (1-\delta) k$
+\end{itemize} \normalsize
+}
+
+\only<2>{
+Recovery of CF-based debt under reorganization:  
+\begin{itemize} \small
+    \item  Debt renegotiation outcome: $\theta V_{cont}(x,e)$ \qquad - \footnotesize {Corbae and D'Erasmo, 2021}
+\end{itemize} \normalsize
+}
+
+\only<3>{
+Recovery of CF-based debt under liquidation: \hfill \hyperlink{payoffs_det}{\beamergotobutton{Details}}
+\begin{itemize} \small
+    \item Not backed by physical collateral
+    \item Near-zero recovery: $\kappa \phi_a (1-\delta) k$, where  $ \kappa \in (0,1)$ \qquad \footnotesize - Bris et al. (2006) 
+\end{itemize} \normalsize
+}
+
+      
+\only<4>{
+Recovery of AB debt under reorganization: \hfill \hyperlink{payoffs_det}{\beamergotobutton{Details}}
+\begin{itemize} \small
+    \item Creditor is protected by the 'best interest of creditor test'  - \textit{U.S.C. §1129}
+    \item Recovery is \textit{expected} to match the resale value of assets: $\phi_a (1-\delta) k$
+\end{itemize} \normalsize }
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label=Lpayoff] \frametitle{The Lender's In-Default Payoffs  \hfill \hyperlink{outline2}{\beamergotobutton{Back}}}
+
+\begin{table}[h!]
+\centering
+\resizebox{0.57\textwidth}{!}{
+\begin{tabular}{l|cc}
+& Asset-based debt & CF-based debt  \\  
+\midrule
+Liquidation & \phi_a (1-\delta) k$ & $\kappa\phi_a (1-\delta) k$ \\ 
+Reorganization & \phi_a (1-\delta) k$ & $\theta V_{cont}(x, \varepsilon)$ \\ 
+\bottomrule
+\end{tabular}
+}
+\label{tab:shares}
+\end{table}
+
+Under liquidation, the lender recovers: 
+$$   \Pi_{l}(a) =  \min \{b, \ \ (1-\tau) \underbrace{\phi_a (1-\delta) k}_{\textcolor{red}{\text{AB, Liq}}} + \tau \underbrace{\kappa \phi_a  (1-\delta) k}_{\textcolor{red}{\text{CF, Liq}}} \} $$
+\begin{itemize} \small
+    \item The remainder is retained by the household
+\end{itemize} \normalsize
+Under reorganization, the lender receives the transfer: 
+$$ \Pi_{r}(a,\varepsilon) = \min \{b, \ \  (1-\tau) \underbrace{\phi_a (1-\delta) k}_{\textcolor{red}{\text{AB, Reorg}}} +\tau \underbrace{\theta V_{cont} (x, \varepsilon)}_{\textcolor{red}{\text{CF, Reorg}}} \} $$ 
+
+ 
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}[label= interest_rate] \frametitle{The Inverse Interest Rate \hfill \hyperlink{outline2}{\beamergotobutton{Back}}}
+
+
+The lender considers: \small 
+\begin{itemize}\setlength\itemsep{0em} 
+    \item Probability of default, $P_D(a', \varepsilon)$
+    \item Probability of liquidation in default $\gamma(k',b', \varepsilon)$
+    \item Expected payoffs under liquidation and reorganization,  $\Pi_{l}(a')$, $\Pi_{r}(a', \varepsilon)$
+\end{itemize} \normalsize
+
+Inverse interest rate ($q$) defined by the zero profit condition:
+\begin{equation*} \label{eq:q}
+    \begin{split}
+        & q(a', \varepsilon)b' = q_0 [ \left(1-P_D(a', \varepsilon)\right)b' +  \\
+        & \qquad \qquad P_D(a', \varepsilon) \gamma(a', \varepsilon) \ \Pi_{l}(a') + \\  
+        & \qquad  \qquad \underbrace{P_D(a', \varepsilon)}_{\textcolor{red}{\text{Pr(default)}}} (1-\underbrace{\gamma(a', \varepsilon)}_{\textcolor{red}{\text{Pr(Liq.) }}})\ E_{\varepsilon' | \varepsilon} [ \Pi_{r}(a', \varepsilon') |\chi_r = 1 ] \} ]
+    \end{split}
+\end{equation*}
+
+Continuing firms choose $(k',b',\tau')$, to maximize $V_{cont}(x,\varepsilon)$ s.t. $q(k',b',\tau', \varepsilon)$
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+
+\centering{\textbf{\LARGE{BANKRUPTCY RESOLUTION}}}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=LiqReorg_backup] \frametitle{Liquidation and Reorganization \hfill \hyperlink{LiqReorg}{\beamergotobutton{Back}}} 
+
+In default: liquidation or reorganization  \hfill \hyperlink{Default}{\beamergotobutton{Default Probability}} \vspace{3mm}
+
+Liquidation: 
+\begin{itemize} \small
+    \item Firm exits and capital stock is resold at $\phi_a(1-\delta)k$, where $\phi_a \in (0,1)$  
+    \item Lender is recovers $\Pi_l(a)$ any remainder goes to the household
+\end{itemize} \normalsize \vspace{3mm} \\
+
+Reorganization: 
+\begin{itemize} \small
+\item Debt is renegotiated at a variable $\phi_c V_{cont}(x,\varepsilon)$ and a fixed cost $\zeta$ \hfill \hyperlink{FCreorg}{\beamergotobutton{Reorganization Costs}}
+\item The lender receives a transfer $\Pi_r(a,\varepsilon)$, financed by equity
+\item Firm gets a ‘fresh start’, chooses $(k', b', \tau')$ freely
+\end{itemize} \normalsize
+
+Lender’s payoffs $\Pi_l(a)$ and $\Pi_r(a,\varepsilon)$ depend on the debt contract
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=LiqProb_backup] \frametitle{Liquidation Probability \hfill \hyperlink{LiqReorg}{\beamergotobutton{Back}}} 
+
+Default resolution by bankruptcy courts \vspace{3mm}
+
+Maximizes the value retained after bankruptcy,
+\begin{equation*} \label{eq:liquidation decision}
+    \max \{ \phi_a (1-\delta) k; \ (1-\phi_c) V_{cont}(x,\varepsilon)- \zeta  \} 
+\end{equation*}
+
+Ex-ante, conditional probability of liquidation in default: 
+\begin{equation*} \label{eq:liquidation probability}
+    \gamma(k', b', \varepsilon) = Pr(\phi_a (1-\delta) k' \ \geq \ (1-\phi_c) V_{cont}(x',\varepsilon') - \zeta | \chi_d = 1)
+\end{equation*}  
+
+\textbf{Fixed costs} of reorganization, $\zeta$: decreasing liquidation prob. across firm size
+
+\end{frame}
+
+
+
+
+%------------------------------------------------
+\begin{frame}[label = Conversions] \frametitle{Lender's Perspective: Exogenous Risk of Liquidation \hfill  \hyperlink{motivation2}{\beamergotobutton{Back}}}
+
+The debtor is expected to file for bankruptcy
+\begin{itemize} \small 
+    \item Chapter 7 liquidation or Chapter 11 reorganization
+\end{itemize} \normalsize \vspace{6mm} 
+
+Observed Conversions in the US (IDB 2010–2023)
+\begin{itemize} \small 
+    \item 0.16\% of Chapter 7 cases converted to Chapter 11
+\end{itemize} \normalsize  \vspace{6mm}
+
+Legal and practical barriers to reversing liquidation decisions
+\begin{itemize} \small
+    \item The court is unlikely approve the conversion, if the management is unwilling to continue 
+    \item Lender is often ill-equipped to take over the management of the firm
+\end{itemize} \normalsize
+
+
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}[label = payoffs_det] \frametitle{Recovery - Further Details \hfill  \hyperlink{payoffs}{\beamergotobutton{Back}}}
+
+\textbf{Near-zero} recovery of CF-based debt under liquidation: 
+\begin{itemize} \small
+    \item No physical collateral; recovery is costly and time-consuming
+    \item Assets are often tied up in other loans (53\% of firms hold both AB and CF-based debt)
+    \item Employee wages enjoy priority over unsecured claims - \textit{U.S.C. §507(a)(4)}
+\end{itemize} \normalsize \vspace{5mm}
+
+Recovery of AB-based debt under reorganization: 
+\begin{itemize} \small
+    \item 'Best interest of creditor test': creditors cannot be worse-off under the proposed reorganization plan than they would have been under liquidation - \textit{U.S.C. §1129}
+    \item The lender avoids the cost of monitoring uncertain future cash flows
+\end{itemize} \normalsize
+ \normalsize 
+
+
+\end{frame}  
+
+%------------------------------------------------
+\begin{frame}[label = FCreorg] \frametitle{Fixed Costs of Reorganization \hfill \hyperlink{motivation2}{\beamergotobutton{Back to Motivation}}  \hyperlink{LiqReorg}{\beamergotobutton{Back To Liq.}}}
+
+
+Reorganization: lengthy negotiation between debtors and creditors 
+\begin{itemize} \small 
+    \item Large legal, administrative and time (direct and indirect)  cost
+    \item Often, costs of replacing original management
+\end{itemize} \normalsize \vspace{3mm} 
+
+\textbf{Fixed cost} of reorganization - \textit{Wang, 2022} 
+\begin{itemize} \small 
+    \item Smaller firms face higher costs per dollar of assets \\
+     \qquad \footnotesize - \textit{LoPucki and Doherty 2004, 2011; Bris et al. 2006} \small 
+     \item Smaller firms take longer to reorganize per dollar of assets \footnotesize \qquad - \textit{IDB data} \normalsize 
+\end{itemize} \normalsize \vspace{3mm}
+
+Model implementation \qquad  \footnotesize -\textit{Antill and Grenadier 2018; Corbae and D'Erasmo 2021}
+\begin{itemize} \small 
+    \item Fixed costs replicate declining liquidation risk across firm size \\
+\end{itemize} \normalsize
+
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}[label=Default] \frametitle{Probability of Default \hfill \hyperlink{LiqReorg}{\beamergotobutton{Back}}}
+\textbf{Endogenous default} decision:
+\begin{equation*} \label{eq:default decision}
+    V_0(k,b,\varepsilon) = \max \{V_{def}, \  V_{exit}(k,b,\varepsilon),  \ V_{cont}(k,b,\varepsilon) \}.
+\end{equation*}
+Let $\chi_{endo}(a', \varepsilon) = 1$ if the firm decides to default \vspace{3mm} \\
+
+\textbf{Exogenous default} shock 
+\begin{itemize} \small
+    \item With probability $P_{x}$
+    \item Matches share of reorganizations to the data
+\end{itemize} \normalsize
+
+\textbf{Combined} default probability 
+$$ P_D(a', \varepsilon) = E_{\varepsilon'|\varepsilon}[\chi_{endo}(a',\varepsilon')] + P_{x} - E_{\varepsilon'|\varepsilon}[\chi_{endo}(a',\varepsilon')]P_{x} $$
+
+
+\end{frame}
+
+\begin{frame}
+
+\centering{\textbf{\LARGE{CALIBRATION AND RESULTS}}}
+
+\end{frame}
+
+
+
+
+%------------------------------------------------
+\begin{frame}[label=Calibration] \frametitle{Calibration \hfill \hyperlink{datasources}{\beamergotobutton{Back}}}
+ 
+\small
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{0.85}
+    \begin{tabular}{c|l|c|l}
+    \multicolumn{4}{l}{\textbf{Externally Calibrated Parameters}} \\ 
+    \toprule
+    $c_e$ & Entry cost & 537.5 & wage $\rightarrow 1$ \\
+    $\alpha$ & Capital Share & 0.33 & \\
+    $\beta$ & Discount Rate & 0.96 & \\
+    $\delta$ & Depreciation & 0.065 & Khan and Thomas (2013) \\
+    $\rho$ & Shock Persistence & 0.969 & Di Nola et al. (2023) \\
+    $\sigma_{\varepsilon}$ & Shock SD & 0.146 & Di Nola et al. (2023) \\
+    $\varepsilon_0$ & Average Productivity & 1 & Di Nola et al. (2023) \\
+    $\phi_a$ & Resale value of assets & 0.4 & Kermani et al. (2020) \\
+    $\kappa$ & Unsecured discount & 0.1 & \textcolor{gray}{Bris et al. (2006)} \vspace{2mm} \\
+    \multicolumn{4}{l}{\textbf{Internally Calibrated Parameters}} \\ 
+    \midrule
+    $\phi_c$ & Variable cost of reorganization & 0.204 & \\
+    $\zeta$ & Fixed costs of reorganization & 2590 & \\
+    $\theta$ & Lender's renegotiation payoff & 0.281 & \\
+    $P_x$ & Exogenous probability of default & 0.025 & \\
+    $c$ & Fixed costs of operation & 30.2 & \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:calibration}
+\end{table}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[label=targets] \frametitle{Targeted Moments \hfill \hyperlink{datasources}{\beamergotobutton{Back}}}
+ 
+Combination of CapitalIQ, Compustat, and FJC's IDB data \vspace{3mm} \\
+\textbf{Challenge}: Small firms are underrepresented in Compustat, overrepresented in IDB
+\begin{itemize}
+    \item Micro firms ($<100$k assets) excluded due to lack of Compustat coverage
+    \item Small firms: liabilities $\leq 10$ million (aligned with SBRA threshold)\footnote{Cutoff corresponds to largest subchapter V-eligible category in IDB.}
+    \item Large firms: liabilities $ > 10$ million
+\end{itemize}
+Sample shares: 21\% small firms in Compustat vs. 67\% in IDB. \vspace{3mm} \\
+Moments computed by mapping Compustat means onto IDB firm size distribution
+
+
+\end{frame}
+
+
+
+
+
+%------------------------------------------------
+\begin{frame}[label = liqrisk]  \frametitle{The Effects of Liquidation Risk  \hfill \hyperlink{Aggeffects}{\beamergotobutton{Back}}}
+
+`Thought experiment': exogenous change in liquidation probability 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\textwidth]{Plots/GamPol.png}
+    \label{fig:GamPol}
+\end{figure} \vspace{-8mm}
+
+\begin{itemize} \small
+    \item Liquidation Risk: increases interest rate, decreases CFL reliance
+    \item Effects are largest for small but productive firms $\rightarrow $ typically young firms
+\end{itemize} \normalsize
+
+\end{frame}
+
+
+
+
+
+
+%------------------------------------------------
+\begin{frame}[label=3] \frametitle{The Effects of Reorganization Costs - Firm Effects}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Plots/reform.png}
+    \label{fig:GamPol}
+\end{figure}
+
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}[label = SBRA]  \frametitle{Assessing the SBRA \hfill \hyperlink{What I do}{\beamergotobutton{Back}}}
+
+Small Business Reorganization Act (effective of 2020):
+\begin{itemize} \small
+    \item Enacted on August 2019, with an effective date of February 2020
+    \item Streamline reorganization process up to a debt limit of \$3 million  (\$7.5 million) 
+\end{itemize} \normalsize \vspace{3mm}
+
+Reduction of reorganization costs \textbf{for small firms}
+\begin{itemize} \small
+    \item Reduced disclosure requirements, shorter deadlines
+    \item Appointment of a Subchapter V Trustee
+\end{itemize} \normalsize \vspace{2mm}
+Reducing creditor control
+\begin{itemize} \small
+    \item Simplifies deviations from APR and creditor cramdown
+    \item No competing reorganization plan from creditors
+\end{itemize} \normalsize 
+Hotchkiss et al. (2024): SBRA raises Ch11 confirmation rates by 17.8 pp. (LATE)
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}[label=Shifting costs] \frametitle{Shifting Costs}
+
+\small 
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{0.9}
+    \begin{tabular}{l|ccc}
+     & \textbf{Universal (basline)} & \textbf{Targeted} & \textbf{Control Reduc.} \\    
+    \toprule
+     & $\zeta, \phi_c$ & $\zeta/2, \phi_c$ & $\zeta/2, \phi_c/2$  \\  
+    \midrule
+    Total firm mass & 4.2\%  & 2.20\% & 1.55\%  \\  
+    Mean employees & -4.04\%  & -2.15\% & -1.58\%   \\  
+    Productivity (Y/L) & 1.34\%  & 0.97\% & 0.25\%  \\  
+    Capital Int. (K/L) & 0.26\%  & 1.25\% & 2.80\%  \\  
+    Wage & 1.34\%  & 0.97\% & 0.25\%  \\  
+    \midrule
+    Pr. Liquidation & -18.43 pp  & -11.92 pp & -17.90 pp \\  
+    Debt/Collateral & 3.07 pp  &  1.53 pp & -0.86 pp  \\  
+    Interest rate & -0.45 pp  & -0.35 pp & -0.20 pp  \\  
+    CF reliance & 21.2 pp  & 20.58 pp & -3.47 pp  \\    
+    CF share & 6.83 pp  & 2.23 pp & -54.51 pp  \\  
+    \bottomrule
+    \end{tabular}
+    \label{tab:percentage_changes2}
+\end{table}
+
+\normalsize
+\begin{itemize} 
+    \item Targeted policy has similar effects to the universal program
+    \item Reducing creditor control diminishes most effects
+\end{itemize} 
+
+
+\end{frame}
+
+
+
+
+\end{document}
