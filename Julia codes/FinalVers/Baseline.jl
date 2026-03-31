@@ -30,10 +30,11 @@ function gridsize()
     # grid sizes - x, k, b should be even numbers!!
     x_size::Int = 46
     e_size::Int = 23
-    k_size::Int = 32
-    b_size::Int = 32
+    k_size::Int = 46
+    b_size::Int = 46
     return (x_size = x_size, e_size = e_size, k_size = k_size, b_size = b_size)
 end
+
 function parameters()
     rho_e::Float64 = 0.969
     sigma_e::Float64 = 0.146
@@ -41,12 +42,12 @@ function parameters()
     DRS::Float64 = 0.75
     alpha::Float64 = 1/3 * DRS
     nu::Float64 = 2/3 * DRS
-    pc::Float64 = 28.564
+    pc::Float64 = 42.03135921
     beta::Float64 = 0.96
-    delta::Float64 = 0.1
-    pdef_exo_l::Float64 =  0.02633
+    delta::Float64 = 0.065
+    pdef_exo_l::Float64 =  0.029176179
     pdef_exo_s::Float64 =  pdef_exo_l
-    discount::Float64 = beta            
+    discount::Float64 = beta
     phi_a::Float64 =   0.4
     phi_af::Float64 =   0.4
     tauchen_sd::Float64 = 3
@@ -54,8 +55,8 @@ function parameters()
     kappa::Float64 = 0.1       # capital recovery rate of CFL debt
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
     zeta_L::Float64 = 0
-    phi_c_hh::Float64 =    0.7597
-    Fcut::Float64 = 1400
+    phi_c_hh::Float64 = 0.803835125
+    Fcut::Float64 = 2000
 
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
@@ -395,12 +396,13 @@ function FirmOptim(wage, phi_c, zeta_Rl)
 
         # probability that you will end up in default state
         pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] 
+        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
 
         e_i = Int(floor( (s_i-1) / x_size) + 1) 
         for next_e_i in 1:e_size
 
-            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8]))
+            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
+            x_next = fn_X(next_k,next_b,e_vals[next_e_i])
             x_next = fn_X(next_k,next_b,e_vals[next_e_i])
 
             x_close = argmin(abs.(x_next .- x_grid))
@@ -437,25 +439,17 @@ end
 ############ Results: ABL vs CFL  ##############
 # calibration values
 wage = 1;
-phi_c =  0.3934
-zeta_Rl =  2759.45
+phi_c =  0.360542276
+zeta_Rl =  2753.229657
 @elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c, zeta_Rl)
 c_e, f0 = EntryValue(SumPol, e_chain) ;
 mu, m, xpol = stat_dist(SumPol, Fmat, f0);
 
-zeta_Rl = 1370
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.016, phi_c, zeta_Rl)
+zeta_Rl = 1350
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0175, phi_c, zeta_Rl)  # perfcred w is about 1.14
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
 
-
-zeta_Rl = 259
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.02864151, phi_c, zeta_Rl)
-c_e0, f00 = EntryValue(SumPol0, e_chain0); 
-mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
-
-
-PrintPolOld(SumPol, mu)   
 
 ############ Core results Results: stationary distributions ############
 println("The relative productivity of the ABL case is: ", round(c_e0 / c_e , digits=3))
@@ -513,7 +507,7 @@ pGamPol = plot(GamPol(SumPol, 15, 21), GamPol(SumPol, 26, 21), GamPol(SumPol, 35
 # Plots.savefig(pGamPol, "GamPol.png")
 
 # Reform effects
-# include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/improve.jl")
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/improve.jl")
 reformplot = plotPolHeatmaps(SumPol, SumPol0, mu, 1)
 # Plots.savefig(reformplot, "large_reform.png")
 # Plots.savefig(reformplot, "reform.png")
@@ -525,23 +519,25 @@ zeta_R_vec = 0:1000:8000
 ZetaGamPlot(SumPolZeta, zeta_R_vec, 23, 15)
 
 ###### GENERAL EQUILIBRIUM: Finding wage given entry cost, using bisection ####
-tolerance = 0.01
-wage_0 = 1;
-phi_c =  0.33057888644219274
-zeta_Rl =  2851.230119196035
+tolerance = 1
+wage_0 = 1
+phi_c =  0.360542276
+zeta_Rl =  2753.229657
 
 SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
 c_e, f0 = EntryValue(SumPol, e_chain)
 results_baseline = sumSS(SumPol,Fmat,f0)
 c_e_baseline = c_e
 
-phi_c =  0.33057888644219274
-zeta_Rl = 900
+#zeta_Rl = 1350
+@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (1.1, 1.3), Bisection(), rtol=tolerance, verbose=true)
 
-@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (1.01, 1.04), Bisection(), rtol=tolerance, verbose=true)
+#  wage_alt = 1.017549201334813 - where zeta_Rl  = zeta_Rl/2
+#  wage_alt =  - where zeta_Rl  = zeta_Rl/10
 
-#  wage_alt = 1.0150781249999998 - where zeta_Rl  = zeta_Rl/2 - 1400
-#  wage_alt = 1.0291748046874996 - where zeta_Rl  = zeta_Rl/3 - 900
+#  wage_inf =  - where zeta_Rl  = inf
+#  wage_alt =  - perfect credit economy 
+wage_alt
 
 SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
 c_e0, f00 = EntryValue(SumPol0, e_chain0)
@@ -554,10 +550,10 @@ include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions
 include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FCmodel/FirmOptim_Ext.jl")
 
 # initital values ipc, ipdef_exo_l, ipdef_exo_s, izeta_Rl, izeta_Rs, iphi_a, iphi_c, iFcut)
-initvec = [ 28.564, 0.02633, 2759.45, 0.7597, 0.3934]
+initvec = [ 28.56, 0.02343, 2759.45, 0.75978, 0.393]
 options = Optim.Options(
     iterations = 200,
-    time_limit = 5*3600.0,
+    time_limit = 8*3600.0,
     f_tol = 0.002,
     show_trace = true,
     store_trace = true,
@@ -569,9 +565,16 @@ println(CalRes)
 
 # CFshare_calib = CalRes.minimizer
 CFrel_calib = CalRes.minimizer
-# how much the calibration helped
-ErrorFunc1(initvec)
-ErrorFunc1(CalRes.minimizer)
+
+ErrorFunc2(initvec)
+ErrorFunc2(CalRes.minimizer)
+
+# Wrap CFrel_calib into a DataFrame
+CFrel_df = DataFrame(CFcal = CFrel_calib)
+# Timestamped filename
+time_string = "ESTPARAM_$(Dates.day(now()))_$(Dates.hour(now()))_$(Dates.minute(now()))"
+# Write to Excel
+XLSX.writetable("$time_string.xlsx", sheetname = "sheet1", CFrel_df)
 
 
 
@@ -598,4 +601,15 @@ sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025
 sumSSsme(SumPol0,Fmat0,f00)
 
 sumSS(SumPol,Fmat,f0) # wage = 1
-sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025
+sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025	
+
+
+####### Finding zeta_L for a given target liquidation probability ####
+include("C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Julia codes/Functions/FindZeta.jl")
+
+tolerance = 1
+wage = 1
+phi_c =  0.360542276
+zeta_Rl =  2753.229657
+
+FindZeta(wage, phi_c, zeta_Rl)

@@ -364,7 +364,7 @@ Furthermore, if you make the either liquidation or reorganization value dependen
 Note that having zero value in reorganization can be a feature. If this was not the case, higher ex-ante liquidation probability would decrease firm value even in the absence of external finance, simply through increasing the chance of inefficient liquidation. I want to shut down this channel. \vspace{3mm} \\
 \textbf{Issue of reorganizations} \\
 The code assumes that with default, the firm decision on future values of $k$ and $b$ does not matter. This eases the computational burden, since you do not have to multiply the size of the decision matrix - the [k,b] grid - only add two lines to the bottom. One for default and one for exit. However, this is not true when firms may choose reorganization in default. In this case, they continue to the next period and they must make decisions on (k,b). \vspace{3mm} \\
-This is not a proble because reorganization happens within the period, so the frim may continue operating as if no default occured. No need to treat reorganizing firms any differently from liquidating firms and you do not need to take into account reorganizing firms when you calculate exiting firms. \vspace{3mm} \\
+This is not a proble because reorganization happens within the period, so the frim may continue operating as if no default occurred. No need to treat reorganizing firms any differently from liquidating firms and you do not need to take into account reorganizing firms when you calculate exiting firms. \vspace{3mm} \\
 \textbf{Why CF-based debt is always preferred when liquidation risk is zero} \\
 Due to the exit decision only those firms exist in the market whose continuation value is larger than the liquidation value. This means that the liquidation probability is close to zero, CF-based debt is always preferred. \\
 \newpage
@@ -388,7 +388,7 @@ $$ \begin{aligned}
 \alpha \varepsilon_i k_i^{\alpha-1}l_i^{\nu} &= \lambda_K, \\
 \nu \varepsilon_i k_i^{\alpha}l_i^{\nu-1} &= \lambda_L.
 \end{aligned} $$
-This conditon implies that for each firm, capital to labour ratio is constant $\phi$, 
+This condition implies that for each firm, capital to labour ratio is constant $\phi$, 
 $$ \frac{k_i}{l_i} = \frac{\alpha}{\nu}\frac{\lambda_L}{\lambda_K} \equiv \phi  = \frac{K}{L} $$
 Since this conditions hold for each firm it holds for aggregates too. Lets also define $\kappa = \phi^{-1}$ such that $l_i = \kappa k_i$. 
 
@@ -402,7 +402,7 @@ rearrange to $k_i$ to find the optimal the optimal resource allocation given pro
 $$ k_i =  \Big(\tfrac{\lambda}{s}\Big)^{\!\frac{1}{s-1}} \varepsilon_i^{\frac{1}{1-s}} =  C \varepsilon_i^{\frac{1}{1-s}} \qquad l_i = \kappa C \varepsilon_i^{\frac{1}{1-s}} $$
 where C is a collection of parameters. It follows from the resource constraint that: 
 $$ K=\sum_i k_i = C \sum_i \varepsilon_i^{\frac{1}{1-s}} $$
-Dividing the two equations abouve implies that the efficient allocation is: 
+Dividing the two equations above implies that the efficient allocation is: 
 $$ \frac{k_i}{K} =  \frac{ \varepsilon_i^{\frac{1}{1-s}}}{\sum_i \varepsilon_i^{\frac{1}{1-s}}}  $$
 Note that the some logic applies where there is a fixed cost of operating. The only difference that in that case only a certain subset ($I$) of firm operates. In this case that optimal allocation of capital would be: 
 $$ \frac{k_i}{K} =  \frac{ \varepsilon_i^{\frac{1}{1-s}}}{\sum_{i \in I} \varepsilon_i^{\frac{1}{1-s}}}  $$
@@ -455,27 +455,8 @@ $$ \frac{A_{\text{eff}}}{A_{\text{obs}}} = \frac{\left(\sum_i \varepsilon_i^{\fr
     \item Decomposition of the productivity growth following Kochen
 \end{itemize} \normalsize
 
-\newpage
+\textbf{You will need to recalculate the targeted small and large firms empirical moments for only 60\% for small firms. Otherwise with the 2/3 cutoff the targeted small - large moments weighed will not add up to the aggregate moments. Also need to rewrite the paper accordingly. In general, it would probably be best to recalibrate the whole model to 2010-2020 data}
 
-\section*{Elevator Pitch}
-
-\small
-\begin{itemize}
-    \item My job market paper studies how small and medium-sized firms' tendency to liquidate in default limits their ability to borrow against future cash flows (earnings).
-    \item The traditional view is that the main reason why small firms are credit-constrained is the lack of physical collateral.
-    \item This view contradicts recent evidence suggesting that most corporate debt is backed by future cash flows rather than physical assets.
-    \item I suggest that the limiting factor in small firms' access to debt is high ex-ante liquidation risk.
-    \item I build a quantitative model around this. Heterogeneous firms are subject to idiosyncratic productivity shocks which may yield default, which triggers bankruptcy resolution procedures.
-    \item Firm may be liquidated which implies exit from the market, or reorganized which allows them to continue operating but tis subject to a fixed cost.
-    \item This fixed costs reflects the observation that reorganization is a time and resource intensive process, and small firms often lack the scale to justify these expenses. 
-    \item Lender redistribute household savings to firms subject to a zero-profit condition. They may lend against assets and cash flows. Cash flow based debt is exposed to liquidation risk since liquidation terminates all future cash flows. Hence, lenders charge a higher interest rate to firms with a high liquidation probability.
-    \item As a result, asset-poor firms are simultaneously constrained by a lack of physical collateral and high liquidation risk, leading to capital misallocation, subdued firm entry and aggregate productivity losses.
-    \item To quantify the importance of this mechanism, I calibrate the model to U.S. corporations and study the effects of an exogenous decrease in reorganization costs.
-    \item I find that lowering reorganization costs significantly increases small firms' reliance on cash flow-based lending, narrows the financing gap between small and large firms, and raises aggregate productivity by promoting firm entry and improving capital allocation.
-    \item Reducing reorganization costs may seem like a purely academic exercise, but it has clear policy relevance.
-    \item It highlights how reorganization friendly bankruptcy procedures can improve financing for small and medium-sized enterprises.
-    \item The US has recently introduced the SBRA to streamline bankruptcy procedures for small businesses, and similar reforms have implemented in the EU reorganization directive. These aim to streamline the reorganization process and reduce associated costs to reduce inefficient liquidations. The SBRA is size-based the EU directive is not. 
-\end{itemize} \normalsize
 
 \newpage
 \section*{Comments}
@@ -753,7 +734,7 @@ Introduction:
     \item \textbf{(! \checkmark)} What happens to the cash flows that are produced in the current period after continuation? - \textit{For simplicity, I assume that these are simply DWL - \textbf{check if they are actually subtracted!} This is a usual assumption of the ABL literature, making the point that current earnings are not well contractible - this is more of a practical that assumption would make less sense in the case of CF-based debt. Adding or taking away these cash flows would not change affect the results much.}
     \item \textbf{(!)} The parameter $\kappa$ needs to be calibrated to some moment - \textit{Check how much it changes equilibrium results in the current model.}
     \item \textbf{(?)} What happens to indifferent firms? - \textit{This is a problem, but to a much lesser extent than in no-equilibrium default models. See the footnote on this.}
-    \item \textbf{(?)} Is the decreasing cost of reorganization a policy variable? - \textit{Better viewed as access to a better technology. However, it can be a policy variable as demonstarted by the SBRA and EU restructuring directive. Policymakers may have a significant impact on out of court restructuring as well, such as the RERE introduced in Portugal, 2018, which is a confidential, out-of-court restructuring process that allows distressed firms to negotiate debt agreements with creditors using a standardized protocol and mediator, without immediate court involvement.} 
+    \item \textbf{(?)} Is the decreasing cost of reorganization a policy variable? - \textit{Better viewed as access to a better technology. However, it can be a policy variable as demonstrated by the SBRA and EU restructuring directive. Policymakers may have a significant impact on out of court restructuring as well, such as the RERE introduced in Portugal, 2018, which is a confidential, out-of-court restructuring process that allows distressed firms to negotiate debt agreements with creditors using a standardized protocol and mediator, without immediate court involvement.} 
     \item \textbf{(?)} More entry can also be a bad thing because the household has to pay for the entry costs. - \textit{I am not sure this is true, because there is an endo entry margin. You should calculate consumption in the code and have something to say about it.}
     \item \textbf{(?)} Why is there a non-linear change in the heatmap - \textit{In the baseline calibration, some large firms end up borrowing against Assets, which then changes after the reform. Point out that it does not change the rest of their positions much, so they are close to being indifferent between the two types of debt. }
     \item How much of the change is really policy relevant?
@@ -794,18 +775,19 @@ Introduction:
     \item \textbf{(!)} Add s.t a fixed costs to the summary slide
     \item \textbf{(!)} The near zero assumption is a bit problematic in the lenders' payoff matrix, it would be nice to fill it up with empirical evidence. - \textit{Empirical evidence is about unsecured debt, there is not much on CF-based debt. Probably, there is significant heterogeneity withing CF-based debt, that I am ignoring since 'blanket liens' are very different from unsecured debt in liquidation. However, I do not want to add more complexity to the model. The point is to have a good answer to these shortcomings not really to be able to fix it in the model, there is always something missing from any model.}
     \item As it modeled, the equity holder has priority over the unsecured borrower, which is contrary to the US bankruptcy law. - \textit{Highlight the unmodeled extra creditor that seized these assets. Or highlight that this is just a simplifying assumption. The alternative would be to make whatever is not seized by the creditor a DWL, but then liquidation and reorganization would have a direct welfare effect, which I want to avoid.}
-    \item 
 \end{itemize} \normalsize
 
 \subsection*{Notes and Questions from Alberto Martin}
 \begin{itemize} \setlength\itemsep{0em}  \small
     \item \textbf{(?)} You should acknowledge that reorganizations may happen strategically so reducing reorganizations has a negative part as well. This would yield a not so one-sided view on reorganizations. -\textit{True, but in most cases the management does get replaced in the reorganization process. So the zero value in default assumption is realistic. Consistently with this, Hotchkiss et al. (2024) no evidence that the introduction of SubV in the SBRA harm creditor recoveries.}
-    \item \textbf{(?)} Confusion on how and what the bankruptcy resolution optimizes. - \textit{The key is in the accounting of the transfer the HH sends to the lender. If it would be taken into account with a negative sign that would be like maximizing the household utility (or as if the HH decided on liquidation); if it entered with a positive sign it would be like maximizing the lender's utility (or as if the lender decided on liquidation). In my case it does not take into account the transfer so it is more like just maximizing the whatever is left from the firm without any regard who seizes more of the remainder value.}
+    \item \textbf{(?)} Confusion on how and what the bankruptcy resolution optimizes. - \textit{The key is in the accounting of the transfer the HH sends to the lender. If it would be taken into account with a negative sign that would be like maximizing the household utility (or as if the HH decided on liquidation); if it entered with a positive sign it would be like maximizing the lender's utility (or as if the lender decided on liquidation). In my case, it does not take into account the transfer so it is more like just maximizing the whatever is left from the firm without any regard who seizes more of the remainder value.}
 \end{itemize} \normalsize
+
+\newpage 
 
 \subsection*{Notes and Questions from the Job Market Seminar}
 \begin{itemize} \setlength\itemsep{0em}  \small
-    \item \textbf{(! \checkmark)} Think about making it relevant for a broader audience, especially for policymakers in the EU - \textit{I have a lot of info on the EU directive and the Portugese bankruptcy reform. I could have a subchapter of the appendix in the paper, and maybe a backup slide in the presentation. Also, you can say that in the US, the Reorganization system is already fairly well developed, so for other countries the potential improvements could be larger.}
+    \item \textbf{(! \checkmark)} Think about making it relevant for a broader audience, especially for policymakers in the EU - \textit{I have a lot of info on the EU directive and the Portuguese bankruptcy reform. I could have a subchapter of the appendix in the paper, and maybe a backup slide in the presentation. Also, you can say that in the US, the Reorganization system is already fairly well developed, so for other countries the potential improvements could be larger.}
     \item \textbf{(!)} Research questions should come sooner after the introduction of the motivation - \textit{You should try to find a way to do this.}
     \item Say "build on existing models/research" instead of saying "they did not do that" (referred to the literature review slide)
     \item Do not say "I abstract from" or that "I need to cut corners" since these highlight the limitations. Say instead, "I provide a stylized description".
@@ -817,60 +799,108 @@ Introduction:
 
 \subsection*{Notes and Questions from JM Brownbag}
 \begin{itemize} \setlength\itemsep{0em}  \small
-    \item \textbf{(!)} Need a better intro. The current one is `too nerdy'. 
-    \begin{itemize}
-        \item Maybe start with the policy motivation first (Georg) or with arrow describing the mechanism (Lidia).
-        \item Would the law apply for firms under 100 million USD in assets? If not why choose this cutoff? - \textit{Originally this cutoff was intended to show that the premium for CF-based debt extends beyond SMEs. But I see how it is confusing in relation to the SBRA.}
-        \item \textbf{(!)} Try to avoid corporations vs. firms - stick to firms. 
-        \end{itemize}
-    \item \textbf{(!)} DO NOT tell people what you tried to do and failed. They are not interested. 
-    \item \textbf{(?)} Are the macroeconomic effects facts, assumptions or model predictions? 
+    \item \textbf{(!)} Try to avoid corporations vs. firms - \textbf{stick to firms}. 
+    \item \textbf{(! \checkmark)} Remake the plot on how long reorganizations take with not where one panel is not divided by the number of assets on the Y axis
+    \item \textbf{(! \checkmark)} Are the macroeconomic effects facts, assumptions or model predictions? 
     \item \textbf{(?)} Is it that high interest rates cause liquidation or liquidation cause high interest rates? - \textit{Liquidation probability is conditional on default. So interest rates probably do not have a large effects}
     \item \textbf{(?)} How large these reorganization costs are in practice and in the model after calibration  - \textit{In the model, it is probably best to compare it to mean firms size, which is 1000, implying that reorganization would cost about 2.8 years of wage payments for the average firm. Empirically there is evidence that these costs are high but \textbf{need to check this better}.}
-    \item \textbf{(!)} Does the model looks any transmission dynamics? - \textit{No, I just compare stationary equilibria before and after the reform. The problem is that I calibrate to a period where the already existed. It would be cleaner to calibrate the model to 2010-2020. This is true, but I not sure recalibrating the model is worth the effort at this point.}
-    \item Highlight the difference between exit and default better
+    \item \textbf{(?)} Does the model looks any transmission dynamics? - \textit{No, I just compare stationary equilibria before and after the reform. The problem is that I calibrate to a period where the reform already existed. It would be cleaner to calibrate the model to 2010-2020. This is true, but I not sure recalibrating the model is worth the effort at this point.}
+    \item Highlight the difference between exit and default better - \textit{Be sure you mention it when you introduce it in the model}
     \item \textbf{(?)} What is the definition of a small firms in the model and in the data? - \textit{In the data, small firms are those with less than 10 million USD in liabilities, which corresponds to 64\% of firms in the IDB. In the model, I define small firms as the bottom 64\% of firms by borrowing.}
-    \item \textbf{(!)} Color code the boxed that you talk about 
-    \item \textbf{(!)} Even with the variable costs, as long as they only depend on assets, you could get this decreasing reorganization cost relative to firms size. - \textit{Since there are no adjustment costs, capital and productivity are pretty highly correlated in the model, so there this is not true. Empirically, fixed costs are quite well established (Wang, 2022; Corbae and D'Erasmo, 2021).}
+    \item \textbf{(! \checkmark)} Color code the boxed that you talk about - \textit{Better instead of the extra step.}
+    \item \textbf{(?)} Even with the variable costs, as long as they only depend on assets, you could get this decreasing reorganization cost relative to firms size. - \textit{Since there are no adjustment costs, capital and productivity are pretty highly correlated in the model, this is not true. Empirically, fixed costs are quite well established (Wang, 2022; Corbae and D'Erasmo, 2021).}
     \item \textbf{(?)} What is the average size of firms that reorganize and liquidate in the model and in the data? - \textit{Not sure but about exact numbers, but C\&D find that reorganizing firms are significantly larger on average.}
-    \item \textbf{(?)} Firms can only have one type of debt in the model? - \textit{In Compustat, 53\% of firms have both types of debt simultaneously. My model allows for this, but firms optimally choose only one type of debt. This is a more general problem with the literature.}
-    \item \textbf{(!)} Move entry cost to the the internally calibrated parameters.
     \item \textbf{(?)} Why do you have exogenous financial distress? How would you interpret this. - \textit{Defaults that are not due to the productivity process.}
-    \item \textbf{(?)} Large firms cannot really much more on CF-based debt in the model but in reality they can - \textit{Look at the interest rate margina as well. Even if they would rely a 100 on CF-based debt, they could achive gains from accessing it cheaper.}
-    \item \textbf{(!)} Firm mass and mean firms size should be expressed as changes (add a change column to the results). 
+    \item \textbf{(?)} Large firms cannot rely much more on CF-based debt in the model but in reality they can - \textit{Look at the interest rate margin as well. Even if they would rely a 100\% on CF-based debt, they could achieve gains from accessing it cheaper.}
+    \item \textbf{(!  \checkmark)} Firm mass and mean firms size should be expressed as changes (add a change column to the results). 
     \item \textbf{(?)} Results rely on no labour supply elasticity, but what happens if labour supply is flexible. - \textit{In that case the labour supply would increase in response to the shock. Therefore wage would increase a bit less. Since the productivity gain is proportional to the wage increase, this would take away a bit from the productivity effect.}
-    \item \textbf{(?)} Does the model fit firms distribution statistics? How much bigger are large firms in the model and empirically? - \textit{I would have to check but I have my doubts.}
+    \item \textbf{(!)} Does the model fit firms distribution statistics? How much bigger are large firms in the model and empirically? - \textit{I would have to check but I have my doubts.}
     \item \textbf{(?)} Is the probability of firm default constant in the model? - \textit{The exogenous financial distress probability is constant, but endogenous default is not.}
+    \item \textbf{(!  \checkmark)} Compare your 1.75\% to comparable literature - \textit{In C\&D the reform increases measured total factor productivity (TFP) by 0.5\% and aggregate consumption by 0.9\%. - They consider a `fresh start' reform where creditors receive the firm free of debt and decide whether to continue or liquidate it, as opposed to bargaining with equity holders over partial debt repayment. These reforms are not directly comparable, but both papers find small but non-negligible effects on macro aggregates.} 
+    
+    \bigskip
 
-    \noindent \textbf{Notes after the speech.}
-    \item \textbf{(!)} Be more enthusiastic in the presentation.
-    \item \textbf{(!)} Too many words on the slides 
-    \item \textbf{(!)} Think why any of this is imporant? Big picture implications, sort of.
-    \item \textbf{(!)} Do not answer questions with `thats a good comment'.
-    \item \textbf{(!)} You say liquidation probability but that implies exogeneity. You should say that small firms tendency to liquidate in defualt or smth. 
-    \item \textbf{(!)} Silde 7, the model summary: one should be able to see more of the model mechanism and tradeoffs already.
-    \item \textbf{(!)} Define small firms better - they could be smaller firms or something else.
-    \item \textbf{(!)} Be more precise. 
-    \item \textbf{(!)} Do not need slide 3 (?)
-    \item 
+    \noindent \textbf{Notes after the presentation - General talking points}
+    \item  Be more enthusiastic in the presentation, look at the audience more
+    \item  Why should someone in family economics for example care? Keep in mind that you will not have a specialist audience
+    \item  Do not say, it not just a corporate finance paper, this should be obvious from the start
+    \item  Describe your model as ambitious, not as complicated
+    \item  DO NOT tell people what you tried to do and failed. They are not interested. 
+    \item  Do not answer questions with `thats a good comment'.
+    \item  You say liquidation probability but that implies exogeneity - \textit{The point here is that I am trying to make is that liquidation is exogenous from the POV of the lender. The lenders POV matters for pricing of debt.}
+    \item \textbf{(! \checkmark)} Sidle 7, the model summary: one should be able to see more of the model mechanism and tradeoffs already - \textit{This is not feasible, but you should be saying that let me first discuss the actors in the model, then I will consider the central trade-off}
+    \item  RQ should be improved, the link between reorganization costs and misallocation is not clear
+    \item \textbf{(! \checkmark)} You need to understand all your numbers! - \textit{This relates to fixed reorganization costs, they are 2.8 years of wage expense for the average firm - so quite large. Also caution that these costs are not just monetary, but also time costs that are hard to measure empirically.}
+    \item \textbf{(!)}  Think why any of this is important? Big picture implications could be better discussed - \textit{Use the spiel details here: I emphasize that high ex-ante liquidation risks is a distinct and relevant barrier for small firms' borrowing, which is in contrast to the traditional view on credit frictions that focuses on lack of physical collateral.}
+    
+    \bigskip
+
+    \noindent \textbf{Leo's notes}
+    \item \textbf{(! \checkmark)} Slides are overloaded; reduce words and bullet points.  
+    \item Motivation slide too academic; start with a big-picture motivation and deliver it more engagingly.  
+    \item Clarify distinction between facts, hypotheses, and mechanisms; specify the research question before macro consequences.  
+    \item Say “what I do in this paper” instead “what I do in this model”. 
+    \item Avoid referring to “the” interest rate; the model features multiple relevant rates.  
+    \item \textbf{(! \checkmark)} Simplify slides 13–15; remove excess equations and move technical derivations to the appendix. - \textit{Tried it but I use those equations later, so I would then later need to introduce them again.}
+    \item Move slide 15 to the appendix. -\textit{I believe it is necessary, since fixed costs are a key element}
+    \item \textbf{(! \checkmark)}  Show calibration targets on slide 23; merge with model fit if possible.  
+    \item Prepare firm-size statistics (assets, employment) and discuss firm-size distribution.  
+    \item \textbf{(! \checkmark)} Correct unrealistic mean employment (999); normalize labor units for interpretation.  
+    \item \textbf{(! \checkmark)} Replace “firm mass” with “number of firms” or “market size.”  
+    \item \textbf{(! \checkmark)}Clarify units on slide 31; explain what total firm measure integrates to.  
+    \item \textbf{(! \checkmark)} Slide 33 overloaded; shorten or split into two slides.
 
 \end{itemize} \normalsize
 
 
-\subsection*{Aux Notes and Questions}
+
+\subsection*{CEFER Flyout Notes and Questions}
+\begin{itemize} \setlength\itemsep{0em} \small
+    \item Confusion about fixed and variable costs of reorganization: Is the current setup simplifying too much? In many cases, it is not firm size per se that matters, but how long it takes to negotiate with creditors. 
+    \textit{It is important to highlight that reorganization costs also have a variable component, denoted by $\phi_c$, which increases with the continuation value of the firm. While reorganization costs may depend on the difficulty of reaching an agreement with creditors, debtor structures generally become more complex with firm size. I believe the $\phi_c$ parameter captures this effect sufficiently well.}
+    \item Make sure whether the EU Directive rules have really been implemented in their entirety. 
+    \textit{The confusion was that dissenting creditors can still sometimes force liquidation. Cramdown is only allowed under a court ruling, which may explain why some creditors can still force liquidation.}
+    \item The changes in debt-to-collateral do not seem very large, so how can the macro effects be so large? 
+    \textit{The policy shock affects entrants much more than incumbent firms, since entrants require substantial external financing. However, there are relatively few entrants in the economy, so the average change in debt-to-collateral is limited. Also note that the interest rate is bounded below at 4\%, so the implied change in credit spreads is larger.}
+    \item What direction would aggregate employment move if it were endogenous? It would be interesting to show that employment also increases. 
+    \textit{Since wages increase, employment would also rise if labor supply were endogenous. Note that one cannot simply compare firm mass and employment, since average firm size also changes.}
+    \item From studying only a reduction in $\theta$, are you sure you can claim that eroding lenders’ bargaining power eliminates productivity gains? This seems like a strong claim. 
+    \textit{At the current level of abstraction, this is essentially the best I can do.}
+    \item Do not calibrate the COVID period and the SBRA period. It would probably be better to calibrate the model using data from 2010–2019. 
+    \textit{This is something I plan to do later. I am fairly confident it would not change the overall message. There is a break in some variables around 2020, but long-run averages are not strongly affected.}
+    \item The SBRA was implemented about five years ago. Do you already see any effects? 
+    \textit{There is some soft evidence, shown in the backup slides, that after the SBRA small firms increased their use of CF-based debt while reducing liquidation rates. However, the COVID shock makes it very hard to disentangle these effects. I therefore would not definitively attribute these changes to the SBRA. There is also some DiD evidence that after the SBRA, new debt issuance by small firms became more tilted toward CF-based debt, but it is unclear whether this reflects the SBRA or the COVID recovery.}
+    \item Why does debt-to-collateral for large firms not change at all? It also changes little for small firms. 
+    \textit{See above. There may also be composition effects at play. In addition, large firms likely borrow at very low rates already.}
+    \item Is not failing to match the U-shape a major issue for the results?    
+    \textit{Aggregate effects operate mainly through liquidation risk, interest rates, and debt-to-collateral.  Since these key margins are matched, the main results are not sensitive to missing the U-shape. The U-shape in CF-reliance concerns financing composition, not the level or price of external finance that drives the results. It would be nice to match the U-shape, but it would require a more complex model.}
+
+\end{itemize}
+
+\subsection*{MNB Notes and Questions}
+\begin{itemize} \small
+    \item Liquidation risk: is the high liquidation probability driven mainly by the very smallest firms? -\textit{In the motivating evidence, there is some of that going on. However, for model calibration, I drop the first smaller than 100k USD of assset - because the Compustat does not cover these firms well. So the model results are not affected by this.}
+    \item Where do the fixed costs come from empirically? What types of expenses do they represent? -\textit{Cost represent administrative, legal fees and time costs. Evidence show that some portion of these is fixed but it not easy to disentangle }
+    \item Why is reducing reorganization costs to zero not equivalent to the perfect credit markets (free equity) case? This suggests that even if liquidation probability is close to zero, CF-based lenders will still not fund as much as equity holders. Relatedly, what is the fundamental difference between an equity holder and a CF-based lender? - \textit{The lender has to negotiate for the continuation value of the firm in default, and can only obtain a fraction $\theta$ of it. Therefore, even if liquidation probability is zero, the lender cannot extract the full value of the firm as an equity holder would.}
+    \item Confusion about what exactly AB-based and CF-based debt represent. -\textit{Loans and bonds as well. Debt.}
+    \item Can you compute welfare effects? What would be the welfare cost of reducing $\zeta$? How much can policy realistically reduce reorganization costs? - \textit{Computing welfare effects is planned. Problem here is that it is really not easy to say how much policy can reduce reorganization costs. The SBRA seems to be pretty efficint at cutting liquidation risk, but I suspect that achiving larger reductions would be much more costly.} 
+    \item Is the model exactly identified? - \textit{No, most parameters affect multiple moments simultaneously. }
+    \item Slow down the model description if time permits.
+\end{itemize}
+
+
+\subsection*{Recurring Notes and Questions}
 \begin{itemize} \setlength\itemsep{0em}  \small
-    \item \textbf{(?)} Why do lenders have a near-zero payoff if they hold CF-based debt, but the borrower liquidates? - \textit{Technically, the lender could take unencumbered assets, but this is not likely to be the case for most firms. In Compustat, 53\% of firms hold both type of debt simultaneously. Even, if  the creditor often cannot make sure that the firm will not take higher-priority debt later - Ivashina and Vallée (2025), argues that non-pledge covenants are frequently undermined by 	contractual loopholes. Accordingly, Bris et al. (2006) finds that in 95\% of chapter 7 cases, the unsecured lender retrieves nothing.}
-    \item \textbf{(?)} Are there any cases where the lender would prefer reorganization but the firm is liquidated - \textit{Yes, it happens a due to the fixed costs of reorganization which is not imposed on the lender.}
+    \item \textbf{(?)} Are there any cases where the lender would prefer reorganization but the firm is liquidated - \textit{Yes, it happens a due to the fixed costs of reorganization which is not imposed on the lender. If the fixed costs would be imposed on the lender, it would be the case when the lender forces liquidation even if reorganization would be socially optimal. This would be an interesting extension.}
     \item \textbf{(!)} In the paper you have to clearly differentiate between expected payments and actual payoffs are they the same maybe assume that they end up the same
-    \item \textbf{(?)} How does the firm continue after reorganization? - \textit{The firm is reorganized within the period, continues with the same productivity and cash on hand and can chose next period capital and debt as if nothing happened. The debt contract that is for the current period is washed away. This is because the household paid the lender to keep the firm running.}
-    \item \textbf{(?)} How is debt to collateral calculated in the model? - \textit{Future debt over future capital in the stationary equilibrium. Note that in the stationary equilibrium the timing of the averages does not matter. Moreover, it is not k+x because the lender seize cash on hand in case of liquidation - check in the model what happens to cash on hand after default, it should be a DWL or reallocated to households (Jermann and Quadrini, 2012)}
-    \item  \textbf{(?)} So asset based debt is always fully collateralized? - \textit{In the model, I define AB, CF debt differently how they are commonly referred to. Following Lian and Ma (2021), AB-debt is where debt is backed by liquidation value. CF-based debt is where debt is backed by future cash flows. This allows AB-debt to not be fully collateralized. This is where it is important that this distiction is different from secured and unsecured debt.}
-    \item  \textbf{(?)} In the model asset based lending and CF-based lending can exceed to value of physical collateral or the value of CF-s. In the case of AB debt this is a problem, since if the value of the debt exceeds the value of physical collateral then conventionally you would call that CF-debt. \textit{I could come up with a setup where this is not the case and asset-based debt is always paid in full, and there is no variations in the spreads of AB-debt empirically. Although this does not seem to be the case - I did not consider this as it would only be added complication although it would be more realistic. If I took this into account the estimated effect would be even stronger, since small firms, that would like to borrow in excess their of their liquidation value would be forced to borrow against CFs which is then affected by liquidation probability. I think the reasoning that I want to make this paper about liquidation probability not debt capacity is strong enough.}
-    \item \textbf{(?)} How is CF-based lending different from equity financing? - \textit{The lender does not have a claim on the firms' shares. The value of future cash flow only comes into play when the firm is under financial distress. The lenders' payoff from the debt is bounded from above, by the original value of the debt times risk-free rate. } 
-
-
+    \item \textbf{(?)} How is debt to collateral calculated in the model? - \textit{Future debt over future capital in the stationary equilibrium. Note that in the stationary equilibrium the timing of the averages does not matter. Moreover, it is not k+x because the lender seize cash on hand in case of liquidation.}
+    \item  \textbf{(?)} So asset based debt is always fully collateralized? - \textit{In the model, I define AB, CF debt following Lian and Ma (2021), AB-debt is where debt is backed by liquidation value. CF-based debt is where debt is backed by future cash flows. This definition allows AB-debt to not be fully collateralized. This is where it is important that this distiction is different from secured and unsecured debt. I could come up with a setup where AB-debt must be always fully collateralized. If I took this into account the estimated effect would be even stronger, since small firms, that would like to borrow in excess their of their liquidation value would be forced to borrow against CFs which is then affected by liquidation probability. But it would also make the algebra much messier. Also it would not reflect reality that many AB-debt have different credit spreads.}
+    \item \textbf{(?)} How is CF-based lending different from equity financing? - \textit{The lender does not have a claim on the firms' shares. The value of future cash flow only comes into play when the firm is under financial distress. The lenders' payoff from the debt is bounded from above, by the original value of the debt times risk-free rate. Finally, the lender can only seize a fraction $\theta$ of the continuation value of the firm.} 
+    \item \textbf{(?)} Firms can only have one type of debt in the model? - \textit{In Compustat, 53\% of firms have both types of debt simultaneously. My model allows for this, but firms optimally choose only one type of debt. This is a more general problem with the literature, matching this moment would be an interesting extension, but it is not necessary for studying the effects of ex-ante liquidation risk.}
+    \item How is it different from Corbae and D'Erasmo (2021)? - \textit{You can view it the following way: C\&D (2021) argue that an important determinant of lenders in-default payoffs is the way firms resolve financial distress. On the other hand, Lian and Ma (2021) argue that an important determinant of lenders in-default payoffs is the type of debt the firm has issued. My paper combines these two insights, arguing that the way firms resolve financial distress interacts with the type of debt they issue, which then has real effects on firms' borrowing and investment decisions ex-ante.}
+    \item How it is different from Milibrant, Hartman-Glaser and Mayer (2025)? - \textit{Milibrant, Hartman-Glaser and Mayer do not consider ex-ante liquidation risk as a determinant of firms access to external finance. They assume that in the case of default lenders can take over the firm and force liquidation or co-finance reorganization. I highlight that in practice lenders typically have very limited power to overturn liquidation decisions made by the firm. This creates risk for lenders if the debt is not backed by physical collateral, which drives up credit spreads for small and middle-market firms. Moreover, Milibrant, Hartman-Glaser and Mayer only focus on the dynamic contracting framework and do not consider firm dynamics or macroeconomic effects.}
+    \item Who pays for reorganization costs? - \textit{I pin it all on firms. Probably the lender also has to pay some of these costs. For the overall results, it does not matter much who pays these costs. However, the story is different. If the lender pays these costs, then the risk is that it must force the liqudation of the firms, or be dragged into a costly reorganization process. This would highlight inefficient liqudiations more. If the firm pays these costs, then the risk is that the firms liqudates when the lender would prefer reorganization. This would highlight liquidation risk more. The truth is probably somewhere in between.}
 \end{itemize} \normalsize
-
 
 
 \end{document}  
