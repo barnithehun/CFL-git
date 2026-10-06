@@ -878,7 +878,7 @@ Introduction:
 \end{itemize}
 
 \subsection*{MNB Notes and Questions}
-\begin{itemize} \small
+\begin{itemize} \setlength\itemsep{0em}  \small
     \item Liquidation risk: is the high liquidation probability driven mainly by the very smallest firms? -\textit{In the motivating evidence, there is some of that going on. However, for model calibration, I drop the first smaller than 100k USD of assset - because the Compustat does not cover these firms well. So the model results are not affected by this.}
     \item Where do the fixed costs come from empirically? What types of expenses do they represent? -\textit{Cost represent administrative, legal fees and time costs. Evidence show that some portion of these is fixed but it not easy to disentangle }
     \item Why is reducing reorganization costs to zero not equivalent to the perfect credit markets (free equity) case? This suggests that even if liquidation probability is close to zero, CF-based lenders will still not fund as much as equity holders. Relatedly, what is the fundamental difference between an equity holder and a CF-based lender? - \textit{The lender has to negotiate for the continuation value of the firm in default, and can only obtain a fraction $\theta$ of it. Therefore, even if liquidation probability is zero, the lender cannot extract the full value of the firm as an equity holder would.}
@@ -886,6 +886,15 @@ Introduction:
     \item Can you compute welfare effects? What would be the welfare cost of reducing $\zeta$? How much can policy realistically reduce reorganization costs? - \textit{Computing welfare effects is planned. Problem here is that it is really not easy to say how much policy can reduce reorganization costs. The SBRA seems to be pretty efficint at cutting liquidation risk, but I suspect that achiving larger reductions would be much more costly.} 
     \item Is the model exactly identified? - \textit{No, most parameters affect multiple moments simultaneously. }
     \item Slow down the model description if time permits.
+\end{itemize}
+
+
+\subsection*{KTKR Conference}
+\begin{itemize} \setlength\itemsep{0em}  \small
+    \item (\textbf{!}) The headline result hinges on the on the $0.75$ DRS number but this is not calibrated to anything. Should match it better to firm distribution or some other moments. 
+    \item Equity finance is missing. No strategic reorganization. 
+    \item Move the numerical solution (\textit{and some footnotes}) to the main body of the text. 
+    \item (\textbf{!}) Welfare analysis is missing. 
 \end{itemize}
 
 
@@ -900,6 +909,24 @@ Introduction:
     \item How is it different from Corbae and D'Erasmo (2021)? - \textit{You can view it the following way: C\&D (2021) argue that an important determinant of lenders in-default payoffs is the way firms resolve financial distress. On the other hand, Lian and Ma (2021) argue that an important determinant of lenders in-default payoffs is the type of debt the firm has issued. My paper combines these two insights, arguing that the way firms resolve financial distress interacts with the type of debt they issue, which then has real effects on firms' borrowing and investment decisions ex-ante.}
     \item How it is different from Milibrant, Hartman-Glaser and Mayer (2025)? - \textit{Milibrant, Hartman-Glaser and Mayer do not consider ex-ante liquidation risk as a determinant of firms access to external finance. They assume that in the case of default lenders can take over the firm and force liquidation or co-finance reorganization. I highlight that in practice lenders typically have very limited power to overturn liquidation decisions made by the firm. This creates risk for lenders if the debt is not backed by physical collateral, which drives up credit spreads for small and middle-market firms. Moreover, Milibrant, Hartman-Glaser and Mayer only focus on the dynamic contracting framework and do not consider firm dynamics or macroeconomic effects.}
     \item Who pays for reorganization costs? - \textit{I pin it all on firms. Probably the lender also has to pay some of these costs. For the overall results, it does not matter much who pays these costs. However, the story is different. If the lender pays these costs, then the risk is that it must force the liqudation of the firms, or be dragged into a costly reorganization process. This would highlight inefficient liqudiations more. If the firm pays these costs, then the risk is that the firms liqudates when the lender would prefer reorganization. This would highlight liquidation risk more. The truth is probably somewhere in between.}
+\end{itemize} \normalsize
+
+
+\newpage
+
+\section{To Do Before Submitting}
+\begin{itemize} \setlength\itemsep{0em}  \small
+    \item Calculate consumption changes and put it into a welfare discussion.
+    \item Consider thinning out footnotes and rewrite the appendix references in the main text as per AEJ publication recommendations.
+    \item Fix the decomposition exercise and the related charts
+    \item Set the SBRA decomposition into a less ambitious version that acknowledges that better takes into account the limitations of the exercise
+    \item Bring the outline of the financial intermediation process forward so readers have a chance (check how Eyno does in the DSGE model)
+    \item Recalibrate for until 2020.
+    \item Fix trickery with calibration targets, currently the main text says 60\% are classified as small firms, but actually its 64\%.
+    \item If there is none so far add a passage to the intro that highlights, what an important deviation this is from the usual view on credit market constraints.
+    \item Make the code more efficient with AI and then improve the grid. Relatedly, the 46-point capital grid and your own admission that $\Omega$ "may partly reflect the coarse grid" invite a robustness demand. Run at least one finer-grid check.
+    \item There are typos ("Univesity", "Azaridis", "Limiations", "conditon") and the affiliation and email are outdated (Goethe instead of Bank of Lithuania).    
+    \item Read up on how to make the best possible replication files
 \end{itemize} \normalsize
 
 

@@ -1,5 +1,5 @@
 ###########################################################################
-############### VER 10.2 - Optimal liquidation decision  ##################
+############### VER 11.3 - Optimal liquidation decision  ##################
 ###########################################################################
 
 using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, SparseArrays, Dates, XLSX, DataFrames, Distributions, Random, Optim, Measures
