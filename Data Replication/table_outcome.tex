@@ -1,0 +1,66 @@
+\begin{table}
+\centering
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={* p \num{< 0.1}, ** p \num{< 0.05}, *** p \num{< 0.01}},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]},
+hline{2}={1-4}{solid, black, 0.05em},
+hline{48}={1-4}{solid, black, 0.05em},
+hline{1}={1-4}{solid, black, 0.08em},
+hline{50}={1-4}{solid, black, 0.08em},
+column{2-4}={}{halign=c},
+column{1}={}{halign=l},
+}                     %% tabularray inner close
+& All contracts & CF contracts & AB contracts \\
+(Intercept) & \num{6.530}*** & \num{7.621}*** & \num{5.674}*** \\
+& (\num{0.482}) & (\num{0.685}) & (\num{0.859}) \\
+lebitda & \num{-0.168}*** & \num{-0.115}*** & \num{-0.231}*** \\
+& (\num{0.009}) & (\num{0.010}) & (\num{0.018}) \\
+lassets & \num{-0.337}*** & \num{-0.478}*** & \num{-0.213}*** \\
+& (\num{0.042}) & (\num{0.050}) & (\num{0.073}) \\
+pledge & \num{-0.434}*** & \num{0.024} & \num{-0.937}*** \\
+& (\num{0.074}) & (\num{0.090}) & (\num{0.129}) \\
+levrg & \num{1.727}*** & \num{2.030}*** & \num{1.181}*** \\
+& (\num{0.092}) & (\num{0.119}) & (\num{0.157}) \\
+lage & \num{-0.133}*** & \num{-0.159}*** & \num{-0.119}*** \\
+& (\num{0.022}) & (\num{0.026}) & (\num{0.039}) \\
+lemp & \num{-0.032}* & \num{-0.067}*** & \num{0.029} \\
+& (\num{0.017}) & (\num{0.021}) & (\num{0.028}) \\
+Nconts & \num{-0.001} & \num{0.007}*** & \num{-0.003} \\
+& (\num{0.001}) & (\num{0.001}) & (\num{0.003}) \\
+CFshare & \num{0.341}*** & \num{-0.240}*** & \num{0.706}*** \\
+& (\num{0.056}) & (\num{0.093}) & (\num{0.102}) \\
+sic\_groupConstruction & \num{0.329} & \num{1.133}** & \num{-0.244} \\
+& (\num{0.260}) & (\num{0.492}) & (\num{0.332}) \\
+sic\_groupManufacturing & \num{0.076} & \num{0.882}* & \num{-0.229} \\
+& (\num{0.238}) & (\num{0.475}) & (\num{0.282}) \\
+sic\_groupMining & \num{0.918}*** & \num{1.531}*** & \num{0.765}** \\
+& (\num{0.244}) & (\num{0.479}) & (\num{0.303}) \\
+sic\_groupRetail Trade & \num{0.507}** & \num{1.334}*** & \num{-0.044} \\
+& (\num{0.247}) & (\num{0.481}) & (\num{0.303}) \\
+sic\_groupServices & \num{-0.025} & \num{0.873}* & \num{-0.529}* \\
+& (\num{0.242}) & (\num{0.477}) & (\num{0.291}) \\
+sic\_groupTransportation \& P.U & \num{0.335} & \num{1.148}** & \num{-0.201} \\
+& (\num{0.242}) & (\num{0.477}) & (\num{0.297}) \\
+sic\_groupWholesale Trade & \num{0.522}** & \num{1.219}** & \num{0.147} \\
+& (\num{0.254}) & (\num{0.486}) & (\num{0.316}) \\
+ratingA & \num{-0.132} & \num{-0.259}*** & \num{1.146}** \\
+& (\num{0.083}) & (\num{0.074}) & (\num{0.450}) \\
+ratingA- & \num{-0.027} & \num{-0.235}*** & \num{0.595}* \\
+& (\num{0.076}) & (\num{0.067}) & (\num{0.350}) \\
+ratingB & \num{0.510}*** & \num{0.523}*** & \num{0.301} \\
+& (\num{0.068}) & (\num{0.067}) & (\num{0.320}) \\
+ratingB- & \num{0.736}*** & \num{0.847}*** & \num{0.389} \\
+& (\num{0.073}) & (\num{0.076}) & (\num{0.320}) \\
+ratingB+ & \num{0.060} & \num{-0.034} & \num{0.149} \\
+& (\num{0.066}) & (\num{0.064}) & (\num{0.323}) \\
+ratingC & \num{1.482}*** & \num{1.440}*** & \num{1.241}*** \\
+& (\num{0.078}) & (\num{0.091}) & (\num{0.322}) \\
+ratingD & \num{1.756}*** & \num{1.775}*** & \num{1.552}*** \\
+& (\num{0.126}) & (\num{0.160}) & (\num{0.351}) \\
+Num.Obs. & \num{22820} & \num{13772} & \num{9048} \\
+R2 & \num{0.304} & \num{0.418} & \num{0.184} \\
+\end{talltblr}
+\end{table}
