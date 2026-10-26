@@ -48,7 +48,7 @@
 \interfootnotelinepenalty=10000
 \setlength{\droptitle}{-3.0cm} % move title up
 
-\title{\Large{\textbf{Bankruptcy Resolution and the Macroeconomics of Cash Flow-Based Lending}}\thanks{I am thankful to Leo Kaas, Árpád Ábrahám, Alexander Ludwig, Georg Duernecker, Lidia Cruces, Nicolò Russo, Marek Ignaszak, and Johannes Gönsch for their invaluable guidance and support. I also thank Thomas Drechsel, Chen Lian, Andrea Sy, Andrea Caggese, Seho Kim, Priit Jeenas, and Victoria Vanasco for their valuable comments that helped improve this paper, as well as the audiences at the FQMG Brown Bag Seminar, the Vigo Workshop on Dynamic Macroeconomics, and the faculty members of the University of Bristol School of Economics for helpful feedback.} }
+\title{\Large{\textbf{Bankruptcy Resolution and the Macroeconomics of Cash Flow-Based Lending}}\thanks{I am thankful to Leo Kaas, Árpád Ábrahám, Alexander Ludwig, Georg Duernecker, and the entire Frankfurt Quantitative Macro Group for their invaluable guidance and support. I also thank Thomas Drechsel, Chen Lian, Andrea Sy, Andrea Caggese, Seho Kim, Priit Jeenas, and Victoria Vanasco for their valuable comments, which helped improve this paper. I am also grateful to audiences at the Vigo Workshop on Dynamic Macroeconomics, the PSE-CEPR Policy Forum, the 2026 EAYE Annual Meeting, the Ioannina Meeting on Applied Economics and Finance, and the faculty of the University of Bristol School of Economics for helpful feedback.} }
 \date{}
 
 \begin{document}
@@ -63,7 +63,7 @@
 \vspace{-1.cm}
 
 \begin{center}
-    \href{https://barnithehun.github.io/Website/\%E2\%80\%8EBSzekely_JMP_Draft.pdf}{[Click here for the latest version]}
+    \href{https://barnithehun.github.io/Website/BSzekely_JMP_Draft.pdf}{[Click here for the latest version]}
 \end{center}
 
 \begin{abstract}
@@ -137,7 +137,7 @@ Additionally, in most Chapter 11 cases, original equity holders are wiped out in
 \begin{figure}[H]  % [H] indicates placing the image here
     \centering  
     \textbf{\large Liquidation Share Across Firm Sizes \vspace{2mm} } \\  % This acts as a title
-    \includegraphics[width=0.6\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/liqprob2.png}
+    \includegraphics[width=0.85\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/liqprob2.png}
     \caption{ \small The proportion of Chapter 7 filings as a share of total bankruptcies between 2010 and 2024 across firm sizes}
     \label{chart:liqprob_emp}
 \end{figure}
@@ -172,7 +172,7 @@ Table \ref{tab:spread_table} summarizes the main determinants of credit spreads 
     \bottomrule
     \end{tabular}%
     }
-    \caption{\small The main determinants of credit spreads of new loan issuances. To retain negative values, EBITDA is log-modulus transformed using the formula: $\text{sign}(x) \log(|x|)$.  Firm-level controls include sector and credit rating dummies, the number of debt contracts held and the logarithm of the number of employees, and the share of CF-based debt relative to total debt. Robust standard errors are reported in parentheses, *** p$<$0.01, ** p$<$0.05, * p$<$0.1. The full regression table is reported in Section \ref{sec:credit spreads} of the appendix.}
+    \caption{\small The main determinants of credit spreads of new loan issuances. To retain negative values, EBITDA is log-modulus transformed using the formula: $\text{sign}(x) \log(|x|+1)$.  Firm-level controls include sector and credit rating dummies, the number of debt contracts held and the logarithm of the number of employees, and the share of CF-based debt relative to total debt. Robust standard errors are reported in parentheses, *** p$<$0.01, ** p$<$0.05, * p$<$0.1. The full regression table is reported in Section \ref{sec:credit spreads} of the appendix.}
     \label{tab:spread_table}
 
 \end{table}
@@ -905,6 +905,8 @@ $$K_e=\mu_e k_{e,i}=\mu_e C\,\varepsilon_e^{\frac{1}{1-s}} \qquad \text{and labo
 and the efficient input shares of firms with productivity state $e$ is,
 $$  \frac{K_e}{K}=\frac{N_e}{N} =\frac{\mu_e\,\varepsilon_e^{\frac{1}{1-s}}}{\sum_{j=1}^{N_\varepsilon}\mu_j\,\varepsilon_j^{\frac{1}{1-s}}}\ . $$
 
+\bigskip
+
 \subsection{Aggregation and Total Factor Productivity \label{sec: aggregation}} 
 Given the optimality condition, $ k_{e,i} = C\,\varepsilon_e^{\frac{1}{1-s}}$ and $n_{e,i}=\kappa k_{e,i}$ the efficient output of firm $i$ in productivity bracket $e$ can be written as, 
 $$ y_{e,i} = \varepsilon_e k_{e,i}^{\alpha} n_{e,i}^{\nu}  = \kappa^\nu C^s \varepsilon_{e}^{\frac{1}{1-s}} $$
@@ -922,7 +924,7 @@ K^{\alpha}N^{\nu}\left(\sum_{e=1}^{N_\varepsilon}\mu_e\,\varepsilon_e^{\tfrac{1}
 Hence, optimal allocation implies the aggregate output and TFP
 $$ Y = K^{\alpha}N^{\nu}\,A(\mu) \qquad \text{where} \quad A(\mu)=\left(\sum_{e=1}^{N_\varepsilon}\mu_e\,\varepsilon_e^{\frac{1}{1-s}}\right)^{1-s} . $$
 
-
+\bigskip
 
 \section{Numerical Model Solution \label{sec: qualitative analysis}}
 

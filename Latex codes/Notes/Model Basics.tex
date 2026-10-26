@@ -1,0 +1,305 @@
+
+% !TEX program = pdflatex
+% !TEX enableSynctex = true
+% !BIB program = bibtex
+
+
+\documentclass[12pt]{article}
+
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\addtolength{\oddsidemargin}{-.7in}
+\addtolength{\evensidemargin}{-.7in}
+\addtolength{\textwidth}{1.4in}
+\usepackage{enumerate}
+\onehalfspacing
+\usepackage{geometry} % Required for customizing page layout
+
+\usepackage{caption}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartview = FitH,
+	pdfauthor = {...},
+	pdftitle = {...},
+	pdfkeywords = {...; ...; ...; ...},
+	colorlinks = true,
+	linkcolor = blue,
+	urlcolor = blue,
+	citecolor = blue,
+	linktocpage=true
+}
+
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\begin{document}
+
+\section*{Partial equilibrium model - firms' problem}
+\subsection*{Ver 1 - PE model - Fixed q-s - 3 state variables}
+Productivity process: two-state markov chain \vspace{3mm} \\
+Labour policy: 
+\begin{equation}
+    n(k,\varepsilon_i) = \left( \dfrac{ \nu \varepsilon_i k^\alpha}{w} \right)^{\frac{1}{1-\nu}}
+\end{equation}
+Corresponding output: 
+\begin{equation}
+    y(k,\varepsilon_i) = \varepsilon_i k^{\alpha} \left( \dfrac{\nu \varepsilon_i k^\alpha}{w} \right)^{\frac{\nu}{1-\nu}}
+\end{equation}
+Corresponding profits: 
+\begin{equation}
+    \pi(k,\varepsilon_i) = (1-\nu) y(k,\varepsilon_i) - c
+\end{equation}
+External finance premium - just a parameter \vspace{2mm} \\
+Value function:
+\begin{equation}
+     V(k,b, \varepsilon_i) = \max_{k',b'}  \left( \pi(k,\varepsilon_j)+(1-\delta)k - k' +  q^s b' -b  +
+            \beta (1-P_\chi) \sum_{j=1}^{N_\varepsilon} g_{ij}  V(x',\varepsilon_j') \right)
+\end{equation}
+\noindent Here, the firm can directly choose $k'$ and $b'$, which makes coding the transition matrix easier, since you do not have to interpolate the Q-es. In the end you just have some very sparse matrices, since the model is almost deterministic. \vspace{3mm} \\
+The shortcoming is you have 3 state variables and 2 action variables, which means that it is very hard to move past a grid size of 30. 
+
+\newpage
+\setcounter{equation}{0}
+
+\subsection*{Ver 2 - Fixed Qs - cash on hand - two-state productivity}
+Productivity process: two-state markov chain \vspace{3mm} \\
+Labour policy: 
+\begin{equation}
+    n(k,\varepsilon_i) = \left( \dfrac{ \nu \varepsilon_i k^\alpha}{w} \right)^{\frac{1}{1-\nu}}
+\end{equation}
+Corresponding output: 
+\begin{equation}
+    y(k,\varepsilon_i) = \varepsilon_i k^{\alpha} \left( \dfrac{\nu \varepsilon_i k^\alpha}{w} \right)^{\frac{\nu}{1-\nu}}
+\end{equation}
+Corresponding profits: 
+\begin{equation}
+    \pi(k,\varepsilon_i) = (1-\nu) y(k,\varepsilon_i) - c
+\end{equation}
+Future cash on hand: 
+\begin{equation}
+   x' = \pi(k',\varepsilon_j')+(1-\delta)k'-b'
+\end{equation}
+External finance premium 
+\begin{equation}
+    q^s = 0.94
+\end{equation}
+Need an equity finance option. Otherwise there certain states are not associated to any feasible action. Here, I assume. This means that firms will sometimes have negative cash on hand. 
+\begin{equation}
+    d < 0 \implies d = 1.6d
+\end{equation}
+Value function:
+\begin{equation}
+     V(x,\varepsilon_i) = \max_{k',b'}  \left(x - k' +  q^s b' + 
+            \beta  (1-P_\chi)  \sum_{j=1}^{N_\varepsilon} g_{ij} V(x',\varepsilon_j') \right)
+\end{equation}
+Adding cash on hand reduces the grid to 2 state and 2 action variables. This implies that you can do a much larger grid. However, you have to interpolate resulting x that follows from choices k' and b' to the grid, since x-here is the result. This could be a problem. Generally, results are well behaved in this case, although they are very mechanical. 
+
+
+\begin{figure}[H]  % [h] indicates placing the image here
+    \centering
+    \caption{Ver2 - prod: 5, 8} \label{chart:CFLcdf}
+    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/ver2.png}
+\end{figure}
+
+
+\newpage
+\setcounter{equation}{0}
+
+\subsection*{Ver 3 - ABL Qs - cash on hand - AR(1) productivity}
+Productivity process: AR(1) process with multiple states. Below, I plot the worst the median and the best productivity state. \vspace{3mm} \\
+Labour policy: 
+\begin{equation}
+    n(k,\varepsilon_i) = \left( \dfrac{ \nu \varepsilon_i k^\alpha}{w} \right)^{\frac{1}{1-\nu}}
+\end{equation}
+Corresponding output: 
+\begin{equation}
+    y(k,\varepsilon_i) = \varepsilon_i k^{\alpha} \left( \dfrac{\nu \varepsilon_i k^\alpha}{w} \right)^{\frac{\nu}{1-\nu}}
+\end{equation}
+Corresponding profits: 
+\begin{equation}
+    \pi(k,\varepsilon_i) = (1-\nu) y(k,\varepsilon_i) - c
+\end{equation}
+Future cash on hand: 
+\begin{equation}
+   x' = \pi(k',\varepsilon_j')+(1-\delta)k'-b'
+\end{equation}
+External finance premium:
+\begin{equation}
+    q^{abl}(k',b')b' = \beta \left[ (1-P_\chi) b' + P_\chi \min\{b', \ \phi_k (1-\delta) k' \} \right]  
+\end{equation}
+Equity finance option:
+\begin{equation}
+    d < 0 \implies d = 1.6d
+\end{equation}
+Value function:
+\begin{equation}
+     V(x, \varepsilon_i) = \max_{k',b'}  \left( x - k' +  q(k',b',\varepsilon) b' +
+            \beta (1-P_\chi) \sum_{j=1}^{N_\varepsilon} g_{ij}  V(x',\varepsilon_j') \right)
+\end{equation}
+Here the two innovations are that interest rates are endogenous and the productivity process is more realistic. Results makes sense, although they display this jigsaw pattern in certain regions and calibrations. \textbf{Weirdly, the model breaks down when grids are defined logarithmically.} Firms very quickly converge to their desired level of capital, even if they are cash-poor - that is because $q$ remains relatively large even for very indebted firms.
+
+\begin{figure}[H]  % [h] indicates placing the image here
+    \centering
+    \caption{Ver3 - worst, median and best productivity states} \label{chart:CFLcdf}
+    \includegraphics[width=1\textwidth]{C:/Users/szjud/OneDrive/Asztali gép/EBCs/CFL-git/Latex codes/Plots/ver3.png}
+\end{figure}
+
+\newpage
+\setcounter{equation}{0}
+
+\subsection*{Ver 4.1 - Endogenous defaults, and better x-interpolation}
+\textbf{Same as in Ver 3:} AR(1) productivity process, Labour policy; Corresponding output; Corresponding profits; Future cash on hand; External finance premium. \vspace{3mm} \\
+Equity finance option is not necessary anymore, but I keep it with prohibitive costs. This is needed to ensure that firms have a feasible action every state.  \vspace{3mm} \\
+Default decision: the firm chooses $\sigma(x, \varepsilon)$ and the corresponding $V(x, \varepsilon)$. It chooses default if $V(x,\varepsilon) \leq 0$ and $x \leq 0$ - hence the firm can fall back to limited liability and the associated value is zero. \vspace{3mm} \\
+Exit decision (not implemented in this version): the firm can decide to quit without falling back to limited liability. The associated value is the cash on hand: $x$. The firm chooses this if $V(x, \varepsilon) \leq x$ and $x \geq 0$. \vspace{3mm} \\
+Value functions:
+\begin{equation}
+    V_0 = \max \{ V_{def}, V_{exit}, V_{cont} \}
+\end{equation}
+where $ V_{def} = 0$, $V_{exit} = x$ and $V_{cont}$ is
+\begin{equation}
+     V_{cont}(x, \varepsilon_i) = \max_{k',b'}  \left( x - k' +  q(k',b',\varepsilon) b' +
+            \beta (1-P_\chi) \sum_{j=1}^{N_\varepsilon} g_{ij}  V_0(x',\varepsilon_j') \right)
+\end{equation}
+When a firm chooses $(k',b')$ it can expect a realization of $x$, given its current $\varepsilon$. The problem is that this may not lie on the $x$ grid. In previous versions, I chose the $x_i$ on the grid that was closest to the realization of $x$. This has led to some imprecisions. Here, I make the following adjustment: if observe the two gridpoints that surround the realization of $x$. These are defined as $x_{low}$ and $x_{high}$. \vspace{3mm} \\
+Then, assume that the probability of falling on these points linearly depends on the relative distance $x_{low}$ and $x_{high}$. This yields more stable results, but computing the optimal policies becomes much slower. It is probably because the Q matrix becomes more dense when with adjustment. Also, setting up Q takes longer.
+
+\subsection*{Ver 5 - default probabilities and endogenous interest rates}
+
+In previous iterations of the model, the interest rate was calculated on the basis of an exogenous default probability. Now you have a default decision you can update the interest rates while taking into account the endogenous default probability. I follow the following algorithm: 
+\begin{enumerate}
+    \item Set $q|P_{d}(exo)$, the interest rate given the exogenous default probability. Then I calculate $V(x,\varepsilon)$ given $q|P_{d}(exo)$ - which allows me to calculate the default decision for each $(x,\varepsilon)$.
+    \item Now it is possible to calculate what is the probability that the firm lands on a state $(x,e)$ associated with default. This corresponds to endogenous default probability $P_d(endo)|(x,e,k',b')$ - where $P_d(endo)$ is an $n \times m$ matrix containing the default probabilities for each state-action pair.
+    \item Update interest rates taking into account the endogenous default probability $q|P_{d}(exo),P_{d}(endo)$ and recalculate the optimal $k',b$ and default policies
+    \item Repeat $1-3$ until the optimal policies and interest rates do not change - that is, $ (k^{i},b^{i},\chi^{i},q^{i}) = (k^{i-1},b^{i-1},\chi^{i-1},q^{i-1}) $ for each state $(x,\varepsilon)$
+\end{enumerate}
+\textbf{Exit decision}: I also implement endogenous exit decision. This is analogous to the default decision, with the difference that firms may keep their cash on hand if they quit voluntarily. Moreover, you need to change the value of defaulting to some small negative value ($-1000$ in this calibration). Otherwise firms always prefer to just pay all cash on hand as dividends and stay on the market for one more period on the off chance that they receive a large, positive productivity shock. \vspace{3mm} \\
+\textbf{Probability of default}: default can derive from an exogenous default shock or endogenous decision of the firm. The total probability of default can be described with:
+$$             P_D = 1 - [(1 - P_{exo})(1 - P_{endo})]   $$ 
+I will use this formula in the following.
+\newpage
+\setcounter{equation}{0}
+
+\subsection*{Ver 6 - Heterogeneous debt contracts}
+\textbf{Same as in Ver 5:} AR(1) productivity process, Labour policy; Corresponding output; Corresponding profits; Future cash on hand; Default decision, Exit decision \vspace{3mm}  \\
+Value functions:
+\begin{equation}
+    V_0 = \max \{ V_{def}, V_{exit}, V_{cont} \}
+\end{equation}
+where $ V_{def} = 0$, $V_{exit} = x$ and $V_{cont}$ is
+\begin{equation}
+     V_{cont}(x, \varepsilon_i) = \max_{k',b'}  \left( x - k' +  q(k',b',\varepsilon) b' +
+            \beta (1-P_\chi) \sum_{j=1}^{N_\varepsilon} g_{ij}  V_0(x',\varepsilon_j') \right)
+\end{equation}
+External finance premium: 
+\begin{equation} \label{eq:opt_tau}
+    \begin{split}
+        & q = \frac{\beta}{b'} \Big{[} (1-P_D)b' \ +  P_D \Big(\min \big\{ b', \ \  \gamma(k',b',\varepsilon) \left( (1-\tau') \phi_A (1-\delta) k' +\tau' \kappa \phi_A  (1-\delta) k' \right)  \\
+        & \quad  +  \ (1-\gamma(k',b',\varepsilon))\left((1-\tau') \phi_A (1-\delta) k' +\tau' \left( \phi_C \E_{\varepsilon'|\varepsilon}V_2 (x', \varepsilon') - \zeta \right) \right) \big\} \Big) \Big{]} 
+    \end{split}
+\end{equation}
+The firm has access to CF-based and asset-based debt contracts simultaneously. It chooses the optimal reliance on CF-backed debt, $\tau$ to maximize $q$. Therefore, the $\argmax$ of equation 3 describes optimal CFL reliance. The solution strategy is the same as in version 5, but now it is much more complex, hence it is also more prone to error.
+\begin{enumerate}
+    \item Set $q^0$, the starting interest rate at $\beta$ and calculate the value of the firm, $V(x,\varepsilon)$ and $k', b'$ and exit policies given  $q^0$. 
+    \item Calculate the following: the probability of default $P_D$, the probability of liquidation under default $\gamma$, the liquidation value; $\phi_A (1-\delta) k'$ and the reorganization value; $V_2 (x', \varepsilon') - \zeta$ given $q^0$, for each state-action pair - meaning that all these are $n \times m$ matrices.
+    \item Update interest rate, $q^1$ associated with the state-action pair, taking into account the default and liquidation probability and lenders in-default payoffs. To do this, you also need find $\tau^1$ what maximizes $q^1$ for each state-action pair. This requires an additional loop, that calculates $q^1$ given tau, and then chooses the best $\tau$.
+    \item Repeat $1-3$ until the optimal policies and interest rates do not change - that is, $ (k^{i},b^{i},\chi^{i},q^{i}) = (k^{i-1},b^{i-1},\chi^{i-1},q^{i-1}) $, or at least within some tolerance value for each state $(x,\varepsilon)$.
+\end{enumerate}
+\textbf{Issues of non-convergence}: sometimes this model version does not converge. There might be two reasons for this. First, it might be that the next $x$ with a particular debt decision falls closer to the non-default $x$ on the grid than the one associated with default. Then the lender offers the borrower a low interest rate even though the debt policy is not sustainable. In this case, the iteration is cut short. A quick solution is to increase the x-grid. A better one would be to do the same Xlow-Xhigh setup as in the Q matrix - \textbf{already implemented and it solves most convergence problems}. Second, the model practically converges, but there is oscillation between two neighboring debt levels and corresponding q-s. This can be solved with increasing the $b$ grid. Alternatively, you can just write a code that stops after this oscillation starts. Not very elegant but it is ok.
+
+
+
+\newpage
+
+\subsection*{Finding the stationary firm distribution}
+Solution approach:
+\begin{itemize} \setlength\itemsep{0em}
+    \item Set up the VFI to find optimal policies given state variables and the wage, $w$ (some models solve for the price of the final good $p$, I use price as the numeraire so I can solve for the wage)
+    \item Equilibrium wage is such that the value of entering is equal to the cost of entering: $V^e = k$ - this works only with entry decision 2. (see below)
+    \item The stationary distribution is defined as follows in matrix form 
+       $$ \mu = F(I-\text{diag}(X)) \mu + mf^0 = M\mu + mf^0 = m(I-M)^{-1}f^0 $$
+       where $\mu$ is the distribution of firms, F is the transpose of the transition matrix given productivity shocks and policies; X denotes the exit policy; $f^0$ is the vector of entrants and $m$ scales the distribution of firms
+    \item Defines the transition matrix of incumbents given production and exit policies and the productivity transition matrix $\rightarrow$ M
+    \item Takes the vector of entrants $\rightarrow f^0$; in my model entrants may exit immediately, so $f_0$ should also be premultiplied with $I-\text{diag}(X)$
+    \item The unscaled stationary distribution of firms ($\mu^{0}$) can be expressed as: 
+        $$\mu^{0}= (I-M)^{-1}f^0$$
+    \item Finds $m$ from labour market equilibrium given wage; 
+        $N(w) = m \sum_\varepsilon \sum_x \mu^{0}_{x, \varepsilon} n_{x, \varepsilon} $
+    \item Scales the stationary distribution $\mu = m\mu^0$ $\rightarrow$ $m$ is the measure of entrants but it scales the entire stationary distribution
+\end{itemize}
+ \textbf{On entry decision}: this must be figured out in order to have a stationary distribution of firms. In the Hopenhayn model the entry decision is made ex-ante, before learning about your productivity. Therefore, the value of entering is the same $V^e$ for each potential entrant. Under the free entry condition, $V^e = k$. I set up the model such that potential entrants first learn about their state and then decide to enter or not. This setup is designed to study composition of entrants under aggregate shock - as in Khan and Thomas. \vspace{3mm} \\
+I see 3 ways:
+\begin{enumerate} \setlength\itemsep{0em}
+    \item Entrants decide in full knowledge of their ($x, \varepsilon$) - KT16, Kaas22
+    \item Entrants decide ex-ante, knowing only $V^e$ - Hopenhayn, CandD
+    \item Exogenous flow of entrants - Leo's recommendation, KT13, Öztürk (2023)
+\end{enumerate}
+Number 1 and 2 can be made almost equivalent setting the timing such that entrants do not produce in the current period. In this case, potential entrants uniformly face $V^e$. Then, they receive ($x, \varepsilon$) and can decide to exit, default or continue just as the rest of the incumbents. Hence, nonviable young firms exit after one period instead of not entering at the first place. The only difference to approach n1 is that it adds to the default and exit rates, but you can use the solution approach from above! \vspace{3mm} \\
+Alternatively, you could have entry in the beginning of the period after which startups produce and decide to exit and or default. This is almost the same except that entrants take part in production. \vspace{3mm} \\
+\textbf{Entrants' problem}: \\
+There is a mass ($m$) of potential entrants that may enter after production has taken place. Entry decision is informed by the free entry condition, $\beta E[V^e(x,e)] - c_e = 0$ where $x_e$ the starting cash on hand and the $c_e$ is the setup cost. This decision takes effect at the end of the period, so firms quit without ever taking part in production. In this setting, entrants' problem is the same as incumbents', but their value is discounted by $\beta$ due to the timing. \vspace{3mm} \\
+Define the joint starting distribution of $\Gamma(x,\varepsilon)$. Since $(x,\varepsilon)$ are independent in the beginning, you can just define the two distributions separately. The common practice is to set entrant productivity distribution equal to the stationary distribution implied by the Markov Chain. Having an entry cost also justifies setting a $x_e$ distribution with negative values. In this case, the firm co-finances entry with the household. If the firm decides to exit without taking part in production the household gets $x_e - c_e$, meaning that $c_e$ is treated as a sunk cost. \vspace{3mm} \\
+An interesting approach is to set the entry cost such that the equilibrium wage is equal to 1. Then you would not have to mention the large entry cost in the calibration - although this is not necessarily a problem. For now, I am choosing x=0 for all entrants because it is clearer. However, you might want to consider the x-distribution approach later, that might yield larger effects on the intensive margin. \vspace{3mm} \\
+\textbf{In the current model}, entrants enter at the beginning with $x = 0$ (to keep things simple), they do not take part in production but may pay dividends and exit or default. These assumptions ensure that they face the same optimization as incumbents, so I do not have to solve a separate VFI for entrants. Their entry cost $c_e$ and starting cash on hand $x_e$ is financed by the household. If they exit or default immediately $x_e$ is rebated to the HH and $c_e$ is lost. This implies a stationary distribution of:
+$$ \mu = F(I-\text{diag}(X)) \mu + m(I-\text{diag}(X))f^0 $$
+
+\subsection*{Misallocation}
+
+The best reference for studying misallocation in this model framework is Kochen (2022), since his approach is very similar to mine. He also measures productivity as Y/L and he also finds that this is proportional to the wage. This means that everything that changes the wage affects aggregate productivity in the end. Moreover, he gives an easy solution to find the perfect credit equilibrium by simply making equity finance free. In my model, this amounts to getting rid of the $d \geq 0$ constraint.  \vspace{3mm} \\ 
+Decomposes the reduction in productivity to reduction in TFP and reduction in capital deepening: 
+$$ Y/L = \text{TFP}^{1/1-\alpha}(K/L)^{\alpha/1-\alpha} $$
+Taking logs, it is possible to decompose this into the effects of capital deepening and TFP. Then, he further decomposes reduction in TFP into misallocation of capital (reduction of due to dispersion of capital-output ratios) and distortions in the mass of active firms. He finds that the latter effect dominates. I could do this decomposition but it probably does not add that much to the results overall. However, it means that I should focus on the reduction of productivity rather than the misallocation of capital.
+
+\subsection*{Partial Equilibrium or General Equilibrium}
+In partial equilibrium, there is no household and no prices (goods prices, wages and interest rates) are set externally. This is not what I am doing in the model. Labour market clearing is achieved by simply adjusting the mass of firms such that $N^s = N^d$ holds, where $N^s$ is the inelastic labour supply of the household. This already assumes there is a supply of labour - even if it is inelastic. Hence in this part, the model is GE. \vspace{3mm} \\
+Moreover, wages adjust such that the entry value of the firm matches the fixed cost of entering (free entry condition). If wages are not allowed to adjust, then the cost of entering must adjust in order to keep up the free entry condition. This might still be valid, since total labour is just some number, which may give you some freedom in always normalizing wage to zero. On the other hand, my results depend on the wage changing so I might not want to consider this. \vspace{3mm} \\
+For a GE model, you need 3 markets that need to clear: labour, bond and goods. Labour market clearing is easy to achieve by setting the mass of firms. The other two are not as straightforward. If you follow Corbae and D'Erasmo you can say that goods market clearing is ensured by Walras' law (HH budget constraint holds with equality) such that consumption is whatever left from output that is not invested or lost in production (adjustment costs, fixed costs of operating, capital sales from exiting firms, bankruptcy costs etc). This is in fact not so far from my assumption that consumption passively adjusts to $C = Y - I$, but it also takes all the leftover costs that are present in the economy. The same logic is followed by Di'Nola, Kaas and Wang so taking this approach should be fine.  \vspace{3mm} \\ 
+As for bonds market clearing, you need to discuss two things: first, it can be derived from households' optimization risk free interest rate of bonds must be equal to households intertemporal marginal rate of substitution. That is $q_0 = \beta$. Moreover, market clearing on the bonds market requires that firms' discount factor corresponds to households the same marginal rate of substitution. It seems that once you have these, it is enough to assume that $B^s$ adjust passively. The way to think about it is that in this case you already have $B^d$ and prices pinned down. Moreover, your assumptions make sure that the bond market clears, so $B^d = B^s$ must hold. \vspace{3mm} \\
+Note that when setting the household and firms discount equal to each other, the covid paper argues that this firms values represent marginal contributions to the households' utility; therefore dividend payments accrued in the next period are priced by the financial discount factor of the household. This seems more intuitive, so maybe it is enough to mention this when using $\beta$ in firms' optimization.
+
+\subsection*{The productivity process (Tauchen's method)}
+Productivity follows the AR(1) process:
+$$ \ln(\varepsilon_{t+1}) = (1-\rho) \ln(\varepsilon_0) + \rho \ln(\varepsilon_t) + \sigma \zeta_\varepsilon $$
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item $\rho$ is the persistence of the shock
+    \item ln($\varepsilon_0$) is 'average productivity'm calibrated to $1$ in Kaas et al.
+    \item $\sigma$ is the standard deviation of shocks
+\end{itemize} \normalsize
+I discretize the log-process via Tauchen's method, then take the exponents of the productivity values. This process does have some mean reversion in it, due to the first term on the RHS - however not every paper have this term, KT13 for instance does not. Moreover, I found two calibration approach: in Kaas, Öztürk and Kochen it is high persistence with $\rho$ close to one and small innovations whereas with KT13 and CandD, $\rho$ is around $2/3$ and innovations are large. In these papers there is no reversion to the mean in the AR process. Overall, I am not a hundred percent sure how to best set it. 
+
+\subsection*{Calibration in General}
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item First find the data moments that you want to match - must be reproducible in the data and in the model
+    \item Then find the parameters that affect these moments the most without affecting other moments too much - you must have at least as many moments to match as the number of parameters (otherwise there are infinite solutions)
+    \item Then, set a function that transforms the deviation of model values from their targets into a single value - sum of percentage deviations seem perfect
+    \item Take the entire model as a function that takes the parameter values and produces the target values into the loss value defined by the function above. 
+    \item Finally, send it into a solver. `Optim' package is good, you can use Nelder-Mead algorithm that requires no differentiation or LBFGS which differentiates which makes it faster but less robust.
+    \item Try to keep the model solution time at a few minutes to make the calibration run in time. 
+\end{itemize} \normalsize
+
+
+\newpage
+
+\subsection*{Interpretation of model results}
+\textbf{Entry on the extensive margin.} I study if CF-based borrowing affects the extensive entry margin for firms. I find that there are no significant differences between the ABL and the CFL case - this somewhat contradicts preliminary runs. However, this is not such a big shortcoming, with the current calibration productive firms still enter with around -20000 of cash on hand. There is no realistic way to justify this sort of cash on hand upon entry. \vspace{3mm} \\
+\textbf{Comparing ABL and CFL case.} I extend the calibrated model version where firms only have access to ABL debt (ABL-case), to the model where there may choose either (CFL-case). Sanity check: the CFL case where the cost of CFL is prohibitive is equivalent to the ABL case. The differences are the following: 
+\begin{itemize}\setlength\itemsep{0em} \small
+    \item When firms do not have access to CFL debt, they often hold more capital. This can occasionally be seen on the long-run. Firms hold more capital after they have reached their optimal size when there is no CFL lending available. This is even more pronounced when firms enter the market with negative cash on hand. In this case, they can pay their previous debts only if they buy a lot of next periods' capital, which gives them access to a lot of debt.
+    \item The main difference between ABL and CFL cases, is that in the latter case the most productive firms have a better access to external finance, which means that they rarely borrow for a $q$ much different from $\beta$. This allows them to pay higher dividends and realize higher values. However, this does not always realize in higher capital or debt - this may be partly explained by the incentive to over-borrow in the ABL case, but its also possible that the grid is not fine enough. Later, in firms' life-span these differences evaporate as firms become unconstrained.
+    \item Large recovery rates for banks also implies that firms can run a bigger chance of default without increasing the external finance premium too much.
+    \item The largest effect could be through the change of values, with changes the entry decision and affects wages. These effects are probably not huge but still considerable. If you want to increase the effect of CFL lending on the stationary equilibrium, consider calibrations that change the value of entrants.
+\end{itemize} \normalsize
+\textbf{Dynamic Simulations} 
+I take an entrant with a certain productivity and simulate their path given Fmat - the transition matrix of incumbent firms. Then, I repeat this simulation a large number of times and take averages - these show the average path of a firm that enters at a given productivity. The path of x, k, b, y, d and v  are intuitive, the reason for the decline at large productivities is a results of the mean-reversion of the AR process. \vspace{3mm} \\
+The issue is with comparisons: I compare firm dynamics when there is access to CF-based borrowing and when there is none. I find that firms that are not the highest productivity state (but still have access of CF-based borrowing) are smaller (smaller production, capital and value). The reason behind could be that I assume a fixed wage in the process, which implies that the entry cost is changing. Meaning, that I do not run the model on the same parameter values. This shows on the steady state values.  When there is access to CFL, firms are on average smaller and produce less but hold more debt. \textit{Maybe comparing them when entry cost is fixed and wages are different would be a better idea - but even then you could not control for changes in average firms sizes.} 
+
+
+
+\end{document}  

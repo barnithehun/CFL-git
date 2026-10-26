@@ -373,9 +373,6 @@ function FirmOptim(wage, zeta_Rl, shift, target_flag)
                 # adjusting the Pi_reo to the possibility of exo. default shock
                 Pi_reo = Pi_reo * (1-pdef_exo)
 
-                # updating Gamma: probability of liquidation either through endogenous or exogenous
-                # gam = (gam*pdef_exo + pdef_endo - ( gam*pdef_exo * pdef_endo)) / pdef
-
                 # q and tau
                 q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
 
