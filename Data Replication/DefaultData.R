@@ -2,7 +2,7 @@
 # source: https://www.fjc.gov/research/idb
 #     https://www.fjc.gov/research/idb/bankruptcy-cases-filed-terminated-and-pending-fy-2008-present
 # INPUTS: raw FJC IDB snapshots in R/IDB dataset/ (DB10-DB25 .RDS) - read only
-# OUTPUTS: idb_cases.RDS - cleaned bankruptcy cases, one row per case (used by liqprob.R, liqprob_specsearch.R and Exper.R)
+# OUTPUTS: idb_cases.RDS - cleaned bankruptcy cases, one row per case (used by liqprob.R and liqprob_specsearch.R)
 #          Liqprob_OT.png - share of Ch.7 filings over time by liabilities (written to the paper's Plots folder)
 #
 # Structure:
@@ -136,7 +136,7 @@ size_labels <- setNames(size_bins$label, as.character(size_bins$value))
 # EASST gets its labels (ELBLTS stays in letters)
 master <- master %>% mutate(EASST = size_bins$label[match(EASST, size_bins$code)])
 
-## Final dataset: one row per case (last snapshot) - used in sections 3 and 4, saved for liqprob.R, liqprob_specsearch.R and Exper.R
+## Final dataset: one row per case (last snapshot) - used in sections 3 and 4, saved for liqprob.R and liqprob_specsearch.R
 # type_convert() gives the same column types as the old write.csv / read_csv round trip
 idb_cases <- master %>% filter(last_obs == 1) %>% type_convert()
 
