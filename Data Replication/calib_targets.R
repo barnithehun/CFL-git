@@ -51,12 +51,12 @@ rate_scheme      <- "new"    # "new": data_cleaning.R - weighted.mean(), contrac
 size_var         <- "assets" # firm size: "assets" - Compustat total assets (atq)    <-> IDB estimated assets (EASST)
                              #            "ltq"    - Compustat total liabilities (ltq) <-> IDB estimated liabilities (ELBLTS)
                              #            "value"  - CapIQ total debt                  <-> IDB estimated liabilities (ELBLTS)
-cutoff_usd       <- 1e8      # small = IDB size bin up to the cutoff (USD); the cutoff has to be an upper bound of an IDB bin:
+cutoff_usd       <- 1e10      # small = IDB size bin up to the cutoff (USD); the cutoff has to be an upper bound of an IDB bin:
                              #   5e4  ($0 to $50k)       1e5  ($50k to $100k)    5e5  ($100k to $500k)   1e6  ($500k to $1m)
                              #   1e7  ($1 to $10m)       5e7  ($10 to $50m)      1e8  ($50 to $100m)     5e8  ($100 to $500m)
                              #   1e9  ($500 to $1000m)   5e9  ($1b + (pre 2015)) 1e10 ($1-$10b)          5e10 ($10- $50b)
 
-micro_usd        <- 1e6      # micro firms (size up to micro_usd) are dropped in Compustat-CapIQ, IDB and SOI; 0 = keep them
+micro_usd        <- 1e8      # micro firms (size up to micro_usd) are dropped in Compustat-CapIQ, IDB and SOI; 0 = keep them
                              # SOI: 0, 5e5 or 1e6 (smallest SOI class: $1 under $500k); IDB: 0 or an IDB bin bound
 
 # Weights
@@ -74,7 +74,7 @@ stopifnot(cutoff_usd %in% idb_bins, micro_usd %in% c(0, idb_bins), micro_usd < c
           rate_scheme %in% c("new", "old"),
           weight_source %in% c("SOI", "IDB"),
           nonlead %in% c("include", "exclude"))
-if (weight_source == "SOI") stopifnot(size_var == "assets", cutoff_usd %in% c(1e6, 1e7, 5e7, 1e8, 5e8), micro_usd %in% c(0, 5e5, 1e6))
+if (weight_source == "SOI") stopifnot(size_var == "assets", cutoff_usd %in% idb_bins, micro_usd %in% idb_bins)
 
 tic("calib_targets.R")
 

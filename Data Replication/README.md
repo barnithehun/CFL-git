@@ -24,8 +24,6 @@ Run them in this order. `results.R` is an analysis script and comes last.
 | `calib_targets.R` | Computes the small- and large-firm moments and the weighted calibration targets | None saved; the tables are printed to the console. These are the targets for step 3 in `Julia codes/Model Replication/` |
 | `results.R` | Summary statistics, credit-spread regressions and firm-level results | `spreads.png`, `spreads_age.png`, `mixplot.png`; `CFshare_firms.png` (saved to `Latex codes/Plots/`) |
 
-`liqprob_report.md` is a report on predicted liquidation probabilities and spreads, not a guide to this folder. The scripts it cites, `liqprob.R` and `liqprob_specsearch.R`, are not in this folder.
-
 ## Requirements
 
 - **R packages:** tidyverse, tictoc, lubridate, RPostgres, RPostgreSQL, readxl, fixest, estimatr, modelsummary.
