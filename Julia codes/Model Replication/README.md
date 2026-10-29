@@ -30,14 +30,17 @@ Pkg.instantiate()
 
 `Baseline.jl` is meant to be run block by block (for example with Shift+Enter in VS Code). Its first lines `cd` into this folder, so includes load the copies in `Functions/` and outputs are saved here.
 
-**Memory:** `FirmOptim` builds a dense transition array `Q` of size n × m × n, with n = 1,059 states and m = 2,118 actions at the 46/23/46/46 grid. That is about 19 GB of RAM.
+**Memory:** `FirmOptim` builds a dense transition array `Q` of size n × m × n, with n = 1,059 states and m = 2,118 actions at the 46/23/46/46 grid. That is about 19 GB of RAM. `Abaseline.jl` avoids it and takes about 22 s per `FirmOptim` at the full grid.
 
 ## What is in this folder
 
 | File | Origin | Changes |
 |---|---|---|
 | `Baseline.jl` | `FinalVers/Baseline.jl` at commit `6bd4edb` | Includes point to `Functions/` here, and a `cd(@__DIR__)` line was added |
+| `Abaseline.jl` | Copy of `Baseline.jl` | The faster working version (option A). Only `FirmOptim` changes, in original lines 107–380, plus helper functions placed just before it. `FirmOptim` stores transition tables that depend on e only, in place of the dense `Q`. It solves the DP with `PFI_solve`, which follows the steps of QuantEcon's PFI, and runs the q update once per (e, a) pair. Everything after `FirmOptim` is unchanged |
 | `Functions/*.jl`, `Functions/FCmodel/*.jl` | Every file that `Baseline.jl` includes | None |
+
+On 2026-10-28, `Abaseline.jl` reproduced `Baseline.jl` bit for bit at k = b = 14, 20 and 30, for both the baseline and the reform. The comparison covered `SumPol`, `Fmat`, `c_e`, `sumSS` and `sumSSsme`. `Baseline.jl` cannot run at the full grid on a machine with about 16 GB of free RAM. There, `Abaseline.jl` reproduces the paper's untargeted small/large table and c_e = 654.3.
 
 `Functions/PrintPolNew.jl` and `Functions/FCmodel/UpdateLoop.jl` were not copied because nothing uses them.
 
