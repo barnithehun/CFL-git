@@ -21,7 +21,7 @@ Run them in this order. `results.R` is an analysis script and comes last.
 | `data_cleaning.R` | Cleans and links Compustat and Capital IQ (sections 1–7) | `comps.RDS`, `capiq.RDS`, `dlevel_cleaned.RDS`, `flevel.RDS`, `comps_fjc.RDS`, `flevel_full.RDS`, `dlevel_full.RDS` |
 | `DefaultData.R` | Builds business bankruptcy cases from the FJC IDB | `idb_cases.RDS`; `liqprob2.png` and `Liqprob_OT.png` (saved to `Latex codes/Plots/`) |
 | `firm_weights.R` | Counts US corporations by asset size from IRS SOI, downloading files into `soi_raw/` if they are missing | `soi_weights.RDS` |
-| `calib_targets.R` | Computes the small- and large-firm moments and the weighted calibration targets | None saved; the tables are printed to the console. These are the targets for step 3 in `Julia codes/Model Replication/` |
+| `calib_targets.R` | Computes the small- and large-firm moments and the weighted calibration targets. The weights come from the SOI, the IDB or Compustat-CapIQ (`weight_source`); with Compustat-CapIQ only the liquidation probability is reweighted, by post-stratifying IDB cases to the Compustat-CapIQ size distribution | None saved; the tables are printed to the console. These are the targets for step 3 in `Julia codes/Model Replication/` |
 | `results.R` | Summary statistics, credit-spread regressions and firm-level results | `spreads.png`, `spreads_age.png`, `mixplot.png`; `CFshare_firms.png` (saved to `Latex codes/Plots/`) |
 
 ## Requirements

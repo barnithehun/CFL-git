@@ -2,8 +2,10 @@
 # Small firms are underrepresented in Compustat-CapIQ. The moments are calculated separately for small and large firms
 # (Compustat-CapIQ; liquidation probability from the IDB) and mapped onto a firm size distribution:
 #     target = w * small + (1 - w) * large,    w = share of small firms among non-micro firms
-# w comes from the US population of corporations (SOI, firm_weights.R) or from the IDB. CF-based to total debt is not
-# weighted: it is the aggregate CF-based debt over all debt in the sample.
+# w comes from the US population of corporations (SOI, firm_weights.R), from the IDB, or from Compustat-CapIQ itself.
+# With Compustat weights the firm universe is the Compustat-CapIQ sample: the targets are its sample averages, and only the
+# liquidation probability is reweighted - IDB cases are post-stratified to the Compustat-CapIQ size distribution (section 5).
+# CF-based to total debt is not weighted: it is the aggregate CF-based debt over all debt in the sample.
 #
 # INPUTS (all in CFL-git/Data Replication/):
 #   dlevel_cleaned.RDS - contract level data before the firm level filters (data_cleaning.R, section 3)
@@ -48,21 +50,23 @@ rate_scheme      <- "new"    # "new": data_cleaning.R - weighted.mean(), contrac
                              #        contracts without a rate stay in the denominator, which gives lower rates
 
 # Small and large firms
-size_var         <- "assets" # firm size: "assets" - Compustat total assets (atq)    <-> IDB estimated assets (EASST)
+size_var         <- "value" # firm size: "assets" - Compustat total assets (atq)    <-> IDB estimated assets (EASST)
                              #            "ltq"    - Compustat total liabilities (ltq) <-> IDB estimated liabilities (ELBLTS)
                              #            "value"  - CapIQ total debt                  <-> IDB estimated liabilities (ELBLTS)
-cutoff_usd       <- 1e10      # small = IDB size bin up to the cutoff (USD); the cutoff has to be an upper bound of an IDB bin:
+cutoff_usd       <- 1e8      # small = IDB size bin up to the cutoff (USD); the cutoff has to be an upper bound of an IDB bin:
                              #   5e4  ($0 to $50k)       1e5  ($50k to $100k)    5e5  ($100k to $500k)   1e6  ($500k to $1m)
                              #   1e7  ($1 to $10m)       5e7  ($10 to $50m)      1e8  ($50 to $100m)     5e8  ($100 to $500m)
                              #   1e9  ($500 to $1000m)   5e9  ($1b + (pre 2015)) 1e10 ($1-$10b)          5e10 ($10- $50b)
 
-micro_usd        <- 1e8      # micro firms (size up to micro_usd) are dropped in Compustat-CapIQ, IDB and SOI; 0 = keep them
+micro_usd        <- 1e5      # micro firms (size up to micro_usd) are dropped in Compustat-CapIQ, IDB and SOI; 0 = keep them
                              # SOI: 0, 5e5 or 1e6 (smallest SOI class: $1 under $500k); IDB: 0 or an IDB bin bound
 
 # Weights
-weight_source    <- "SOI"    # "SOI": US corporations (firm_weights.R) - needs size_var = "assets" and a cutoff that is also an
+weight_source    <- "Compustat"    # "SOI": US corporations (firm_weights.R) - needs size_var = "assets" and a cutoff that is also an
                              #        SOI class bound: 1e6, 1e7, 5e7, 1e8, 5e8
                              # "IDB": share of small cases in the IDB
+                             # "Compustat": share of small Compustat-CapIQ firm-quarters; all targets are Compustat-CapIQ
+                             #        averages, the IDB liquidation probability is post-stratified to its size distribution
 
 # IDB sample
 nonlead          <- "exclude"   # "include" / "exclude": cases that are members of a joint or consolidated filing
@@ -72,9 +76,9 @@ idb_bins <- c(5e4, 1e5, 5e5, 1e6, 1e7, 5e7, 1e8, 5e8, 1e9, 5e9, 1e10, 5e10)
 stopifnot(cutoff_usd %in% idb_bins, micro_usd %in% c(0, idb_bins), micro_usd < cutoff_usd,
           size_var %in% c("assets", "ltq", "value"),
           rate_scheme %in% c("new", "old"),
-          weight_source %in% c("SOI", "IDB"),
+          weight_source %in% c("SOI", "IDB", "Compustat"),
           nonlead %in% c("include", "exclude"))
-if (weight_source == "SOI") stopifnot(size_var == "assets", cutoff_usd %in% idb_bins, micro_usd %in% idb_bins)
+if (weight_source == "SOI") stopifnot(size_var == "assets", cutoff_usd %in% c(1e6, 1e7, 5e7, 1e8, 5e8), micro_usd %in% c(0, 1e5, 5e5, 1e6, 1e7, 5e7, 1e8))
 
 tic("calib_targets.R")
 
@@ -267,7 +271,34 @@ shares <- tibble(
 print(shares)
 
 # weight of small firms
-w <- if (weight_source == "SOI") last(shares$small) else mean(idb$small)
+w <- switch(weight_source, SOI = last(shares$small), IDB = mean(idb$small), Compustat = mean(flevel$small))
+
+# Compustat weights: the IDB liquidation probability is post-stratified to the Compustat-CapIQ size distribution.
+# Cells = IDB size bin x small; the liquidation share of each cell in the IDB is weighted by the cell's share of
+# Compustat-CapIQ firm-quarters. All bins above $1bn form one cell: before 2015 the top IDB bin is "$1b +" (5e9),
+# later it is split into $1-10b (1e10) and $10-50b (5e10).
+if (weight_source == "Compustat") {
+  idb_bin <- function(size_usd) {   # IDB bin (its upper bound, USD) of a size in USD; above $1bn: Inf
+    bin <- idb_bins[findInterval(size_usd, idb_bins, left.open = TRUE) + 1]
+    ifelse(size_usd > 1e9, Inf, bin)
+  }
+  cells <- full_join(
+    flevel %>% mutate(bin = idb_bin(size * 1e6)) %>% count(bin, small, name = "n_comps"),
+    idb %>% mutate(bin = idb_bin(size)) %>% group_by(bin, small) %>%
+      summarise(n_idb = n(), liq = mean(chapter == 7), .groups = "drop"),
+    by = c("bin", "small")) %>%
+    mutate(across(c(n_comps, n_idb), ~ replace_na(.x, 0L))) %>% arrange(bin)
+  if (any(cells$n_comps > 0 & cells$n_idb == 0)) warning("Compustat-CapIQ size bins without IDB cases are left out of the reweighting")
+
+  # post-stratified liquidation probability of small (s = 1) or large (s = 0) firms
+  liq_ps <- function(s) with(filter(cells, small == s, n_comps > 0, n_idb > 0), sum(n_comps * liq) / sum(n_comps))
+
+  cat("
+Compustat weights - IDB liquidation probability by size bin (upper bound, USD) and its Compustat-CapIQ weight:
+")
+  print(cells %>% transmute(bin_upper_usd = format(bin, big.mark = ",", scientific = FALSE), small, n_idb, liq = round(liq, 3),
+                            sh_idb = round(n_idb / sum(n_idb), 3), sh_comps = round(n_comps / sum(n_comps), 3)), n = Inf)
+}
 
 # Table 2: calibration targets for small and large firms and their weighted average
 moments <- function(f, d) {
@@ -285,6 +316,15 @@ targets <- moments(filter(flevel, small == 1), filter(idb, small == 1)) %>% rena
   mutate(weighted = w * small + (1 - w) * large) %>%
   left_join(moments(flevel, idb) %>% rename(unweighted = value), by = "moment") %>%   # Compustat-CapIQ (IDB) sample averages
   mutate(weighted = ifelse(moment == "CF-based to total debt", unweighted, weighted))   # aggregate ratio, not weighted
+
+# Compustat weights: the targets are the Compustat-CapIQ sample averages; only the liquidation probability is reweighted.
+# Its small and large values are post-stratified within each group, so that weighted = w * small + (1 - w) * large
+if (weight_source == "Compustat") {
+  targets <- targets %>%
+    mutate(small    = ifelse(moment == "Liquidation prob.", liq_ps(1), small),
+           large    = ifelse(moment == "Liquidation prob.", liq_ps(0), large),
+           weighted = ifelse(moment == "Liquidation prob.", w * small + (1 - w) * large, unweighted))
+}
 
 cat("\n", weight_source, "weight of small firms: w =", round(w, 3),
     " \n Comps-CapIQ share of small firms:", round(mean(flevel$small), 3), "(firm-quarters)\n")
