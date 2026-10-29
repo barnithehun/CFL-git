@@ -30,17 +30,19 @@ Pkg.instantiate()
 
 `Baseline.jl` is meant to be run block by block (for example with Shift+Enter in VS Code). Its first lines `cd` into this folder, so includes load the copies in `Functions/` and outputs are saved here.
 
-**Memory:** `FirmOptim` builds a dense transition array `Q` of size n × m × n, with n = 1,059 states and m = 2,118 actions at the 46/23/46/46 grid. That is about 19 GB of RAM. `Abaseline.jl` avoids it and takes about 22 s per `FirmOptim` at the full grid.
+**Memory:** `FirmOptim` builds a dense transition array `Q` of size n × m × n, with n = 1,059 states and m = 2,118 actions at the 46/23/46/46 grid. That is about 19 GB of RAM. `Abaseline.jl` avoids it and takes about 1.7 s per `FirmOptim` at the full grid.
 
 ## What is in this folder
 
 | File | Origin | Changes |
 |---|---|---|
 | `Baseline.jl` | `FinalVers/Baseline.jl` at commit `6bd4edb` | Includes point to `Functions/` here, and a `cd(@__DIR__)` line was added |
-| `Abaseline.jl` | Copy of `Baseline.jl` | The faster working version (option A). Only `FirmOptim` changes, in original lines 107–380, plus helper functions placed just before it. `FirmOptim` stores transition tables that depend on e only, in place of the dense `Q`. It solves the DP with `PFI_solve`, which follows the steps of QuantEcon's PFI, and runs the q update once per (e, a) pair. Everything after `FirmOptim` is unchanged |
+| `Abaseline.jl` | Copy of `Baseline.jl` | The faster working version (option A). Only `FirmOptim` changes, in original lines 107–380, plus helper functions placed just before it. `FirmOptim` stores transition tables that depend on e only, in place of the dense `Q`. It solves the DP with `PFI_solve`, which follows the steps of QuantEcon's PFI, and runs the q update once per (e, a) pair. `PFI_solve` starts from the previous q iteration's values (warm start), so each solve needs fewer policy iterations. The q loop stops once k', b' and default are unchanged and q moved by at most 1e-10 (`q_tol`), instead of waiting for an exact repeat. `Q_sigma_mat` returns a sparse matrix, so the policy evaluation in `PFI_solve` uses a sparse solve. Everything after `FirmOptim` is unchanged |
 | `Functions/*.jl`, `Functions/FCmodel/*.jl` | Every file that `Baseline.jl` includes | None |
 
 On 2026-10-28, `Abaseline.jl` reproduced `Baseline.jl` bit for bit at k = b = 14, 20 and 30, for both the baseline and the reform. The comparison covered `SumPol`, `Fmat`, `c_e`, `sumSS` and `sumSSsme`. `Baseline.jl` cannot run at the full grid on a machine with about 16 GB of free RAM. There, `Abaseline.jl` reproduces the paper's untargeted small/large table and c_e = 654.3.
+
+On 2026-10-29, the warm start was checked against the earlier `Abaseline.jl` results at the full grid. `SumPol`, `Fmat`, `c_e`, `sumSS` and `sumSSsme` were bit-identical for the baseline and the reform, and `FirmOptim` went from 5.8 s to 3.3 s per call. The tolerance stop cut the q loop from 15 to 10 iterations and the time to 2.3 s. Policies, `Fmat`, `sumSS` and `sumSSsme` stayed bit-identical; q, values and `c_e` moved by at most 1e-12. Sparse policy evaluation then cut the time to 1.7 s, with the same differences from the reference.
 
 `Functions/PrintPolNew.jl` and `Functions/FCmodel/UpdateLoop.jl` were not copied because nothing uses them.
 

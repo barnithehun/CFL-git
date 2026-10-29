@@ -106,30 +106,31 @@ end
 # Q_sigma_mat builds the transition matrix under the current policy sigma:
 # Q_sigma[s, s'] = probability of moving from state s to state s' next period when the firm in state s takes action sigma(s)
 # Same as in the original only now the transition matrix is built from the compact Qtab instead of the dense Q.
+# AI updateded it for sparse matrix construction, which is more efficient for large state spaces.
 function Q_sigma_mat(Qtab, sigma)
     n = length(sigma)
     x_size, e_size = Qtab.x_size, Qtab.e_size
-    Q_sigma = zeros(n, n)
+    rows = Int[]; cols = Int[]; probs = Float64[]    # one entry per nonzero Q_sigma[s, s']
     for s_i in 1:n
         a_i = sigma[s_i]
         if s_i == n || !Qtab.reg_a[a_i]
-            Q_sigma[s_i, n] = 1
+            push!(rows, s_i); push!(cols, n); push!(probs, 1.0)
         else
             pdef_exo = Qtab.Pdef_a[a_i]
-            Q_sigma[s_i, n] = pdef_exo
+            push!(rows, s_i); push!(cols, n); push!(probs, pdef_exo)
             for next_e_i in 1:e_size
                 base = (next_e_i - 1) * x_size
                 p_trans = Qtab.e_ptrans[Qtab.e_of_s[s_i], next_e_i] * (1 - pdef_exo)
                 close_weight = Qtab.close_weight_ea[next_e_i, a_i]
-                Q_sigma[s_i, Qtab.x_close_ea[next_e_i, a_i] + base] = p_trans * close_weight
+                push!(rows, s_i); push!(cols, Qtab.x_close_ea[next_e_i, a_i] + base); push!(probs, p_trans * close_weight)
                 x_far = Qtab.x_far_ea[next_e_i, a_i]
                 if x_far != 0
-                    Q_sigma[s_i, x_far + base] = p_trans * (1 - close_weight)
+                    push!(rows, s_i); push!(cols, x_far + base); push!(probs, p_trans * (1 - close_weight))
                 end
             end
         end
     end
-    return Q_sigma
+    return sparse(rows, cols, probs, n, n)
 end
 
 # bellman!: one policy-improvement step.
@@ -157,13 +158,14 @@ end
 #   Evaluate: v = (I - beta*Q_sigma) \ R_sigma, the value of following sigma forever
 #   Improve:  sigma = argmax_a R + beta*E[v'], via bellman!/Qv!
 #   Repeat until sigma no longer changes.
+#   v_init: starting values. FirmOptim passes the previous q iteration's values (warm start); the default is QuantEcon's v(s) = max_a R(s,a).
 # Same steps as QuantEcon.solve(DiscreteDP(R, Q, beta), PFI) in QuantEcon 0.19.0
-function PFI_solve(R, Qtab, beta; max_iter = 250)
+function PFI_solve(R, Qtab, beta; v_init = nothing, max_iter = 250)
     n, m = size(R)
     vals = similar(R)
 
-    # initial value v(s) = max_a R(s,a) and its greedy policy
-    v = vec(maximum(R, dims = 2))
+    # initial value (v_init, or v(s) = max_a R(s,a)) and its greedy policy
+    v = v_init === nothing ? vec(maximum(R, dims = 2)) : v_init
     Tv = similar(v)
     sigma = zeros(Int, n)
     bellman!(vals, Tv, sigma, R, Qtab, v, beta)
@@ -258,7 +260,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     # From the default state, and after the default or exit action, the next state is default with probability 1
     e_of_s = s_i_vals[:, 2]                                    # productivity index of each state
     reg_a = (a_i_vals[:, 3] .== 0) .& (a_i_vals[:, 4] .== 0)   # actions that are neither default nor exit
-    Pdef_a = [a_vals[a_i, 1] >= Fcut ? pdef_exo_l : pdef_exo_s for a_i in 1:m]
+    Pdef_a = [next_k >= Fcut ? pdef_exo_l : pdef_exo_s for next_k in a_vals[:, 1]]   # loop over the column, so the comprehension does not capture a_vals (which would box it)
     x_close_ea = zeros(Int, e_size, m)
     x_far_ea = zeros(Int, e_size, m)      # stays 0 if x' is off the grid, then all weight is on x_close
     close_weight_ea = ones(e_size, m)
@@ -300,9 +302,12 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     Pi_reo_ea::Array{Float64, 2} = zeros(e_size, m)
     tau_ea::Array{Float64, 2} = zeros(e_size, m)
     iter::Int = 0
+    Values_prev = nothing   # values from the previous q iteration, the starting point for PFI_solve
+    q_tol = 1e-10           # stop when k', b', default are unchanged and q moved by at most q_tol
     
     ############### 
-    while !isequal(kbexq_old,kbexq_new)
+    while !(kbexq_old[:, 1:3] == kbexq_new[:, 1:3] &&
+            maximum(abs.(kbexq_new[:, 4] .- kbexq_old[:, 4])) <= q_tol)
 
         iter += 1
         if iter >= 25
@@ -344,10 +349,11 @@ function FirmOptim(wage, phi_c, zeta_Rl)
             end
         end
 
-        results = PFI_solve(R, Qtab, discount)
+        results = PFI_solve(R, Qtab, discount; v_init = Values_prev)
 
         Values = results.v;
         policies = results.sigma;  # optimal policy     
+        Values_prev = Values
 
         ###################################################################
         # summarising results
@@ -415,7 +421,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                 Pi_reo = 0
                 Pi_liq = max(0, phi_af*(1-delta)*next_k - zeta_L)
 
-                # ChatGPT made this loop more efficient, not a 100% what it does but it cuts comp time in half - see older versions for the original
+                # Made more  efficient by using the fact that the expectation over e' is linear
                 for next_e_i in 1:e_size
     
                     p_trans = e_ptrans[e_i, next_e_i]
@@ -537,7 +543,7 @@ c_e, f0 = EntryValue(SumPol, e_chain) ;
 mu, m, xpol = stat_dist(SumPol, Fmat, f0);
 
 zeta_Rl = 1350
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0175, phi_c, zeta_Rl)  # perfcred w is about 1.14
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0175, phi_c, zeta_Rl)  # perfect w is about 1.14
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
 
