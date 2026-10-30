@@ -326,7 +326,7 @@ function FirmOptim_Ext1(wage, ipc, ipdef_exo, izeta_Rl, iphi_c_hh, iphi_c;  )
               # gam = (gam*pdef_exo + pdef_endo - ( gam*pdef_exo * pdef_endo)) / pdef
 
               # q and tau
-              q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+              q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec, beta, kappa)
 
               # saving results for summary
               pdef_sa[s_i, a_i] = pdef
@@ -723,7 +723,7 @@ function FirmOptim_Ext_CF(wage, ipc, ipdef_exo, izeta_Rl)
                 # gam = (gam*pdef_exo + pdef_endo - ( gam*pdef_exo * pdef_endo)) / pdef
 
                 # q and tau
-                q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+                q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec, beta, kappa)
 
                 # saving results for summary
                 pdef_sa[s_i, a_i] = pdef
@@ -1113,7 +1113,7 @@ function FirmOptim_Ext_AB(wage, phi_c, ipc, ipdef_exo, izeta_Rl)
                 # gam = (gam*pdef_exo + pdef_endo - ( gam*pdef_exo * pdef_endo)) / pdef
 
                 # q and tau
-                q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+                q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec, beta, kappa)
 
                 # saving results for summary
                 pdef_sa[s_i, a_i] = pdef

@@ -67,6 +67,130 @@ function parameters()
              phi_c_hh = phi_c_hh, Fcut = Fcut)
 end
 
+####### TRANSITIONS AND POLICY ITERATION #######
+# Qv!: out[s,a] = E[ v(s') | s, a ], the same as Q*v in QuantEcon's PFI, computed from Qtab without the dense Q.
+#   v is the current value-function guess; it changes every PFI round, while Qtab stays fixed.
+#   1. average v over the two x' grid points   2. average over e' with e_ptrans   3. mix in P_x * v[default]
+# bellman! then uses vals = R + beta*out to pick the new policy.
+function Qv!(out, Qtab, v)
+    n, m = size(out)
+    x_size, e_size = Qtab.x_size, Qtab.e_size
+
+    # expected v over x' for each action and next productivity e'
+    EV = zeros(e_size, m)
+    for a_i in 1:m
+        Qtab.reg_a[a_i] || continue
+        for next_e_i in 1:e_size
+            base = (next_e_i - 1) * x_size
+            x_close = Qtab.x_close_ea[next_e_i, a_i]
+            x_far = Qtab.x_far_ea[next_e_i, a_i]
+            close_weight = Qtab.close_weight_ea[next_e_i, a_i]
+            EV[next_e_i, a_i] = x_far == 0 ? v[x_close + base] :
+                close_weight * v[x_close + base] + (1 - close_weight) * v[x_far + base]
+        end
+    end
+
+    # expectation over e' given e, and the exogenous default
+    EV_e = Qtab.e_ptrans * EV
+    for a_i in 1:m, s_i in 1:n
+        if s_i == n || !Qtab.reg_a[a_i]
+            out[s_i, a_i] = v[n]
+        else
+            pdef_exo = Qtab.Pdef_a[a_i]
+            out[s_i, a_i] = (1 - pdef_exo) * EV_e[Qtab.e_of_s[s_i], a_i] + pdef_exo * v[n]
+        end
+    end
+    return out
+end
+
+# Q_sigma_mat builds the transition matrix under the current policy sigma:
+# Q_sigma[s, s'] = probability of moving from state s to state s' next period when the firm in state s takes action sigma(s)
+# Same as in the original only now the transition matrix is built from the compact Qtab instead of the dense Q.
+# AI updateded it for sparse matrix construction, which is more efficient for large state spaces.
+function Q_sigma_mat(Qtab, sigma)
+    n = length(sigma)
+    x_size, e_size = Qtab.x_size, Qtab.e_size
+    rows = Int[]; cols = Int[]; probs = Float64[]    # one entry per nonzero Q_sigma[s, s']
+    for s_i in 1:n
+        a_i = sigma[s_i]
+        if s_i == n || !Qtab.reg_a[a_i]
+            push!(rows, s_i); push!(cols, n); push!(probs, 1.0)
+        else
+            pdef_exo = Qtab.Pdef_a[a_i]
+            push!(rows, s_i); push!(cols, n); push!(probs, pdef_exo)
+            for next_e_i in 1:e_size
+                base = (next_e_i - 1) * x_size
+                p_trans = Qtab.e_ptrans[Qtab.e_of_s[s_i], next_e_i] * (1 - pdef_exo)
+                close_weight = Qtab.close_weight_ea[next_e_i, a_i]
+                push!(rows, s_i); push!(cols, Qtab.x_close_ea[next_e_i, a_i] + base); push!(probs, p_trans * close_weight)
+                x_far = Qtab.x_far_ea[next_e_i, a_i]
+                if x_far != 0
+                    push!(rows, s_i); push!(cols, x_far + base); push!(probs, p_trans * (1 - close_weight))
+                end
+            end
+        end
+    end
+    return sparse(rows, cols, probs, n, n)
+end
+
+# bellman!: one policy-improvement step.
+#   vals[s,a] = R[s,a] + beta * E[ v(s') | s, a ]   (Qv! fills the expectation in place)
+#   sigma[s]  = first a with the highest vals[s,a]   -> the new policy
+#   Tv[s]     = that highest value; only the running max for the search, not used afterwards
+function bellman!(vals, Tv, sigma, R, Qtab, v, beta)
+    Qv!(vals, Qtab, v)
+    vals .= R .+ beta .* vals
+    n, m = size(vals)
+    for s_i in 1:n
+        Tv[s_i] = vals[s_i, 1]
+        sigma[s_i] = 1
+    end
+    for a_i in 2:m, s_i in 1:n
+        if vals[s_i, a_i] > Tv[s_i]
+            Tv[s_i] = vals[s_i, a_i]
+            sigma[s_i] = a_i
+        end
+    end
+    return Tv, sigma
+end
+
+# PFI_solve: QuantEcon's PFI, using Qtab instead of the dense Q.
+#   Evaluate: v = (I - beta*Q_sigma) \ R_sigma, the value of following sigma forever
+#   Improve:  sigma = argmax_a R + beta*E[v'], via bellman!/Qv!
+#   Repeat until sigma no longer changes.
+#   v_init: starting values. FirmOptim passes the previous q iteration's values (warm start); the default is QuantEcon's v(s) = max_a R(s,a).
+# Same steps as QuantEcon.solve(DiscreteDP(R, Q, beta), PFI) in QuantEcon 0.19.0
+function PFI_solve(R, Qtab, beta; v_init = nothing, max_iter = 250)
+    n, m = size(R)
+    vals = similar(R)
+
+    # initial value (v_init, or v(s) = max_a R(s,a)) and its greedy policy
+    v = v_init === nothing ? vec(maximum(R, dims = 2)) : v_init
+    Tv = similar(v)
+    sigma = zeros(Int, n)
+    bellman!(vals, Tv, sigma, R, Qtab, v, beta)
+
+    old_sigma = copy(sigma)
+    num_iter = 0
+    for i in 1:max_iter
+        # policy evaluation: value of following sigma forever
+        R_sigma = [R[s_i, sigma[s_i]] for s_i in 1:n]
+        Q_sigma = Q_sigma_mat(Qtab, sigma)
+        v = (I - beta * Q_sigma) \ R_sigma
+
+        # policy improvement: v-greedy policy
+        bellman!(vals, Tv, sigma, R, Qtab, v, beta)
+
+        num_iter += 1
+        if old_sigma == sigma
+            break
+        end
+        copyto!(old_sigma, sigma)
+    end
+
+    return (v = v, sigma = sigma, num_iter = num_iter)
+end
+
 ####### FIRM OPTIM #######
 function FirmOptim(wage, phi_c, zeta_Rl)
 
@@ -126,72 +250,60 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     m = m+2
 
     #################################### 
-    # Collecting the probabilities of endogenous default in a matrix
-    Pdefmat = zeros(n, m);
+    # Transition probabilities. Q[s,a,:] depends on the state only through e, so instead of the dense
+    # Q(n,m,n) array we store where x'(k',b',e') falls on the x-grid, for each action a and next productivity e'.
+    # For a regular state (x,e) and a regular action (k',b'):
+    #   Q[s, a, xe_close] = e_ptrans[e, e'] * (1-pdef_exo) * close_weight
+    #   Q[s, a, xe_far]   = e_ptrans[e, e'] * (1-pdef_exo) * (1-close_weight)
+    #   Q[s, a, end]      = pdef_exo   (exogenous default)
+
+    # From the default state, and after the default or exit action, the next state is default with probability 1
+    e_of_s = s_i_vals[:, 2]                                    # productivity index of each state
+    reg_a = (a_i_vals[:, 3] .== 0) .& (a_i_vals[:, 4] .== 0)   # actions that are neither default nor exit
+    Pdef_a = [next_k >= Fcut ? pdef_exo_l : pdef_exo_s for next_k in a_vals[:, 1]]   # loop over the column, so the comprehension does not capture a_vals (which would box it)
+    x_close_ea = zeros(Int, e_size, m)
+    x_far_ea = zeros(Int, e_size, m)      # stays 0 if x' is off the grid, then all weight is on x_close
+    close_weight_ea = ones(e_size, m)
+
     for a_i in 1:m
-        for  s_i in 1:n 
-            next_k = a_vals[a_i, 1]   
-            Pdefmat[s_i, a_i] = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
+        reg_a[a_i] || continue
+        b = a_vals[a_i, 2]   
+        k = a_vals[a_i, 1]   
+
+        for next_e_i in 1:e_size  
+            # next period cash on hand x'(b',k',e')
+            x_next = fn_X(k,b,e_vals[next_e_i])
+            # where x falls on the grid - closer
+            x_close = argmin(abs.(x_next .- x_grid))
+            x_close_ea[next_e_i, a_i] = x_close
+
+            # find the second closest
+            if x_next < x_grid[end] && x_next > x_grid[1]
+                x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1            
+                close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
+                x_far_ea[next_e_i, a_i] = x_far
+                close_weight_ea[next_e_i, a_i] = close_weight
+            end
         end
     end
 
-    
-    Q = zeros(n, m, n); 
-    # exogenous default - no matter the state or action you will have a P_exo chance to end up in default the next period
-    Q[:,:,end] = Pdefmat
+    Qtab = (x_size = x_size, e_size = e_size, e_ptrans = e_ptrans, e_of_s = e_of_s, Pdef_a = Pdef_a,
+            reg_a = reg_a, x_close_ea = x_close_ea, x_far_ea = x_far_ea, close_weight_ea = close_weight_ea)
 
-    for a_i in 1:m
-        for  s_i in 1:n 
-
-            # productivities (indices)
-            e = s_i_vals[s_i, 2]  # enough to save e, current x does not matter, since there are no financial frictions
-
-            # actions (values)
-            next_def = a_vals[a_i, 3] 
-            next_exit = a_vals[a_i, 4] 
-            def = s_vals[s_i,3]
-            b = a_vals[a_i, 2]   
-            k = a_vals[a_i, 1]   
-
-            for next_e_i in 1:e_size  
-                if  def == 0 && next_def == 0 && next_exit == 0
-                
-                    # next period cash on hand x'(b',k',e')
-                    x_next = fn_X(k,b,e_vals[next_e_i])
-                    # where x falls on the grid - closer
-                    x_close = argmin(abs.(x_next .- x_grid))
-            
-                    # probability of transition from e_i to next_e_j - conditional on no def
-                    pdef_exo = k >= Fcut ? pdef_exo_l : pdef_exo_s
-                    p_trans = e_ptrans[e, next_e_i] * (1-pdef_exo)
-            
-                    # find the second closest
-                    if x_next < x_grid[end] && x_next > x_grid[1]
-                        
-                        x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1            
-                        close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
-            
-                        # finding the correspoing indicies     
-                        xe_close = x_close + (next_e_i-1)*x_size
-                        xe_far = x_far + (next_e_i-1)*x_size
-                        
-                        # filling the transition matrix
-                        Q[s_i, a_i, xe_close] = p_trans*close_weight
-                        Q[s_i, a_i, xe_far] = p_trans*(1-close_weight)
-
-                    else
-                        xe_close = x_close + (next_e_i-1)*x_size
-                        Q[s_i, a_i, xe_close] = p_trans
-                    end  
-                        
-                else
-                    # this states two things: 
-                    # 1) if you are in an def state, you will be in an def state in the next period no matter the action (row of ones)
-                    # 2) if you choose def or exit action, you will be in an def state in the next period no matter the state (columns of ones)
-                    Q[s_i, a_i, end] = 1
-                            
-                end
-            end
+    # Tables for the q update: where x'(k',b',e') falls on the x-grid does not change across q iterations
+    x_lo_ea = zeros(Int, e_size, m)      # state index of the grid point at or below x' (or of the nearest edge)
+    t_ea = zeros(e_size, m)              # interpolation weight on the next grid point
+    interp_ea = falses(e_size, m)        # true if x' is inside the grid
+    for a_i in 1:m, next_e_i in 1:e_size
+        x_next = fn_X(a_vals[a_i, 1], a_vals[a_i, 2], e_vals[next_e_i])
+        base = (next_e_i - 1) * x_size
+        j = searchsortedlast(x_grid, x_next)  # j ∈ 0:x_size
+        if 1 ≤ j < x_size
+            t_ea[next_e_i, a_i] = (x_next - x_grid[j]) / (x_grid[j+1] - x_grid[j])
+            x_lo_ea[next_e_i, a_i] = j + base
+            interp_ea[next_e_i, a_i] = true
+        else
+            x_lo_ea[next_e_i, a_i] = ((j ≤ 0) ? 1 : x_size) + base   # clamp to nearest edge
         end
     end
 
@@ -199,15 +311,20 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     kbexq_old::Array{Float64, 2} = zeros(n, 4)
     kbexq_new::Array{Float64, 2} = fill(1.0, n, 4)
     SumPol::Array{Float64, 2} = zeros(n, 18)
-    q_sa::Array{Float64, 2} = zeros(n, m)
-    pdef_sa::Array{Float64, 2} = zeros(n, m)
-    gam_sa::Array{Float64, 2} = zeros(n, m)
-    Pi_liq_sa::Array{Float64, 2} = zeros(n, m)
-    Pi_reo_sa::Array{Float64, 2} = zeros(n, m)
-    tau_sa::Array{Float64, 2} = zeros(n, m)
+    
+    pdef_ea::Array{Float64, 2} = zeros(e_size, m)
+    q_ea::Array{Float64, 2} = zeros(e_size, m)
+    gam_ea::Array{Float64, 2} = zeros(e_size, m)
+    Pi_liq_ea::Array{Float64, 2} = zeros(e_size, m)
+    Pi_reo_ea::Array{Float64, 2} = zeros(e_size, m)
+    tau_ea::Array{Float64, 2} = zeros(e_size, m)
     iter::Int = 0
-    ################ 
-    while !isequal(kbexq_old,kbexq_new)
+    Values_prev = nothing   # values from the previous q iteration, the starting point for PFI_solve
+    q_tol = 1e-10           # stop when k', b', default are unchanged and q moved by at most q_tol
+    
+    ############### 
+    while !(kbexq_old[:, 1:3] == kbexq_new[:, 1:3] &&
+            maximum(abs.(kbexq_new[:, 4] .- kbexq_old[:, 4])) <= q_tol)
 
         iter += 1
         if iter >= 25
@@ -232,7 +349,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                 if next_def == 0 && def == 0 && next_exit == 0
                         
                     # dividends
-                    q = q_sa[s_i,a_i]
+                    q = q_ea[e_of_s[s_i],a_i]
                     d = fn_D(next_k, next_b, x, q)
 
                     if d >= 0
@@ -249,11 +366,11 @@ function FirmOptim(wage, phi_c, zeta_Rl)
             end
         end
 
-        ddp = QuantEcon.DiscreteDP(R, Q, discount);
-        results = QuantEcon.solve(ddp, PFI)
+        results = PFI_solve(R, Qtab, discount; v_init = Values_prev)
 
         Values = results.v;
         policies = results.sigma;  # optimal policy     
+        Values_prev = Values
 
         ###################################################################
         # summarising results
@@ -281,12 +398,13 @@ function FirmOptim(wage, phi_c, zeta_Rl)
 
             # if the firm defaults or exits these cannot be interpreted
             if def == 0 && exit == 0
-                q = q_sa[s_i, pol]
-                tau = tau_sa[s_i, pol]
-                gam = gam_sa[s_i, pol]    
-                pdef = pdef_sa[s_i, pol]
-                Pi_liq = Pi_liq_sa[s_i, pol] 
-                Pi_reo = Pi_reo_sa[s_i, pol] 
+                e_i = e_of_s[s_i]
+                q = q_ea[e_i, pol]
+                tau = tau_ea[e_i, pol]
+                gam = gam_ea[e_i, pol]
+                pdef = pdef_ea[e_i, pol]
+                Pi_liq = Pi_liq_ea[e_i, pol]
+                Pi_reo = Pi_reo_ea[e_i, pol]
             else
                 q = gam = Pi_liq = Pi_reo = tau = pdef = 0 
             end
@@ -303,10 +421,8 @@ function FirmOptim(wage, phi_c, zeta_Rl)
         
         ###############################################################################
         # Probability of default, liquidation, PIliq and PIreo and implied q given optimal k', b' in each state
-        for s_i in 1:n
-
-            x_i = s_i_vals[s_i, 1]
-            e_i = s_i_vals[s_i, 2]
+        # These depend on the state only through e: they are computed for each (e, a)
+        for e_i in 1:e_size
     
             for a_i in 1:m
                 # policies given (x,e)
@@ -322,19 +438,15 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                 Pi_reo = 0
                 Pi_liq = max(0, phi_af*(1-delta)*next_k - zeta_L)
 
-                # ChatGPT made this loop more efficient, not a 100% what it does but it cuts comp time in half - see older versions for the original
+                # Expectation over e' only: given (k', b', e'), x' is known, so only the two x-grid points around x' matter (interpolated)
                 for next_e_i in 1:e_size
     
                     p_trans = e_ptrans[e_i, next_e_i]
-                    x_next  = fn_X(next_k, next_b, e_vals[next_e_i])
-                    base    = (next_e_i - 1) * x_size
+                    xe0     = x_lo_ea[next_e_i, a_i]   # from the tables built before the q loop
 
-                    j = searchsortedlast(x_grid, x_next)  # j ∈ 0:x_size
-
-                    if 1 ≤ j < x_size
-                        t   = (x_next - x_grid[j]) / (x_grid[j+1] - x_grid[j])
-                        xe0 = j + base
-                        xe1 = j + 1 + base
+                    if interp_ea[next_e_i, a_i]
+                        t   = t_ea[next_e_i, a_i]
+                        xe1 = xe0 + 1
 
                         @inbounds begin
                             val      = (1 - t) * Values[xe0] + t * Values[xe1]
@@ -344,13 +456,10 @@ function FirmOptim(wage, phi_c, zeta_Rl)
 
                     else
 
-                        # clamp to nearest edge
-                        i  = (j ≤ 0) ? 1 : x_size
-                        xe = i + base
-                        
+                        # x' off the grid: nearest edge
                         @inbounds begin
-                            val      = Values[xe]
-                            next_def = a_i_vals[policies[xe], 3]
+                            val      = Values[xe0]
+                            next_def = a_i_vals[policies[xe0], 3]
                         end
                     end
 
@@ -367,15 +476,15 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                 Pi_reo = Pi_reo * (1-pdef_exo)
 
                 # q and tau
-                q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+                q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec, beta, kappa)
 
                 # saving results for summary
-                pdef_sa[s_i, a_i] = pdef
-                q_sa[s_i,a_i] = q
-                tau_sa[s_i,a_i] = tau
-                gam_sa[s_i, a_i] = gam
-                Pi_liq_sa[s_i, a_i] = Pi_liq
-                Pi_reo_sa[s_i, a_i] = Pi_reo
+                pdef_ea[e_i, a_i] = pdef
+                q_ea[e_i,a_i] = q
+                tau_ea[e_i,a_i] = tau
+                gam_ea[e_i, a_i] = gam
+                Pi_liq_ea[e_i, a_i] = Pi_liq
+                Pi_reo_ea[e_i, a_i] = Pi_reo
             end
         end
         kbexq_new = SumPol[:, [3, 4, 7, 9]]
@@ -444,7 +553,7 @@ c_e, f0 = EntryValue(SumPol, e_chain) ;
 mu, m, xpol = stat_dist(SumPol, Fmat, f0);
 
 zeta_Rl = 1350
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0175, phi_c, zeta_Rl)  # perfcred w is about 1.14
+@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0175, phi_c, zeta_Rl)  # perfect w is about 1.14
 c_e0, f00 = EntryValue(SumPol0, e_chain0); 
 mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
 

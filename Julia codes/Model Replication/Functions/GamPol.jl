@@ -20,7 +20,7 @@ function GamPol(SumPol, x_i, e_i)
     tauCgam = zeros(length(gam_vec))
 
     for (ind, gam) in enumerate(gam_vec)
-        q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+        q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec, parameters().beta, parameters().kappa)
         qCgam[ind] = q
         tauCgam[ind] = tau
     end
@@ -134,7 +134,8 @@ function DebtScedule(SumPol, x_i, e_i; phi_c)
             end  
         
         end 
-        q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec)
+        # parameters().kappa, not the local kappa: the parameters() unpack above uses an old order
+        q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec, parameters().beta, parameters().kappa)
         
         # saving results for summary
         pdef_a[ind] = pdef
