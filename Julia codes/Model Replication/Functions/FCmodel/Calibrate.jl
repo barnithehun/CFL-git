@@ -210,3 +210,83 @@ function calibrate(calib_params, calib_moments, data_targets; options = Optim.Op
 
     return (values = fit.values, fit = fit, optim = OptRes)
 end
+
+####### CALIBRATE THOROUGHLY #######
+# default_starts: the start in calib_params, and two variants that move each start by ±pct with alternating signs
+# (+,-,+,... and -,+,-,...). A start of 0 does not move.
+function default_starts(calib_params, pct)
+    x0 = [start for (start, _, _) in values(calib_params)]
+    variant(s) = NamedTuple{keys(calib_params)}(Tuple(x0 .* (1 .+ s .* pct)))
+    signs = [isodd(i) ? 1 : -1 for i in eachindex(x0)]
+    pct == 0 && return [variant(0)]
+    return [variant(0), variant(signs), variant(-signs)]
+end
+
+# calibrate_thoroughly: calibrate with restarts and several starts. Nelder-Mead often stops before the minimum, when its
+# simplex shrinks in a rugged part of the error. A restart runs it again from where it stopped, with a new first simplex
+# (Optim's default: +50% on each parameter). Restarts stop when one improves the error by less than restart_tol, or after
+# max_restarts. A start that ends in a wrong local minimum stays there, so the loop runs from each start and keeps the best.
+#   starts: NamedTuples with the names of calib_params (other fields, such as Fcut, are ignored). The default is
+#           default_starts(calib_params, variant_pct); starts = [CalRes.values] polishes an earlier calibrate result.
+# The first run from the start in calib_params is the same as calibrate's, so the result is never worse.
+# Saves the same CSV as calibrate, and <file>_runs.csv with every run: start, restart, error, gain, trials, minutes, values.
+function calibrate_thoroughly(calib_params, calib_moments, data_targets; options = Optim.Options(), wage = 1, valid = p -> true,
+                              variant_pct = 0.10, starts = default_starts(calib_params, variant_pct),
+                              restart_tol = 1e-6, max_restarts = 5,
+                              file = joinpath("calibration_outputs", "CALIB_$(Dates.format(now(), "yyyy-mm-dd_HHMM"))_thorough.csv"))
+
+    pnames = keys(calib_params)
+    f(x) = calib_error(x, calib_params, calib_moments, data_targets; wage = wage, valid = valid)
+    inside(vals) = all(calib_params[n][2] < v < calib_params[n][3] for (n, v) in pairs(vals)) &&
+                   with_params(() -> valid(parameters()), vals)
+
+    runs = NamedTuple[]
+    best = nothing
+    for (i, s) in enumerate(starts)
+        x = NamedTuple{pnames}(Tuple(Float64(s[n]) for n in pnames))
+        if !inside(x)
+            @warn "start $i is outside the bounds or fails valid, skipped" start = x
+            continue
+        end
+
+        OptRes = nothing
+        for r in 0:max_restarts
+            println("\n####### start $i of $(length(starts)), ", r == 0 ? "first run" : "restart $r", " #######")
+            t = @elapsed res = optimize(f, r == 0 ? collect(x) : Optim.minimizer(OptRes), NelderMead(), options)
+            gain = r == 0 ? missing : Optim.minimum(OptRes) - Optim.minimum(res)
+            push!(runs, merge((start = i, restart = r, error = Optim.minimum(res), gain = gain,
+                               trials = Optim.f_calls(res), minutes = t / 60),
+                              NamedTuple{pnames}(Tuple(Optim.minimizer(res)))))
+            println("error ", Optim.minimum(res), r == 0 ? "" : ", gain $gain", ", ", Optim.f_calls(res), " trials, ",
+                    round(t / 60, digits = 1), " min")
+            (r == 0 || gain > 0) && (OptRes = res)
+            r > 0 && gain < restart_tol && break
+        end
+
+        if best === nothing || Optim.minimum(OptRes) < Optim.minimum(best.optim)
+            best = (start = x, optim = OptRes)
+        end
+    end
+    best === nothing && error("no start lies inside the bounds and passes valid")
+
+    runs = DataFrame(runs)
+    runs.best = (1:nrow(runs)) .== argmin(runs.error)
+    println("\nAll runs (if the starts end at different values with similar errors, the moments do not pin down the parameters)")
+    show(stdout, runs; allrows = true, allcols = true, eltypes = false); println()
+
+    # from here on as in calibrate
+    vals = NamedTuple{pnames}(Tuple(Optim.minimizer(best.optim)))
+    fit = model_fit(vals, calib_moments, data_targets; wage = wage)
+
+    println("\nTo keep these values, replace these lines in parameters():")
+    for (name, v) in pairs(fit.values)
+        println("    $name::Float64 = par(:$name, $v)")
+    end
+    # the start column of the CSV shows the start of the best run
+    save_calibration(file, NamedTuple{pnames}(Tuple((best.start[n], calib_params[n][2], calib_params[n][3]) for n in pnames)), fit)
+    runs_file = replace(file, ".csv" => "_runs.csv")
+    CSV.write(runs_file, runs)
+    println("Saved the runs to ", runs_file)
+
+    return (values = fit.values, fit = fit, optim = best.optim, runs = runs)
+end

@@ -597,8 +597,14 @@ options = Optim.Options(
     show_trace = true,
     store_trace = true,
     show_every = 1)
-# saves to calibration_outputs/CALIB_<date>.csv
-@elapsed CalRes = calibrate(calib_params, calib_moments, data_targets; options = options, valid = valid)
+# thorough = true runs calibrate_thoroughly instead (see Calibrate.jl): it restarts Nelder-Mead until a restart gains less
+#  than 1e-6 (at most 5 restarts), from the start in calib_params and two variants ±variant_pct away, and keeps the best.
+#  It takes several times as long as calibrate. starts = [CalRes.values] in its call polishes an earlier result instead.
+thorough = false
+# saves to calibration_outputs/CALIB_<date>.csv (thorough: CALIB_<date>_thorough.csv and CALIB_<date>_thorough_runs.csv)
+@elapsed CalRes = thorough ?
+    calibrate_thoroughly(calib_params, calib_moments, data_targets; options = options, valid = valid, variant_pct = 0.10) :
+    calibrate(calib_params, calib_moments, data_targets; options = options, valid = valid)
 
 # To use the calibrated values (Fcut included) without pasting them: set_params!(CalRes.values).
 # reset_params!() goes back to the values written in parameters().
