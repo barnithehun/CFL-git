@@ -13,7 +13,9 @@
 #   comps.RDS          - raw Compustat in USD, only for total liabilities ltq (data_cleaning.R, section 1)
 #   idb_cases.RDS      - bankruptcy cases, one row per case (DefaultData.R, section 2)
 #   soi_weights.RDS    - number of US corporations by asset class and year (firm_weights.R)
-# OUTPUTS: none - the tables are printed in the console
+# OUTPUTS (in CFL-git/Data Replication/), read by the Julia calibration (Julia codes/Model Replication/baseline_calib.jl):
+#   calib_targets.csv          - Table 2 (moment, small, large, weighted, unweighted) plus the row "Share of small firms" (weighted = w)
+#   calib_targets_settings.csv - the settings of section 0 that produced it
 #
 # Sections 1 and 2 repeat sections 4 and 6 of data_cleaning.R, so that capital leases and the interest rate
 # weighing can be switched. The "old" rate scheme follows R/V4/dlevel_v4.R.
@@ -329,5 +331,13 @@ if (weight_source == "Compustat") {
 cat("\n", weight_source, "weight of small firms: w =", round(w, 3),
     " \n Comps-CapIQ share of small firms:", round(mean(flevel$small), 3), "(firm-quarters)\n")
 print(targets %>% mutate(across(where(is.numeric), ~ round(.x, 3))))
+
+# Output for the Julia calibration: Table 2 and the share of small firms, which the model matches with its size cutoff Fcut
+write_csv(bind_rows(targets, tibble(moment = "Share of small firms", weighted = w)), "calib_targets.csv", na = "")
+write_csv(tibble(setting = c("end_year", "cap_lease_stock", "cap_lease_rates", "rate_scheme", "size_var", "cutoff_usd",
+                             "micro_usd", "weight_source", "nonlead", "written"),
+                 value   = c(end_year, cap_lease_stock, cap_lease_rates, rate_scheme, size_var, cutoff_usd,
+                             micro_usd, weight_source, nonlead, format(Sys.time(), "%Y-%m-%d %H:%M"))),
+          "calib_targets_settings.csv")
 
 toc()

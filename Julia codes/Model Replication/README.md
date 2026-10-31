@@ -37,7 +37,9 @@ Pkg.instantiate()
 | File | Origin | Changes |
 |---|---|---|
 | `Baseline.jl` | `FinalVers/Baseline.jl` at commit `6bd4edb` | The faster working version. Includes point to `Functions/` here, and a `cd(@__DIR__)` line was added. Otherwise only `FirmOptim` changes, in original lines 107–380, plus helper functions placed just before it. `FirmOptim` stores transition tables that depend on e only, in place of the dense `Q`. It solves the DP with `PFI_solve`, which follows the steps of QuantEcon's PFI, and runs the q update once per (e, a) pair. `PFI_solve` starts from the previous q iteration's values (warm start), so each solve needs fewer policy iterations. The q loop stops once k', b' and default are unchanged and q moved by at most 1e-10 (`q_tol`), instead of waiting for an exact repeat. `Q_sigma_mat` returns a sparse matrix, so the policy evaluation in `PFI_solve` uses a sparse solve. Where x' falls on the x-grid for each (e', a) is computed once, before the q loop (`x_lo_ea`, `t_ea`, `interp_ea`), and the q update reads it from these tables. Everything after `FirmOptim` is unchanged |
-| `Functions/*.jl`, `Functions/FCmodel/*.jl` | Every file that `Baseline.jl` includes | `FCmodel/fn_Tau_Q.jl` takes `beta` and `kappa` as arguments and builds no arrays; its callers in `FCmodel/FirmOptim_Ext.jl` and `GamPol.jl` pass them. All other files unchanged |
+| `baseline_calib.jl` | `Baseline.jl` up to the end of `FirmOptim` (the model), plus a calibration block and a model fit section | `parameters()` reads overrides (`par(:name, default)` on each line) and also returns `phi_c`, `zeta_Rl` and `DRS`, appended last so positional unpacking still works. Overriding `DRS` moves `alpha` and `nu` with it. `FirmOptim(wage, phi_c, zeta_Rl)` takes `phi_c` and `zeta_Rl` from `parameters()` when they are left out. It includes `FCmodel/Calibrate.jl` in place of `FCmodel/ErrorFunc.jl` and loads `CSV`. The baseline/reform results blocks of `Baseline.jl` are not copied; the model fit section replaces them |
+| `Functions/*.jl`, `Functions/FCmodel/*.jl` | Every file that `Baseline.jl` includes | `FCmodel/fn_Tau_Q.jl` takes `beta` and `kappa` as arguments and builds no arrays; its callers in `FCmodel/FirmOptim_Ext.jl` and `GamPol.jl` pass them. `FCmodel/stat_dist.jl`, `sumSS.jl` and `sumSSsme.jl` take a keyword `zeta_R`, which defaults to the global `zeta_Rl` as before. `sumSS.jl` and `sumSSsme.jl` also take `rate_digits`, the digits the interest rate and spread are rounded to; the default 2 keeps their output unchanged, and `nothing` leaves them unrounded. `FCmodel/Calibrate.jl` is new. All other files unchanged |
+| `calibration_outputs/` | Written by `calibrate` | One `CALIB_<date>.csv` per calibration run |
 
 On 2026-10-28, the faster solver (then called `Abaseline.jl`) reproduced the original `Baseline.jl` bit for bit at k = b = 14, 20 and 30, for both the baseline and the reform. The comparison covered `SumPol`, `Fmat`, `c_e`, `sumSS` and `sumSSsme`. The original cannot run at the full grid on a machine with about 16 GB of free RAM. There, the faster solver reproduces the paper's untargeted small/large table and c_e = 654.3.
 
@@ -45,7 +47,30 @@ On 2026-10-29, the warm start was checked against the earlier results at the ful
 
 On 2026-10-30, the copy of the original `Baseline.jl` was dropped from this folder and `Abaseline.jl` was renamed `Baseline.jl`. The original is still in `FinalVers/Baseline.jl` and in git history.
 
+On 2026-10-30, `baseline_calib.jl` reproduced the committed `Baseline.jl` (lines 1–570) bit for bit: `SumPol`, `Fmat`, `mu`, `c_e`, `sumSS` and `sumSSsme` for the baseline and the reform. `calib_fit` at the values in `parameters()` gives the same moments and c_e = 654.28. At k = b = 14, `FirmOptim_Ext1` and `FirmOptim` gave identical policies, `Fmat` and `sumSS`, and c_e within 1e-10, so the calibration can use `FirmOptim` itself.
+
+On 2026-10-31, after the model fit section replaced the results blocks, `model_fit` at the values in `parameters()` reproduced the committed `Baseline.jl` bit for bit: the targeted `sumSS` moments, the small and large `sumSSsme` moments, the share of small firms and c_e. This used main5's targets with the share target set to the model's share at Fcut = 2000, and Fcut stayed at 2000. A recovery test at k = b = 20 (targets = the model's own moments at the current values, start 5–10% away) converged in 1,147 trials (390 s) to an error of 0.012. Every targeted moment came within 0.5% of its target, but the parameters came back 0–10% off (θ the most, P_x and c next). The objective is flat in places: policies are on a grid, and `sumSS` rounds the interest rate to two decimals. With unrounded rates the same test took 515 trials (178 s) and reached an error of 0.004, with every targeted moment within 0.26%. The parameters still came back 5–11% off (θ and ζ the most), so at this grid several parameter sets give nearly the same five moments.
+
+The same test at the full grid, with unrounded targets, ran from two starts 5–10% from the truth in opposite directions. Each took about 660 trials and 11–12 minutes, two runs in parallel. Neither found the truth, where the error is 0. Nelder–Mead reported convergence at an error of 0.112 from start A and 0.053 from start B, with moments 1–3% off and parameters up to 19–21% off (P_x the most). The simplex had shrunk to points within about 1e-8 of each other in error. Moments jump where a policy switches grid points, so the error has local minima that are not the global one. The calibration code finds the right error at the truth; the weak point is Nelder–Mead on this rugged objective.
+
+Restarting Nelder–Mead from where it stopped, with a fresh default simplex (each parameter +50%), was tested on both runs. From B, the first restart lowered the error from 0.053 to 0.038 (1,065 trials) and the second to 0.00006 (467 trials). The parameters were then within 0.01% of the truth, except `phi_c_hh` (−1%). A third restart gained nothing. From A, one restart (647 trials) gained only 3e-9: that run sits in a local minimum wider than the simplex. So restarts can finish a run that is close, but they cannot get a run out of a wrong basin.
+
 `Functions/PrintPolNew.jl` and `Functions/FCmodel/UpdateLoop.jl` were not copied because nothing uses them.
+
+### Calibration in baseline_calib.jl
+
+The calibration block is the only place to edit. It sets four things:
+
+- **`data_targets`**: a table with columns `moment`, `weighted`, `small` and `large`. With `targets_source = :R` it is read from `Data Replication/calib_targets.csv`, the last table of `calib_targets.R` plus its share of small firms w; run that script first to update it. With `:manual` it is `manual_targets`, main5's values.
+- **`calib_moments`**: `(moment, row in sumSS, row in sumSSsme, error form)` for each moment. The error term is `|model − data| / data` (`:rel`), or `|model − data| / (1 − data)` (`:rel_1m`), which is `ErrorFunc1`'s AB share in place of the CF share. `:none` shows a moment without targeting it.
+- **`calib_params`**: each internally calibrated parameter as `name = (start, lower, upper)`. Any number field of `parameters()` can be listed; a parameter that is not listed keeps its value from `parameters()`.
+- **`valid`**: an optional joint condition on the trial values.
+
+`calibrate` runs Nelder–Mead on the summed error terms. Each trial sets the trial values as overrides in `parameters()` through `with_params`, then runs `FirmOptim`, `EntryValue` and `sumSS`. The calibration and the model fit use unrounded interest rates and spreads (`rate_digits = nothing`). With the default two digits, the error stays flat until the rate crosses 0.005. A trial outside the bounds scores 1e10 instead of `Inf`: an `Inf` in the simplex makes Nelder–Mead's convergence measure NaN and stops it, and the default first simplex sets `phi_c_hh` to 1.23.
+
+**Fcut is set after the fit.** It does not enter the solution while `pdef_exo_s = pdef_exo_l` (`model_fit` warns otherwise); it only splits small and large firms. The share of small firms (`sumSSsme`'s `share` row) changes only where Fcut passes a k′ value, so it is a step function that Nelder–Mead handles badly. `fit_Fcut` picks the split closest to the data's share of small firms. It keeps the current Fcut if that split is already the best, and otherwise uses the k′ value just above the split.
+
+`calibrate` prints the lines to paste into `parameters()` and saves `calibration_outputs/CALIB_<date>.csv`. The file has one row per item, grouped by `section`: internally calibrated parameters (with their starts), Fcut, external parameters, grid sizes, targeted moments (data, model, error term), small and large firm moments, the share of small firms, and the total error, c_e and wage. The model fit section prints the same fit: total error, share of small firms, the targeted moments, and the small and large firm moments. `set_params!(CalRes.values)` makes the calibrated values (Fcut included) the active ones without pasting; `reset_params!()` undoes it.
 
 ### Baseline.jl, block by block
 
@@ -76,7 +101,8 @@ Line numbers refer to the copy in this folder. This is the block order inherited
 |---|---|---|
 | `FCmodel/fn_Tau_Q.jl` | Debt price q and CF share τ for each state–action pair | Core; takes `beta` and `kappa` from the caller |
 | `FCmodel/EntryValue.jl` | Entry value `c_e` and entrant distribution `f0` | Core |
-| `FCmodel/stat_dist.jl` | Stationary distribution `mu` | Core; reads the global `zeta_Rl` |
+| `FCmodel/stat_dist.jl` | Stationary distribution `mu` | Core; reads the global `zeta_Rl` unless `zeta_R` is passed |
+| `FCmodel/Calibrate.jl` | `calibrate`, `model_fit`, `print_fit`, `fit_Fcut`, `read_targets`, `save_calibration`, `calib_fit`, `calib_error`, and the overrides `set_params!`, `reset_params!`, `with_params` | Used by `baseline_calib.jl` only |
 | `FCmodel/FindWage.jl` | Entry value at a given wage, for the GE bisection | Core |
 | `FCmodel/ErrorFunc.jl` | Calibration objectives (`ErrorFunc1`, `_CF`, `_AB`) | Targets liquidation probability 0.55; main5 says 0.58 |
 | `FCmodel/FirmOptim_Ext.jl` | Solver copies used by the calibration | Speed changes must be repeated here |
@@ -107,7 +133,7 @@ No saved script reproduces the SBRA table's universal (0.93%) and control-reduct
 These are recorded here, not fixed. Each one is decided separately.
 
 - **Firm law of motion.** `Fmat` moves P_x + P_D·γ of each state to exit, but P_D already includes P_x, and `stat_dist` also removes states that choose default. This may count defaults twice. Check it against the paper's equations.
-- **Liquidation target.** `ErrorFunc1` uses 0.55, while main5's target table says 0.58.
+- **Liquidation target.** `ErrorFunc1` uses 0.55, while main5's target table says 0.58. `baseline_calib.jl` uses 0.58.
 - **Decomposition.** The ±0.003 in `CapAlloc2.jl` changes the policy margin from about 0.01 to 0.311 log points.
 - **Size split.** main5 splits small and large firms by borrowing. `sumSSsme` uses k′ < Fcut, and `sumSS` uses k + x ≤ 2000.
 - **Solver stop.** The q loop stops after 25 iterations with only a printed warning.

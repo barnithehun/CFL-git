@@ -1,8 +1,10 @@
-function sumSS(SumPol,Fmat,f0)
+# zeta_R is passed on to stat_dist; defaults to the global zeta_Rl
+# rate_digits: digits the interest rate and spread are rounded to; nothing = unrounded (used by the calibration)
+function sumSS(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
         
     beta = parameters().beta 
 
-    mu, m, xpol = stat_dist(SumPol, Fmat, f0)
+    mu, m, xpol = stat_dist(SumPol, Fmat, f0; zeta_R = zeta_R)
     n = size(SumPol,1)
     totalmass = sum(mu)
  
@@ -57,8 +59,9 @@ function sumSS(SumPol,Fmat,f0)
         end
         
     end
-    avg_q = round((1/(avg_q / mu_q) - 1)*100, digits = 2)
-    avg_spread =  round(avg_q - (1/beta-1)*100, digits = 2)
+    rnd(x) = rate_digits === nothing ? x : round(x, digits = rate_digits)
+    avg_q = rnd((1/(avg_q / mu_q) - 1)*100)
+    avg_spread =  rnd(avg_q - (1/beta-1)*100)
     avg_b2a = avg_b2a / mu_b2a
     avg_gam = avg_gam / mu_gam
     avg_prod = avg_prod / mu_prod # sanity check

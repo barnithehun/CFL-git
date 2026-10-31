@@ -1,5 +1,6 @@
 ####### STATIONARY DISTRIBUTION ########
-function stat_dist(SumPol, Fmat, f0)
+# zeta_R: fixed reorganization cost for the liquidation decision; defaults to the global zeta_Rl
+function stat_dist(SumPol, Fmat, f0; zeta_R = zeta_Rl)
 
     # Exiting firms + defaulting firms
     n = size(SumPol,1)
@@ -10,7 +11,7 @@ function stat_dist(SumPol, Fmat, f0)
     delta = parameters().delta
 
     # liq decision works with policies works bc. of stationary distribution
-    liq = Int.( (phi_a .* (1-delta) .* SumPol[1:n-1, 3]) .>= (phi_c_hh .* SumPol[1:n-1, end] .- zeta_Rl) )
+    liq = Int.( (phi_a .* (1-delta) .* SumPol[1:n-1, 3]) .>= (phi_c_hh .* SumPol[1:n-1, end] .- zeta_R) )
 
     # a default state exits the market, it means that its need no updating after Fmat is changed to reflect Q
     xpol = [SumPol[1:n-1,6] .+ SumPol[1:n-1,7] .* liq ; 1]
