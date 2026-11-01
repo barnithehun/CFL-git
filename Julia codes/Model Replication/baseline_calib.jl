@@ -69,12 +69,19 @@ function parameters()
     phi_c::Float64 = par(:phi_c, 0.360542276)
     zeta_Rl::Float64 = par(:zeta_Rl, 2753.229657)
 
-    # phi_c, zeta_Rl and DRS come last: FirmOptim, GamPol and CapAlloc2 unpack the first 19 fields by position
+    # results experiments (see FirmOptim): zeta and theta for small firms (k' < Fcut), which follow zeta_Rl and phi_c
+    # unless set, and perfect credit (1 = negative dividends, i.e. equity injections, are free, as in FinalVers/Xallocation.jl)
+    zeta_Rs::Float64 = par(:zeta_Rs, zeta_Rl)
+    phi_c_s::Float64 = par(:phi_c_s, phi_c)
+    perf_cred::Float64 = par(:perf_cred, 0)
+
+    # phi_c, zeta_Rl and the fields after them come last: FirmOptim, GamPol and CapAlloc2 unpack the first 19 fields by position
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
             discount = discount, phi_a = phi_a, phi_af = phi_af, tauchen_sd = tauchen_sd,
             kappa = kappa, zeta_L = zeta_L, tau_vec = tau_vec,
-            phi_c_hh = phi_c_hh, Fcut = Fcut, phi_c = phi_c, zeta_Rl = zeta_Rl, DRS = DRS)
+            phi_c_hh = phi_c_hh, Fcut = Fcut, phi_c = phi_c, zeta_Rl = zeta_Rl, DRS = DRS,
+            zeta_Rs = zeta_Rs, phi_c_s = phi_c_s, perf_cred = perf_cred)
 end
 
 ####### TRANSITIONS AND POLICY ITERATION #######
@@ -206,6 +213,11 @@ end
 function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta_Rl)
 
     rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, phi_af, tauchen_sd, kappa,  zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
+
+    # small firms' (k' < Fcut) zeta and theta follow the arguments unless set as overrides (SBRA experiments, SmallCosts.jl)
+    zeta_Rs = haskey(PARAM_OVERRIDE, :zeta_Rs) ? parameters().zeta_Rs : zeta_Rl
+    phi_c_s = haskey(PARAM_OVERRIDE, :phi_c_s) ? parameters().phi_c_s : phi_c
+    perf_cred = parameters().perf_cred
 
     # calling grid size
     x_size, e_size, k_size, b_size = gridsize()
@@ -363,8 +375,9 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
                     q = q_ea[e_of_s[s_i],a_i]
                     d = fn_D(next_k, next_b, x, q)
 
-                    if d >= 0
-                        R[s_i, a_i] = d 
+                    # with perfect credit negative dividends have no cost (free equity injections)
+                    if d >= 0 || perf_cred == 1
+                        R[s_i, a_i] = d
                     end
 
                 elseif next_def == 1 
@@ -377,7 +390,9 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
             end
         end
 
-        results = PFI_solve(R, Qtab, discount; v_init = Values_prev)
+        # with perfect credit some debt choices tie, and a warm start can pick another tied policy in each q iteration, so
+        # the q loop cycles: start cold, as the original solver did
+        results = PFI_solve(R, Qtab, discount; v_init = perf_cred == 1 ? nothing : Values_prev)
 
         Values = results.v;
         policies = results.sigma;  # optimal policy     
@@ -441,7 +456,8 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
                 next_b = a_vals[a_i,2]
 
                 # exo probability of default and reorganization costs change with size
-                zeta_R = zeta_Rl
+                zeta_R = next_k >= Fcut ? zeta_Rl : zeta_Rs
+                theta  = next_k >= Fcut ? phi_c : phi_c_s
                 pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
     
                 pdef_endo = 0
@@ -476,7 +492,7 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
 
                     pdef_endo += p_trans * next_def
                     gam       += p_trans * fn_Gam(val, next_k, zeta_R)
-                    Pi_reo    += p_trans * (phi_c * val)
+                    Pi_reo    += p_trans * (theta * val)
                 end
 
                 # now default is a decision and a shock at the same time
@@ -590,6 +606,8 @@ options = Optim.Options(
     show_trace = true,
     store_trace = true,
     show_every = 1)
+
+
 # thorough = true runs calibrate_thoroughly instead (see Calibrate.jl): it screens n_screen points spread over screen_box
 #  (name = (low, high); a parameter left out gets start × (0.5, 1.5)), runs Nelder-Mead with up to 3 restarts from the
 #  best n_starts of them, each start on its own Julia process, and keeps the best. Save the file first: the workers load
@@ -609,6 +627,112 @@ thorough = false
 # Fit at the calibrated values. Without a calibration run, model_fit(NamedTuple(), calib_moments, data_targets)
 # gives the fit at the values in parameters().
 Fit = model_fit(CalRes.values, calib_moments, data_targets)
+println("\nInternally calibrated parameters (and Fcut):")
+foreach(((name, v),) -> println("  $name = $v"), pairs(Fit.values))
 print_fit(Fit)
+
+########## RESULTS ################
+# The paper's model results at the calibrated values; MiscResults.jl has the rest (run_misc at the end).
+# Each equilibrium is a set of overrides in parameters() plus a wage (Functions/Results.jl): solve_eq solves it at a
+# given wage, and ge_eq at the wage where free entry holds with the baseline entry cost c_e (bisection on the wage).
+# Everything is saved to results_outputs/<date>/: RESULTS.csv (tables and equilibria) and the figures.
+include("Functions/Results.jl")
+include("Functions/CapAlloc2.jl")
+include("Functions/Xallocation.jl")
+
+# Which parameter values the results use:
+#  - the calibration run above (CalRes), if there is one; otherwise the defaults written in parameters()
+#  - to use a saved calibration instead, replace the line below with
+#      CalVals = load_calibration(joinpath("calibration_outputs", "CALIB_<date>.csv"))
+CalVals = @isdefined(CalRes) ? CalRes.values : NamedTuple()
+reset_params!(); set_params!(CalVals)
+results_dir = joinpath("results_outputs", Dates.format(now(), "yyyy-mm-dd_HHMM"))
+
+#### Baseline and reform: the fixed cost of reorganization cut by half (main5 section 5.1) ####
+BaseEq   = solve_eq()
+ReformEq = ge_eq((zeta_Rl = parameters().zeta_Rl / 2,), BaseEq.c_e)
+
+# tab:targets and tab:untargeted are in Fit (MODEL FIT above)
+SizeTab = size_table(["Baseline" => BaseEq, "Reform" => ReformEq])     # tab:SSvalues_firms
+GETab   = ge_table(BaseEq, ReformEq)                                    # tab:SSvalues_GE
+print_table("Small and large firms in the baseline and the reform (tab:SSvalues_firms)", SizeTab)
+print_table("Aggregate moments, % change (tab:SSvalues_GE)", GETab)
+
+#### Decomposition of the change in Y/L (tab:decomposition; CapAlloc2.jl) ####
+Decomp = CapAlloc2(BaseEq, ReformEq);
+print_table("Decomposition of the change in Y/L, log points x 100 (tab:decomposition)", Decomp.table)
+
+#### Firm and capital allocation across productivity states (fig:firmalloc, fig:capalloc; Xallocation.jl) ####
+# Two more equilibria: zeta cut to a tenth, and perfect credit (free equity injections). PerfEq's change in Y/L is
+# main5's footnote on the productivity gain without financial frictions.
+Reform10Eq = ge_eq((zeta_Rl = parameters().zeta_Rl / 10,), BaseEq.c_e)
+PerfEq     = ge_eq((perf_cred = 1.0,), BaseEq.c_e; bracket = (1.0, 1.6))
+println("\nPerfect credit: Y/L changes by ", round(100 * (PerfEq.ss["YtoL", "values"] / BaseEq.ss["YtoL", "values"] - 1), digits = 2), "%")
+Xalloc = Xallocation(["baseline (ζ)" => BaseEq, "reform (ζ/2)" => ReformEq, "reform (ζ/10)" => Reform10Eq], "perfect credit" => PerfEq)
+Xalloc.firmalloc     # fig:firmalloc
+Xalloc.capital       # fig:capalloc
+
+#### Interest rate and debt type against the liquidation probability (appendix GamPol.png) ####
+pGamPol = plot(GamPol(BaseEq.SumPol, 15, 21), GamPol(BaseEq.SumPol, 26, 21), GamPol(BaseEq.SumPol, 35, 21), layout = (1, 3), size = (900, 300) , margin = 5mm)
+
+#### SBRA (tab:percentage_changes2; SmallCosts.jl) ####
+# Targeted: small firms' (k' < Fcut) fixed cost is cut until their liquidation probability falls by 13 pp (main5 section 6).
+# Universal: the same fixed cost for all firms. Control reduction: the targeted cut, and theta (all firms) cut in
+# proportion to it, as in main5 (0.361 to 0.268 there).
+SBRA = find_zeta_Rs(BaseEq; drop = 0.13)
+theta_control = parameters().phi_c * SBRA.zeta_Rs / parameters().zeta_Rl
+TargetedEq  = ge_eq((zeta_Rs = SBRA.zeta_Rs,), BaseEq.c_e)
+UniversalEq = ge_eq((zeta_Rl = SBRA.zeta_Rs,), BaseEq.c_e)
+ControlEq   = ge_eq((zeta_Rs = SBRA.zeta_Rs, phi_c = theta_control), BaseEq.c_e)
+SBRATab = change_table(["Targeted" => (BaseEq, TargetedEq), "Universal" => (BaseEq, UniversalEq), "Control Reduc." => (BaseEq, ControlEq)])
+print_table("SBRA: changes from the baseline (tab:percentage_changes2)", SBRATab)
+println("Targeted: zeta_Rs = ", round(SBRA.zeta_Rs, digits = 2), "; small firms' liquidation probability ",
+        round(BaseEq.sme["liqprob", "SME Values"], digits = 3), " -> ", round(TargetedEq.sme["liqprob", "SME Values"], digits = 3),
+        " in GE. Control reduction: theta = ", round(theta_control, digits = 4))
+
+#### Only AB debt and only CF debt (tab:percentage_changes, columns 2 and 3; ABcase.jl, CFcase.jl) ####
+# AB only: theta = 0 (phi_c; lenders get nothing in reorganization). CF only: phi_af = 0 (lenders get nothing in liquidation).
+# Each case recalibrates pc, P_x and zeta to the debt to collateral ratio, the interest rate and the liquidation
+# probability (main5), starting from the calibrated values; then zeta is cut by half and the wage solved as above.
+# This uses data_targets, calib_moments and options from the CALIBRATION block. Each recalibration takes about 10-20
+# minutes and saves its CALIB file; with recalibrate_ABCF = false, set AB_file and CF_file to saved files instead.
+recalibrate_ABCF = true
+AB_file = joinpath("calibration_outputs", "CALIB_$(Dates.format(now(), "yyyy-mm-dd_HHMM"))_AB.csv")
+CF_file = replace(AB_file, "_AB.csv" => "_CF.csv")
+ABCF_moments = [(moment, row, row_sme, moment in ("Debt to Collateral", "Interest rate", "Liquidation prob."))
+                for (moment, row, row_sme, _) in calib_moments]
+ABCF_params = (pc         = (parameters().pc,         0.0, Inf),
+               pdef_exo_l = (parameters().pdef_exo_l, 0.0, 1.0),
+               zeta_Rl    = (parameters().zeta_Rl,    0.0, Inf))
+
+# AB only. calibrate prints lines to paste into parameters(): they are for the AB-only model, do not paste them.
+ABVals = recalibrate_ABCF ?
+    with_params(() -> calibrate(ABCF_params, ABCF_moments, data_targets; options = options, file = AB_file).values, (phi_c = 0.0,)) :
+    load_calibration(AB_file)
+ABBaseEq   = solve_eq(merge(ABVals, (phi_c = 0.0,)))
+ABReformEq = ge_eq(merge(ABVals, (phi_c = 0.0, zeta_Rl = ABVals.zeta_Rl / 2)), ABBaseEq.c_e)
+
+# CF only
+CFVals = recalibrate_ABCF ?
+    with_params(() -> calibrate(ABCF_params, ABCF_moments, data_targets; options = options, file = CF_file).values, (phi_af = 0.0,)) :
+    load_calibration(CF_file)
+CFBaseEq   = solve_eq(merge(CFVals, (phi_af = 0.0,)))
+CFReformEq = ge_eq(merge(CFVals, (phi_af = 0.0, zeta_Rl = CFVals.zeta_Rl / 2)), CFBaseEq.c_e)
+
+PctTab = change_table(["AB and CF debt" => (BaseEq, ReformEq), "Only AB debt" => (ABBaseEq, ABReformEq), "Only CF debt" => (CFBaseEq, CFReformEq)])
+print_table("Reform with both debt types, AB only and CF only: changes from each baseline (tab:percentage_changes)", PctTab)
+
+#### Saving: results_outputs/<date>/RESULTS.csv and the figures ####
+save_results(results_dir,
+    ["tab:SSvalues_firms" => SizeTab, "tab:SSvalues_GE" => GETab, "tab:decomposition" => Decomp.table,
+     "tab:percentage_changes" => PctTab, "tab:percentage_changes2" => SBRATab, "SBRA zeta_Rs search" => SBRA.grid],
+    ["Baseline" => BaseEq, "Reform" => ReformEq, "Reform zeta/10" => Reform10Eq, "Perfect credit" => PerfEq,
+     "Targeted" => TargetedEq, "Universal" => UniversalEq, "Control reduction" => ControlEq,
+     "AB baseline" => ABBaseEq, "AB reform" => ABReformEq, "CF baseline" => CFBaseEq, "CF reform" => CFReformEq],
+    ["firm_distribution" => Xalloc.firmalloc, "capital_allocation" => Xalloc.capital, "GamPol" => pGamPol])
+
+#### Other results (not in the paper): MiscResults.jl, which can also be run on its own ####
+run_misc = false
+run_misc && include("MiscResults.jl")
 
 
