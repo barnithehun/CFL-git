@@ -559,14 +559,14 @@ end
 # "Share of small firms" sets Fcut after the fit.
 data_targets = read_targets(joinpath("..", "..", "Data Replication", "calib_targets.csv"))
 
-# calib_moments: (moment as in calib_targets.R, row in sumSS, row in sumSSsme, error form)
-#   :rel = |model - data| / data;  :rel_1m = |model - data| / (1 - data), as ErrorFunc1's AB share;  :none = not targeted
+# calib_moments: (moment as in calib_targets.R, row in sumSS, row in sumSSsme, targeted)
+#   targeted = true: error term |model - data| / data;  false: shown, not targeted
 calib_moments = [
-    ("Debt to Collateral",     "avg_b2a",     "b2a",         :rel),
-    ("Interest rate",          "avg intrate", "intrate",     :rel),
-    ("Liquidation prob.",      "avg_liqprob", "liqprob",     :rel),
-    ("CF-reliance",            "CF reliance", "CF reliance", :rel),
-    ("CF-based to total debt", "CF share",    "CF share",    :rel_1m),
+    ("Debt to Collateral",     "avg_b2a",     "b2a",         true),
+    ("Interest rate",          "avg intrate", "intrate",     true),
+    ("Liquidation prob.",      "avg_liqprob", "liqprob",     true),
+    ("CF-reliance",            "CF reliance", "CF reliance", true),
+    ("CF-based to total debt", "CF share",    "CF share",    true),
 ]
 
 # calib_params: name = (start, lower, upper); each trial must lie strictly inside the bounds.

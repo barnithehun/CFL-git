@@ -2,7 +2,7 @@
 # A calibration is written as data, in the calibration block of baseline_calib.jl:
 #   data_targets:  DataFrame with columns moment, weighted, small, large - read from calib_targets.R's output (read_targets).
 #                  The row "Share of small firms" sets the size cutoff Fcut.
-#   calib_moments: vector of (moment, row in sumSS, row in sumSSsme, error form); error form :none = shown, not targeted.
+#   calib_moments: vector of (moment, row in sumSS, row in sumSSsme, targeted); targeted = false: shown, not targeted.
 #   calib_params:  NamedTuple, name = (start, lower, upper). Any number field of parameters() can be calibrated;
 #                  a parameter that is not listed keeps its value from parameters().
 # Every trial runs the same FirmOptim, EntryValue and sumSS as the results, with the trial values set as overrides in parameters().
@@ -53,24 +53,16 @@ function data_value(data_targets, moment, col = :weighted)
 end
 
 ####### Model moments and the error #######
-# error term of one moment:  :rel     |model - data| / data
-#                            :rel_1m  |model - data| / (1 - data), the same as comparing 1 - model with 1 - data
-#                                     (ErrorFunc1 compared the AB share instead of the CF share, for greater weight)
-#                            :none    0, the moment is shown but not targeted
-function error_term(model, data, form)
-    form == :rel    && return abs(model - data) / data
-    form == :rel_1m && return abs(model - data) / (1 - data)
-    form == :none   && return 0.0
-    error("unknown error form :$form")
-end
+# error term of one moment: |model - data| / data if it is targeted, 0 if it is only shown
+error_term(model, data, targeted) = targeted ? abs(model - data) / data : 0.0
 
 # targeted moments from the sumSS table r: data, model and the error term of each moment in calib_moments
 function targeted_table(r, calib_moments, data_targets)
     data  = [data_value(data_targets, moment) for (moment, _, _, _) in calib_moments]
     model = [r[row, "values"] for (_, row, _, _) in calib_moments]
-    form  = [form for (_, _, _, form) in calib_moments]
+    targeted = [targeted for (_, _, _, targeted) in calib_moments]
     return DataFrame(moment = first.(calib_moments), data = data, model = model,
-                     error = error_term.(model, data, form), form = string.(form))
+                     error = error_term.(model, data, targeted), targeted = targeted)
 end
 
 # calib_fit: solves the model at wage with vals as overrides; returns the targeted moments, the total error and c_e
@@ -157,7 +149,7 @@ function print_fit(fit)
     println("\nTotal error (minimized by calibrate): ", round(fit.error, digits = 5), "     c_e = ", round(fit.c_e, digits = 2), " at wage ", fit.wage)
     println("Share of small firms: data ", round(fit.share.data, digits = 3), ", model ", round(fit.share.model, digits = 3),
             "  (small: k' < Fcut = ", round(fit.Fcut, digits = 2), ")")
-    println("\nTargeted moments, all firms (form :none = not targeted)")
+    println("\nTargeted moments, all firms (targeted = false: shown, not targeted)")
     show(stdout, fit.targeted; allrows = true, allcols = true, eltypes = false); println()
     println("\nSmall and large firms (not targeted)")
     show(stdout, fit.size; allrows = true, allcols = true, eltypes = false); println()
@@ -179,7 +171,8 @@ function save_calibration(file, calib_params, fit)
         name in internal || name == :Fcut || push!(rows, row("external parameter", name, name == :tau_vec ? string(p[name]) : p[name]))
     end
     append!(rows, [row("grid", name, g[name]) for name in keys(g)])
-    append!(rows, [row("targeted moment ($(r.form))", r.moment, r.model; data = r.data, error = r.error) for r in eachrow(fit.targeted)])
+    append!(rows, [row(r.targeted ? "targeted moment" : "moment, not targeted", r.moment, r.model; data = r.data, error = r.error)
+                   for r in eachrow(fit.targeted)])
     append!(rows, [row("small firms", r.moment, r.model_small; data = r.data_small) for r in eachrow(fit.size)])
     append!(rows, [row("large firms", r.moment, r.model_large; data = r.data_large) for r in eachrow(fit.size)])
     push!(rows, row("share of small firms", "Share of small firms", fit.share.model; data = fit.share.data))

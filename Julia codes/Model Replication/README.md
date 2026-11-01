@@ -62,7 +62,7 @@ Restarting Nelder–Mead from where it stopped, with a fresh default simplex (ea
 The calibration block is the only place to edit. It sets four things:
 
 - **`data_targets`**: a table with columns `moment`, `weighted`, `small` and `large`. It is read from `Data Replication/calib_targets.csv`, the last table of `calib_targets.R` plus its share of small firms w; run that script first to update it.
-- **`calib_moments`**: `(moment, row in sumSS, row in sumSSsme, error form)` for each moment. The error term is `|model − data| / data` (`:rel`), or `|model − data| / (1 − data)` (`:rel_1m`), which is `ErrorFunc1`'s AB share in place of the CF share. `:none` shows a moment without targeting it.
+- **`calib_moments`**: `(moment, row in sumSS, row in sumSSsme, targeted)` for each moment. A targeted moment's error term is `|model − data| / data`; `targeted = false` shows a moment without targeting it.
 - **`calib_params`**: each internally calibrated parameter as `name = (start, lower, upper)`. Any number field of `parameters()` can be listed; a parameter that is not listed keeps its value from `parameters()`.
 - **`valid`**: an optional joint condition on the trial values.
 
