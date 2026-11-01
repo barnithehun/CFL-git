@@ -4,8 +4,8 @@
 #   runs: label => equilibrium for the baseline, reform (ζ/2) and reform (ζ/10), in this order
 #   perf: label => the perfect credit equilibrium (perf_cred = 1), shown in the firm distribution panels only.
 #         The capital panel shows the efficient allocation k_share_opt as "perfect credit", as the script did.
-# Returns the capital allocation (plt1), the share (plt2) and the mass (plt3) of firms by productivity, and firmalloc,
-# the two firm distribution panels side by side as in main5's figure (mass left, share right).
+# Returns the capital allocation (plt1) and firmalloc, the mass (plt3) and share (plt2) of firms by productivity side
+# by side as in main5's figure.
 function Xallocation(runs, perf)
 
     # model sizes and parameters
@@ -48,16 +48,13 @@ function Xallocation(runs, perf)
         Span = toskip:(length(mu) - 1)
 
         mu_stat = sum(reshape(mu[Span], x_size, :), dims=1)[:]               # firm mass by productivity
-        M = sum(mu)                                                           # total mass
 
         k_num = results[id][:SumPol][Span, 3] .* mu[Span]
         k_share_obs = k_num ./ sum(k_num)
         k_share_obs = sum(reshape(k_share_obs, x_size, :), dims=1)[:]         # by productivity
 
         R[:mu_stat] = mu_stat
-        R[:M] = M
         R[:k_share_obs] = k_share_obs
-        R[:check_mu_share_sum] = sum(mu_stat) / M
     end
 
     # ------------ Plot 1: Capital allocation (observed vs optimal) ------------
@@ -109,5 +106,5 @@ function Xallocation(runs, perf)
 
     firmalloc = plot(plt3, plt2, layout=(1,2), size=(1200, 500), margin=10mm)
 
-    return (capital = plt1, share = plt2, mass = plt3, firmalloc = firmalloc, results = results)
+    return (capital = plt1, firmalloc = firmalloc)
 end

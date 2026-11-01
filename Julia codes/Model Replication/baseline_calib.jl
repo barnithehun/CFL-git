@@ -668,7 +668,7 @@ print_table("Decomposition of the change in Y/L, log points x 100 (tab:decomposi
 Reform10Eq = ge_eq((zeta_Rl = parameters().zeta_Rl / 10,), BaseEq.c_e)
 PerfEq     = ge_eq((perf_cred = 1.0,), BaseEq.c_e; bracket = (1.0, 1.6))
 println("\nPerfect credit: Y/L changes by ", round(100 * (PerfEq.ss["YtoL", "values"] / BaseEq.ss["YtoL", "values"] - 1), digits = 2), "%")
-Xalloc = Xallocation(["baseline (ζ)" => BaseEq, "reform (ζ/2)" => ReformEq, "reform (ζ/10)" => Reform10Eq], "perfect credit" => PerfEq)
+Xalloc = Xallocation(["baseline (ζ)" => BaseEq, "reform (ζ/2)" => ReformEq, "reform (ζ/10)" => Reform10Eq], "perfect credit" => PerfEq);
 Xalloc.firmalloc     # fig:firmalloc
 Xalloc.capital       # fig:capalloc
 
