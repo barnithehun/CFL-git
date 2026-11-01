@@ -597,13 +597,15 @@ options = Optim.Options(
     show_trace = true,
     store_trace = true,
     show_every = 1)
-# thorough = true runs calibrate_thoroughly instead (see Calibrate.jl): it restarts Nelder-Mead until a restart gains less
-#  than 1e-6 (at most 5 restarts), from the start in calib_params and two variants ±variant_pct away, and keeps the best.
-#  It takes several times as long as calibrate. starts = [CalRes.values] in its call polishes an earlier result instead.
+# thorough = true runs calibrate_thoroughly instead (see Calibrate.jl): it screens n_screen points spread over screen_box
+#  (name = (low, high); a parameter left out gets start × (0.5, 1.5)), runs Nelder-Mead with up to 3 restarts from the
+#  best n_starts of them, each start on its own Julia process, and keeps the best. Save the file first: the workers load
+#  the model from it. starts = [CalRes.values] in its call polishes an earlier result instead of screening.
 thorough = false
-# saves to calibration_outputs/CALIB_<date>.csv (thorough: CALIB_<date>_thorough.csv and CALIB_<date>_thorough_runs.csv)
+# saves to calibration_outputs/CALIB_<date>.csv (thorough: CALIB_<date>_thorough.csv, _thorough_runs.csv and _thorough_screen.csv)
 @elapsed CalRes = thorough ?
-    calibrate_thoroughly(calib_params, calib_moments, data_targets; options = options, valid = valid, variant_pct = 0.10) :
+    calibrate_thoroughly(calib_params, calib_moments, data_targets; options = options, valid = valid, n_screen = 100, n_starts = 4,
+        screen_box = (pc = (25.0, 75.0), pdef_exo_l = (0.01, 0.10), zeta_Rl = (1000.0, 5000.0), phi_c_hh = (0.6, 0.995), phi_c = (0.15, 0.6))) :
     calibrate(calib_params, calib_moments, data_targets; options = options, valid = valid)
 
 # To use the calibrated values (Fcut included) without pasting them: set_params!(CalRes.values).

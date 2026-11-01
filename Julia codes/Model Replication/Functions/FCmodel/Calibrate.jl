@@ -8,6 +8,8 @@
 # Every trial runs the same FirmOptim, EntryValue and sumSS as the results, with the trial values set as overrides in parameters().
 # The calibration and the model fit use unrounded interest rates and spreads (rate_digits = nothing in sumSS and sumSSsme).
 
+using Distributed   # calibrate_thoroughly runs its starts on separate Julia processes
+
 ####### Overrides in parameters() #######
 # set_params!: parameters() returns vals in place of its defaults, until reset_params!()
 function set_params!(vals)
@@ -212,70 +214,156 @@ function calibrate(calib_params, calib_moments, data_targets; options = Optim.Op
 end
 
 ####### CALIBRATE THOROUGHLY #######
-# default_starts: the start in calib_params, and two variants that move each start by ±pct with alternating signs
-# (+,-,+,... and -,+,-,...). A start of 0 does not move.
-function default_starts(calib_params, pct)
-    x0 = [start for (start, _, _) in values(calib_params)]
-    variant(s) = NamedTuple{keys(calib_params)}(Tuple(x0 .* (1 .+ s .* pct)))
-    signs = [isodd(i) ? 1 : -1 for i in eachindex(x0)]
-    pct == 0 && return [variant(0)]
-    return [variant(0), variant(signs), variant(-signs)]
+# calibrate_thoroughly: calibrate with a screening step, several starts run in parallel, restarts, and the parameters
+# searched in transformed form. The error has many local minima (moments jump where a policy switches grid points),
+# and in the tests on 2026-10-31 the result depended mostly on where Nelder-Mead started.
+#  1. Screening: the error at n_screen points spread evenly over screen_box (a Halton sequence) and at the start in
+#     calib_params, one model solve each. The best n_starts points become the starts. screen_box: name = (low, high);
+#     a parameter left out gets start × (0.5, 1.5), cut to its bounds. Points outside the bounds or failing valid are
+#     dropped. starts = [CalRes.values, ...] skips the screening (fields not in calib_params, such as Fcut, are ignored).
+#  2. From each start, Nelder-Mead runs, then restarts from where it stopped with a new first simplex, until a restart
+#     improves the error by less than restart_tol, or after max_restarts. The best result over all starts is kept.
+#  3. transform = true: Nelder-Mead searches z = logit of a parameter with two finite bounds and z = log(p - lower) of
+#     one with only a lower bound, so no trial leaves the bounds; the first simplex moves each z by simplex_step
+#     (0.4: ×1.5 for a log, 0.80 -> 0.86 for a logit). transform = false searches the parameters themselves, with
+#     Optim's default first simplex (+50% on each), as calibrate.
+#  n_workers: separate Julia processes the screening and the starts run on (0 = this process only); the overrides in
+#     parameters() are global, so threads would overwrite each other's. Each worker loads the model part of model_file
+#     (everything above "########## CALIBRATION"), so changes to gridsize() or the model must be saved there first.
+#     Overrides set with set_params! before the call are passed on to the workers.
+# Saves the same CSV as calibrate (CALIB_<date>_thorough.csv; its start column shows the best run's start),
+# <file>_runs.csv with every run and <file>_screen.csv with every screened point.
+
+# Halton sequence: point i in the dimension with prime base, in (0, 1)
+function halton(i, base)
+    f, r = 1.0, 0.0
+    while i > 0
+        f /= base
+        r += f * (i % base)
+        i ÷= base
+    end
+    return r
+end
+const HALTON_BASES = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47)
+
+# transformed parameter z: logit((p - lower) / (upper - lower)) with two finite bounds, log(p - lower) or log(upper - p)
+# with one, p itself with none
+to_z(p, lower, upper) = isfinite(lower) && isfinite(upper) ? log((p - lower) / (upper - p)) :
+                        isfinite(lower) ? log(p - lower) : isfinite(upper) ? log(upper - p) : p
+from_z(z, lower, upper) = isfinite(lower) && isfinite(upper) ? lower + (upper - lower) / (1 + exp(-z)) :
+                          isfinite(lower) ? lower + exp(z) : isfinite(upper) ? upper - exp(z) : z
+
+# first simplex of Nelder-Mead: the start, and the start with each coordinate moved by step
+struct StepSimplexer <: Optim.Simplexer
+    step::Float64
+end
+Optim.simplexer(S::StepSimplexer, x0) = [[copy(x0)]; [x0 .+ S.step .* (eachindex(x0) .== j) for j in eachindex(x0)]]
+
+# default screening box: start × (0.5, 1.5), cut to the bounds
+default_box(calib_params) = map(((start, lower, upper),) -> (max(min(0.5start, 1.5start), lower), min(max(0.5start, 1.5start), upper)), calib_params)
+
+# error at the parameter values vals (a NamedTuple); 1e10 outside the bounds, when valid fails or when the error is NaN.
+# base: the overrides set before calibrate_thoroughly was called.
+function thorough_error(vals, calib_params, calib_moments, data_targets, wage, valid, base)
+    all(calib_params[n][2] < v < calib_params[n][3] for (n, v) in pairs(vals)) || return 1e10
+    return with_params(base) do
+        with_params(() -> valid(parameters()), vals) || return 1e10
+        err = calib_fit(vals, calib_moments, data_targets; wage = wage).error
+        isnan(err) ? 1e10 : err
+    end
 end
 
-# calibrate_thoroughly: calibrate with restarts and several starts. Nelder-Mead often stops before the minimum, when its
-# simplex shrinks in a rugged part of the error. A restart runs it again from where it stopped, with a new first simplex
-# (Optim's default: +50% on each parameter). Restarts stop when one improves the error by less than restart_tol, or after
-# max_restarts. A start that ends in a wrong local minimum stays there, so the loop runs from each start and keeps the best.
-#   starts: NamedTuples with the names of calib_params (other fields, such as Fcut, are ignored). The default is
-#           default_starts(calib_params, variant_pct); starts = [CalRes.values] polishes an earlier calibrate result.
-# The first run from the start in calib_params is the same as calibrate's, so the result is never worse.
-# Saves the same CSV as calibrate, and <file>_runs.csv with every run: start, restart, error, gain, trials, minutes, values.
+# thorough_start: Nelder-Mead with restarts from start x (a NamedTuple), with the settings s; runs on a worker.
+# Returns every run, and the best values, error and Optim result.
+function thorough_start(i, x, s)
+    pnames = keys(s.calib_params)
+    lower = [s.calib_params[n][2] for n in pnames]
+    upper = [s.calib_params[n][3] for n in pnames]
+    to_vals(z) = NamedTuple{pnames}(Tuple(s.transform ? from_z.(z, lower, upper) : z))
+    f(z) = thorough_error(to_vals(z), s.calib_params, s.calib_moments, s.data_targets, s.wage, s.valid, s.base)
+    method = s.transform ? NelderMead(initial_simplex = StepSimplexer(s.simplex_step)) : NelderMead()
+    z0 = s.transform ? to_z.(collect(x), lower, upper) : collect(x)
+
+    runs = NamedTuple[]
+    OptRes = nothing
+    for r in 0:s.max_restarts
+        t = @elapsed res = optimize(f, r == 0 ? z0 : Optim.minimizer(OptRes), method, s.options)
+        gain = r == 0 ? missing : Optim.minimum(OptRes) - Optim.minimum(res)
+        push!(runs, merge((start = i, restart = r, error = Optim.minimum(res), gain = gain,
+                           trials = Optim.f_calls(res), minutes = t / 60), to_vals(Optim.minimizer(res))))
+        println("start $i, ", r == 0 ? "first run" : "restart $r", ": error ", Optim.minimum(res),
+                r == 0 ? "" : ", gain $gain", ", ", Optim.f_calls(res), " trials, ", round(t / 60, digits = 1), " min")
+        (r == 0 || gain > 0) && (OptRes = res)
+        r > 0 && gain < s.restart_tol && break
+    end
+    return (runs = runs, values = to_vals(Optim.minimizer(OptRes)), error = Optim.minimum(OptRes), start = x, optim = OptRes)
+end
+
+# start_workers: n Julia processes with the model part of model_file loaded
+function start_workers(n, model_file)
+    code = read(model_file, String)
+    i = findfirst("########## CALIBRATION", code)
+    i === nothing && error("no \"########## CALIBRATION\" line in $model_file")
+    model = code[1:prevind(code, first(i))]
+    ws = addprocs(n; exeflags = "--project=$(Base.active_project())")
+    println("Loading the model from $model_file on $n workers")
+    @everywhere ws task_local_storage(() -> include_string(Main, $model, $model_file), :SOURCE_PATH, $model_file)
+    return ws
+end
+
 function calibrate_thoroughly(calib_params, calib_moments, data_targets; options = Optim.Options(), wage = 1, valid = p -> true,
-                              variant_pct = 0.10, starts = default_starts(calib_params, variant_pct),
-                              restart_tol = 1e-6, max_restarts = 5,
+                              screen_box = NamedTuple(), n_screen = 100, n_starts = 4, starts = nothing,
+                              restart_tol = 1e-6, max_restarts = 3, transform = true, simplex_step = 0.4,
+                              n_workers = n_starts, model_file = normpath(joinpath(@__DIR__, "..", "..", "baseline_calib.jl")),
                               file = joinpath("calibration_outputs", "CALIB_$(Dates.format(now(), "yyyy-mm-dd_HHMM"))_thorough.csv"))
 
     pnames = keys(calib_params)
-    f(x) = calib_error(x, calib_params, calib_moments, data_targets; wage = wage, valid = valid)
+    base = (; PARAM_OVERRIDE...)
     inside(vals) = all(calib_params[n][2] < v < calib_params[n][3] for (n, v) in pairs(vals)) &&
                    with_params(() -> valid(parameters()), vals)
+    s = (calib_params = calib_params, calib_moments = calib_moments, data_targets = data_targets, wage = wage, valid = valid,
+         base = base, options = options, transform = transform, simplex_step = simplex_step,
+         restart_tol = restart_tol, max_restarts = max_restarts)
 
-    runs = NamedTuple[]
-    best = nothing
-    for (i, s) in enumerate(starts)
-        x = NamedTuple{pnames}(Tuple(Float64(s[n]) for n in pnames))
-        if !inside(x)
-            @warn "start $i is outside the bounds or fails valid, skipped" start = x
-            continue
+    ws = n_workers > 0 ? start_workers(n_workers, model_file) : Int[]
+    run_map(f, xs) = isempty(ws) ? map(f, xs) : pmap(f, WorkerPool(ws), xs)
+    screen, results = nothing, nothing
+    try
+        if starts === nothing
+            box = merge(default_box(calib_params), screen_box)
+            points = [NamedTuple{pnames}(Tuple(box[n][1] + halton(j, HALTON_BASES[d]) * (box[n][2] - box[n][1])
+                                               for (d, n) in enumerate(pnames))) for j in 1:n_screen]
+            pushfirst!(points, NamedTuple{pnames}(Tuple(start for (start, _, _) in values(calib_params))))
+            points = filter(inside, points)
+            println("\n####### Screening $(length(points)) points #######")
+            t = @elapsed errs = run_map(x -> thorough_error(x, calib_params, calib_moments, data_targets, wage, valid, base), points)
+            screen = sort(DataFrame([merge((point = j, error = e), x) for (j, (x, e)) in enumerate(zip(points, errs))]), :error)
+            println("Screening took ", round(t / 60, digits = 1), " min; the best points:")
+            show(stdout, first(screen, n_starts); allcols = true, eltypes = false); println()
+            starts = [NamedTuple{pnames}(Tuple(r[n] for n in pnames)) for r in eachrow(first(screen, n_starts))]
+        else
+            starts = [NamedTuple{pnames}(Tuple(Float64(x[n]) for n in pnames)) for x in starts]
+            for (i, x) in enumerate(starts)
+                inside(x) || @warn "start $i is outside the bounds or fails valid, skipped" start = x
+            end
+            starts = filter(inside, starts)
         end
+        isempty(starts) && error("no start lies inside the bounds and passes valid")
 
-        OptRes = nothing
-        for r in 0:max_restarts
-            println("\n####### start $i of $(length(starts)), ", r == 0 ? "first run" : "restart $r", " #######")
-            t = @elapsed res = optimize(f, r == 0 ? collect(x) : Optim.minimizer(OptRes), NelderMead(), options)
-            gain = r == 0 ? missing : Optim.minimum(OptRes) - Optim.minimum(res)
-            push!(runs, merge((start = i, restart = r, error = Optim.minimum(res), gain = gain,
-                               trials = Optim.f_calls(res), minutes = t / 60),
-                              NamedTuple{pnames}(Tuple(Optim.minimizer(res)))))
-            println("error ", Optim.minimum(res), r == 0 ? "" : ", gain $gain", ", ", Optim.f_calls(res), " trials, ",
-                    round(t / 60, digits = 1), " min")
-            (r == 0 || gain > 0) && (OptRes = res)
-            r > 0 && gain < restart_tol && break
-        end
-
-        if best === nothing || Optim.minimum(OptRes) < Optim.minimum(best.optim)
-            best = (start = x, optim = OptRes)
-        end
+        println("\n####### Nelder-Mead from $(length(starts)) starts #######")
+        results = run_map(((i, x),) -> thorough_start(i, x, s), collect(enumerate(starts)))
+    finally
+        isempty(ws) || rmprocs(ws)
     end
-    best === nothing && error("no start lies inside the bounds and passes valid")
+    best = results[argmin([r.error for r in results])]
 
-    runs = DataFrame(runs)
+    runs = DataFrame(reduce(vcat, [r.runs for r in results]))
     runs.best = (1:nrow(runs)) .== argmin(runs.error)
     println("\nAll runs (if the starts end at different values with similar errors, the moments do not pin down the parameters)")
     show(stdout, runs; allrows = true, allcols = true, eltypes = false); println()
 
     # from here on as in calibrate
-    vals = NamedTuple{pnames}(Tuple(Optim.minimizer(best.optim)))
+    vals = best.values
     fit = model_fit(vals, calib_moments, data_targets; wage = wage)
 
     println("\nTo keep these values, replace these lines in parameters():")
@@ -287,6 +375,11 @@ function calibrate_thoroughly(calib_params, calib_moments, data_targets; options
     runs_file = replace(file, ".csv" => "_runs.csv")
     CSV.write(runs_file, runs)
     println("Saved the runs to ", runs_file)
+    if screen !== nothing
+        screen_file = replace(file, ".csv" => "_screen.csv")
+        CSV.write(screen_file, screen)
+        println("Saved the screening to ", screen_file)
+    end
 
-    return (values = fit.values, fit = fit, optim = best.optim, runs = runs)
+    return (values = fit.values, fit = fit, optim = best.optim, runs = runs, screen = screen)
 end
