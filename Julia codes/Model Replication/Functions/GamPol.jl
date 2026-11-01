@@ -1,4 +1,4 @@
-#### hypotheticals ####
+#### Hypotheticals ####
 # interest rate and debt financing strategy across different liquidation probability
 function GamPol(SumPol, x_i, e_i)
 

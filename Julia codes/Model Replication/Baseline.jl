@@ -64,7 +64,7 @@ function parameters()
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
             discount = discount, phi_a = phi_a, phi_af = phi_af, tauchen_sd = tauchen_sd,
             kappa = kappa, zeta_L = zeta_L, tau_vec = tau_vec,
-             phi_c_hh = phi_c_hh, Fcut = Fcut)
+            phi_c_hh = phi_c_hh, Fcut = Fcut)
 end
 
 ####### TRANSITIONS AND POLICY ITERATION #######
@@ -626,10 +626,10 @@ zeta_R_vec = 0:1000:8000
 ZetaGamPlot(SumPolZeta, zeta_R_vec, 23, 15)
 
 ###### GENERAL EQUILIBRIUM: Finding wage given entry cost, using bisection ####
-tolerance = 1
+tolerance = 0.0001
 wage_0 = 1
 phi_c =  0.360542276
-zeta_Rl =  2753.229657
+zeta_Rl =  2753.229657/2
 
 SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
 c_e, f0 = EntryValue(SumPol, e_chain)
@@ -637,7 +637,7 @@ results_baseline = sumSS(SumPol,Fmat,f0)
 c_e_baseline = c_e
 
 #zeta_Rl = 1350
-@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (1.1, 1.3), Bisection(), rtol=tolerance, verbose=true)
+@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (1, 1.3), Bisection(), rtol=tolerance, verbose=true)
 
 #  wage_alt = 1.017549201334813 - where zeta_Rl  = zeta_Rl/2
 #  wage_alt =  - where zeta_Rl  = zeta_Rl/10

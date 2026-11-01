@@ -52,7 +52,7 @@ rate_scheme      <- "new"    # "new": data_cleaning.R - weighted.mean(), contrac
                              #        contracts without a rate stay in the denominator, which gives lower rates
 
 # Small and large firms
-size_var         <- "value" # firm size: "assets" - Compustat total assets (atq)    <-> IDB estimated assets (EASST)
+size_var         <- "ltq" # firm size: "assets" - Compustat total assets (atq)    <-> IDB estimated assets (EASST)
                              #            "ltq"    - Compustat total liabilities (ltq) <-> IDB estimated liabilities (ELBLTS)
                              #            "value"  - CapIQ total debt                  <-> IDB estimated liabilities (ELBLTS)
 cutoff_usd       <- 1e8      # small = IDB size bin up to the cutoff (USD); the cutoff has to be an upper bound of an IDB bin:
