@@ -555,16 +555,9 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
 end
 
 ########## CALIBRATION ################
-# Data targets: :R reads the last table of Data Replication/calib_targets.R (run it first to update calib_targets.csv);
-# :manual uses manual_targets below (main5's values). "Share of small firms" sets Fcut after the fit.
-targets_source = :R
-manual_targets = DataFrame(
-    moment   = ["Debt to Collateral", "Interest rate", "Liquidation prob.", "CF-reliance", "CF-based to total debt", "Share of small firms"],
-    weighted = [0.52,                 5.30,            0.58,                0.51,          0.82,                     0.66],
-    small    = [0.44,                 5.89,            0.84,                0.51,          0.34,                     missing],
-    large    = [0.59,                 4.63,            0.20,                0.53,          0.83,                     missing])
-targets_source in (:R, :manual) || error("targets_source must be :R or :manual, not $(repr(targets_source))")
-data_targets = targets_source == :R ? read_targets(joinpath("..", "..", "Data Replication", "calib_targets.csv")) : manual_targets
+# Data targets: the last table of Data Replication/calib_targets.R (run it first to update calib_targets.csv).
+# "Share of small firms" sets Fcut after the fit.
+data_targets = read_targets(joinpath("..", "..", "Data Replication", "calib_targets.csv"))
 
 # calib_moments: (moment as in calib_targets.R, row in sumSS, row in sumSSsme, error form)
 #   :rel = |model - data| / data;  :rel_1m = |model - data| / (1 - data), as ErrorFunc1's AB share;  :none = not targeted

@@ -1,7 +1,7 @@
 ####### CALIBRATION #######
 # A calibration is written as data, in the calibration block of baseline_calib.jl:
-#   data_targets:  DataFrame with columns moment, weighted, small, large - read from calib_targets.R's output (read_targets)
-#                  or written by hand. The row "Share of small firms" sets the size cutoff Fcut.
+#   data_targets:  DataFrame with columns moment, weighted, small, large - read from calib_targets.R's output (read_targets).
+#                  The row "Share of small firms" sets the size cutoff Fcut.
 #   calib_moments: vector of (moment, row in sumSS, row in sumSSsme, error form); error form :none = shown, not targeted.
 #   calib_params:  NamedTuple, name = (start, lower, upper). Any number field of parameters() can be calibrated;
 #                  a parameter that is not listed keeps its value from parameters().

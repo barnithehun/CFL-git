@@ -61,7 +61,7 @@ Restarting Nelder–Mead from where it stopped, with a fresh default simplex (ea
 
 The calibration block is the only place to edit. It sets four things:
 
-- **`data_targets`**: a table with columns `moment`, `weighted`, `small` and `large`. With `targets_source = :R` it is read from `Data Replication/calib_targets.csv`, the last table of `calib_targets.R` plus its share of small firms w; run that script first to update it. With `:manual` it is `manual_targets`, main5's values.
+- **`data_targets`**: a table with columns `moment`, `weighted`, `small` and `large`. It is read from `Data Replication/calib_targets.csv`, the last table of `calib_targets.R` plus its share of small firms w; run that script first to update it.
 - **`calib_moments`**: `(moment, row in sumSS, row in sumSSsme, error form)` for each moment. The error term is `|model − data| / data` (`:rel`), or `|model − data| / (1 − data)` (`:rel_1m`), which is `ErrorFunc1`'s AB share in place of the CF share. `:none` shows a moment without targeting it.
 - **`calib_params`**: each internally calibrated parameter as `name = (start, lower, upper)`. Any number field of `parameters()` can be listed; a parameter that is not listed keeps its value from `parameters()`.
 - **`valid`**: an optional joint condition on the trial values.
@@ -147,7 +147,7 @@ No saved script reproduces the SBRA table's universal (0.93%) and control-reduct
 These are recorded here, not fixed. Each one is decided separately.
 
 - **Firm law of motion.** `Fmat` moves P_x + P_D·γ of each state to exit, but P_D already includes P_x, and `stat_dist` also removes states that choose default. This may count defaults twice. Check it against the paper's equations.
-- **Liquidation target.** `ErrorFunc1` uses 0.55, while main5's target table says 0.58. `baseline_calib.jl` uses 0.58.
+- **Liquidation target.** `ErrorFunc1` uses 0.55, while main5's target table says 0.58. `baseline_calib.jl` takes its targets from `calib_targets.R` instead.
 - **Decomposition.** The ±0.003 in `CapAlloc2.jl` changes the policy margin from about 0.01 to 0.311 log points.
 - **Size split.** main5 splits small and large firms by borrowing. `sumSSsme` uses k′ < Fcut, and `sumSS` uses k + x ≤ 2000.
 - **Solver stop.** The q loop stops after 25 iterations with only a printed warning.
