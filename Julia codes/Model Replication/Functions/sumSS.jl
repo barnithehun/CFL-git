@@ -38,11 +38,12 @@ function sumSS(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
             mu_gam += mu[s_i]/totalmass
         end
 
-        if SumPol[s_i,3] != 0 && SumPol[s_i,9] >= 0.5
-            avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / (SumPol[s_i, 3] + SumPol[s_i, 1])
-            # avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / (SumPol[s_i, 3] )
+        # debt to collateral b'/k', as the data's debt / (PPE + inventories + receivables); cash on hand x is not collateral.
+        # Ratios above 3 are dropped, as calib_targets.R does (d2c_cut = 3)
+        if SumPol[s_i,3] != 0 && SumPol[s_i,9] >= 0.5 && SumPol[s_i,4] / SumPol[s_i,3] <= 3
+            avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / SumPol[s_i, 3]
             mu_b2a += mu[s_i]/totalmass
-        end  
+        end
 
         if SumPol[s_i,11] != 0 && SumPol[s_i, 10] != 0
             avg_prod += mu[s_i]/totalmass * SumPol[s_i,11] / SumPol[s_i, 10]

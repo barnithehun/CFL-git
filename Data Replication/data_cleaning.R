@@ -505,7 +505,7 @@ flevel <- flevel %>%
 flevel <- flevel %>% group_by(companyid) %>% arrange(companyid, dateper) %>% 
   mutate(ebit2a = ebitda / assets ,
          d2c = value / collat,
-         d2c = ifelse(d2c < 0 | d2c > 1.5, NA, d2c),
+         d2c = ifelse(d2c < 0 | d2c > 3, NA, d2c),   # same cut as d2c_cut in calib_targets.R
          AB2a =  AB_val / 1000000 / assets,
          CF2a = CF_val / 1000000 / assets)
 

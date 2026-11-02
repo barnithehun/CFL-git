@@ -45,6 +45,7 @@ end_year         <- 2024     # sample: 2010Q1 - end_year Q4 (Compustat-CapIQ qua
 # Defaults = the settings closest to the paper's targeted and untargeted moments (Tables tab:targets and tab:untargeted)
 cap_lease_stock  <- FALSE    # capital leases in the debt stocks (value, CF/AB volumes, CFshare, d2c and the ±30% match filter)
 cap_lease_rates  <- FALSE    # capital leases in the firm level interest rates (data_cleaning.R: excluded)
+d2c_cut          <- 3        # debt to collateral above d2c_cut is set to NA
 
 # Firm level aggregation of interest rates
 rate_scheme      <- "new"    # "new": data_cleaning.R - weighted.mean(), contracts without a rate are dropped
@@ -209,7 +210,7 @@ flevel <- flevel %>%
 flevel <- flevel %>% group_by(companyid) %>% arrange(companyid, dateper) %>%
   mutate(ebit2a = ebitda / assets ,
          d2c = value / collat,
-         d2c = ifelse(d2c < 0 | d2c > 1.5, NA, d2c),
+         d2c = ifelse(d2c < 0 | d2c > d2c_cut, NA, d2c),
          AB2a =  AB_val / 1000000 / assets,
          CF2a = CF_val / 1000000 / assets)
 
@@ -334,9 +335,9 @@ print(targets %>% mutate(across(where(is.numeric), ~ round(.x, 3))))
 
 # Output for the Julia calibration: Table 2 and the share of small firms, which the model matches with its size cutoff Fcut
 write_csv(bind_rows(targets, tibble(moment = "Share of small firms", weighted = w)), "calib_targets.csv", na = "")
-write_csv(tibble(setting = c("end_year", "cap_lease_stock", "cap_lease_rates", "rate_scheme", "size_var", "cutoff_usd",
+write_csv(tibble(setting = c("end_year", "cap_lease_stock", "cap_lease_rates", "d2c_cut", "rate_scheme", "size_var", "cutoff_usd",
                              "micro_usd", "weight_source", "nonlead", "written"),
-                 value   = c(end_year, cap_lease_stock, cap_lease_rates, rate_scheme, size_var, cutoff_usd,
+                 value   = c(end_year, cap_lease_stock, cap_lease_rates, d2c_cut, rate_scheme, size_var, cutoff_usd,
                              micro_usd, weight_source, nonlead, format(Sys.time(), "%Y-%m-%d %H:%M"))),
           "calib_targets_settings.csv")
 
