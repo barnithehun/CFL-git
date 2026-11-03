@@ -49,10 +49,10 @@ function parameters()
     DRS::Float64 = par(:DRS, 0.75)
     alpha::Float64 = par(:alpha, 1/3 * DRS)
     nu::Float64 = par(:nu, 2/3 * DRS)
-    pc::Float64 = par(:pc, 42.03135921)
+    pc::Float64 = par(:pc, 43.779097957778575)
     beta::Float64 = par(:beta, 0.96)
     delta::Float64 = par(:delta, 0.065)
-    pdef_exo_l::Float64 = par(:pdef_exo_l, 0.029176179)
+    pdef_exo_l::Float64 = par(:pdef_exo_l, 0.02998404342624058)
     pdef_exo_s::Float64 = par(:pdef_exo_s, pdef_exo_l)
     discount::Float64 = par(:discount, beta)
     phi_a::Float64 = par(:phi_a, 0.4)
@@ -62,12 +62,12 @@ function parameters()
     kappa::Float64 = par(:kappa, 0.1)       # capital recovery rate of CFL debt
     tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
     zeta_L::Float64 = par(:zeta_L, 0)
-    phi_c_hh::Float64 = par(:phi_c_hh, 0.803835125)
-    Fcut::Float64 = par(:Fcut, 2000)
+    phi_c_hh::Float64 = par(:phi_c_hh, 0.8217010809438593)
+    Fcut::Float64 = par(:Fcut, 533.6699231206312)
 
     # baseline values of the two FirmOptim arguments (phi_c is theta in main5)
-    phi_c::Float64 = par(:phi_c, 0.360542276)
-    zeta_Rl::Float64 = par(:zeta_Rl, 2753.229657)
+    phi_c::Float64 = par(:phi_c, 0.3722123743631673)
+    zeta_Rl::Float64 = par(:zeta_Rl, 3145.0211744432772)
 
     # results experiments (see FirmOptim): zeta and theta for small firms (k' < Fcut), which follow zeta_Rl and phi_c
     # unless set, and perfect credit (1 = negative dividends, i.e. equity injections, are free, as in FinalVers/Xallocation.jl)
@@ -461,46 +461,49 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
                 pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
     
                 pdef_endo = 0
-                gam = 0
-                Pi_reo = 0
+                liqD = 0.0   # P(default in e' and liquidated)
+                reoD = 0.0   # P(default in e' and reorganized)
+                reoV = 0.0   # E[theta * V(x'+b', e'); default and reorganized]
                 Pi_liq = max(0, phi_af*(1-delta)*next_k - zeta_L)
+                # The action with the k′ and b′ = 0 has next-period cash on hand of exactly x′ + b′
+                a0 = a_i_vals[a_i, 1]
 
                 # Expectation over e' only: given (k', b', e'), x' is known, so only the two x-grid points around x' matter (interpolated)
                 for next_e_i in 1:e_size
-    
+
                     p_trans = e_ptrans[e_i, next_e_i]
                     xe0     = x_lo_ea[next_e_i, a_i]   # from the tables built before the q loop
 
                     if interp_ea[next_e_i, a_i]
                         t   = t_ea[next_e_i, a_i]
                         xe1 = xe0 + 1
-
-                        @inbounds begin
-                            val      = (1 - t) * Values[xe0] + t * Values[xe1]
-                            next_def = (1 - t) * a_i_vals[policies[xe0], 3] +
-                                    t * a_i_vals[policies[xe1],  3]
-                        end
-
+                        @inbounds next_def = (1 - t) * a_i_vals[policies[xe0], 3] + t * a_i_vals[policies[xe1], 3]
                     else
-
                         # x' off the grid: nearest edge
-                        @inbounds begin
-                            val      = Values[xe0]
-                            next_def = a_i_vals[policies[xe0], 3]
-                        end
+                        @inbounds next_def = a_i_vals[policies[xe0], 3]
                     end
 
+                    # reorganization is a fresh start: the firm does not repay b', so the lender bargains over its value at x' + b'
+                    xg = x_lo_ea[next_e_i, a0]
+                    @inbounds val_reo = interp_ea[next_e_i, a0] ?
+                        (1 - t_ea[next_e_i, a0]) * Values[xg] + t_ea[next_e_i, a0] * Values[xg + 1] : Values[xg]
+                    liq = fn_Gam(val_reo, next_k, zeta_R)
+
+                    # default in e': chosen (next_def) or the exogenous shock
+                    p_d = p_trans * (next_def + (1 - next_def) * pdef_exo)
                     pdef_endo += p_trans * next_def
-                    gam       += p_trans * fn_Gam(val, next_k, zeta_R)
-                    Pi_reo    += p_trans * (theta * val)
+                    liqD += p_d * liq
+                    reoD += p_d * (1 - liq)
+                    reoV += p_d * (1 - liq) * theta * val_reo
                 end
 
                 # now default is a decision and a shock at the same time
                 # prob. of either pdef of pdef exo occurs- these are independent events
                 pdef = pdef_endo + pdef_exo - pdef_endo * pdef_exo
 
-                # adjusting the Pi_reo to the possibility of exo. default shock
-                Pi_reo = Pi_reo * (1-pdef_exo)
+                # liquidation probability and reorganization payoff conditional on default (liqD + reoD = pdef)
+                gam    = pdef > 0 ? liqD / pdef : 0.0
+                Pi_reo = reoD > 0 ? reoV / reoD : 0.0
 
                 # q and tau
                 q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec, beta, kappa)
