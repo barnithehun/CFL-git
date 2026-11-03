@@ -675,6 +675,7 @@ Xalloc.capital       # fig:capalloc
 #### Interest rate and debt type against the liquidation probability (appendix GamPol.png) ####
 pGamPol = plot(GamPol(BaseEq.SumPol, 15, 21), GamPol(BaseEq.SumPol, 26, 21), GamPol(BaseEq.SumPol, 35, 21), layout = (1, 3), size = (900, 300) , margin = 5mm)
 
+
 #### SBRA (tab:percentage_changes2; SmallCosts.jl) ####
 # Targeted: small firms' (k' < Fcut) fixed cost is cut until their liquidation probability falls by 13 pp (main5 section 6).
 # Universal: the same fixed cost for all firms. Control reduction: the targeted cut, and theta (all firms) cut in
@@ -690,6 +691,7 @@ println("Targeted: zeta_Rs = ", round(SBRA.zeta_Rs, digits = 2), "; small firms'
         round(BaseEq.sme["liqprob", "SME Values"], digits = 3), " -> ", round(TargetedEq.sme["liqprob", "SME Values"], digits = 3),
         " in GE. Control reduction: theta = ", round(theta_control, digits = 4))
 
+        
 #### Only AB debt and only CF debt (tab:percentage_changes, columns 2 and 3; ABcase.jl, CFcase.jl) ####
 # AB only: theta = 0 (phi_c; lenders get nothing in reorganization). CF only: phi_af = 0 (lenders get nothing in liquidation).
 # Each case recalibrates pc, P_x and zeta to the debt to collateral ratio, the interest rate and the liquidation
