@@ -28,8 +28,9 @@ function sumSS(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
     avg_b2a, mu_b2a, avg_gam, mu_gam, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL, SMEshare = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     for s_i in 1:n-1
 
+        # interest rate: mean of firm rates 1/q - 1, as the data's mean of loan rates
         if SumPol[s_i,4] != 0  && SumPol[s_i,9] >= 0.5
-            avg_q += mu[s_i]/totalmass * SumPol[s_i,9]
+            avg_q += mu[s_i]/totalmass * (1/SumPol[s_i,9] - 1)
             mu_q += mu[s_i]/totalmass
         end
 
@@ -61,7 +62,7 @@ function sumSS(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
         
     end
     rnd(x) = rate_digits === nothing ? x : round(x, digits = rate_digits)
-    avg_q = rnd((1/(avg_q / mu_q) - 1)*100)
+    avg_q = rnd(avg_q / mu_q * 100)
     avg_spread =  rnd(avg_q - (1/beta-1)*100)
     avg_b2a = avg_b2a / mu_b2a
     avg_gam = avg_gam / mu_gam

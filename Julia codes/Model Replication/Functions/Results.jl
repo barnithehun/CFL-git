@@ -65,7 +65,7 @@ function ge_eq(vals, c_e_target; bracket = (0.9, 1.3), wage_tol = 1e-6, gap_tol 
 end
 
 ####### SBRA: targeted cost cut #######
-# find_zeta_Rs: the fixed reorganization cost of small firms (k' < Fcut) that lowers small firms' liquidation probability
+# find_zeta_Rs: the fixed reorganization cost of small firms (below Fcut, see size_by_debt in parameters()) that lowers small firms' liquidation probability
 # by drop (main5: about 13 pp) from the baseline B, at B's wage. It is a grid search over shares of B's zeta_Rl, as in
 # SmallCosts.jl, which found that bisection fails here (the probability is not monotone in zeta_Rs).
 function find_zeta_Rs(B; drop = 0.13, shares = 0.40:0.01:1.0)

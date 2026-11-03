@@ -3,8 +3,8 @@
 function GamPol(SumPol, x_i, e_i)
 
     gam_vec = 0:0.01:1
-    tau_vec = 0:1.0:1
-    x_size = gridsize().x_size    
+    tau_vec = parameters().tau_vec
+    x_size = gridsize().x_size
     xe_i = x_i + (e_i-1)*x_size
 
     x_val = Int(round(SumPol[xe_i, 1],digits = 0))

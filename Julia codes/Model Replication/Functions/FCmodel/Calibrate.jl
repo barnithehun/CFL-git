@@ -98,18 +98,22 @@ function calib_error(x, calib_params, calib_moments, data_targets; wage = 1, val
 end
 
 ####### Size cutoff #######
-# fit_Fcut: the cutoff on k' that brings the model's share of small firms (the "share" row of sumSSsme) closest to
-# share_target. The share only changes where Fcut passes a k' value, so the current Fcut is kept if it gives the best
-# split; otherwise Fcut is the k' value just above the split (small firms: k' < Fcut, as in sumSSsme).
+# fit_Fcut: the cutoff on b' or k' (parameters().size_by_debt) that brings the model's share of small firms (the "share"
+# row of sumSSsme) closest to share_target. The share only changes where Fcut passes a b' (k') value, so the current
+# Fcut is kept if it gives the best split; otherwise Fcut is the value just above the split. As in sumSSsme, small firms
+# are b' < Fcut among borrowers, or k' < Fcut among all firms.
 function fit_Fcut(SumPol, Fmat, f0, share_target; zeta_R = parameters().zeta_Rl)
     mu, m, xpol = stat_dist(SumPol, Fmat, f0; zeta_R = zeta_R)
     n = size(SumPol, 1)
     totalmass = sum(mu)
     exitshare = (transpose(mu) * xpol) / totalmass
-    kp = SumPol[1:n-1, 3]
-    share(F) = sum(mu[1:n-1][kp .< F]) / totalmass / (1 - exitshare)
+    by_debt = parameters().size_by_debt == 1
+    kp = SumPol[1:n-1, by_debt ? 4 : 3]
+    pop = by_debt ? SumPol[1:n-1, 4] .!= 0 : trues(n-1)
+    denom = by_debt ? transpose(mu[1:n-1]) * pop / totalmass : 1 - exitshare
+    share(F) = sum(mu[1:n-1][pop .& (kp .< F)]) / totalmass / denom
 
-    ks = sort(unique(kp))
+    ks = sort(unique(kp[pop]))
     cuts = [ks[2:end]; 2 * ks[end]]           # cut j: small = {k' <= ks[j]}
     gaps = [abs(share(F) - share_target) for F in cuts]
     Fcut = parameters().Fcut
@@ -148,7 +152,7 @@ end
 function print_fit(fit)
     println("\nTotal error (minimized by calibrate): ", round(fit.error, digits = 5), "     c_e = ", round(fit.c_e, digits = 2), " at wage ", fit.wage)
     println("Share of small firms: data ", round(fit.share.data, digits = 3), ", model ", round(fit.share.model, digits = 3),
-            "  (small: k' < Fcut = ", round(fit.Fcut, digits = 2), ")")
+            "  (small: ", parameters().size_by_debt == 1 ? "b' < Fcut among borrowers" : "k' < Fcut", ", Fcut = ", round(fit.Fcut, digits = 2), ")")
     println("\nTargeted moments, all firms (targeted = false: shown, not targeted)")
     show(stdout, fit.targeted; allrows = true, allcols = true, eltypes = false); println()
     println("\nSmall and large firms (not targeted)")

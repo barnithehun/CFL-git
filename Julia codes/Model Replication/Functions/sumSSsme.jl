@@ -16,7 +16,12 @@ function sumSSsme(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
     entrymass = m*(1-transpose(xpol)*f0) 
     exitshare = exitmass/totalmass 
 
-    defshare = transpose(mu[1:n-1,:])*SumPol[1:n-1,7]/totalmass 
+    defshare = transpose(mu[1:n-1,:])*SumPol[1:n-1,7]/totalmass
+
+    # small firms: b' < Fcut among borrowers, or k' < Fcut among all firms (parameters().size_by_debt)
+    by_debt = parameters().size_by_debt == 1
+    size_col = by_debt ? 4 : 3
+    borrowshare = transpose(mu[1:n-1]) * (SumPol[1:n-1,4] .!= 0) / totalmass
 
     totK =  transpose(mu[1:n-1])*SumPol[1:n-1,3]
     totB =  transpose(mu[1:n-1])*SumPol[1:n-1,4]
@@ -31,13 +36,13 @@ function sumSSsme(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
     avg_b2a, mu_b2a, avg_gam, mu_gam, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL, share, CFdebt, Totdebt,  = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     for s_i in 1:n-1
 
-        if SumPol[s_i,3] < Fcut
+        if SumPol[s_i,size_col] < Fcut && (!by_debt || SumPol[s_i,4] != 0)
 
             CFdebt += mu[s_i] * SumPol[s_i,4] * SumPol[s_i,17]
             Totdebt += mu[s_i] * SumPol[s_i,4]
 
             if SumPol[s_i,4] != 0 && SumPol[s_i,9] >= 0.5
-                avg_q += mu[s_i]/totalmass * SumPol[s_i,9]
+                avg_q += mu[s_i]/totalmass * (1/SumPol[s_i,9] - 1)   # mean of firm rates, as in the data
                 mu_q += mu[s_i]/totalmass
             end
 
@@ -67,13 +72,13 @@ function sumSSsme(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
         end
         
     end
-    avg_q = rnd((1/(avg_q / mu_q) - 1)*100)
+    avg_q = rnd(avg_q / mu_q * 100)
     avg_spread =  rnd(avg_q - (1/beta-1)*100)
     avg_b2a = avg_b2a / mu_b2a
     avg_gam = avg_gam / mu_gam
     avg_prod = avg_prod / mu_prod # sanity check
     avg_CFL = avg_CFL / mu_CFL
-    share = share / (1-exitshare) # mu_CFL has the same condition in the denominator
+    share = by_debt ? share / borrowshare : share / (1-exitshare) # share among borrowers, or among firms that do not exit
     CFshare = CFdebt ./ Totdebt
 
     results[:,1] = vcat(totalmass, exitmass, entrymass, exitshare, defshare, YtoL, avg_b2a, avg_q, avg_spread, avg_gam, CFshare, avg_CFL, share)
@@ -82,14 +87,14 @@ function sumSSsme(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
     avg_b2a, mu_b2a, avg_gam, mu_gam, avg_q, mu_q, avg_prod, mu_prod, avg_CFL, mu_CFL, share, CFdebt, Totdebt,  = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     for s_i in 1:n-1
 
-        if SumPol[s_i,3] >= Fcut
+        if SumPol[s_i,size_col] >= Fcut
 
             
             CFdebt += mu[s_i] * SumPol[s_i,4] * SumPol[s_i,17]
             Totdebt += mu[s_i] * SumPol[s_i,4]
 
             if SumPol[s_i,4] != 0  && SumPol[s_i,9] >= 0.5
-                avg_q += mu[s_i]/totalmass * SumPol[s_i,9]
+                avg_q += mu[s_i]/totalmass * (1/SumPol[s_i,9] - 1)   # mean of firm rates, as in the data
                 mu_q += mu[s_i]/totalmass
             end
 
@@ -119,13 +124,13 @@ function sumSSsme(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
         end
         
     end
-    avg_q = rnd((1/(avg_q / mu_q) - 1)*100)
+    avg_q = rnd(avg_q / mu_q * 100)
     avg_spread =  rnd(avg_q - (1/beta-1)*100)
     avg_b2a = avg_b2a / mu_b2a
     avg_gam = avg_gam / mu_gam
     avg_prod = avg_prod / mu_prod # sanity check
     avg_CFL = avg_CFL / mu_CFL
-    share = share / (1-exitshare) # mu_CFL has the same condition in the denominator
+    share = by_debt ? share / borrowshare : share / (1-exitshare) # share among borrowers, or among firms that do not exit
     CFshare = CFdebt ./ Totdebt
 
     results[:,2] = vcat(totalmass, exitmass, entrymass, exitshare, defshare, YtoL, avg_b2a, avg_q, avg_spread, avg_gam, CFshare, avg_CFL, share)

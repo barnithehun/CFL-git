@@ -60,7 +60,7 @@ function parameters()
     tauchen_sd::Float64 = par(:tauchen_sd, 3)
 
     kappa::Float64 = par(:kappa, 0.1)       # capital recovery rate of CFL debt
-    tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
+    tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:0.05:1  # vector of CFL reliances
     zeta_L::Float64 = par(:zeta_L, 0)
     phi_c_hh::Float64 = par(:phi_c_hh, 0.8217010809438593)
     Fcut::Float64 = par(:Fcut, 533.6699231206312)
@@ -69,11 +69,16 @@ function parameters()
     phi_c::Float64 = par(:phi_c, 0.3722123743631673)
     zeta_Rl::Float64 = par(:zeta_Rl, 3145.0211744432772)
 
-    # results experiments (see FirmOptim): zeta and theta for small firms (k' < Fcut), which follow zeta_Rl and phi_c
+    # results experiments (see FirmOptim): zeta and theta for small firms (below Fcut), which follow zeta_Rl and phi_c
     # unless set, and perfect credit (1 = negative dividends, i.e. equity injections, are free, as in FinalVers/Xallocation.jl)
     zeta_Rs::Float64 = par(:zeta_Rs, zeta_Rl)
     phi_c_s::Float64 = par(:phi_c_s, phi_c)
     perf_cred::Float64 = par(:perf_cred, 0)
+
+    # what Fcut cuts: 1 = debt, b' < Fcut is small, and the size table counts borrowers only (as the data, which splits
+    # by total liabilities and has only firms with loans); 0 = capital, k' < Fcut is small, over all firms (the original).
+    # It sets small firms both in sumSSsme and fit_Fcut and for the small-firm zeta, theta and P_x in FirmOptim.
+    size_by_debt::Float64 = par(:size_by_debt, 1)
 
     # phi_c, zeta_Rl and the fields after them come last: FirmOptim, GamPol and CapAlloc2 unpack the first 19 fields by position
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
@@ -81,7 +86,7 @@ function parameters()
             discount = discount, phi_a = phi_a, phi_af = phi_af, tauchen_sd = tauchen_sd,
             kappa = kappa, zeta_L = zeta_L, tau_vec = tau_vec,
             phi_c_hh = phi_c_hh, Fcut = Fcut, phi_c = phi_c, zeta_Rl = zeta_Rl, DRS = DRS,
-            zeta_Rs = zeta_Rs, phi_c_s = phi_c_s, perf_cred = perf_cred)
+            zeta_Rs = zeta_Rs, phi_c_s = phi_c_s, perf_cred = perf_cred, size_by_debt = size_by_debt)
 end
 
 ####### TRANSITIONS AND POLICY ITERATION #######
@@ -208,16 +213,37 @@ function PFI_solve(R, Qtab, beta; v_init = nothing, max_iter = 250)
     return (v = v, sigma = sigma, num_iter = num_iter)
 end
 
+# landing: where x falls on the x-grid, as Fmat uses it: the closest point, its weight, and the second closest
+# point (0 if x is off the grid, then all weight is on the closest point)
+function landing(x, x_grid)
+    x_close = argmin(abs.(x .- x_grid))
+    if x < x_grid[end] && x > x_grid[1]
+        x_far = x > x_grid[x_close] ? x_close + 1 : x_close - 1
+        close_weight = abs(x - x_grid[x_far]) / (abs(x - x_grid[x_close]) + abs(x - x_grid[x_far]))
+        return x_close, close_weight, x_far
+    end
+    return x_close, 1.0, 0
+end
+
+# place_x!: adds mass to row s_i of Fmat at the two x-grid points around x, for the productivity whose states start after base
+function place_x!(Fmat, s_i, x, base, x_grid, mass)
+    x_close, close_weight, x_far = landing(x, x_grid)
+    Fmat[s_i, x_close + base] += mass * close_weight
+    x_far == 0 || (Fmat[s_i, x_far + base] += mass * (1 - close_weight))
+end
+
 ####### FIRM OPTIM #######
 # phi_c and zeta_Rl default to their values in parameters(); pass them only to solve at other values (e.g. a reform)
 function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta_Rl)
 
     rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, phi_af, tauchen_sd, kappa,  zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
 
-    # small firms' (k' < Fcut) zeta and theta follow the arguments unless set as overrides (SBRA experiments, SmallCosts.jl)
+    # small firms' (below Fcut) zeta and theta follow the arguments unless set as overrides (SBRA experiments, SmallCosts.jl)
     zeta_Rs = haskey(PARAM_OVERRIDE, :zeta_Rs) ? parameters().zeta_Rs : zeta_Rl
     phi_c_s = haskey(PARAM_OVERRIDE, :phi_c_s) ? parameters().phi_c_s : phi_c
     perf_cred = parameters().perf_cred
+    # size column of a_vals that Fcut cuts: 2 = b', 1 = k' (parameters().size_by_debt)
+    size_col = parameters().size_by_debt == 1 ? 2 : 1
 
     # calling grid size
     x_size, e_size, k_size, b_size = gridsize()
@@ -283,7 +309,7 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
     # From the default state, and after the default or exit action, the next state is default with probability 1
     e_of_s = s_i_vals[:, 2]                                    # productivity index of each state
     reg_a = (a_i_vals[:, 3] .== 0) .& (a_i_vals[:, 4] .== 0)   # actions that are neither default nor exit
-    Pdef_a = [next_k >= Fcut ? pdef_exo_l : pdef_exo_s for next_k in a_vals[:, 1]]   # loop over the column, so the comprehension does not capture a_vals (which would box it)
+    Pdef_a = [size_a >= Fcut ? pdef_exo_l : pdef_exo_s for size_a in a_vals[:, size_col]]   # loop over the column, so the comprehension does not capture a_vals (which would box it)
     x_close_ea = zeros(Int, e_size, m)
     x_far_ea = zeros(Int, e_size, m)      # stays 0 if x' is off the grid, then all weight is on x_close
     close_weight_ea = ones(e_size, m)
@@ -455,10 +481,11 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
                 next_k = a_vals[a_i,1]
                 next_b = a_vals[a_i,2]
 
-                # exo probability of default and reorganization costs change with size
-                zeta_R = next_k >= Fcut ? zeta_Rl : zeta_Rs
-                theta  = next_k >= Fcut ? phi_c : phi_c_s
-                pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
+                # exo probability of default and reorganization costs change with size (b' or k', see size_col)
+                large = (size_col == 2 ? next_b : next_k) >= Fcut
+                zeta_R = large ? zeta_Rl : zeta_Rs
+                theta  = large ? phi_c : phi_c_s
+                pdef_exo = large ? pdef_exo_l : pdef_exo_s
     
                 pdef_endo = 0
                 liqD = 0.0   # P(default in e' and liquidated)
@@ -526,41 +553,56 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
     # Fmat - from state n, what is the probability of ending up in state n', given optimal policy
     Fmat = zeros(n-1,n-1)
     Fmat_bottom = zeros(n-1)
+    
+    # For each e': firms landing at x' repay and stay, or default (by choice at x' or by the exo shock).
+    # Defaulters are liquidated and exit (Fmat_bottom) or reorganized and continue at x' + b' (debt written off).
     for s_i in 1:(n-1)
-               
+
         # policies imported from SumPol
         next_k = SumPol[s_i, 3]
         next_b = SumPol[s_i, 4]
+        large = (size_col == 2 ? next_b : next_k) >= Fcut
+        pdef_exo = large ? pdef_exo_l : pdef_exo_s
+        e_i = Int(floor( (s_i-1) / x_size) + 1)
 
-        # probability that you will end up in default state
-        pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
+        # a state whose firm chooses default or exit: stat_dist removes it, so its row is not used 
+        if SumPol[s_i, 6] != 0 || SumPol[s_i, 7] != 0
+            Fmat_bottom[s_i] = pdef_exo
+            for next_e_i in 1:e_size
+                place_x!(Fmat, s_i, fn_X(next_k, next_b, e_vals[next_e_i]), (next_e_i-1)*x_size, x_grid,
+                         e_ptrans[e_i, next_e_i] * (1-pdef_exo))
+            end
+            continue
+        end
 
-        e_i = Int(floor( (s_i-1) / x_size) + 1) 
+        # action (k', b' = 0), as in the q update: its x' is x' + b' (b_grid[1] = 0, k varies fastest in a_vals)
+        a0 = findfirst(==(next_k), k_grid)
+        zeta_R = large ? zeta_Rl : zeta_Rs
+
         for next_e_i in 1:e_size
+            p_trans = e_ptrans[e_i, next_e_i]
+            base = (next_e_i-1)*x_size
 
-            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
-            x_next = fn_X(next_k,next_b,e_vals[next_e_i])
+            # liquidation decision in default, at the value V(x'+b', e') as in the q update
+            # (the q loop's Values are local to it: SumPol[:, 18] holds them)
+            xg = x_lo_ea[next_e_i, a0]
+            val_reo = interp_ea[next_e_i, a0] ?
+                (1 - t_ea[next_e_i, a0]) * SumPol[xg, 18] + t_ea[next_e_i, a0] * SumPol[xg + 1, 18] : SumPol[xg, 18]
+            liq = fn_Gam(val_reo, next_k, zeta_R)
 
-            x_close = argmin(abs.(x_next .- x_grid))
-            xe_close = x_close + (next_e_i-1)*x_size
+            # the two x'-grid points around x'
+            x_close, close_weight, x_far = landing(fn_X(next_k, next_b, e_vals[next_e_i]), x_grid)
+            for (x_i, weight) in ((x_close, close_weight), (x_far, 1 - close_weight))
+                (x_i == 0 || weight == 0) && continue
+                next_def = SumPol[x_i + base, 7]                    # default chosen at this point
+                p_def = next_def + (1 - next_def) * pdef_exo        # default: chosen, or the exogenous shock
 
-            if x_next < x_grid[end] && x_next > x_grid[1]
-                
-                x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
-                
-                close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
-    
-                # finding xe_index     
-                xe_far = x_far + (next_e_i-1)*x_size
-
-                # filling Fmat
-                Fmat[s_i, xe_close] += p_trans * close_weight
-                Fmat[s_i, xe_far] += p_trans * (1-close_weight)                               
-
-            else # close_weight = 1
-                Fmat[s_i, xe_close] += p_trans
-            end  
+                # repays and stays at x'
+                Fmat[s_i, x_i + base] += p_trans * weight * (1 - p_def)
+                # defaults: liquidated (exit), or reorganized and moved to x' + b'
+                Fmat_bottom[s_i] += p_trans * weight * p_def * liq
+                liq == 0 && place_x!(Fmat, s_i, fn_X(next_k, 0, e_vals[next_e_i]), base, x_grid, p_trans * weight * p_def)
+            end
         end
 
     end
@@ -680,7 +722,7 @@ pGamPol = plot(GamPol(BaseEq.SumPol, 15, 21), GamPol(BaseEq.SumPol, 26, 21), Gam
 
 
 #### SBRA (tab:percentage_changes2; SmallCosts.jl) ####
-# Targeted: small firms' (k' < Fcut) fixed cost is cut until their liquidation probability falls by 13 pp (main5 section 6).
+# Targeted: small firms' (below Fcut, see size_by_debt) fixed cost is cut until their liquidation probability falls by 13 pp (main5 section 6).
 # Universal: the same fixed cost for all firms. Control reduction: the targeted cut, and theta (all firms) cut in
 # proportion to it, as in main5 (0.361 to 0.268 there).
 SBRA = find_zeta_Rs(BaseEq; drop = 0.13)
