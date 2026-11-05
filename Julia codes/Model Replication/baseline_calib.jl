@@ -157,19 +157,24 @@ end
 
 # bellman!: one policy-improvement step.
 #   vals[s,a] = R[s,a] + beta * E[ v(s') | s, a ]   (Qv! fills the expectation in place)
-#   sigma[s]  = first a with the highest vals[s,a]   -> the new policy
-#   Tv[s]     = that highest value; only the running max for the search, not used afterwards
-function bellman!(vals, Tv, sigma, R, Qtab, v, beta)
+#   Tv[s]     = the highest vals[s,a]
+#   sigma[s]  = first a within tie_tol (relative) of Tv[s]   -> the new policy
+# Near-ties go to the lowest b' (b' runs slowest in a_vals), not to rounding noise, which can make PFI cycle.
+function bellman!(vals, Tv, sigma, R, Qtab, v, beta; tie_tol = 1e-12)
     Qv!(vals, Qtab, v)
     vals .= R .+ beta .* vals
     n, m = size(vals)
     for s_i in 1:n
         Tv[s_i] = vals[s_i, 1]
-        sigma[s_i] = 1
     end
     for a_i in 2:m, s_i in 1:n
         if vals[s_i, a_i] > Tv[s_i]
             Tv[s_i] = vals[s_i, a_i]
+        end
+    end
+    fill!(sigma, 0)
+    for a_i in 1:m, s_i in 1:n
+        if sigma[s_i] == 0 && vals[s_i, a_i] >= Tv[s_i] - tie_tol * max(abs(Tv[s_i]), 1.0)
             sigma[s_i] = a_i
         end
     end
@@ -181,7 +186,7 @@ end
 #   Improve:  sigma = argmax_a R + beta*E[v'], via bellman!/Qv!
 #   Repeat until sigma no longer changes.
 #   v_init: starting values. FirmOptim passes the previous q iteration's values (warm start); the default is QuantEcon's v(s) = max_a R(s,a).
-# Same steps as QuantEcon.solve(DiscreteDP(R, Q, beta), PFI) in QuantEcon 0.19.0
+# Same steps as QuantEcon.solve(DiscreteDP(R, Q, beta), PFI) in QuantEcon 0.19.0, except for bellman!'s tie rule
 function PFI_solve(R, Qtab, beta; v_init = nothing, max_iter = 250)
     n, m = size(R)
     vals = similar(R)
