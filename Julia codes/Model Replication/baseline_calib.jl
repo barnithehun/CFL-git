@@ -26,6 +26,7 @@ include("Functions/FCmodel/stat_dist.jl")
 include("Functions/FCmodel/FindWage.jl")
 include("Functions/FCmodel/GridMake.jl")
 include("Functions/FCmodel/Calibrate.jl")
+include("Functions/FCmodel/check_grid.jl")
 ##################################################################
 
 function gridsize()
@@ -80,13 +81,17 @@ function parameters()
     # It sets small firms both in sumSSsme and fit_Fcut and for the small-firm zeta, theta and P_x in FirmOptim.
     size_by_debt::Float64 = par(:size_by_debt, 1)
 
+    # lower end of the productivity grid, in stationary sd of ln e (the upper end is tauchen_sd); -tauchen_sd gives the
+    # original symmetric grid. Every firm below about the mean exits, so points further down carry no firms (check_grid)
+    tauchen_lo::Float64 = par(:tauchen_lo, -0.5)
+
     # phi_c, zeta_Rl and the fields after them come last: FirmOptim, GamPol and CapAlloc2 unpack the first 19 fields by position
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
             discount = discount, phi_a = phi_a, phi_af = phi_af, tauchen_sd = tauchen_sd,
             kappa = kappa, zeta_L = zeta_L, tau_vec = tau_vec,
             phi_c_hh = phi_c_hh, Fcut = Fcut, phi_c = phi_c, zeta_Rl = zeta_Rl, DRS = DRS,
-            zeta_Rs = zeta_Rs, phi_c_s = phi_c_s, perf_cred = perf_cred, size_by_debt = size_by_debt)
+            zeta_Rs = zeta_Rs, phi_c_s = phi_c_s, perf_cred = perf_cred, size_by_debt = size_by_debt, tauchen_lo = tauchen_lo)
 end
 
 ####### TRANSITIONS AND POLICY ITERATION #######
@@ -237,6 +242,15 @@ function place_x!(Fmat, s_i, x, base, x_grid, mass)
     x_far == 0 || (Fmat[s_i, x_far + base] += mass * (1 - close_weight))
 end
 
+# tauchen_range: Tauchen on [lo, hi] stationary sd of ln e around its mean mu; the end points absorb the tails.
+function tauchen_range(N, rho, sigma, mu, lo, hi)
+    lo == -hi && return tauchen(N, rho, sigma, (1 - rho) * mu, hi)
+    y = mu .+ sigma / sqrt(1 - rho^2) .* range(lo, hi, N)
+    mids = (y[1:end-1] .+ y[2:end]) ./ 2
+    P = reduce(vcat, (diff([0; cdf.(Normal((1 - rho) * mu + rho * yi, sigma), mids); 1])' for yi in y))
+    MarkovChain(P, collect(y))
+end
+
 ####### FIRM OPTIM #######
 # phi_c and zeta_Rl default to their values in parameters(); pass them only to solve at other values (e.g. a reform)
 function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta_Rl)
@@ -268,8 +282,8 @@ function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta
     
     # Setting the state-space
     # productivity process
-    e_chain = tauchen(e_size, rho_e, sigma_e, (1-rho_e)*nul_e, tauchen_sd)
-    e_vals = exp.(e_chain.state_values) 
+    e_chain = tauchen_range(e_size, rho_e, sigma_e, nul_e, parameters().tauchen_lo, tauchen_sd)
+    e_vals = exp.(e_chain.state_values)
     e_ptrans = e_chain.p 
 
     # Log-grids

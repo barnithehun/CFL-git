@@ -132,6 +132,7 @@ function model_fit(vals, calib_moments, data_targets; wage = 1)
         SumPol, e_chain, Fmat = FirmOptim(wage)
         c_e, f0 = EntryValue(SumPol, e_chain)
         targeted = targeted_table(sumSS(SumPol, Fmat, f0; zeta_R = p.zeta_Rl, rate_digits = nothing), calib_moments, data_targets)
+        check_grid((SumPol = SumPol, mu = stat_dist(SumPol, Fmat, f0; zeta_R = p.zeta_Rl)[1], gridsize = gridsize()))
 
         # the cutoff only moves if the targets have a share of small firms
         share_data = "Share of small firms" in data_targets.moment ? data_value(data_targets, "Share of small firms") : missing

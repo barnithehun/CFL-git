@@ -17,7 +17,7 @@ function Xallocation(runs, perf)
     prod_toskip = 0
     toskip = x_size * prod_toskip + 1
 
-    e_chain = tauchen(e_size, rho_e, sigma_e, (1 - rho_e) * nul_e, tauchen_sd)
+    e_chain = B.e_chain   # the productivity chain FirmOptim solved with
     e_vals  = exp.(e_chain.state_values)
     x       = e_vals[prod_toskip+1:end]
 

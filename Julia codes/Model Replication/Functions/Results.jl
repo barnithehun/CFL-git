@@ -16,7 +16,7 @@ end
 ####### Equilibrium #######
 # This is a flexible setup of my model model solution
 #  solve_eq: solves the model at wage with vals, where vals is a NamedTuple of overrides in parameters()
-#  the last block summarizes the results in a NamedTuple 
+#  the last block summarizes the results in a NamedTuple; check_grid warns if it runs up against a grid edge
 function solve_eq(vals = NamedTuple(); wage = 1.0)
     return with_params(vals) do
         p = parameters()
@@ -25,10 +25,12 @@ function solve_eq(vals = NamedTuple(); wage = 1.0)
         c_e, f0 = EntryValue(SumPol, e_chain)
         mu, m, xpol = stat_dist(SumPol, Fmat, f0; zeta_R = p.zeta_Rl)
 
-        (values = (; PARAM_OVERRIDE...), wage = wage, params = p, gridsize = gridsize(),
-         SumPol = SumPol, e_chain = e_chain, Fmat = Fmat, f0 = f0, c_e = c_e, mu = mu, m = m, xpol = xpol,
-         ss  = sumSS(SumPol, Fmat, f0; zeta_R = p.zeta_Rl, rate_digits = nothing),
-         sme = sumSSsme(SumPol, Fmat, f0; zeta_R = p.zeta_Rl, rate_digits = nothing))
+        eq = (values = (; PARAM_OVERRIDE...), wage = wage, params = p, gridsize = gridsize(),
+              SumPol = SumPol, e_chain = e_chain, Fmat = Fmat, f0 = f0, c_e = c_e, mu = mu, m = m, xpol = xpol,
+              ss  = sumSS(SumPol, Fmat, f0; zeta_R = p.zeta_Rl, rate_digits = nothing),
+              sme = sumSSsme(SumPol, Fmat, f0; zeta_R = p.zeta_Rl, rate_digits = nothing))
+        check_grid(eq)
+        eq
     end
 end
 

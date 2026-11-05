@@ -17,7 +17,7 @@ function CapAlloc2(B, R; adjust = 0.0)
 
     ## sdfsd
     # EFFICIENT
-    e_chain = tauchen(e_size, rho_e, sigma_e, (1-rho_e)*nul_e, tauchen_sd)
+    e_chain = B.e_chain   # the productivity chain FirmOptim solved with
     e_vals = exp.(e_chain.state_values)
     e_active = e_vals[prod_toskip+1:end]
 
