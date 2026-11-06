@@ -5,7 +5,7 @@
 # Interest rates and spreads are unrounded (rate_digits = nothing in sumSS and sumSSsme); tables round only when printed.
 
 ####### Saved calibrations #######
-# load_calibration: the internally calibrated parameters and Fcut from a CSV written by calibrate or calibrate_thoroughly
+# load_calibration: the internally calibrated parameters and Fcut from a CSV written by calibrate_lazy or calibrate_fully
 function load_calibration(file)
     t = CSV.read(file, DataFrame; types = Dict(:value => String))
     rows = filter(r -> r.section == "internal parameter" || startswith(r.section, "Fcut"), t)

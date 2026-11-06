@@ -8,7 +8,7 @@
 # Every trial runs the same FirmOptim, EntryValue and sumSS as the results, with the trial values set as overrides in parameters().
 # The calibration and the model fit use unrounded interest rates and spreads (rate_digits = nothing in sumSS and sumSSsme).
 
-using Distributed   # calibrate_thoroughly runs its starts on separate Julia processes
+using Distributed   # calibrate_fully runs its starts on separate Julia processes
 
 ####### Overrides in parameters() #######
 # set_params!: parameters() returns vals in place of its defaults, until reset_params!()
@@ -151,7 +151,7 @@ function model_fit(vals, calib_moments, data_targets; wage = 1)
 end
 
 function print_fit(fit)
-    println("\nTotal error (minimized by calibrate): ", round(fit.error, digits = 5), "     c_e = ", round(fit.c_e, digits = 2), " at wage ", fit.wage)
+    println("\nTotal error (minimized by calibrate_lazy): ", round(fit.error, digits = 5), "     c_e = ", round(fit.c_e, digits = 2), " at wage ", fit.wage)
     println("Share of small firms: data ", round(fit.share.data, digits = 3), ", model ", round(fit.share.model, digits = 3),
             "  (small: ", parameters().size_by_debt == 1 ? "b' < Fcut among borrowers" : "k' < Fcut", ", Fcut = ", round(fit.Fcut, digits = 2), ")")
     println("\nTargeted moments, all firms (targeted = false: shown, not targeted)")
@@ -192,7 +192,7 @@ end
 # Runs Nelder-Mead from the starts in calib_params, then sets Fcut to match the share of small firms. Prints the
 # lines to paste into parameters(), saves the calibration to file and returns the calibrated values (Fcut included),
 # the model fit and the Optim result.
-function calibrate(calib_params, calib_moments, data_targets; options = Optim.Options(), wage = 1, valid = p -> true,
+function calibrate_lazy(calib_params, calib_moments, data_targets; options = Optim.Options(), wage = 1, valid = p -> true,
                    file = joinpath("calibration_outputs", "CALIB_$(Dates.format(now(), "yyyy-mm-dd_HHMM")).csv"))
 
     x0 = [start for (start, _, _) in values(calib_params)]
@@ -211,8 +211,8 @@ function calibrate(calib_params, calib_moments, data_targets; options = Optim.Op
     return (values = fit.values, fit = fit, optim = OptRes)
 end
 
-####### CALIBRATE THOROUGHLY #######
-# calibrate_thoroughly: calibrate with a screening step, several starts run in parallel, restarts, and the parameters
+####### CALIBRATE FULLY #######
+# calibrate_fully: calibrate_lazy with a screening step, several starts run in parallel, restarts, and the parameters
 # searched in transformed form. The error has many local minima (moments jump where a policy switches grid points),
 # and in the tests on 2026-10-31 the result depended mostly on where Nelder-Mead started.
 #  1. Screening: the error at n_screen points spread evenly over screen_box (a Halton sequence) and at the start in
@@ -224,12 +224,12 @@ end
 #  3. transform = true: Nelder-Mead searches z = logit of a parameter with two finite bounds and z = log(p - lower) of
 #     one with only a lower bound, so no trial leaves the bounds; the first simplex moves each z by simplex_step
 #     (0.4: ×1.5 for a log, 0.80 -> 0.86 for a logit). transform = false searches the parameters themselves, with
-#     Optim's default first simplex (+50% on each), as calibrate.
+#     Optim's default first simplex (+50% on each), as calibrate_lazy.
 #  n_workers: separate Julia processes the screening and the starts run on (0 = this process only); the overrides in
 #     parameters() are global, so threads would overwrite each other's. Each worker loads the model part of model_file
 #     (everything above "########## CALIBRATION"), so changes to gridsize() or the model must be saved there first.
 #     Overrides set with set_params! before the call are passed on to the workers.
-# Saves the same CSV as calibrate (CALIB_<date>_thorough.csv; its start column shows the best run's start),
+# Saves the same CSV as calibrate_lazy (CALIB_<date>_full.csv; its start column shows the best run's start),
 # <file>_runs.csv with every run and <file>_screen.csv with every screened point.
 
 # Halton sequence: point i in the dimension with prime base, in (0, 1)
@@ -261,8 +261,8 @@ Optim.simplexer(S::StepSimplexer, x0) = [[copy(x0)]; [x0 .+ S.step .* (eachindex
 default_box(calib_params) = map(((start, lower, upper),) -> (max(min(0.5start, 1.5start), lower), min(max(0.5start, 1.5start), upper)), calib_params)
 
 # error at the parameter values vals (a NamedTuple); 1e10 outside the bounds, when valid fails or when the error is NaN.
-# base: the overrides set before calibrate_thoroughly was called.
-function thorough_error(vals, calib_params, calib_moments, data_targets, wage, valid, base)
+# base: the overrides set before calibrate_fully was called.
+function full_error(vals, calib_params, calib_moments, data_targets, wage, valid, base)
     all(calib_params[n][2] < v < calib_params[n][3] for (n, v) in pairs(vals)) || return 1e10
     return with_params(base) do
         with_params(() -> valid(parameters()), vals) || return 1e10
@@ -271,14 +271,14 @@ function thorough_error(vals, calib_params, calib_moments, data_targets, wage, v
     end
 end
 
-# thorough_start: Nelder-Mead with restarts from start x (a NamedTuple), with the settings s; runs on a worker.
+# full_start: Nelder-Mead with restarts from start x (a NamedTuple), with the settings s; runs on a worker.
 # Returns every run, and the best values, error and Optim result.
-function thorough_start(i, x, s)
+function full_start(i, x, s)
     pnames = keys(s.calib_params)
     lower = [s.calib_params[n][2] for n in pnames]
     upper = [s.calib_params[n][3] for n in pnames]
     to_vals(z) = NamedTuple{pnames}(Tuple(s.transform ? from_z.(z, lower, upper) : z))
-    f(z) = thorough_error(to_vals(z), s.calib_params, s.calib_moments, s.data_targets, s.wage, s.valid, s.base)
+    f(z) = full_error(to_vals(z), s.calib_params, s.calib_moments, s.data_targets, s.wage, s.valid, s.base)
     method = s.transform ? NelderMead(initial_simplex = StepSimplexer(s.simplex_step)) : NelderMead()
     z0 = s.transform ? to_z.(collect(x), lower, upper) : collect(x)
 
@@ -309,11 +309,11 @@ function start_workers(n, model_file)
     return ws
 end
 
-function calibrate_thoroughly(calib_params, calib_moments, data_targets; options = Optim.Options(), wage = 1, valid = p -> true,
+function calibrate_fully(calib_params, calib_moments, data_targets; options = Optim.Options(), wage = 1, valid = p -> true,
                               screen_box = NamedTuple(), n_screen = 100, n_starts = 4, starts = nothing,
                               restart_tol = 1e-6, max_restarts = 3, transform = true, simplex_step = 0.4,
                               n_workers = n_starts, model_file = normpath(joinpath(@__DIR__, "..", "..", "baseline_calib.jl")),
-                              file = joinpath("calibration_outputs", "CALIB_$(Dates.format(now(), "yyyy-mm-dd_HHMM"))_thorough.csv"))
+                              file = joinpath("calibration_outputs", "CALIB_$(Dates.format(now(), "yyyy-mm-dd_HHMM"))_full.csv"))
 
     pnames = keys(calib_params)
     base = (; PARAM_OVERRIDE...)
@@ -334,7 +334,7 @@ function calibrate_thoroughly(calib_params, calib_moments, data_targets; options
             pushfirst!(points, NamedTuple{pnames}(Tuple(start for (start, _, _) in values(calib_params))))
             points = filter(inside, points)
             println("\n####### Screening $(length(points)) points #######")
-            t = @elapsed errs = run_map(x -> thorough_error(x, calib_params, calib_moments, data_targets, wage, valid, base), points)
+            t = @elapsed errs = run_map(x -> full_error(x, calib_params, calib_moments, data_targets, wage, valid, base), points)
             screen = sort(DataFrame([merge((point = j, error = e), x) for (j, (x, e)) in enumerate(zip(points, errs))]), :error)
             println("Screening took ", round(t / 60, digits = 1), " min; the best points:")
             show(stdout, first(screen, n_starts); allcols = true, eltypes = false); println()
@@ -349,7 +349,7 @@ function calibrate_thoroughly(calib_params, calib_moments, data_targets; options
         isempty(starts) && error("no start lies inside the bounds and passes valid")
 
         println("\n####### Nelder-Mead from $(length(starts)) starts #######")
-        results = run_map(((i, x),) -> thorough_start(i, x, s), collect(enumerate(starts)))
+        results = run_map(((i, x),) -> full_start(i, x, s), collect(enumerate(starts)))
     finally
         isempty(ws) || rmprocs(ws)
     end
@@ -360,7 +360,7 @@ function calibrate_thoroughly(calib_params, calib_moments, data_targets; options
     println("\nAll runs (if the starts end at different values with similar errors, the moments do not pin down the parameters)")
     show(stdout, runs; allrows = true, allcols = true, eltypes = false); println()
 
-    # from here on as in calibrate
+    # from here on as in calibrate_lazy
     vals = best.values
     fit = model_fit(vals, calib_moments, data_targets; wage = wage)
 

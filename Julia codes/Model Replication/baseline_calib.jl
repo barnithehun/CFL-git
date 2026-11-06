@@ -672,16 +672,16 @@ options = Optim.Options(
     show_every = 1)
 
 
-# thorough = true runs calibrate_thoroughly instead (see Calibrate.jl): it screens n_screen points spread over screen_box
+# full = true runs calibrate_fully instead (see Calibrate.jl): it screens n_screen points spread over screen_box
 #  (name = (low, high); a parameter left out gets start × (0.5, 1.5)), runs Nelder-Mead with up to 3 restarts from the
 #  best n_starts of them, each start on its own Julia process, and keeps the best. Save the file first: the workers load
 #  the model from it. starts = [CalRes.values] in its call polishes an earlier result instead of screening.
-thorough = false
-# saves to calibration_outputs/CALIB_<date>.csv (thorough: CALIB_<date>_thorough.csv, _thorough_runs.csv and _thorough_screen.csv)
-@elapsed CalRes = thorough ?
-    calibrate_thoroughly(calib_params, calib_moments, data_targets; options = options, valid = valid, n_screen = 100, n_starts = 4,
+full = false
+# saves to calibration_outputs/CALIB_<date>.csv (full: CALIB_<date>_full.csv, _full_runs.csv and _full_screen.csv)
+@elapsed CalRes = full ?
+    calibrate_fully(calib_params, calib_moments, data_targets; options = options, valid = valid, n_screen = 100, n_starts = 4,
         screen_box = (pc = (25.0, 75.0), pdef_exo_l = (0.01, 0.10), zeta_Rl = (1000.0, 5000.0), phi_c_hh = (0.6, 0.995), phi_c = (0.15, 0.6))) :
-    calibrate(calib_params, calib_moments, data_targets; options = options, valid = valid)
+    calibrate_lazy(calib_params, calib_moments, data_targets; options = options, valid = valid)
 
 # To use the calibrated values (Fcut included) without pasting them: set_params!(CalRes.values).
 # reset_params!() goes back to the values written in parameters().
@@ -771,16 +771,16 @@ ABCF_params = (pc         = (parameters().pc,         0.0, Inf),
                pdef_exo_l = (parameters().pdef_exo_l, 0.0, 1.0),
                zeta_Rl    = (parameters().zeta_Rl,    0.0, Inf))
 
-# AB only. calibrate prints lines to paste into parameters(): they are for the AB-only model, do not paste them.
+# AB only. calibrate_lazy prints lines to paste into parameters(): they are for the AB-only model, do not paste them.
 ABVals = recalibrate_ABCF ?
-    with_params(() -> calibrate(ABCF_params, ABCF_moments, data_targets; options = options, file = AB_file).values, (phi_c = 0.0,)) :
+    with_params(() -> calibrate_lazy(ABCF_params, ABCF_moments, data_targets; options = options, file = AB_file).values, (phi_c = 0.0,)) :
     load_calibration(AB_file)
 ABBaseEq   = solve_eq(merge(ABVals, (phi_c = 0.0,)))
 ABReformEq = ge_eq(merge(ABVals, (phi_c = 0.0, zeta_Rl = ABVals.zeta_Rl / 2)), ABBaseEq.c_e)
 
 # CF only
 CFVals = recalibrate_ABCF ?
-    with_params(() -> calibrate(ABCF_params, ABCF_moments, data_targets; options = options, file = CF_file).values, (phi_af = 0.0,)) :
+    with_params(() -> calibrate_lazy(ABCF_params, ABCF_moments, data_targets; options = options, file = CF_file).values, (phi_af = 0.0,)) :
     load_calibration(CF_file)
 CFBaseEq   = solve_eq(merge(CFVals, (phi_af = 0.0,)))
 CFReformEq = ge_eq(merge(CFVals, (phi_af = 0.0, zeta_Rl = CFVals.zeta_Rl / 2)), CFBaseEq.c_e)

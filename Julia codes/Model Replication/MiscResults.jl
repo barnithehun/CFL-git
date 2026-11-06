@@ -200,7 +200,7 @@ savemisc(plot(shbar(:prodimp, "ProdImp"), shbar(:liqprob, "LiqProb"), shbar(:d2c
 # - DebtScedule (M2): follows an older model version.
 # - FindZeta.jl and SmallCosts.jl's grid search for zeta_Rs: replaced by find_zeta_Rs (Functions/Results.jl).
 # - dynsim.jl: included by baseline_calib.jl but never called.
-# - The calibration with ErrorFunc1 (Baseline.jl lines 655-684): replaced by calibrate (Functions/FCmodel/Calibrate.jl).
+# - The calibration with ErrorFunc1 (Baseline.jl lines 655-684): replaced by calibrate_lazy (Functions/FCmodel/Calibrate.jl).
 
 reset_params!(); set_params!(BaseEq.values)
 println("MiscResults figures saved to ", misc_dir)
