@@ -2,7 +2,7 @@
 ############### VER 10.2 - Optimal liquidation decision  ##################
 ###########################################################################
 
-using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, SparseArrays, Dates, XLSX, DataFrames, Distributions, Random, Optim, Measures
+using LinearAlgebra, Statistics, LaTeXStrings, Plots, QuantEcon, Roots, NamedArrays, SparseArrays, Dates, XLSX, DataFrames, Distributions, Random, Optim, Measures, CSV
 
 cd(@__DIR__)   # REPLICATION: run from this folder; includes below point to the copies in ./Functions, outputs are saved here
 
@@ -25,7 +25,8 @@ include("Functions/FCmodel/EntryValue.jl")
 include("Functions/FCmodel/stat_dist.jl")
 include("Functions/FCmodel/FindWage.jl")
 include("Functions/FCmodel/GridMake.jl")
-include("Functions/FCmodel/ErrorFunc.jl")
+include("Functions/FCmodel/Calibrate.jl")
+include("Functions/FCmodel/check_grid.jl")
 ##################################################################
 
 function gridsize()
@@ -37,34 +38,60 @@ function gridsize()
     return (x_size = x_size, e_size = e_size, k_size = k_size, b_size = b_size)
 end
 
+# Overrides: parameters() returns these values in place of the defaults written below.
+# Only with_params, set_params! and reset_params! (Functions/FCmodel/Calibrate.jl) change it; when it is empty, parameters() is unchanged.
+const PARAM_OVERRIDE = Dict{Symbol, Float64}()
+par(name, default) = get(PARAM_OVERRIDE, name, default)
+
 function parameters()
-    rho_e::Float64 = 0.969
-    sigma_e::Float64 = 0.146
-    nul_e::Int = 1
-    DRS::Float64 = 0.75
-    alpha::Float64 = 1/3 * DRS
-    nu::Float64 = 2/3 * DRS
-    pc::Float64 = 42.03135921
-    beta::Float64 = 0.96
-    delta::Float64 = 0.065
-    pdef_exo_l::Float64 =  0.029176179
-    pdef_exo_s::Float64 =  pdef_exo_l
-    discount::Float64 = beta
-    phi_a::Float64 =   0.4
-    phi_af::Float64 =   0.4
-    tauchen_sd::Float64 = 3
+    rho_e::Float64 = par(:rho_e, 0.969)
+    sigma_e::Float64 = par(:sigma_e, 0.08760000000000001)
+    nul_e::Float64 = par(:nul_e, 0.55004440530223)
+    DRS::Float64 = par(:DRS, 0.85)
+    alpha::Float64 = par(:alpha, 1/3 * DRS)
+    nu::Float64 = par(:nu, 2/3 * DRS)
+    pc::Float64 = par(:pc, 30.221705598739636)
+    beta::Float64 = par(:beta, 0.96)
+    delta::Float64 = par(:delta, 0.065)
+    pdef_exo_l::Float64 = par(:pdef_exo_l, 0.01623279813010318)
+    pdef_exo_s::Float64 = par(:pdef_exo_s, pdef_exo_l)
+    discount::Float64 = par(:discount, beta)
+    phi_a::Float64 = par(:phi_a, 0.4)
+    phi_af::Float64 = par(:phi_af, 0.4)
+    tauchen_sd::Float64 = par(:tauchen_sd, 3)
 
-    kappa::Float64 = 0.1       # capital recovery rate of CFL debt
-    tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:1.0:1  # vector of CFL reliances
-    zeta_L::Float64 = 0
-    phi_c_hh::Float64 = 0.803835125
-    Fcut::Float64 = 2000
+    kappa::Float64 = par(:kappa, 0.1)       # capital recovery rate of CFL debt
+    tau_vec::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}} = 0:0.05:1  # vector of CFL reliances
+    zeta_L::Float64 = par(:zeta_L, 0)
+    phi_c_hh::Float64 = par(:phi_c_hh, 0.7176063676733062)
+    Fcut::Float64 = par(:Fcut, 533.6699231206312)
 
+    # baseline values of the two FirmOptim arguments (phi_c is theta in main5)
+    phi_c::Float64 = par(:phi_c, 0.21842637289640024)
+    zeta_Rl::Float64 = par(:zeta_Rl, 1154.3576752772226)
+
+    # results experiments (see FirmOptim): zeta and theta for small firms (below Fcut), which follow zeta_Rl and phi_c
+    # unless set, and perfect credit (1 = negative dividends, i.e. equity injections, are free, as in FinalVers/Xallocation.jl)
+    zeta_Rs::Float64 = par(:zeta_Rs, zeta_Rl)
+    phi_c_s::Float64 = par(:phi_c_s, phi_c)
+    perf_cred::Float64 = par(:perf_cred, 0)
+
+    # what Fcut cuts: 1 = debt, b' < Fcut is small, and the size table counts borrowers only (as the data, which splits
+    # by total liabilities and has only firms with loans); 0 = capital, k' < Fcut is small, over all firms (the original).
+    # It sets small firms both in sumSSsme and fit_Fcut and for the small-firm zeta, theta and P_x in FirmOptim.
+    size_by_debt::Float64 = par(:size_by_debt, 1)
+
+    # lower end of the productivity grid, in stationary sd of ln e (the upper end is tauchen_sd); -tauchen_sd gives the
+    # original symmetric grid. Every firm below about the mean exits, so points further down carry no firms (check_grid)
+    tauchen_lo::Float64 = par(:tauchen_lo, -0.5)
+
+    # phi_c, zeta_Rl and the fields after them come last: FirmOptim, GamPol and CapAlloc2 unpack the first 19 fields by position
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
             discount = discount, phi_a = phi_a, phi_af = phi_af, tauchen_sd = tauchen_sd,
             kappa = kappa, zeta_L = zeta_L, tau_vec = tau_vec,
-            phi_c_hh = phi_c_hh, Fcut = Fcut)
+            phi_c_hh = phi_c_hh, Fcut = Fcut, phi_c = phi_c, zeta_Rl = zeta_Rl, DRS = DRS,
+            zeta_Rs = zeta_Rs, phi_c_s = phi_c_s, perf_cred = perf_cred, size_by_debt = size_by_debt, tauchen_lo = tauchen_lo)
 end
 
 ####### TRANSITIONS AND POLICY ITERATION #######
@@ -135,19 +162,24 @@ end
 
 # bellman!: one policy-improvement step.
 #   vals[s,a] = R[s,a] + beta * E[ v(s') | s, a ]   (Qv! fills the expectation in place)
-#   sigma[s]  = first a with the highest vals[s,a]   -> the new policy
-#   Tv[s]     = that highest value; only the running max for the search, not used afterwards
-function bellman!(vals, Tv, sigma, R, Qtab, v, beta)
+#   Tv[s]     = the highest vals[s,a]
+#   sigma[s]  = first a within tie_tol (relative) of Tv[s]   -> the new policy
+# Near-ties go to the lowest b' (b' runs slowest in a_vals), not to rounding noise, which can make PFI cycle.
+function bellman!(vals, Tv, sigma, R, Qtab, v, beta; tie_tol = 1e-12)
     Qv!(vals, Qtab, v)
     vals .= R .+ beta .* vals
     n, m = size(vals)
     for s_i in 1:n
         Tv[s_i] = vals[s_i, 1]
-        sigma[s_i] = 1
     end
     for a_i in 2:m, s_i in 1:n
         if vals[s_i, a_i] > Tv[s_i]
             Tv[s_i] = vals[s_i, a_i]
+        end
+    end
+    fill!(sigma, 0)
+    for a_i in 1:m, s_i in 1:n
+        if sigma[s_i] == 0 && vals[s_i, a_i] >= Tv[s_i] - tie_tol * max(abs(Tv[s_i]), 1.0)
             sigma[s_i] = a_i
         end
     end
@@ -159,7 +191,7 @@ end
 #   Improve:  sigma = argmax_a R + beta*E[v'], via bellman!/Qv!
 #   Repeat until sigma no longer changes.
 #   v_init: starting values. FirmOptim passes the previous q iteration's values (warm start); the default is QuantEcon's v(s) = max_a R(s,a).
-# Same steps as QuantEcon.solve(DiscreteDP(R, Q, beta), PFI) in QuantEcon 0.19.0
+# Same steps as QuantEcon.solve(DiscreteDP(R, Q, beta), PFI) in QuantEcon 0.19.0, except for bellman!'s tie rule
 function PFI_solve(R, Qtab, beta; v_init = nothing, max_iter = 250)
     n, m = size(R)
     vals = similar(R)
@@ -191,10 +223,46 @@ function PFI_solve(R, Qtab, beta; v_init = nothing, max_iter = 250)
     return (v = v, sigma = sigma, num_iter = num_iter)
 end
 
+# landing: where x falls on the x-grid, as Fmat uses it: the closest point, its weight, and the second closest
+# point (0 if x is off the grid, then all weight is on the closest point)
+function landing(x, x_grid)
+    x_close = argmin(abs.(x .- x_grid))
+    if x < x_grid[end] && x > x_grid[1]
+        x_far = x > x_grid[x_close] ? x_close + 1 : x_close - 1
+        close_weight = abs(x - x_grid[x_far]) / (abs(x - x_grid[x_close]) + abs(x - x_grid[x_far]))
+        return x_close, close_weight, x_far
+    end
+    return x_close, 1.0, 0
+end
+
+# place_x!: adds mass to row s_i of Fmat at the two x-grid points around x, for the productivity whose states start after base
+function place_x!(Fmat, s_i, x, base, x_grid, mass)
+    x_close, close_weight, x_far = landing(x, x_grid)
+    Fmat[s_i, x_close + base] += mass * close_weight
+    x_far == 0 || (Fmat[s_i, x_far + base] += mass * (1 - close_weight))
+end
+
+# tauchen_range: Tauchen on [lo, hi] stationary sd of ln e around its mean mu; the end points absorb the tails.
+function tauchen_range(N, rho, sigma, mu, lo, hi)
+    lo == -hi && return tauchen(N, rho, sigma, (1 - rho) * mu, hi)
+    y = mu .+ sigma / sqrt(1 - rho^2) .* range(lo, hi, N)
+    mids = (y[1:end-1] .+ y[2:end]) ./ 2
+    P = reduce(vcat, (diff([0; cdf.(Normal((1 - rho) * mu + rho * yi, sigma), mids); 1])' for yi in y))
+    MarkovChain(P, collect(y))
+end
+
 ####### FIRM OPTIM #######
-function FirmOptim(wage, phi_c, zeta_Rl)
+# phi_c and zeta_Rl default to their values in parameters(); pass them only to solve at other values (e.g. a reform)
+function FirmOptim(wage, phi_c = parameters().phi_c, zeta_Rl = parameters().zeta_Rl)
 
     rho_e, sigma_e, nul_e, alpha, nu, pc, beta, delta, pdef_exo_s, pdef_exo_l, discount, phi_a, phi_af, tauchen_sd, kappa,  zeta_L, tau_vec, phi_c_hh, Fcut = parameters()
+
+    # small firms' (below Fcut) zeta and theta follow the arguments unless set as overrides (SBRA experiments, SmallCosts.jl)
+    zeta_Rs = haskey(PARAM_OVERRIDE, :zeta_Rs) ? parameters().zeta_Rs : zeta_Rl
+    phi_c_s = haskey(PARAM_OVERRIDE, :phi_c_s) ? parameters().phi_c_s : phi_c
+    perf_cred = parameters().perf_cred
+    # size column of a_vals that Fcut cuts: 2 = b', 1 = k' (parameters().size_by_debt)
+    size_col = parameters().size_by_debt == 1 ? 2 : 1
 
     # calling grid size
     x_size, e_size, k_size, b_size = gridsize()
@@ -214,8 +282,8 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     
     # Setting the state-space
     # productivity process
-    e_chain = tauchen(e_size, rho_e, sigma_e, (1-rho_e)*nul_e, tauchen_sd)
-    e_vals = exp.(e_chain.state_values) 
+    e_chain = tauchen_range(e_size, rho_e, sigma_e, nul_e, parameters().tauchen_lo, tauchen_sd)
+    e_vals = exp.(e_chain.state_values)
     e_ptrans = e_chain.p 
 
     # Log-grids
@@ -260,7 +328,7 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     # From the default state, and after the default or exit action, the next state is default with probability 1
     e_of_s = s_i_vals[:, 2]                                    # productivity index of each state
     reg_a = (a_i_vals[:, 3] .== 0) .& (a_i_vals[:, 4] .== 0)   # actions that are neither default nor exit
-    Pdef_a = [next_k >= Fcut ? pdef_exo_l : pdef_exo_s for next_k in a_vals[:, 1]]   # loop over the column, so the comprehension does not capture a_vals (which would box it)
+    Pdef_a = [size_a >= Fcut ? pdef_exo_l : pdef_exo_s for size_a in a_vals[:, size_col]]   # loop over the column, so the comprehension does not capture a_vals (which would box it)
     x_close_ea = zeros(Int, e_size, m)
     x_far_ea = zeros(Int, e_size, m)      # stays 0 if x' is off the grid, then all weight is on x_close
     close_weight_ea = ones(e_size, m)
@@ -352,8 +420,9 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                     q = q_ea[e_of_s[s_i],a_i]
                     d = fn_D(next_k, next_b, x, q)
 
-                    if d >= 0
-                        R[s_i, a_i] = d 
+                    # with perfect credit negative dividends have no cost (free equity injections)
+                    if d >= 0 || perf_cred == 1
+                        R[s_i, a_i] = d
                     end
 
                 elseif next_def == 1 
@@ -366,7 +435,9 @@ function FirmOptim(wage, phi_c, zeta_Rl)
             end
         end
 
-        results = PFI_solve(R, Qtab, discount; v_init = Values_prev)
+        # with perfect credit some debt choices tie, and a warm start can pick another tied policy in each q iteration, so
+        # the q loop cycles: start cold, as the original solver did
+        results = PFI_solve(R, Qtab, discount; v_init = perf_cred == 1 ? nothing : Values_prev)
 
         Values = results.v;
         policies = results.sigma;  # optimal policy     
@@ -429,51 +500,56 @@ function FirmOptim(wage, phi_c, zeta_Rl)
                 next_k = a_vals[a_i,1]
                 next_b = a_vals[a_i,2]
 
-                # exo probability of default and reorganization costs change with size
-                zeta_R = zeta_Rl
-                pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
+                # exo probability of default and reorganization costs change with size (b' or k', see size_col)
+                large = (size_col == 2 ? next_b : next_k) >= Fcut
+                zeta_R = large ? zeta_Rl : zeta_Rs
+                theta  = large ? phi_c : phi_c_s
+                pdef_exo = large ? pdef_exo_l : pdef_exo_s
     
                 pdef_endo = 0
-                gam = 0
-                Pi_reo = 0
+                liqD = 0.0   # P(default in e' and liquidated)
+                reoD = 0.0   # P(default in e' and reorganized)
+                reoV = 0.0   # E[theta * V(x'+b', e'); default and reorganized]
                 Pi_liq = max(0, phi_af*(1-delta)*next_k - zeta_L)
+                # The action with the k′ and b′ = 0 has next-period cash on hand of exactly x′ + b′
+                a0 = a_i_vals[a_i, 1]
 
                 # Expectation over e' only: given (k', b', e'), x' is known, so only the two x-grid points around x' matter (interpolated)
                 for next_e_i in 1:e_size
-    
+
                     p_trans = e_ptrans[e_i, next_e_i]
                     xe0     = x_lo_ea[next_e_i, a_i]   # from the tables built before the q loop
 
                     if interp_ea[next_e_i, a_i]
                         t   = t_ea[next_e_i, a_i]
                         xe1 = xe0 + 1
-
-                        @inbounds begin
-                            val      = (1 - t) * Values[xe0] + t * Values[xe1]
-                            next_def = (1 - t) * a_i_vals[policies[xe0], 3] +
-                                    t * a_i_vals[policies[xe1],  3]
-                        end
-
+                        @inbounds next_def = (1 - t) * a_i_vals[policies[xe0], 3] + t * a_i_vals[policies[xe1], 3]
                     else
-
                         # x' off the grid: nearest edge
-                        @inbounds begin
-                            val      = Values[xe0]
-                            next_def = a_i_vals[policies[xe0], 3]
-                        end
+                        @inbounds next_def = a_i_vals[policies[xe0], 3]
                     end
 
+                    # reorganization is a fresh start: the firm does not repay b', so the lender bargains over its value at x' + b'
+                    xg = x_lo_ea[next_e_i, a0]
+                    @inbounds val_reo = interp_ea[next_e_i, a0] ?
+                        (1 - t_ea[next_e_i, a0]) * Values[xg] + t_ea[next_e_i, a0] * Values[xg + 1] : Values[xg]
+                    liq = fn_Gam(val_reo, next_k, zeta_R)
+
+                    # default in e': chosen (next_def) or the exogenous shock
+                    p_d = p_trans * (next_def + (1 - next_def) * pdef_exo)
                     pdef_endo += p_trans * next_def
-                    gam       += p_trans * fn_Gam(val, next_k, zeta_R)
-                    Pi_reo    += p_trans * (phi_c * val)
+                    liqD += p_d * liq
+                    reoD += p_d * (1 - liq)
+                    reoV += p_d * (1 - liq) * theta * val_reo
                 end
 
                 # now default is a decision and a shock at the same time
                 # prob. of either pdef of pdef exo occurs- these are independent events
                 pdef = pdef_endo + pdef_exo - pdef_endo * pdef_exo
 
-                # adjusting the Pi_reo to the possibility of exo. default shock
-                Pi_reo = Pi_reo * (1-pdef_exo)
+                # liquidation probability and reorganization payoff conditional on default (liqD + reoD = pdef)
+                gam    = pdef > 0 ? liqD / pdef : 0.0
+                Pi_reo = reoD > 0 ? reoV / reoD : 0.0
 
                 # q and tau
                 q, tau = fn_Tau_Q(pdef, gam, Pi_liq, Pi_reo, next_b, tau_vec, beta, kappa)
@@ -496,41 +572,56 @@ function FirmOptim(wage, phi_c, zeta_Rl)
     # Fmat - from state n, what is the probability of ending up in state n', given optimal policy
     Fmat = zeros(n-1,n-1)
     Fmat_bottom = zeros(n-1)
+    
+    # For each e': firms landing at x' repay and stay, or default (by choice at x' or by the exo shock).
+    # Defaulters are liquidated and exit (Fmat_bottom) or reorganized and continue at x' + b' (debt written off).
     for s_i in 1:(n-1)
-               
+
         # policies imported from SumPol
         next_k = SumPol[s_i, 3]
         next_b = SumPol[s_i, 4]
+        large = (size_col == 2 ? next_b : next_k) >= Fcut
+        pdef_exo = large ? pdef_exo_l : pdef_exo_s
+        e_i = Int(floor( (s_i-1) / x_size) + 1)
 
-        # probability that you will end up in default state
-        pdef_exo = next_k >= Fcut ? pdef_exo_l : pdef_exo_s
-        Fmat_bottom[s_i] = pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]
+        # a state whose firm chooses default or exit: stat_dist removes it, so its row is not used 
+        if SumPol[s_i, 6] != 0 || SumPol[s_i, 7] != 0
+            Fmat_bottom[s_i] = pdef_exo
+            for next_e_i in 1:e_size
+                place_x!(Fmat, s_i, fn_X(next_k, next_b, e_vals[next_e_i]), (next_e_i-1)*x_size, x_grid,
+                         e_ptrans[e_i, next_e_i] * (1-pdef_exo))
+            end
+            continue
+        end
 
-        e_i = Int(floor( (s_i-1) / x_size) + 1) 
+        # action (k', b' = 0), as in the q update: its x' is x' + b' (b_grid[1] = 0, k varies fastest in a_vals)
+        a0 = findfirst(==(next_k), k_grid)
+        zeta_R = large ? zeta_Rl : zeta_Rs
+
         for next_e_i in 1:e_size
+            p_trans = e_ptrans[e_i, next_e_i]
+            base = (next_e_i-1)*x_size
 
-            p_trans = e_ptrans[e_i, next_e_i] * (1-(pdef_exo + SumPol[s_i, 8] * SumPol[s_i, 14]))
-            x_next = fn_X(next_k,next_b,e_vals[next_e_i])
+            # liquidation decision in default, at the value V(x'+b', e') as in the q update
+            # (the q loop's Values are local to it: SumPol[:, 18] holds them)
+            xg = x_lo_ea[next_e_i, a0]
+            val_reo = interp_ea[next_e_i, a0] ?
+                (1 - t_ea[next_e_i, a0]) * SumPol[xg, 18] + t_ea[next_e_i, a0] * SumPol[xg + 1, 18] : SumPol[xg, 18]
+            liq = fn_Gam(val_reo, next_k, zeta_R)
 
-            x_close = argmin(abs.(x_next .- x_grid))
-            xe_close = x_close + (next_e_i-1)*x_size
+            # the two x'-grid points around x'
+            x_close, close_weight, x_far = landing(fn_X(next_k, next_b, e_vals[next_e_i]), x_grid)
+            for (x_i, weight) in ((x_close, close_weight), (x_far, 1 - close_weight))
+                (x_i == 0 || weight == 0) && continue
+                next_def = SumPol[x_i + base, 7]                    # default chosen at this point
+                p_def = next_def + (1 - next_def) * pdef_exo        # default: chosen, or the exogenous shock
 
-            if x_next < x_grid[end] && x_next > x_grid[1]
-                
-                x_far = x_next > x_grid[x_close] ? x_close + 1 : x_close - 1
-                
-                close_weight = abs(x_next - x_grid[x_far]) / (abs(x_next - x_grid[x_close]) + abs(x_next - x_grid[x_far]))
-    
-                # finding xe_index     
-                xe_far = x_far + (next_e_i-1)*x_size
-
-                # filling Fmat
-                Fmat[s_i, xe_close] += p_trans * close_weight
-                Fmat[s_i, xe_far] += p_trans * (1-close_weight)                               
-
-            else # close_weight = 1
-                Fmat[s_i, xe_close] += p_trans
-            end  
+                # repays and stays at x'
+                Fmat[s_i, x_i + base] += p_trans * weight * (1 - p_def)
+                # defaults: liquidated (exit), or reorganized and moved to x' + b'
+                Fmat_bottom[s_i] += p_trans * weight * p_def * liq
+                liq == 0 && place_x!(Fmat, s_i, fn_X(next_k, 0, e_vals[next_e_i]), base, x_grid, p_trans * weight * p_def)
+            end
         end
 
     end
@@ -543,180 +634,171 @@ function FirmOptim(wage, phi_c, zeta_Rl)
 
 end
 
-############ Results: ABL vs CFL  ##############
-# calibration values
-wage = 1;
-phi_c =  0.360542276
-zeta_Rl =  2753.229657
-@elapsed SumPol, e_chain, Fmat = FirmOptim(wage, phi_c, zeta_Rl)
-c_e, f0 = EntryValue(SumPol, e_chain) ;
-mu, m, xpol = stat_dist(SumPol, Fmat, f0);
-
-zeta_Rl = 1350
-@elapsed SumPol0, e_chain0, Fmat0 = FirmOptim(1.0175, phi_c, zeta_Rl)  # perfect w is about 1.14
-c_e0, f00 = EntryValue(SumPol0, e_chain0); 
-mu0, m0, xpol0 = stat_dist(SumPol0, Fmat0, f00);
-
-
-############ Core results Results: stationary distributions ############
-println("The relative productivity of the ABL case is: ", round(c_e0 / c_e , digits=3))
-
-sumSSsme(SumPol, Fmat,f0)
-sumSSsme(SumPol0, Fmat0,f00)
-
-sumSS(SumPol,Fmat,f0)
-sumSS(SumPol0,Fmat0,f00)
-
-
-############ Untargeted Moments ############
-binnum = 10
-# Pdef and CFL reliance
-Ushape(binnum, SumPol, mu) # in calculating tau, this contains firms with Pdef = 0
-# Gamma and CFL reliance
-Xcross(binnum, SumPol, mu) # in calculating tau, this does not contain firms with Pdef = 0
-# Average Debt policy and Interest rate across firm sizes
-QBplot(binnum, SumPol, SumPol0, mu, mu0) 
-# Capital Allocation 
-CapAlloc(SumPol, SumPol0, mu, mu0) 
-
-
-# Q - against Leverage this plot works well with x_size == 46 and e_size == 23 
-p1, p2 = DebtScedule(SumPol, 25, 17; phi_c = phi_c)
-p3, p4 = DebtScedule(SumPol, 25, 20; phi_c = phi_c)
-p5, p6 = DebtScedule(SumPol, 25, 22; phi_c = phi_c)
-plot(p3, p4, p5, p6, layout = (2, 2), size = (900, 700))
-#savefig(plot(p3, p4, p5, p6, layout = (2, 2), size = (900, 700) ), "DebtScedule.png")
-
-############ Results: dynamics simulations ##############
-_, e_size, _, _ = gridsize()
-# shows the average policies of firms of a given productivity across their lifecycle
-dynsim2(e_size - 6, 10000)
-dynsim2(e_size - 3, 10000)
-dynsim2(e_size - 1, 10000)
-# savefig(dynsim2(e_size - 2, 100000), "Simul.png")
-
-# shows optimal policies of firms with a certain productivity, across x-sizes
-plotPol(SumPol0, SumPol, e_size-6)
-
-############ Firm states and policies in stationary equilibrium ###########
-binnum = 20
-plot(plotPDF(binnum, 'k', SumPol), plotPDF(binnum, 'b', SumPol), plotPDF(binnum, 'l', SumPol),
-    plotPDF(binnum, 'y', SumPol), plotPDF(binnum, 'p', SumPol), plotPDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
-plot(plotCDF(binnum, 'k', SumPol), plotCDF(binnum, 'b', SumPol), plotCDF(binnum, 'l', SumPol),
-    plotCDF(binnum, 'y', SumPol), plotCDF(binnum, 'p', SumPol), plotCDF(binnum, 'v', SumPol), layout=(2,3), size=(1200, 800))
-
-plotXE(SumPol, mu, e_chain)     
-plotTauDist(SumPol)
-
-
-# Q - against Gam this plot works well with x_size == 44 and e_size == 27 
-pGamPol = plot(GamPol(SumPol, 15, 21), GamPol(SumPol, 26, 21), GamPol(SumPol, 35, 21), layout = (1, 3), size = (900, 300) , margin = 5mm)
-# Plots.savefig(pGamPol, "GamPol.png")
-
-# Reform effects
-include("Functions/improve.jl")
-reformplot = plotPolHeatmaps(SumPol, SumPol0, mu, 1)
-# Plots.savefig(reformplot, "large_reform.png")
-# Plots.savefig(reformplot, "reform.png")
-
-
-### Optimal policies over different reorganization costs ###
-zeta_R_vec = 0:1000:8000
-# SumPolZeta = ZetaGam(zeta_R_vec)  # runtime around 1 hour 
-ZetaGamPlot(SumPolZeta, zeta_R_vec, 23, 15)
-
-###### GENERAL EQUILIBRIUM: Finding wage given entry cost, using bisection ####
-tolerance = 0.0001
-wage_0 = 1
-phi_c =  0.360542276
-zeta_Rl =  2753.229657/2
-
-SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
-c_e, f0 = EntryValue(SumPol, e_chain)
-results_baseline = sumSS(SumPol,Fmat,f0)
-c_e_baseline = c_e
-
-#zeta_Rl = 1350
-@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (1, 1.3), Bisection(), rtol=tolerance, verbose=true)
-
-#  wage_alt = 1.017549201334813 - where zeta_Rl  = zeta_Rl/2
-#  wage_alt =  - where zeta_Rl  = zeta_Rl/10
-
-#  wage_inf =  - where zeta_Rl  = inf
-#  wage_alt =  - perfect credit economy 
-wage_alt
-
-SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
-c_e0, f00 = EntryValue(SumPol0, e_chain0)
-
-sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025
-sumSSsme(SumPol0,Fmat0,f00)
-
 ########## CALIBRATION ################
-include("Functions/FCmodel/ErrorFunc.jl")
-include("Functions/FCmodel/FirmOptim_Ext.jl")
+# Data targets: the last table of Data Replication/calib_targets.R (run it first to update calib_targets.csv).
+# "Share of small firms" sets Fcut after the fit.
+data_targets = read_targets(joinpath("..", "..", "Data Replication", "calib_targets.csv"))
 
-# initital values ipc, ipdef_exo_l, ipdef_exo_s, izeta_Rl, izeta_Rs, iphi_a, iphi_c, iFcut)
-initvec = [ 28.56, 0.02343, 2759.45, 0.75978, 0.393]
+# calib_moments: (moment as in calib_targets.R, row in sumSS, row in sumSSsme, targeted)
+#   targeted = true: error term |model - data| / data;  false: shown, not targeted
+calib_moments = [
+    ("Debt to Collateral",     "avg_b2a",     "b2a",         true),
+    ("Interest rate",          "avg intrate", "intrate",     true),
+    ("Liquidation prob.",      "avg_liqprob", "liqprob",     true),
+    ("CF-reliance",            "CF reliance", "CF reliance", true),
+    ("CF-based to total debt", "CF share",    "CF share",    true),
+]
+
+# calib_params: name = (start, lower, upper); each trial must lie strictly inside the bounds.
+#  Starts are the current values in parameters(). Add a line to calibrate a parameter, delete one to keep its parameters() value.
+#  Fcut is not listed: it only splits small and large firms, so it is set after the fit to match the share of small firms.
+calib_params = (
+    pc         = (parameters().pc,         0.0, Inf),   # fixed cost of operation, c
+    pdef_exo_l = (parameters().pdef_exo_l, 0.0, 1.0),   # exogenous distress probability, P_x (pdef_exo_s follows it)
+    zeta_Rl    = (parameters().zeta_Rl,    0.0, Inf),   # fixed cost of reorganization, zeta
+    phi_c_hh   = (parameters().phi_c_hh,   0.0, 1.0),   # 1 - variable cost of reorganization (main5's phi_c = 1 - phi_c_hh)
+    phi_c      = (parameters().phi_c,      0.0, 1.0),   # lender's payoff under reorganization, theta
+)
+
+# making that what the lender and the HH gets after reorganization does not add up to more that 1
+valid = p -> (1 - p.phi_c_hh) + p.phi_c <= 1
+
 options = Optim.Options(
     iterations = 200,
-    time_limit = 8*3600.0,
-    f_tol = 0.002,
+    time_limit = 3*3600.0,
+    f_reltol = 0.002,      # f_tol before Optim 2
     show_trace = true,
     store_trace = true,
     show_every = 1)
-@elapsed CalRes = optimize(ErrorFunc1, initvec, NelderMead(), options)
-
-println(CalRes)
 
 
-# CFshare_calib = CalRes.minimizer
-CFrel_calib = CalRes.minimizer
+# full = true runs calibrate_fully instead (see Calibrate.jl): it screens n_screen points spread over screen_box
+#  (name = (low, high); a parameter left out gets start × (0.5, 1.5)), runs Nelder-Mead with up to 3 restarts from the
+#  best n_starts of them, each start on its own Julia process, and keeps the best. Save the file first: the workers load
+#  the model from it. starts = [CalRes.values] in its call polishes an earlier result instead of screening.
+full = false
+# saves to calibration_outputs/CALIB_<date>.csv (full: CALIB_<date>_full.csv, _full_runs.csv and _full_screen.csv)
+@elapsed CalRes = full ?
+    calibrate_fully(calib_params, calib_moments, data_targets; options = options, valid = valid, n_screen = 100, n_starts = 4,
+        screen_box = (pc = (25.0, 75.0), pdef_exo_l = (0.01, 0.10), zeta_Rl = (1000.0, 5000.0), phi_c_hh = (0.6, 0.995), phi_c = (0.15, 0.6))) :
+    calibrate_lazy(calib_params, calib_moments, data_targets; options = options, valid = valid)
 
-ErrorFunc2(initvec)
-ErrorFunc2(CalRes.minimizer)
-
-# Wrap CFrel_calib into a DataFrame
-CFrel_df = DataFrame(CFcal = CFrel_calib)
-# Timestamped filename
-time_string = "ESTPARAM_$(Dates.day(now()))_$(Dates.hour(now()))_$(Dates.minute(now()))"
-# Write to Excel
-XLSX.writetable("$time_string.xlsx", sheetname = "sheet1", CFrel_df)
-
-
-
-###### GENERAL EQUILIBRIUM: Shifting Costs ####
-tolerance = 1
-wage_0 = 1
-phi_c = 0.2810
-zeta_Rl = 2590
-
-SumPol, e_chain, Fmat = FirmOptim(wage_0, phi_c, zeta_Rl)
-c_e, f0 = EntryValue(SumPol, e_chain)
-results_baseline = sumSS(SumPol,Fmat,f0)
-c_e_baseline = c_e
-
-zeta_Rl = 1295
-phi_c = 0.14
-@elapsed wage_alt = find_zero(wage -> FindWage(wage, phi_c, zeta_Rl) - c_e_baseline, (0.99, 1.02), Bisection(), rtol=tolerance, verbose=true)
+# To use the calibrated values (Fcut included) without pasting them: set_params!(CalRes.values).
+# reset_params!() goes back to the values written in parameters().
 
 
-SumPol0, e_chain0, Fmat0 = FirmOptim(wage_alt, phi_c, zeta_Rl)
-c_e0, f00 = EntryValue(SumPol0, e_chain0)
+########## MODEL FIT ################
+# Fit at the calibrated values. Without a calibration run, model_fit(NamedTuple(), calib_moments, data_targets)
+# gives the fit at the values in parameters().
+Fit = model_fit(CalRes.values, calib_moments, data_targets)
+println("\nInternally calibrated parameters (and Fcut):")
+foreach(((name, v),) -> println("  $name = $v"), pairs(Fit.values))
+print_fit(Fit)
 
-sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025
-sumSSsme(SumPol0,Fmat0,f00)
+########## RESULTS ################
+# The paper's model results at the calibrated values; MiscResults.jl has the rest (run_misc at the end).
+# Each equilibrium is a set of overrides in parameters() plus a wage (Functions/Results.jl): solve_eq solves it at a
+# given wage, and ge_eq at the wage where free entry holds with the baseline entry cost c_e (bisection on the wage).
+# Everything is saved to results_outputs/<date>/: RESULTS.csv (tables and equilibria) and the figures.
+include("Functions/Results.jl")
+include("Functions/CapAlloc2.jl")
+include("Functions/Xallocation.jl")
 
-sumSS(SumPol,Fmat,f0) # wage = 1
-sumSS(SumPol0,Fmat0,f00) # wage_alt = 1.025	
+# Which parameter values the results use:
+#  - the calibration run above (CalRes), if there is one; otherwise the defaults written in parameters()
+#  - to use a saved calibration instead, replace the line below with
+#      CalVals = load_calibration(joinpath("calibration_outputs", "CALIB_<date>.csv"))
+CalVals = @isdefined(CalRes) ? CalRes.values : NamedTuple()
+reset_params!(); set_params!(CalVals)
+results_dir = joinpath("results_outputs", Dates.format(now(), "yyyy-mm-dd_HHMM"))
+
+#### Baseline and reform: the fixed cost of reorganization cut by half (main5 section 5.1) ####
+BaseEq   = solve_eq()
+ReformEq = ge_eq((zeta_Rl = parameters().zeta_Rl / 2,), BaseEq.c_e)
+
+# tab:targets and tab:untargeted are in Fit (MODEL FIT above)
+SizeTab = size_table(["Baseline" => BaseEq, "Reform" => ReformEq])     # tab:SSvalues_firms
+GETab   = ge_table(BaseEq, ReformEq)                                    # tab:SSvalues_GE
+print_table("Small and large firms in the baseline and the reform (tab:SSvalues_firms)", SizeTab)
+print_table("Aggregate moments, % change (tab:SSvalues_GE)", GETab)
+
+#### Decomposition of the change in Y/L (tab:decomposition; CapAlloc2.jl) ####
+Decomp = CapAlloc2(BaseEq, ReformEq);
+print_table("Decomposition of the change in Y/L, log points x 100 (tab:decomposition)", Decomp.table)
+
+#### Firm and capital allocation across productivity states (fig:firmalloc, fig:capalloc; Xallocation.jl) ####
+# Two more equilibria: zeta cut to a tenth, and perfect credit (free equity injections). PerfEq's change in Y/L is
+# main5's footnote on the productivity gain without financial frictions.
+Reform10Eq = ge_eq((zeta_Rl = parameters().zeta_Rl / 10,), BaseEq.c_e)
+PerfEq     = ge_eq((perf_cred = 1.0,), BaseEq.c_e; bracket = (1.0, 1.6))
+println("\nPerfect credit: Y/L changes by ", round(100 * (PerfEq.ss["YtoL", "values"] / BaseEq.ss["YtoL", "values"] - 1), digits = 2), "%")
+Xalloc = Xallocation(["baseline (ζ)" => BaseEq, "reform (ζ/2)" => ReformEq, "reform (ζ/10)" => Reform10Eq], "perfect credit" => PerfEq);
+Xalloc.firmalloc     # fig:firmalloc
+Xalloc.capital       # fig:capalloc
+
+#### Interest rate and debt type against the liquidation probability (appendix GamPol.png) ####
+pGamPol = plot(GamPol(BaseEq.SumPol, 15, 21), GamPol(BaseEq.SumPol, 26, 21), GamPol(BaseEq.SumPol, 35, 21), layout = (1, 3), size = (900, 300) , margin = 5mm)
 
 
-####### Finding zeta_L for a given target liquidation probability ####
-include("Functions/FindZeta.jl")
+#### SBRA (tab:percentage_changes2; SmallCosts.jl) ####
+# Targeted: small firms' (below Fcut, see size_by_debt) fixed cost is cut until their liquidation probability falls by 13 pp (main5 section 6).
+# Universal: the same fixed cost for all firms. Control reduction: the targeted cut, and theta (all firms) cut in
+# proportion to it, as in main5 (0.361 to 0.268 there).
+SBRA = find_zeta_Rs(BaseEq; drop = 0.13)
+theta_control = parameters().phi_c * SBRA.zeta_Rs / parameters().zeta_Rl
+TargetedEq  = ge_eq((zeta_Rs = SBRA.zeta_Rs,), BaseEq.c_e)
+UniversalEq = ge_eq((zeta_Rl = SBRA.zeta_Rs,), BaseEq.c_e)
+ControlEq   = ge_eq((zeta_Rs = SBRA.zeta_Rs, phi_c = theta_control), BaseEq.c_e)
+SBRATab = change_table(["Targeted" => (BaseEq, TargetedEq), "Universal" => (BaseEq, UniversalEq), "Control Reduc." => (BaseEq, ControlEq)])
+print_table("SBRA: changes from the baseline (tab:percentage_changes2)", SBRATab)
+println("Targeted: zeta_Rs = ", round(SBRA.zeta_Rs, digits = 2), "; small firms' liquidation probability ",
+        round(BaseEq.sme["liqprob", "SME Values"], digits = 3), " -> ", round(TargetedEq.sme["liqprob", "SME Values"], digits = 3),
+        " in GE. Control reduction: theta = ", round(theta_control, digits = 4))
 
-tolerance = 1
-wage = 1
-phi_c =  0.360542276
-zeta_Rl =  2753.229657
+        
+#### Only AB debt and only CF debt (tab:percentage_changes, columns 2 and 3; ABcase.jl, CFcase.jl) ####
+# AB only: theta = 0 (phi_c; lenders get nothing in reorganization). CF only: phi_af = 0 (lenders get nothing in liquidation).
+# Each case recalibrates pc, P_x and zeta to the debt to collateral ratio, the interest rate and the liquidation
+# probability (main5), starting from the calibrated values; then zeta is cut by half and the wage solved as above.
+# This uses data_targets, calib_moments and options from the CALIBRATION block. Each recalibration takes about 10-20
+# minutes and saves its CALIB file; with recalibrate_ABCF = false, set AB_file and CF_file to saved files instead.
+recalibrate_ABCF = true
+AB_file = joinpath("calibration_outputs", "CALIB_$(Dates.format(now(), "yyyy-mm-dd_HHMM"))_AB.csv")
+CF_file = replace(AB_file, "_AB.csv" => "_CF.csv")
+ABCF_moments = [(moment, row, row_sme, moment in ("Debt to Collateral", "Interest rate", "Liquidation prob."))
+                for (moment, row, row_sme, _) in calib_moments]
+ABCF_params = (pc         = (parameters().pc,         0.0, Inf),
+               pdef_exo_l = (parameters().pdef_exo_l, 0.0, 1.0),
+               zeta_Rl    = (parameters().zeta_Rl,    0.0, Inf))
 
-FindZeta(wage, phi_c, zeta_Rl)
+# AB only. calibrate_lazy prints lines to paste into parameters(): they are for the AB-only model, do not paste them.
+ABVals = recalibrate_ABCF ?
+    with_params(() -> calibrate_lazy(ABCF_params, ABCF_moments, data_targets; options = options, file = AB_file).values, (phi_c = 0.0,)) :
+    load_calibration(AB_file)
+ABBaseEq   = solve_eq(merge(ABVals, (phi_c = 0.0,)))
+ABReformEq = ge_eq(merge(ABVals, (phi_c = 0.0, zeta_Rl = ABVals.zeta_Rl / 2)), ABBaseEq.c_e)
+
+# CF only
+CFVals = recalibrate_ABCF ?
+    with_params(() -> calibrate_lazy(ABCF_params, ABCF_moments, data_targets; options = options, file = CF_file).values, (phi_af = 0.0,)) :
+    load_calibration(CF_file)
+CFBaseEq   = solve_eq(merge(CFVals, (phi_af = 0.0,)))
+CFReformEq = ge_eq(merge(CFVals, (phi_af = 0.0, zeta_Rl = CFVals.zeta_Rl / 2)), CFBaseEq.c_e)
+
+PctTab = change_table(["AB and CF debt" => (BaseEq, ReformEq), "Only AB debt" => (ABBaseEq, ABReformEq), "Only CF debt" => (CFBaseEq, CFReformEq)])
+print_table("Reform with both debt types, AB only and CF only: changes from each baseline (tab:percentage_changes)", PctTab)
+
+#### Saving: results_outputs/<date>/RESULTS.csv and the figures ####
+save_results(results_dir,
+    ["tab:SSvalues_firms" => SizeTab, "tab:SSvalues_GE" => GETab, "tab:decomposition" => Decomp.table,
+     "tab:percentage_changes" => PctTab, "tab:percentage_changes2" => SBRATab, "SBRA zeta_Rs search" => SBRA.grid],
+    ["Baseline" => BaseEq, "Reform" => ReformEq, "Reform zeta/10" => Reform10Eq, "Perfect credit" => PerfEq,
+     "Targeted" => TargetedEq, "Universal" => UniversalEq, "Control reduction" => ControlEq,
+     "AB baseline" => ABBaseEq, "AB reform" => ABReformEq, "CF baseline" => CFBaseEq, "CF reform" => CFReformEq],
+    ["firm_distribution" => Xalloc.firmalloc, "capital_allocation" => Xalloc.capital, "GamPol" => pGamPol])
+
+#### Other results (not in the paper): MiscResults.jl, which can also be run on its own ####
+run_misc = false
+run_misc && include("MiscResults.jl")
+
+

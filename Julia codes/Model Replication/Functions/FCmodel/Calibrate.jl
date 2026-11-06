@@ -1,5 +1,5 @@
 ####### CALIBRATION #######
-# A calibration is written as data, in the calibration block of baseline_calib.jl:
+# A calibration is written as data, in the calibration block of Baseline.jl:
 #   data_targets:  DataFrame with columns moment, weighted, small, large - read from calib_targets.R's output (read_targets).
 #                  The row "Share of small firms" sets the size cutoff Fcut.
 #   calib_moments: vector of (moment, row in sumSS, row in sumSSsme, targeted); targeted = false: shown, not targeted.
@@ -312,7 +312,7 @@ end
 function calibrate_fully(calib_params, calib_moments, data_targets; options = Optim.Options(), wage = 1, valid = p -> true,
                               screen_box = NamedTuple(), n_screen = 100, n_starts = 4, starts = nothing,
                               restart_tol = 1e-6, max_restarts = 3, transform = true, simplex_step = 0.4,
-                              n_workers = n_starts, model_file = normpath(joinpath(@__DIR__, "..", "..", "baseline_calib.jl")),
+                              n_workers = n_starts, model_file = normpath(joinpath(@__DIR__, "..", "..", "Baseline.jl")),
                               file = joinpath("calibration_outputs", "CALIB_$(Dates.format(now(), "yyyy-mm-dd_HHMM"))_full.csv"))
 
     pnames = keys(calib_params)

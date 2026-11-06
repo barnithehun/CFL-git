@@ -13,7 +13,7 @@
 #   comps.RDS          - raw Compustat in USD, only for total liabilities ltq (data_cleaning.R, section 1)
 #   idb_cases.RDS      - bankruptcy cases, one row per case (DefaultData.R, section 2)
 #   soi_weights.RDS    - number of US corporations by asset class and year (firm_weights.R)
-# OUTPUTS (in CFL-git/Data Replication/), read by the Julia calibration (Julia codes/Model Replication/baseline_calib.jl):
+# OUTPUTS (in CFL-git/Data Replication/), read by the Julia calibration (Julia codes/Model Replication/Baseline.jl):
 #   calib_targets.csv          - Table 2 (moment, small, large, weighted, unweighted) plus the row "Share of small firms" (weighted = w)
 #   calib_targets_settings.csv - the settings of section 0 that produced it
 #

@@ -4,18 +4,19 @@
 # Diagnostics and experiments from FinalVers/ that the paper does not use. Each block names the original code.
 #
 # How to run:
-#  - Once, from baseline_calib.jl: run_misc = true at the end of its RESULTS section includes this file. It uses the
+#  - Once, from Baseline.jl: run_misc = true at the end of its RESULTS section includes this file. It uses the
 #    baseline and the reform solved there (BaseEq, ReformEq).
-#  - On its own: first run baseline_calib.jl up to the CALIBRATION block (the model). The SETUP block below then solves
+#  - On its own: first run Baseline.jl up to the CALIBRATION block (the model). The SETUP block below then solves
 #    the baseline and the reform again from the newest results_outputs/<date>/RESULTS.csv (a few seconds), or from
 #    results_file if you set it.
 #  - Block by block: after SETUP, each block runs on its own.
 # Figures are saved to results_outputs/misc_<date>/.
+# "Baseline.jl lines ..." in the block titles refer to the Baseline.jl this folder held before 2026-11-06 (git commit a20965b).
 
 cd(@__DIR__)
 
 ########## SETUP ##########
-@isdefined(FirmOptim) || error("run baseline_calib.jl up to the CALIBRATION block first: MiscResults.jl needs the model")
+@isdefined(FirmOptim) || error("run Baseline.jl up to the CALIBRATION block first: MiscResults.jl needs the model")
 @isdefined(solve_eq) || include("Functions/Results.jl")
 @isdefined(CapAlloc2) || include("Functions/CapAlloc2.jl")
 
@@ -199,7 +200,7 @@ savemisc(plot(shbar(:prodimp, "ProdImp"), shbar(:liqprob, "LiqProb"), shbar(:d2c
 # - ShiftingFixedCosts.jl: the lender pays a fixed cost in reorganization (Pi_reo = max(phi_c*V - zeta_Rs, 0)); a model change.
 # - DebtScedule (M2): follows an older model version.
 # - FindZeta.jl and SmallCosts.jl's grid search for zeta_Rs: replaced by find_zeta_Rs (Functions/Results.jl).
-# - dynsim.jl: included by baseline_calib.jl but never called.
+# - dynsim.jl: included by Baseline.jl but never called.
 # - The calibration with ErrorFunc1 (Baseline.jl lines 655-684): replaced by calibrate_lazy (Functions/FCmodel/Calibrate.jl).
 
 reset_params!(); set_params!(BaseEq.values)

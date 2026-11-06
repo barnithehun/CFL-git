@@ -1,5 +1,5 @@
 ####### RESULTS #######
-# Helpers for the RESULTS section of baseline_calib.jl and for MiscResults.jl.
+# Helpers for the RESULTS section of Baseline.jl and for MiscResults.jl.
 # An experiment is a set of overrides in parameters() (with_params, Calibrate.jl) plus a wage, e.g. (zeta_Rl = 1376.6,)
 # for the reform. Overrides add to those already set (set_params!), so the results run at the calibrated values.
 # Interest rates and spreads are unrounded (rate_digits = nothing in sumSS and sumSSsme); tables round only when printed.
@@ -172,6 +172,6 @@ end
 # newest_results: dir/<date>/RESULTS.csv of the latest run (folder names are dates, so the last in order is the latest)
 function newest_results(dir = "results_outputs")
     runs = sort(filter(d -> isfile(joinpath(dir, d, "RESULTS.csv")), readdir(dir)))
-    isempty(runs) && error("no RESULTS.csv in $dir; run the RESULTS section of baseline_calib.jl first")
+    isempty(runs) && error("no RESULTS.csv in $dir; run the RESULTS section of Baseline.jl first")
     return joinpath(dir, runs[end], "RESULTS.csv")
 end
