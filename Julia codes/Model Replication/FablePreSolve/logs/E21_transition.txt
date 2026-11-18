@@ -1,0 +1,21 @@
+
+zeta/2, constant-wage path: years with zero entry among the first 30: 16; entry relative to the new steady state, years 0-10: [3.34, 0.43, 0.0, 0.0, 1.41, 3.33, 0.74, 0.0, 0.0, 0.39, 3.5]
+zeta/2, approximation: wage gap closed after 1, 2, 5, 10, 20 years, %: [-4.9, -7.8, -33.4, -47.1, -21.9]; firm mass gap closed: [11.1, 23.9, 41.9, 56.6, 70.4]
+   consumption, % from the baseline, years 0-10: [0.93, 1.07, 1.47, 1.27, 1.06, 0.92, 0.77, 0.65, 0.54, 0.46, 0.39]; year 120 against the new steady state: -0.0314%
+   steady-state consumption gain 1.258%, with the transition (discounted) 0.698%
+
+zeta/3, constant-wage path: years with zero entry among the first 30: 17; entry relative to the new steady state, years 0-10: [5.96, 0.11, 0.0, 0.0, 0.0, 0.0, 2.89, 3.18, 0.0, 0.0, 0.0]
+zeta/3, approximation: wage gap closed after 1, 2, 5, 10, 20 years, %: [-65.0, -68.5, -86.2, -84.2, -41.4]; firm mass gap closed: [8.3, 19.5, 37.5, 51.9, 66.4]
+   consumption, % from the baseline, years 0-10: [9.44, 1.03, 1.55, 1.04, 0.71, 0.56, 0.41, 0.28, 0.18, 0.1, 0.05]; year 120 against the new steady state: -0.0494%
+   steady-state consumption gain 1.846%, with the transition (discounted) 1.022%
+
+transition_welfare.csv
+                                                     zeta/2       zeta/3
+constant-wage path: years with zero entry (of 30)         16.0         17.0
+steady-state wage (Y/L) gain, %                       0.805        1.139
+years until half of the wage gain                      47.0         50.0
+years until half of the rise in firms                   8.0         10.0
+steady-state consumption gain, %                      1.258        1.846
+consumption gain with the transition, %               0.698        1.022
+consumption in year 0, % from baseline                 0.93        9.437
+consumption in year 5, % from baseline                0.918         0.56

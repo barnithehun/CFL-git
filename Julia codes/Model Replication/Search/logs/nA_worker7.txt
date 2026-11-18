@@ -1,0 +1,4 @@
+=== NA08 ===
+NA08: done, 73.1 min
+=== NA18 ===
+NA18: done, 52.9 min

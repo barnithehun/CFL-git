@@ -1,0 +1,134 @@
+\beamer@slide {motivation1<1>}{2}
+\beamer@slide {motivation1}{2}
+\beamer@slide {tab:credit_spread}{2}
+\beamer@slide {motivation1<2>}{3}
+\beamer@slide {motivation2<1>}{4}
+\beamer@slide {motivation2}{4}
+\beamer@slide {tab:credit_spread}{4}
+\beamer@slide {motivation2<2>}{5}
+\beamer@slide {What I do<1>}{6}
+\beamer@slide {What I do}{6}
+\beamer@slide {lit<1>}{7}
+\beamer@slide {lit}{7}
+\beamer@slide {Model Summary<1>}{9}
+\beamer@slide {Model Summary}{9}
+\beamer@slide {Model Summary<2>}{10}
+\beamer@slide {Model Summary<3>}{11}
+\beamer@slide {slide2<1>}{12}
+\beamer@slide {slide2}{12}
+\beamer@slide {slide2<2>}{13}
+\beamer@slide {slide2<3>}{14}
+\beamer@slide {slide2<4>}{15}
+\beamer@slide {slide2<5>}{16}
+\beamer@slide {Firms<1>}{17}
+\beamer@slide {Firms}{17}
+\beamer@slide {Firmvalues<1>}{18}
+\beamer@slide {Firmvalues}{18}
+\beamer@slide {eq:default decision}{18}
+\beamer@slide {ContFirms<1>}{19}
+\beamer@slide {ContFirms}{19}
+\beamer@slide {eq:V_cont}{19}
+\beamer@slide {eq:budget}{19}
+\beamer@slide {slide2<1>}{20}
+\beamer@slide {slide2}{20}
+\beamer@slide {LiqReorg<1>}{21}
+\beamer@slide {LiqReorg}{21}
+\beamer@slide {LiqReorg2<1>}{22}
+\beamer@slide {LiqReorg2}{22}
+\beamer@slide {eq:liquidation decision}{22}
+\beamer@slide {eq:liquidation probability}{22}
+\beamer@slide {FCreorg<1>}{23}
+\beamer@slide {FCreorg}{23}
+\beamer@slide {payoffs<1>}{24}
+\beamer@slide {payoffs}{24}
+\beamer@slide {tab:shares}{24}
+\beamer@slide {payoffs<2>}{25}
+\beamer@slide {payoffs<3>}{26}
+\beamer@slide {payoffs<4>}{27}
+\beamer@slide {Lpayoff<1>}{28}
+\beamer@slide {Lpayoff}{28}
+\beamer@slide {tab:shares}{28}
+\beamer@slide {slide2<1>}{29}
+\beamer@slide {slide2}{29}
+\beamer@slide {slide2<2>}{30}
+\beamer@slide {Qfull<1>}{31}
+\beamer@slide {Qfull}{31}
+\beamer@slide {eq:q}{31}
+\beamer@slide {Calibration<1>}{33}
+\beamer@slide {Calibration}{33}
+\beamer@slide {tab:external calib}{33}
+\beamer@slide {tab:internal_calib}{34}
+\beamer@slide {tab:targets}{34}
+\beamer@slide {3<1>}{35}
+\beamer@slide {3}{35}
+\beamer@slide {tab:external calib}{35}
+\beamer@slide {Pexp<1>}{37}
+\beamer@slide {Pexp}{37}
+\beamer@slide {tab:SSvalues_compact}{37}
+\beamer@slide {Pexp<1>}{38}
+\beamer@slide {Pexp}{38}
+\beamer@slide {tab:ss_moments}{38}
+\beamer@slide {Decomp_main<1>}{39}
+\beamer@slide {Decomp_main}{39}
+\beamer@slide {decomp3<1>}{40}
+\beamer@slide {decomp3}{40}
+\beamer@slide {distplot<1>}{41}
+\beamer@slide {distplot}{41}
+\beamer@slide {fig:GamPol}{41}
+\beamer@slide {Aggeffects<1>}{42}
+\beamer@slide {Aggeffects}{42}
+\beamer@slide {tab:percentage_changes}{42}
+\beamer@slide {EUandUS<1>}{44}
+\beamer@slide {EUandUS}{44}
+\beamer@slide {Framework<1>}{45}
+\beamer@slide {Framework}{45}
+\beamer@slide {tab:percentage_changes2}{45}
+\beamer@slide {3<1>}{46}
+\beamer@slide {3}{46}
+\beamer@slide {LandM<1>}{48}
+\beamer@slide {LandM}{48}
+\beamer@slide {slide2<1>}{49}
+\beamer@slide {slide2}{49}
+\beamer@slide {spreads<1>}{50}
+\beamer@slide {spreads}{50}
+\beamer@slide {liqprob<1>}{51}
+\beamer@slide {liqprob}{51}
+\beamer@slide {Conversions<1>}{52}
+\beamer@slide {Conversions}{52}
+\beamer@slide {payoffs_det<1>}{53}
+\beamer@slide {payoffs_det}{53}
+\beamer@slide {Household<1>}{54}
+\beamer@slide {Household}{54}
+\beamer@slide {HH_T<1>}{55}
+\beamer@slide {HH_T}{55}
+\beamer@slide {eq:T}{55}
+\beamer@slide {Entrants<1>}{56}
+\beamer@slide {Entrants}{56}
+\beamer@slide {eq:entrant decision}{56}
+\beamer@slide {Default<1>}{57}
+\beamer@slide {Default}{57}
+\beamer@slide {eq:default decision}{57}
+\beamer@slide {mechanism<1>}{58}
+\beamer@slide {mechanism}{58}
+\beamer@slide {targets<1>}{59}
+\beamer@slide {targets}{59}
+\beamer@slide {liqrisk<1>}{60}
+\beamer@slide {liqrisk}{60}
+\beamer@slide {fig:GamPol}{60}
+\beamer@slide {tilesplot<1>}{61}
+\beamer@slide {tilesplot}{61}
+\beamer@slide {fig:GamPol}{61}
+\beamer@slide {daysin111<1>}{62}
+\beamer@slide {daysin111}{62}
+\beamer@slide {SBRA<1>}{63}
+\beamer@slide {SBRA}{63}
+\beamer@slide {sbra_effect<1>}{64}
+\beamer@slide {sbra_effect}{64}
+\beamer@slide {tab:percentage_changes2}{64}
+\beamer@slide {sbra_effect<2>}{65}
+\beamer@slide {sbra_data<1>}{66}
+\beamer@slide {sbra_data}{66}
+\beamer@slide {sbra_emp<1>}{67}
+\beamer@slide {sbra_emp}{67}
+\beamer@slide {sbra_emp<1>}{68}
+\beamer@slide {sbra_emp}{68}

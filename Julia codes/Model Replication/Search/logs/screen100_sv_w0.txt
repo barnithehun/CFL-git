@@ -1,0 +1,118 @@
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_L8.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = ltq, cutoff_usd = 1e+08, micro_usd = 1e+05, weight_source = Compustat, nonlead = exclude, written = 2026-11-07 09:33
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_L8m6.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = ltq, cutoff_usd = 1e+08, micro_usd = 1e+06, weight_source = Compustat, nonlead = exclude, written = 2026-11-06 20:08
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_L8m7.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = ltq, cutoff_usd = 1e+08, micro_usd = 1e+07, weight_source = Compustat, nonlead = exclude, written = 2026-11-16 11:46
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_A8.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = assets, cutoff_usd = 1e+08, micro_usd = 1e+05, weight_source = Compustat, nonlead = exclude, written = 2026-11-06 20:06
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_A8m6.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = assets, cutoff_usd = 1e+08, micro_usd = 1e+06, weight_source = Compustat, nonlead = exclude, written = 2026-11-16 11:46
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_A8m7.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = assets, cutoff_usd = 1e+08, micro_usd = 1e+07, weight_source = Compustat, nonlead = exclude, written = 2026-11-16 11:47
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_V8.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = value, cutoff_usd = 1e+08, micro_usd = 1e+05, weight_source = Compustat, nonlead = exclude, written = 2026-11-16 11:47
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_V8m6.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = value, cutoff_usd = 1e+08, micro_usd = 1e+06, weight_source = Compustat, nonlead = exclude, written = 2026-11-16 11:48
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_V8m7.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = value, cutoff_usd = 1e+08, micro_usd = 1e+07, weight_source = Compustat, nonlead = exclude, written = 2026-11-16 11:48
+assets splits: SubString{String}["A8", "A8m6", "A8m7"]
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 11
+5 points, 1.7 min
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 12
+10 points, 2.8 min
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 12
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 11
+15 points, 3.9 min
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 11
+20 points, 5.1 min
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 10
+25 points, 6.3 min
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 13
+Total 'main loop' iterations: 8
+30 points, 7.5 min
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 14
+Total 'main loop' iterations: 7
+35 points, 8.8 min
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 10
+40 points, 9.9 min
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 12
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 11
+45 points, 11.2 min
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 12
+50 points, 12.5 min
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 12
+Total 'main loop' iterations: 7
+55 points, 13.7 min
+Total 'main loop' iterations: 13
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+60 points, 14.9 min
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+65 points, 16.1 min
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 13
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 12
+Total 'main loop' iterations: 8
+70 points, 17.5 min
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 12
+Total 'main loop' iterations: 7
+75 points, 18.6 min
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 12
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 8
+80 points, 19.6 min
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+saved C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\screens\noise_L8_sv_600_w0.csv (82 points)

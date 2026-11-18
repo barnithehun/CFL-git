@@ -1,0 +1,167 @@
+Candidate GG7_0 (grid G0 46/23/46/46: FU7 values, no refit) started 2026-11-08T09:36:14.963
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_L9.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = ltq, cutoff_usd = 1e+09, micro_usd = 1e+05, weight_source = Compustat, nonlead = exclude, written = 2026-11-06 20:07
+External overrides: Dict(:phi_a => 0.425, :size_by_debt => 1.0, :phi_af => 0.425, :tau_tie => 2.0, :d2c_cut => 3.0, :sigma_v => 1.0)
+Calibration: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\FU7\CALIB.csv
+Starts: (pc = 42.53967302816136, pdef_exo_l = 0.0017632343310333568, zeta_Rl = 1771.9597414779814, phi_c_hh = 0.9817848405643379, phi_c = 0.11983159444023396)
+Total 'main loop' iterations: 8
+Saved to C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\GG7_0\CALIB.csv
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 8
+GE wage 1.00872 (55.8 s): entry value - c_e = -1.3383553559178267
+┌ Warning: No wage gives free entry exactly: entry value - c_e jumps from 5.781149647600046 at w = 1.0087196350097658 to -1.3383553559178267 at w = 1.0087203979492188. Kept w = 1.0087203979492188, the end closer to free entry.
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\Results.jl:65
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+zeta_Rs = 974.58 (0.55 of zeta_Rl): small firms' liquidation probability 0.4077, target 0.4079
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 1.00741 (54.0 s): entry value - c_e = -0.00012130737292181948
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 1.00741 (53.7 s): entry value - c_e = -0.000694904594467971
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 0.99651 (54.0 s): entry value - c_e = -7.107147814622294e-5
+Saved to C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\GG7_0
+Candidate GG7_0 finished 2026-11-08T09:44:55.333 (8.7 min)

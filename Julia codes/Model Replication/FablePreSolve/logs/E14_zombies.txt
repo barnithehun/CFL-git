@@ -1,0 +1,8 @@
+
+saved_firms.csv
+                                              % of defaults productivity      capital debt/capital  CF reliance      large %   alive 3y % default 3y %   alive 5y %
+saved by the reform                                  19.367        0.866         0.05         3.79        0.927        0.917       75.256       19.137       60.756
+reorganized under both                               31.968        0.929        0.359        3.793        0.906        9.803       84.587       12.343       72.704
+still liquidated                                     48.665        0.829         0.08        2.929        0.666        1.777          NaN          NaN          NaN
+average firm                                            NaN          1.0          1.0        0.787        0.666          NaN       89.503        7.747        83.67
+entrants                                                NaN        0.924        0.058          NaN          NaN          NaN       77.737       47.021       69.015

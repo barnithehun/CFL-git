@@ -1,0 +1,4 @@
+=== NA06 ===
+NA06: done, 47.6 min
+=== NA16 ===
+NA16: done, 55.5 min

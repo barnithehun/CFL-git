@@ -1,0 +1,193 @@
+Candidate RK1 (Rouwenhorst at RWL values, k/b top 1e6 (74 pts), no refit) started 2026-11-10T16:21:24.237
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_L9.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = ltq, cutoff_usd = 1e+09, micro_usd = 1e+05, weight_source = Compustat, nonlead = exclude, written = 2026-11-06 20:07
+External overrides: Dict(:phi_a => 0.425, :size_by_debt => 1.0, :phi_af => 0.425, :tau_tie => 2.0, :k_size => 74.0, :b_size => 74.0, :x_size => 46.0, :d2c_cut => 3.0, :kb_max => 1.0e6, :e_size => 23.0)
+Calibration: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\RWL\CALIB.csv
+Starts: (pc = 57.843631409301686, pdef_exo_l = 0.003135858116809659, zeta_Rl = 892.1816656827149, phi_c_hh = 0.9446170028622067, phi_c = 0.3234288134355522, sigma_v = 1.5703377692326799)
+Total 'main loop' iterations: 9
+┌ Warning: Grid edge: 139 states choose the top of the k grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:27
+┌ Warning: Grid edge: 133 states choose the top of the b grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:28
+Saved to C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\RK1\CALIB.csv
+Total 'main loop' iterations: 9
+┌ Warning: Grid edge: 139 states choose the top of the k grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:27
+┌ Warning: Grid edge: 133 states choose the top of the b grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:28
+┌ Warning: Grid edge: 139 states choose the top of the k grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:27
+┌ Warning: Grid edge: 133 states choose the top of the b grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:28
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+┌ Warning: Grid edge: 139 states choose the top of the k grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:27
+┌ Warning: Grid edge: 133 states choose the top of the b grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:28
+GE wage 1.002596 (57.1 s): entry value - c_e = -0.0004401334324484196
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+zeta_Rs = 356.87 (0.4 of zeta_Rl): small firms' liquidation probability 0.3357, target 0.3267
+Total 'main loop' iterations: 12
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+┌ Warning: Grid edge: 139 states choose the top of the k grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:27
+┌ Warning: Grid edge: 133 states choose the top of the b grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:28
+GE wage 1.005126 (58.2 s): entry value - c_e = -0.0006752051695571026
+Total 'main loop' iterations: 12
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+┌ Warning: Grid edge: 139 states choose the top of the k grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:27
+┌ Warning: Grid edge: 133 states choose the top of the b grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:28
+GE wage 1.005175 (58.5 s): entry value - c_e = 0.0003099258951806405
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+┌ Warning: Grid edge: 135 states choose the top of the k grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:27
+┌ Warning: Grid edge: 128 states choose the top of the b grid (100000.0)
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\FCmodel\check_grid.jl:28
+GE wage 0.982509 (55.4 s): entry value - c_e = -0.0006032113749938617
+Saved to C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\RK1
+Candidate RK1 finished 2026-11-10T16:29:34.255 (8.2 min)

@@ -2,7 +2,8 @@
 # rate_digits: digits the interest rate and spread are rounded to; nothing = unrounded (used by the calibration)
 function sumSS(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
         
-    beta = parameters().beta 
+    beta = parameters().beta
+    d2c_cut = parameters().d2c_cut
 
     mu, m, xpol = stat_dist(SumPol, Fmat, f0; zeta_R = zeta_R)
     n = size(SumPol,1)
@@ -40,8 +41,8 @@ function sumSS(SumPol,Fmat,f0; zeta_R = zeta_Rl, rate_digits = 2)
         end
 
         # debt to collateral b'/k', as the data's debt / (PPE + inventories + receivables); cash on hand x is not collateral.
-        # Ratios above 3 are dropped, as calib_targets.R does (d2c_cut = 3)
-        if SumPol[s_i,3] != 0 && SumPol[s_i,9] >= 0.5 && SumPol[s_i,4] / SumPol[s_i,3] <= 3
+        # Ratios above d2c_cut (parameters(), 3) are dropped, as calib_targets.R does (d2c_cut = 3)
+        if SumPol[s_i,3] != 0 && SumPol[s_i,9] >= 0.5 && SumPol[s_i,4] / SumPol[s_i,3] <= d2c_cut
             avg_b2a += mu[s_i]/totalmass * SumPol[s_i,4] / SumPol[s_i, 3]
             mu_b2a += mu[s_i]/totalmass
         end

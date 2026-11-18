@@ -1,0 +1,277 @@
+┌ Warning: No wage gives free entry exactly: entry value - c_e jumps from 0.7155744371989954 at w = 0.9906070709228516 to -2.6391216309522747 at w = 0.990608024597168. Kept w = 0.9906070709228516, the end closer to free entry.
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\Results.jl:65
+┌ Warning: No wage gives free entry exactly: entry value - c_e jumps from 3.7273163488742966 at w = 1.0112646102905274 to -1.8110905888319166 at w = 1.0112655639648438. Kept w = 1.0112655639648438, the end closer to free entry.
+└ @ Main C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Functions\Results.jl:65
+Total 'main loop' iterations: 9
+noiseless baseline: c_e 340.77556887717117 (Baseline.jl: 340.776)
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 5
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 6
+GE wage 0.966159 (21.7 s): entry value - c_e = 0.0003593256832914449
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 6
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 0.987634 (26.5 s): entry value - c_e = -0.00021483439252278913
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 0.990607 (25.6 s): entry value - c_e = 0.7155744371989954
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 9
+GE wage 1.011266 (29.3 s): entry value - c_e = -1.8110905888319166
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.015508 (27.9 s): entry value - c_e = -0.00033401984882175384
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.024791 (27.4 s): entry value - c_e = 0.0003628211567274775
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.02778 (28.1 s): entry value - c_e = -9.76281382918387e-5
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.032862 (28.3 s): entry value - c_e = -0.00034875547328283574
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 11
+Error: Iteration number exceeded 25
+Total 'main loop' iterations: 25
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 11
+GE wage 1.035128 (34.6 s): entry value - c_e = 0.00022328318010522707
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+GE wage 1.02382 (29.1 s): entry value - c_e = 0.0004658428492234634
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.028847 (30.0 s): entry value - c_e = -0.023752907129903633
+
+wedge_noiseless.csv
+                                                      Y/L %          C %    C main5 %      firms %    liq share  CF reliance     CF share   rate small default rate
+wedge -1.0                                           -3.384        -5.46       -3.144      -22.406       94.771        0.038        0.021        5.977        8.705
+wedge -0.5                                           -1.237       -1.219       -0.698       -9.685       75.956        0.375        0.652        7.598        8.155
+wedge -0.25                                          -0.939        -0.86       -0.657       -6.187       74.209        0.444        0.678        8.601        7.494
+wedge 0.0                                               0.0          0.0          0.0          0.0       68.784        0.534        0.804        8.281        6.845
+wedge 0.25                                            1.127        0.976        0.451       11.235       67.886        0.618        0.953       10.129        7.717
+wedge 0.5                                             1.551        1.193        0.435       18.447       57.153        0.668        0.959        10.15        6.965
+wedge 0.75                                            2.479        1.732        0.882       26.207       56.357        0.713         0.84       10.169        6.583
+wedge 1.0                                             2.778        1.336       -0.288       37.924       35.858        0.764         0.85        7.737        6.984
+wedge 1.5                                             3.286        1.237        -0.45       44.245       23.505        0.868        0.853        7.445        6.726
+wedge 2.0                                             3.513        0.721       -1.066       49.556       13.223        0.919        0.854        5.973        6.636
+zeta/2, no wedge                                      2.382        2.734        1.832       22.415       59.419        0.694        0.842       10.268        6.685
+zeta/3, no wedge                                      2.885        3.486        1.853       35.953       40.249         0.76        0.848        8.249        7.293
+
+best wedge for consumption on the grid: 0.75 (C 1.732%, Y/L 2.479%); main5 entry costs: 0.75

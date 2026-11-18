@@ -1,0 +1,33 @@
+Calibration: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\FH3\CALIB.csv
+FH3 on grid 46_23_60_60; externals Dict(:b_size => 60.0, :k_size => 60.0, :sigma_e => 0.08760000000000001, :d2c_cut => 3.0, :delta => 0.065, :e_size => 23.0, :phi_af => 0.425, :kappa => 0.1, :nul_e => 0.55004440530223, :phi_a => 0.425, :size_by_debt => 1.0, :tauchen_lo => -0.5, :tau_tie => 2.0, :beta => 0.95, :rho_e => 0.969, :DRS => 0.85, :x_size => 46.0)
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_L8.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = ltq, cutoff_usd = 1e+08, micro_usd = 1e+05, weight_source = Compustat, nonlead = exclude, written = 2026-11-07 09:33
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 1.012377 (80.2 s): entry value - c_e = -0.0003239570977484618
+Total 'main loop' iterations: 8
+solved in 2.3 min
+FH3 46_23_60_60: Y/L +1.24%; small rate 8.20 -> 10.50 (same states 10.01); d2c 0.590 -> 0.625 (same 0.618); V 1266.8 -> 1230.1 (same 1248.2)
+saved C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\better_off\FH3_46_23_60_60.csv

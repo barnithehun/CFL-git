@@ -1,0 +1,4 @@
+=== NA02 ===
+NA02: done, 58.2 min
+=== NA12 ===
+NA12: done, 54.3 min

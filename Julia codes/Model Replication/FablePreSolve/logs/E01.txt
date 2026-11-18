@@ -1,0 +1,75 @@
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.008047 (27.3 s): entry value - c_e = -0.0007857801841169021
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+GE wage 1.011388 (28.6 s): entry value - c_e = 0.009432383539319744
+law of motion gaps: 2.031781084402128e-17 1.3366284536408595e-17 1.5530943908303364e-17
+
+resources.csv
+                                                   baseline       zeta/2       zeta/3  z/2 pp of C  z/3 pp of C
+Y                                                 17647.059     17789.06    17848.031        1.069        1.513
+I: net investment                                  2872.797     2922.829     2916.161        0.377        0.326
+Psi: fixed operating costs                          365.505      396.642      409.159        0.234        0.329
+Psi: entry costs                                    933.032      860.677      865.344       -0.545        -0.51
+Psi: capital lost in liquidation                     36.779       34.344       31.993       -0.018       -0.036
+Psi: profits lost in liquidation                      -3.18       -6.446       -7.444       -0.025       -0.032
+Psi: reorganization, fixed (zeta)                   135.388      104.296       77.385       -0.234       -0.437
+Psi: reorganization, variable                         25.13       28.062       28.644        0.022        0.026
+Psi                                                1492.655     1417.576     1405.082       -0.565       -0.659
+C                                                 13281.607    13448.655    13526.788        1.258        1.846
+Psi: entry costs, main5                             310.868      347.246      349.129        0.274        0.288
+C, main5 entry                                    13903.771    13962.086    14043.003        0.439        1.048
+C, reorganization costs as transfers              13442.126    13581.013    13632.817        1.046        1.436
+
+gains.csv
+                                                     zeta/2       zeta/3
+Y/L = wage, %                                         0.805        1.139
+C, %                                                  1.258        1.846
+C, main5 entry costs, %                               0.419        1.001
+C, reorganization costs as transfers, %               1.033        1.419
+producing firms, %                                    8.519       11.944
+potential entrants, %                                -7.755       -7.257
+entrants that stay, %                                11.702       12.305
+K, %                                                  1.742        1.509

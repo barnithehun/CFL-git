@@ -1,0 +1,119 @@
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+zeta_Rs = 508.95 (0.43 of zeta_Rl): small firms' liquidation probability 0.3768, target 0.3758
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.009113 (58.0 s): entry value - c_e = -0.0003994172022885323
+targeted: zeta_Rs = 508.9495445218336 (0.43 of zeta), GE wage 1.009113311767578
+
+small_firms.csv
+                                                   baseline     targeted   zeta/3 all
+default rate, % of the group's borrowers              4.245        4.972        4.975
+reorganized share of defaults, %                     37.329        48.16       50.117
+liquidation prob., firm average, %                   50.583       37.885       34.727
+lender recovery in default, % of face                43.404       50.382       42.831
+lender recovery in reorganization, %                 79.468       79.667        64.09
+interest rate, %                                      6.972         6.43        7.563
+CF reliance                                           0.438        0.597        0.614
+reorganized firms: operating after 3 years, %        87.336       84.701       79.786
+reorganized firms: default again within 3 years, %         6.53       10.989       15.831
+average firm: operating after 3 years, %             87.152       86.697       86.426
+average firm: default within 3 years, %               7.267        9.237       10.069
+
+large_firms.csv
+                                                   baseline     targeted   zeta/3 all
+default rate, % of the group's borrowers              0.501          0.5        0.501
+reorganized share of defaults, %                     75.514       75.116       79.289
+liquidation prob., firm average, %                   24.469       24.866       20.716
+lender recovery in default, % of face                 31.82       31.697       31.937
+lender recovery in reorganization, %                 37.295       37.171       37.063
+interest rate, %                                      4.467        4.469        4.469
+CF reliance                                           0.745        0.737        0.786
+reorganized firms: operating after 3 years, %         99.58       99.613       99.646
+reorganized firms: default again within 3 years, %        1.491        1.491        1.491
+average firm: operating after 3 years, %             99.506       99.524       99.567
+average firm: default within 3 years, %               1.528        1.556        1.561
+
+aggregates.csv
+                                                      Y/L %          C %    C main5 %      firms %    liq share  CF reliance     CF share   rate small default rate
+targeted                                              0.911        1.417        0.604       11.368       50.714        0.639        0.738         6.43        6.381
+zeta/3 all                                            1.139        1.846        1.001       11.944       48.665        0.666        0.765        7.563        6.434

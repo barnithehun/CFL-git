@@ -1,0 +1,4 @@
+=== ND02 ===
+ND02: done, 57.3 min
+=== ND06 ===
+ND06: done, 64.1 min

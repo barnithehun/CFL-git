@@ -55,8 +55,9 @@ rate_scheme      <- "new"    # "new": data_cleaning.R - weighted.mean(), contrac
 # Small and large firms
 size_var         <- "ltq" # firm size: "assets" - Compustat total assets (atq)    <-> IDB estimated assets (EASST)
                              #            "ltq"    - Compustat total liabilities (ltq) <-> IDB estimated liabilities (ELBLTS)
-                             #            "value"  - CapIQ total debt                  <-> IDB estimated liabilities (ELBLTS)
-cutoff_usd       <- 1e8      # small = IDB size bin up to the cutoff (USD); the cutoff has to be an upper bound of an IDB bin:
+                             # (not "value", CapIQ total debt: the IDB has no debt figure, so the two samples would be split
+                             #  on different size measures; dropped 2026-11-17)
+cutoff_usd       <- 1e8     # small = IDB size bin up to the cutoff (USD); the cutoff has to be an upper bound of an IDB bin:
                              #   5e4  ($0 to $50k)       1e5  ($50k to $100k)    5e5  ($100k to $500k)   1e6  ($500k to $1m)
                              #   1e7  ($1 to $10m)       5e7  ($10 to $50m)      1e8  ($50 to $100m)     5e8  ($100 to $500m)
                              #   1e9  ($500 to $1000m)   5e9  ($1b + (pre 2015)) 1e10 ($1-$10b)          5e10 ($10- $50b)
@@ -75,9 +76,25 @@ weight_source    <- "Compustat"    # "SOI": US corporations (firm_weights.R) - n
 nonlead          <- "exclude"   # "include" / "exclude": cases that are members of a joint or consolidated filing
                                 # (JNTLEAD or CNSLLEAD points to the lead case; it is NA for the lead case itself)
 
+# Variants from the command line: Rscript calib_targets.R size_var=assets cutoff_usd=1e9 out_tag=A9
+# Any setting above can be given as name=value; out_tag writes calib_targets_<tag>.csv and calib_targets_<tag>_settings.csv
+# instead of calib_targets.csv (the Julia calibration reads a tagged file the same way). With no arguments nothing changes.
+out_tag <- ""
+for (arg in commandArgs(trailingOnly = TRUE)) {
+  kv <- strsplit(arg, "=", fixed = TRUE)[[1]]
+  stopifnot(length(kv) == 2)
+  name <- kv[1]; value <- kv[2]
+  if (name %in% c("end_year", "d2c_cut", "cutoff_usd", "micro_usd")) value <- as.numeric(value)
+  if (name %in% c("cap_lease_stock", "cap_lease_rates")) value <- as.logical(value)
+  stopifnot(name %in% c("end_year", "cap_lease_stock", "cap_lease_rates", "d2c_cut", "rate_scheme", "size_var", "cutoff_usd",
+                        "micro_usd", "weight_source", "nonlead", "out_tag"))
+  assign(name, value)
+}
+out_file <- function(suffix) paste0("calib_targets", if (out_tag == "") "" else paste0("_", out_tag), suffix)
+
 idb_bins <- c(5e4, 1e5, 5e5, 1e6, 1e7, 5e7, 1e8, 5e8, 1e9, 5e9, 1e10, 5e10)
 stopifnot(cutoff_usd %in% idb_bins, micro_usd %in% c(0, idb_bins), micro_usd < cutoff_usd,
-          size_var %in% c("assets", "ltq", "value"),
+          size_var %in% c("assets", "ltq"),
           rate_scheme %in% c("new", "old"),
           weight_source %in% c("SOI", "IDB", "Compustat"),
           nonlead %in% c("include", "exclude"))
@@ -306,12 +323,14 @@ Compustat weights - IDB liquidation probability by size bin (upper bound, USD) a
 # Table 2: calibration targets for small and large firms and their weighted average
 moments <- function(f, d) {
   tibble(
-    moment = c("Debt to Collateral", "Interest rate", "Liquidation prob.", "CF-reliance", "CF-based to total debt"),
+    moment = c("Debt to Collateral", "Interest rate", "Liquidation prob.", "CF-reliance", "CF-based to total debt",
+               "Credit spread"),   # last: the value-weighted spread of the firm's loans (as intrate), not targeted by default
     value  = c(mean(f$d2c, na.rm = T),
                mean(f$intrate, na.rm = T),
                mean(d$chapter == 7),
                mean(f$CFshare, na.rm = T),
-               sum(f$CF_val, na.rm = T) / sum(f$CF_val + f$AB_val, na.rm = T)))
+               sum(f$CF_val, na.rm = T) / sum(f$CF_val + f$AB_val, na.rm = T),
+               mean(f$spread, na.rm = T)))
 }
 
 targets <- moments(filter(flevel, small == 1), filter(idb, small == 1)) %>% rename(small = value) %>%
@@ -334,11 +353,11 @@ cat("\n", weight_source, "weight of small firms: w =", round(w, 3),
 print(targets %>% mutate(across(where(is.numeric), ~ round(.x, 3))))
 
 # Output for the Julia calibration: Table 2 and the share of small firms, which the model matches with its size cutoff Fcut
-write_csv(bind_rows(targets, tibble(moment = "Share of small firms", weighted = w)), "calib_targets.csv", na = "")
+write_csv(bind_rows(targets, tibble(moment = "Share of small firms", weighted = w)), out_file(".csv"), na = "")
 write_csv(tibble(setting = c("end_year", "cap_lease_stock", "cap_lease_rates", "d2c_cut", "rate_scheme", "size_var", "cutoff_usd",
                              "micro_usd", "weight_source", "nonlead", "written"),
                  value   = c(end_year, cap_lease_stock, cap_lease_rates, d2c_cut, rate_scheme, size_var, cutoff_usd,
                              micro_usd, weight_source, nonlead, format(Sys.time(), "%Y-%m-%d %H:%M"))),
-          "calib_targets_settings.csv")
+          out_file("_settings.csv"))
 
 toc()

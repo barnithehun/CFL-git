@@ -1,0 +1,105 @@
+=== A8 : calib_targets.R size_var=assets cutoff_usd=1e8 out_tag=A8
+
+ Compustat weight of small firms: w = 0.308  
+ Comps-CapIQ share of small firms: 0.308 (firm-quarters)
+# A tibble: 5 × 5
+  moment                 small large weighted unweighted
+  <chr>                  <dbl> <dbl>    <dbl>      <dbl>
+1 Debt to Collateral     0.689 0.732    0.72       0.72 
+2 Interest rate          8.04  5.43     6.20       6.20 
+3 Liquidation prob.      0.6   0.189    0.316      0.737
+4 CF-reliance            0.46  0.541    0.516      0.516
+5 CF-based to total debt 0.38  0.819    0.818      0.818
+calib_targets.R: 52.75 sec elapsed
+=== L9 : calib_targets.R size_var=ltq cutoff_usd=1e9 out_tag=L9
+
+ Compustat weight of small firms: w = 0.668  
+ Comps-CapIQ share of small firms: 0.668 (firm-quarters)
+# A tibble: 5 × 5
+  moment                 small large weighted unweighted
+  <chr>                  <dbl> <dbl>    <dbl>      <dbl>
+1 Debt to Collateral     0.656 0.847    0.721      0.721
+2 Interest rate          6.87  5.05     6.22       6.22 
+3 Liquidation prob.      0.501 0.24     0.414      0.813
+4 CF-reliance            0.415 0.724    0.517      0.517
+5 CF-based to total debt 0.479 0.832    0.818      0.818
+calib_targets.R: 35.5 sec elapsed
+=== L7 : calib_targets.R size_var=ltq cutoff_usd=1e7 out_tag=L7
+
+ Compustat weight of small firms: w = 0.164  
+ Comps-CapIQ share of small firms: 0.164 (firm-quarters)
+# A tibble: 5 × 5
+  moment                 small large weighted unweighted
+  <chr>                  <dbl> <dbl>    <dbl>      <dbl>
+1 Debt to Collateral     0.622 0.737    0.721      0.721
+2 Interest rate          8.18  5.86     6.22       6.22 
+3 Liquidation prob.      0.789 0.341    0.414      0.813
+4 CF-reliance            0.579 0.505    0.517      0.517
+5 CF-based to total debt 0.532 0.818    0.818      0.818
+calib_targets.R: 35.67 sec elapsed
+=== L8m6 : calib_targets.R size_var=ltq cutoff_usd=1e8 micro_usd=1e6 out_tag=L8m6
+
+ Compustat weight of small firms: w = 0.361  
+ Comps-CapIQ share of small firms: 0.361 (firm-quarters)
+# A tibble: 5 × 5
+  moment                 small large weighted unweighted
+  <chr>                  <dbl> <dbl>    <dbl>      <dbl>
+1 Debt to Collateral     0.63  0.776    0.727      0.727
+2 Interest rate          7.65  5.38     6.16       6.16 
+3 Liquidation prob.      0.659 0.251    0.399      0.72 
+4 CF-reliance            0.393 0.581    0.513      0.513
+5 CF-based to total debt 0.28  0.819    0.818      0.818
+calib_targets.R: 35.64 sec elapsed
+=== L8d2 : calib_targets.R size_var=ltq cutoff_usd=1e8 d2c_cut=2 out_tag=L8d2
+
+ Compustat weight of small firms: w = 0.382  
+ Comps-CapIQ share of small firms: 0.382 (firm-quarters)
+# A tibble: 5 × 5
+  moment                 small large weighted unweighted
+  <chr>                  <dbl> <dbl>    <dbl>      <dbl>
+1 Debt to Collateral     0.491 0.665    0.603      0.603
+2 Interest rate          7.69  5.38     6.22       6.22 
+3 Liquidation prob.      0.678 0.251    0.414      0.813
+4 CF-reliance            0.414 0.581    0.517      0.517
+5 CF-based to total debt 0.28  0.819    0.818      0.818
+calib_targets.R: 36.61 sec elapsed
+=== L8d4 : calib_targets.R size_var=ltq cutoff_usd=1e8 d2c_cut=4 out_tag=L8d4
+
+ Compustat weight of small firms: w = 0.382  
+ Comps-CapIQ share of small firms: 0.382 (firm-quarters)
+# A tibble: 5 × 5
+  moment                 small large weighted unweighted
+  <chr>                  <dbl> <dbl>    <dbl>      <dbl>
+1 Debt to Collateral     0.722 0.862    0.812      0.812
+2 Interest rate          7.69  5.38     6.22       6.22 
+3 Liquidation prob.      0.678 0.251    0.414      0.813
+4 CF-reliance            0.414 0.581    0.517      0.517
+5 CF-based to total debt 0.28  0.819    0.818      0.818
+calib_targets.R: 34.82 sec elapsed
+=== L8y20 : calib_targets.R size_var=ltq cutoff_usd=1e8 end_year=2020 out_tag=L8y20
+
+ Compustat weight of small firms: w = 0.398  
+ Comps-CapIQ share of small firms: 0.398 (firm-quarters)
+# A tibble: 5 × 5
+  moment                 small large weighted unweighted
+  <chr>                  <dbl> <dbl>    <dbl>      <dbl>
+1 Debt to Collateral     0.591 0.745    0.687      0.687
+2 Interest rate          7.53  5.36     6.18       6.18 
+3 Liquidation prob.      0.698 0.246    0.426      0.829
+4 CF-reliance            0.41  0.581    0.513      0.513
+5 CF-based to total debt 0.272 0.81     0.809      0.809
+calib_targets.R: 43.53 sec elapsed
+=== A9 : calib_targets.R size_var=assets cutoff_usd=1e9 out_tag=A9
+
+ Compustat weight of small firms: w = 0.585  
+ Comps-CapIQ share of small firms: 0.585 (firm-quarters)
+# A tibble: 5 × 5
+  moment                 small large weighted unweighted
+  <chr>                  <dbl> <dbl>    <dbl>      <dbl>
+1 Debt to Collateral     0.665 0.791    0.72       0.72 
+2 Interest rate          7.13  5.03     6.20       6.20 
+3 Liquidation prob.      0.424 0.162    0.316      0.737
+4 CF-reliance            0.394 0.687    0.516      0.516
+5 CF-based to total debt 0.436 0.827    0.818      0.818
+calib_targets.R: 88.31 sec elapsed
+done

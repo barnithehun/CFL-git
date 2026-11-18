@@ -1,0 +1,8 @@
+=== NB01 ===
+NB01: done, 51.1 min
+=== NB02 ===
+NB02: done, 60.1 min
+=== NB03 ===
+NB03: done, 65.7 min
+=== NB04 ===
+NB04: done, 55.6 min

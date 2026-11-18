@@ -1,0 +1,8 @@
+=== NF01 ===
+NF01: done, 50.2 min
+=== NF02 ===
+NF02: done, 51.6 min
+=== NF03 ===
+NF03: done, 42.2 min
+=== NF04 ===
+NF04: done, 49.2 min

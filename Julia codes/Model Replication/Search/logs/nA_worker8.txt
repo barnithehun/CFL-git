@@ -1,0 +1,4 @@
+=== NA09 ===
+NA09: done, 66.2 min
+=== NA19 ===
+NA19: done, 47.4 min

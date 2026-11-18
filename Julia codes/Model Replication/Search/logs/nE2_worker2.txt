@@ -1,0 +1,4 @@
+=== NE10 ===
+NE10: done, 51.9 min
+=== NE07 ===
+NE07: done, 43.5 min

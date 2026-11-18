@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{Model}{8}{0}{1}
+\beamer@sectionintoc {2}{Model Fit and Results}{16}{0}{2}
+\beamer@sectionintoc {3}{Designing Bankruptcy Frameworks}{26}{0}{3}
+\beamer@sectionintoc {4}{Appendix}{30}{1}{4}

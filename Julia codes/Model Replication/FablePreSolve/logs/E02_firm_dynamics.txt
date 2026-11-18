@@ -1,0 +1,22 @@
+
+firm_dynamics.csv
+                                                   baseline       zeta/2       zeta/3
+entry rate, % of firms                                6.754        6.953        6.776
+potential entrants that stay, %                      33.318       40.346       40.346
+exit rate, % (voluntary + liquidated)                 6.754        6.952        6.776
+  voluntary exits, %                                  2.102        2.089        2.087
+  liquidations, %                                     4.653        4.864        4.688
+default rate, % of firms                              5.792        6.481        6.434
+default rate, % of borrowers                          3.062        3.684        3.624
+defaults without debt, % of defaults                 50.092       47.044       47.398
+liquidated share of defaults, borrowers, %           60.698       53.073       48.665
+liquidation prob., firm average (sumSS), %           42.331       34.498       30.494
+recovery in liquidation, % of face value             11.572       10.154        9.547
+recovery in reorganization, %                        45.338       46.495       44.741
+recovery in default, %                               34.946       36.246       35.533
+AB borrowers: recovery in liquidation, %             61.191       50.961       50.369
+AB borrowers: recovery in reorganization, %          78.812       71.244       72.352
+CF borrowers: recovery in liquidation, %              9.824        8.905        8.309
+CF borrowers: recovery in reorganization, %          44.798       46.174       44.405
+CF borrowers' share of defaulted debt, %             97.853       98.241       98.341
+interest rate, firm average, %                        6.176        5.962        6.624

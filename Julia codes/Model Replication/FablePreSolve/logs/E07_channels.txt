@@ -1,0 +1,11 @@
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 10
+court only: policies equal the baseline's: true; values equal: 1.3164935808163136e-10
+
+channels.csv
+                                                     wage %entry value %          C %    C main5 %      firms %          K % default rate  liq per 100    liq share  CF reliance   rate small
+baseline                                                0.0          0.0          0.0          0.0          0.0          0.0        5.792        4.653       60.698        0.535        6.972
+1 court only                                            0.0          0.0        0.971        0.584        3.928        0.083        5.295        3.714        41.14        0.524         6.66
+2 + loan prices                                         0.0        7.276        0.824        0.009        8.913       -0.076        6.035        4.361       47.702        0.656         6.55
+3 + wage (GE)                                         1.139        0.002        1.846        1.001       11.944        1.509        6.434        4.688       48.665        0.666        7.563

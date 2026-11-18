@@ -85,13 +85,17 @@ function parameters()
     # original symmetric grid. Every firm below about the mean exits, so points further down carry no firms (check_grid)
     tauchen_lo::Float64 = par(:tauchen_lo, -0.5)
 
+    # debt to collateral ratios above d2c_cut are left out of the b'/k' moment (sumSS, sumSSsme), as calib_targets.R's d2c_cut
+    d2c_cut::Float64 = par(:d2c_cut, 3)
+
     # phi_c, zeta_Rl and the fields after them come last: FirmOptim, GamPol and CapAlloc2 unpack the first 19 fields by position
     return (rho_e = rho_e, sigma_e = sigma_e, nul_e = nul_e, alpha = alpha,
             nu = nu, pc = pc, beta = beta, delta = delta, pdef_exo_s = pdef_exo_s, pdef_exo_l = pdef_exo_l,
             discount = discount, phi_a = phi_a, phi_af = phi_af, tauchen_sd = tauchen_sd,
             kappa = kappa, zeta_L = zeta_L, tau_vec = tau_vec,
             phi_c_hh = phi_c_hh, Fcut = Fcut, phi_c = phi_c, zeta_Rl = zeta_Rl, DRS = DRS,
-            zeta_Rs = zeta_Rs, phi_c_s = phi_c_s, perf_cred = perf_cred, size_by_debt = size_by_debt, tauchen_lo = tauchen_lo)
+            zeta_Rs = zeta_Rs, phi_c_s = phi_c_s, perf_cred = perf_cred, size_by_debt = size_by_debt, tauchen_lo = tauchen_lo,
+            d2c_cut = d2c_cut)
 end
 
 ####### TRANSITIONS AND POLICY ITERATION #######

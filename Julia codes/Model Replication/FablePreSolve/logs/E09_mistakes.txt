@@ -1,0 +1,12 @@
+
+mistakes.csv
+                                                   base all   base small   base large      z/3 all    z/3 small    z/3 large
+defaults per 100 borrowers of the group               3.062        4.245        0.501        3.624        4.975        0.501
+liquidated share of defaults, %                      60.698       62.671       24.486       48.665       49.883       20.711
+  the noiseless court's share, %                      65.89        69.48          0.0       37.067       38.683          0.0
+mistaken liquidations, % of liquidations             22.592       20.945        100.0       41.468       40.409        100.0
+mistaken reorganizations, % of reorganizations       48.104       53.405          0.0       16.719       17.872          0.0
+all mistakes, % of defaults                          32.619       33.062       24.486       28.763       29.114       20.711
+value lost in mistaken liquidations, % of value       17.591       22.501       16.367       17.246       21.397       14.949
+value lost in mistaken reorganizations, % of value        6.377       31.958          0.0         0.81        2.274          0.0
+value lost in all mistakes, % of consumption          0.627        0.284        0.343        0.603        0.282        0.321

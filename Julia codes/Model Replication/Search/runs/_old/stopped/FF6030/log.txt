@@ -1,0 +1,6 @@
+Candidate FF6030 (full: FH1 setting (L8 liabilities split, beta 0.95, small and large CF targeted) on grid 60/30/60/60, from FL6030) started 2026-11-17T19:56:28.841
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_L8.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = ltq, cutoff_usd = 1e+08, micro_usd = 1e+05, weight_source = Compustat, nonlead = exclude, written = 2026-11-07 09:33
+External overrides: Dict(:phi_a => 0.425, :size_by_debt => 1.0, :beta => 0.95, :phi_af => 0.425, :tau_tie => 2.0, :k_size => 60.0, :x_size => 60.0, :d2c_cut => 3.0, :b_size => 60.0, :e_size => 30.0)
+Calibration: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\FL6030\CALIB.csv
+Starts: (pc = 58.05399698235442, pdef_exo_l = 0.0012214230650572264, zeta_Rl = 1567.711536102087, phi_c_hh = 0.8243184649173607, phi_c = 0.12817034422024506, sigma_v = 0.9050403015743771)

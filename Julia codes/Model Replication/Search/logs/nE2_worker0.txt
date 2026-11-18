@@ -1,0 +1,4 @@
+=== NE08 ===
+NE08: done, 44.3 min
+=== NE04 ===
+NE04: done, 49.4 min

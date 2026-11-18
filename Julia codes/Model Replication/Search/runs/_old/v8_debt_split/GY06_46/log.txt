@@ -1,0 +1,2339 @@
+Candidate GY06_46 (Y06 on grid 46, every result (no refit)) started 2026-11-16T14:45:19.496
+Targets: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Data Replication\calib_targets_V8.csv
+  settings: end_year = 2024, cap_lease_stock = FALSE, cap_lease_rates = FALSE, d2c_cut = 3, rate_scheme = new, size_var = value, cutoff_usd = 1e+08, micro_usd = 1e+05, weight_source = Compustat, nonlead = exclude, written = 2026-11-16 11:47
+External overrides: Dict(:phi_a => 0.35, :size_by_debt => 1.0, :beta => 0.95, :phi_af => 0.35, :tau_tie => 2.0, :d2c_cut => 3.0)
+Calibration: C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\Y06\CALIB.csv
+Starts: (pc = 48.21355731555013, pdef_exo_l = 0.001178858564884304, zeta_Rl = 1433.150847673843, phi_c_hh = 0.764316670526806, phi_c = 0.1723386273224852, sigma_v = 1.292760756894148)
+Total 'main loop' iterations: 9
+Saved to C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\GY06_46\CALIB.csv
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 1.009035 (51.3 s): entry value - c_e = 0.0004444855209726484
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+zeta_Rs = 745.24 (0.52 of zeta_Rl): small firms' liquidation probability 0.5292, target 0.5275
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 1.008672 (50.9 s): entry value - c_e = 0.0001048104167011843
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 1.008682 (51.2 s): entry value - c_e = -0.0003181767798992041
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+GE wage 0.994273 (50.7 s): entry value - c_e = -0.00016442696073681873
+Total 'main loop' iterations: 11
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 10
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.020837 (57.9 s): entry value - c_e = -0.00032560154875227454
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 3
+GE wage 1.128469 (28.1 s): entry value - c_e = -7.783266443084358e-5
+(pc = 48.21355731555013, pdef_exo_l = 0.001178858564884304, zeta_Rl = 1433.150847673843)
+Total 'main loop' iterations: 4
+error: 0.24169609430429004
+(pc = 72.3453359733252, pdef_exo_l = 0.001178858564884304, zeta_Rl = 1433.150847673843)
+Total 'main loop' iterations: 4
+error: 0.37400916326749
+(pc = 48.21355731555013, pdef_exo_l = 0.026768287847326457, zeta_Rl = 1433.150847673843)
+Total 'main loop' iterations: 4
+error: 0.17710424787735948
+(pc = 48.21355731555013, pdef_exo_l = 0.001178858564884304, zeta_Rl = 2149.7512715107646)
+Total 'main loop' iterations: 4
+error: 0.23348167858321173
+(pc = 24.08177865777506, pdef_exo_l = 0.018238478086512404, zeta_Rl = 1910.8844635651237)
+Total 'main loop' iterations: 4
+error: 0.2703959854392436
+(pc = 34.136686431848005, pdef_exo_l = 0.014684390686173217, zeta_Rl = 1811.356626921107)
+Total 'main loop' iterations: 4
+error: 0.13627033029997276
+(pc = 38.82897672641538, pdef_exo_l = 0.02724216616737168, zeta_Rl = 2163.021649729966)
+Total 'main loop' iterations: 4
+error: 0.2983944783379366
+(pc = 46.25843635948039, pdef_exo_l = 0.006608714315402507, zeta_Rl = 1585.2072647688683)
+Total 'main loop' iterations: 4
+error: 0.15278496489430404
+(pc = 37.52556275570221, pdef_exo_l = 0.030862070001050478, zeta_Rl = 1070.0585547317805)
+Total 'main loop' iterations: 4
+error: 0.23086102069195666
+(pc = 39.75222828900386, pdef_exo_l = 0.024678067618515858, zeta_Rl = 1294.9945373940689)
+Total 'main loop' iterations: 4
+error: 0.10377297354353132
+(pc = 31.884676738004686, pdef_exo_l = 0.003879160566067928, zeta_Rl = 1694.5547717155198)
+Total 'main loop' iterations: 4
+error: 0.22182501062234727
+(pc = 44.811707195228166, pdef_exo_l = 0.021999719663730932, zeta_Rl = 1487.609998515859)
+Total 'main loop' iterations: 4
+error: 0.09493539564594816
+(pc = 32.87531158457295, pdef_exo_l = 0.034299404330210836, zeta_Rl = 1477.4335104518213)
+Total 'main loop' iterations: 4
+error: 0.32579422114875883
+(pc = 43.470285364708005, pdef_exo_l = 0.012377608068487573, zeta_Rl = 1562.7543992861501)
+Total 'main loop' iterations: 4
+error: 0.08459681905357279
+(pc = 51.21946080077868, pdef_exo_l = 0.024685872880983024, zeta_Rl = 1085.5493298762785)
+Total 'main loop' iterations: 4
+error: 0.23659922530012975
+(pc = 37.69559775870856, pdef_exo_l = 0.016768032810091926, zeta_Rl = 1660.146773370101)
+Total 'main loop' iterations: 4
+error: 0.10916967288732815
+(pc = 47.660549473918124, pdef_exo_l = 0.022602230757064315, zeta_Rl = 1236.7591834272844)
+Total 'main loop' iterations: 4
+error: 0.22062508024913566
+(pc = 39.77162936604388, pdef_exo_l = 0.017983490715711176, zeta_Rl = 1571.9410254653476)
+Total 'main loop' iterations: 4
+error: 0.051334106466097054
+(pc = 45.61685299498284, pdef_exo_l = 0.01022914468010393, zeta_Rl = 1786.5424114508353)
+Total 'main loop' iterations: 4
+error: 0.07801790751413103
+(pc = 41.09413795526166, pdef_exo_l = 0.005060442645804186, zeta_Rl = 1793.2152256190293)
+Total 'main loop' iterations: 4
+error: 0.10426707833807117
+(pc = 44.037213603568475, pdef_exo_l = 0.018470703618329528, zeta_Rl = 1551.2777541623527)
+Total 'main loop' iterations: 4
+error: 0.08587790741584786
+(pc = 41.86863154692135, pdef_exo_l = 0.00858945869120559, zeta_Rl = 1729.5474699725355)
+Total 'main loop' iterations: 4
+error: 0.16220904904794384
+(pc = 43.585425675100325, pdef_exo_l = 0.01641211092517871, zeta_Rl = 1588.417278289474)
+Total 'main loop' iterations: 4
+error: 0.03603645074794333
+(pc = 42.51231999271003, pdef_exo_l = 0.017372222812174966, zeta_Rl = 1735.179410850954)
+Total 'main loop' iterations: 4
+error: 0.08485919419805323
+(pc = 43.27070924554176, pdef_exo_l = 0.01341815280675578, zeta_Rl = 1598.6762766954844)
+Total 'main loop' iterations: 4
+error: 0.03676823968661153
+(pc = 38.801656529474464, pdef_exo_l = 0.021646691618326507, zeta_Rl = 1386.1473088493683)
+Total 'main loop' iterations: 4
+error: 0.09247963101249913
+(pc = 44.19702039800193, pdef_exo_l = 0.012607800292233634, zeta_Rl = 1703.1267650755296)
+Total 'main loop' iterations: 4
+error: 0.04711577779207213
+(pc = 47.59714084638547, pdef_exo_l = 0.010308551967067571, zeta_Rl = 1688.2058545749778)
+Total 'main loop' iterations: 4
+error: 0.07812339626683229
+(pc = 41.401944257781714, pdef_exo_l = 0.016384545143077092, zeta_Rl = 1596.1628648631872)
+Total 'main loop' iterations: 4
+error: 0.04593017243307708
+(pc = 41.30836572094726, pdef_exo_l = 0.018202072291107416, zeta_Rl = 1485.7108481565676)
+Total 'main loop' iterations: 4
+error: 0.05574126403410212
+(pc = 43.59521734028221, pdef_exo_l = 0.01377327362533234, zeta_Rl = 1657.8317823840791)
+Total 'main loop' iterations: 4
+error: 0.023646241491431436
+(pc = 45.565623916167816, pdef_exo_l = 0.012684479761767457, zeta_Rl = 1633.787360049504)
+Total 'main loop' iterations: 4
+error: 0.05016176174476617
+(pc = 42.269377519945486, pdef_exo_l = 0.015613698188637585, zeta_Rl = 1604.0013013603366)
+Total 'main loop' iterations: 4
+error: 0.02891551192830521
+(pc = 43.0293044446769, pdef_exo_l = 0.01711456901934331, zeta_Rl = 1634.8239646604416)
+Total 'main loop' iterations: 4
+error: 0.060694198089269555
+(pc = 43.220416578694916, pdef_exo_l = 0.014188239517711514, zeta_Rl = 1606.2070450215172)
+Total 'main loop' iterations: 4
+error: 0.025269880373972625
+(pc = 42.471248617514746, pdef_exo_l = 0.012638029962608915, zeta_Rl = 1656.9428075544809)
+Total 'main loop' iterations: 4
+error: 0.10519825007580519
+(pc = 43.353305454769995, pdef_exo_l = 0.01562584405797667, zeta_Rl = 1602.693430219684)
+Total 'main loop' iterations: 4
+error: 0.029488382828314865
+(pc = 42.703368837845076, pdef_exo_l = 0.013424296829810955, zeta_Rl = 1642.666655624271)
+Total 'main loop' iterations: 4
+error: 0.08587621651233407
+(pc = 43.21790199291064, pdef_exo_l = 0.015167188385442145, zeta_Rl = 1611.0211855123061)
+Total 'main loop' iterations: 4
+error: 0.02697640374860754
+(pc = 44.41964642131301, pdef_exo_l = 0.013138769497019745, zeta_Rl = 1646.0387072515978)
+Total 'main loop' iterations: 4
+error: 0.02651692915166898
+(pc = 44.272284900616114, pdef_exo_l = 0.012233000041266921, zeta_Rl = 1662.3638375924893)
+Total 'main loop' iterations: 4
+error: 0.05859111508345001
+(pc = 43.43756509868261, pdef_exo_l = 0.014555899147072306, zeta_Rl = 1621.7175713623442)
+Total 'main loop' iterations: 4
+error: 0.023673793003291567
+(pc = 42.41581959046014, pdef_exo_l = 0.01520617202972436, zeta_Rl = 1611.1322252603622)
+Total 'main loop' iterations: 4
+error: 0.026375451958904263
+(pc = 42.833283513554484, pdef_exo_l = 0.014775463168744233, zeta_Rl = 1618.4044090085363)
+Total 'main loop' iterations: 4
+error: 0.023756558811716535
+(pc = 43.35696072298462, pdef_exo_l = 0.014548184443054408, zeta_Rl = 1659.0954634817892)
+Total 'main loop' iterations: 4
+error: 0.03123508105887325
+(pc = 43.24886327542194, pdef_exo_l = 0.014263228043824617, zeta_Rl = 1617.225465534074)
+Total 'main loop' iterations: 4
+error: 0.01913104660013373
+(pc = 44.02114696270336, pdef_exo_l = 0.013619470708741945, zeta_Rl = 1646.112137178462)
+Total 'main loop' iterations: 4
+error: 0.01943322164292843
+(pc = 43.805919953589054, pdef_exo_l = 0.013214749104860295, zeta_Rl = 1659.0620187020654)
+Total 'main loop' iterations: 4
+error: 0.027078606774613805
+(pc = 43.51430569345479, pdef_exo_l = 0.014276492888278137, zeta_Rl = 1629.4976645581194)
+Total 'main loop' iterations: 4
+error: 0.019940787745337397
+(pc = 43.59432661410451, pdef_exo_l = 0.014332854135230787, zeta_Rl = 1604.0583957963574)
+Total 'main loop' iterations: 4
+error: 0.0255755973741494
+(pc = 43.595031772328525, pdef_exo_l = 0.013889852898227851, zeta_Rl = 1646.6289935116372)
+Total 'main loop' iterations: 4
+error: 0.021641225672362152
+(pc = 43.594512182058196, pdef_exo_l = 0.014216274862335277, zeta_Rl = 1615.2611846687994)
+Total 'main loop' iterations: 4
+error: 0.022851120730290178
+(pc = 43.594923524355536, pdef_exo_l = 0.013957857474083565, zeta_Rl = 1640.0940333360459)
+Total 'main loop' iterations: 4
+error: 0.01638149338635649
+(pc = 43.72898348153245, pdef_exo_l = 0.013617211262821949, zeta_Rl = 1639.4567594742682)
+Total 'main loop' iterations: 4
+error: 0.021690300350746337
+(pc = 43.55903023263763, pdef_exo_l = 0.014139142549641432, zeta_Rl = 1631.5724759989837)
+Total 'main loop' iterations: 4
+error: 0.018091435740775697
+(pc = 42.91406439224003, pdef_exo_l = 0.014620681336291134, zeta_Rl = 1613.1491794009398)
+Total 'main loop' iterations: 4
+error: 0.0223293445546353
+(pc = 43.790504760523504, pdef_exo_l = 0.013828056256148026, zeta_Rl = 1639.244854308145)
+Total 'main loop' iterations: 4
+error: 0.019034339990600387
+(pc = 44.04744240292251, pdef_exo_l = 0.01368680947609073, zeta_Rl = 1656.7154435613757)
+Total 'main loop' iterations: 4
+error: 0.021116944059982927
+(pc = 43.415233926984556, pdef_exo_l = 0.014143140842213391, zeta_Rl = 1625.4525442897618)
+Total 'main loop' iterations: 4
+error: 0.01953028994846106
+(pc = 43.570994663210264, pdef_exo_l = 0.014078714191122143, zeta_Rl = 1634.4129951113378)
+Total 'main loop' iterations: 4
+error: 0.017164619383160714
+(pc = 43.72531101513418, pdef_exo_l = 0.013871323328793206, zeta_Rl = 1639.527913984112)
+Total 'main loop' iterations: 4
+error: 0.01929305954369908
+(pc = 43.36421669173314, pdef_exo_l = 0.014161437853910932, zeta_Rl = 1624.8483214680646)
+Total 'main loop' iterations: 4
+error: 0.02071695805002243
+(pc = 43.89660277673352, pdef_exo_l = 0.013777158808755007, zeta_Rl = 1651.1749734862656)
+Total 'main loop' iterations: 4
+error: 0.020628461041410466
+(pc = 43.78568900902511, pdef_exo_l = 0.013857216943162491, zeta_Rl = 1645.6902543158071)
+Total 'main loop' iterations: 4
+error: 0.02042585284578732
+(pc = 43.47513045944155, pdef_exo_l = 0.014081379719503448, zeta_Rl = 1630.333040638523)
+Total 'main loop' iterations: 4
+error: 0.018053643179747177
+(pc = 43.36872141620405, pdef_exo_l = 0.014207310927679562, zeta_Rl = 1630.3654654064924)
+Total 'main loop' iterations: 4
+error: 0.01970686089722366
+(pc = 43.65102151535707, pdef_exo_l = 0.013941320745227864, zeta_Rl = 1637.6190705304414)
+Total 'main loop' iterations: 4
+error: 0.015338011327297745
+(pc = 43.736162675840355, pdef_exo_l = 0.013903881887452264, zeta_Rl = 1644.41769201336)
+Total 'main loop' iterations: 4
+error: 0.020712069535392955
+(pc = 43.5295121711913, pdef_exo_l = 0.014044401004492784, zeta_Rl = 1633.2673430082807)
+Total 'main loop' iterations: 4
+error: 0.017133069053041676
+(pc = 43.61264347739233, pdef_exo_l = 0.013883671958080665, zeta_Rl = 1639.5739694718409)
+Total 'main loop' iterations: 4
+error: 0.020113495468890456
+(pc = 43.5796714994982, pdef_exo_l = 0.014038080392571836, zeta_Rl = 1635.4881981031092)
+Total 'main loop' iterations: 4
+error: 0.016723608713294535
+(pc = 43.68756552161588, pdef_exo_l = 0.01391377140342939, zeta_Rl = 1642.200191638117)
+Total 'main loop' iterations: 4
+error: 0.02034709514152787
+(pc = 43.56243995252976, pdef_exo_l = 0.014017186504271244, zeta_Rl = 1635.1283531394965)
+Total 'main loop' iterations: 4
+error: 0.01653575957024179
+(pc = 43.62591849533005, pdef_exo_l = 0.01390616275648328, zeta_Rl = 1639.7394399008801)
+Total 'main loop' iterations: 4
+error: 0.020433870975261937
+(pc = 43.5893062902965, pdef_exo_l = 0.014010597551720053, zeta_Rl = 1636.3738734776448)
+Total 'main loop' iterations: 4
+error: 0.016361329220571635
+(pc = 43.66106093414297, pdef_exo_l = 0.013922664009749744, zeta_Rl = 1640.9296317565913)
+Total 'main loop' iterations: 4
+error: 0.01542406088537325
+(pc = 43.67266896884216, pdef_exo_l = 0.01395853073038154, zeta_Rl = 1636.5210171737394)
+Total 'main loop' iterations: 4
+error: 0.01561766430077572
+(pc = 43.733861321931634, pdef_exo_l = 0.013871079438519377, zeta_Rl = 1640.339272829537)
+Total 'main loop' iterations: 4
+error: 0.019459214587694243
+(pc = 43.61942192188715, pdef_exo_l = 0.013981531278136578, zeta_Rl = 1637.1999983426224)
+Total 'main loop' iterations: 4
+error: 0.016089915199140128
+(pc = 43.70374569034098, pdef_exo_l = 0.013900145712102852, zeta_Rl = 1639.5131479645595)
+Total 'main loop' iterations: 4
+error: 0.01963041319391894
+(pc = 43.63698937364837, pdef_exo_l = 0.013964575951879553, zeta_Rl = 1637.6819045138593)
+Total 'main loop' iterations: 4
+error: 0.015459362691829055
+(pc = 43.62671224659012, pdef_exo_l = 0.013927176407523233, zeta_Rl = 1640.966054026855)
+Total 'main loop' iterations: 4
+error: 0.015468564298408441
+(pc = 43.63628656372596, pdef_exo_l = 0.013933708558118714, zeta_Rl = 1640.040004682456)
+Total 'main loop' iterations: 4
+error: 0.015363292964890701
+(pc = 43.66192330183562, pdef_exo_l = 0.013900552923517996, zeta_Rl = 1641.3772334658)
+Total 'main loop' iterations: 4
+error: 0.01999796253139977
+(pc = 43.642183942020715, pdef_exo_l = 0.013951237820970895, zeta_Rl = 1638.4517647121802)
+Total 'main loop' iterations: 4
+error: 0.015255506919001485
+(pc = 43.625267079926175, pdef_exo_l = 0.01396151407312857, zeta_Rl = 1636.4775948601273)
+Total 'main loop' iterations: 4
+error: 0.015731248180517486
+(pc = 43.653603881181134, pdef_exo_l = 0.013930757772953667, zeta_Rl = 1640.002124069828)
+Total 'main loop' iterations: 4
+error: 0.01532840141597777
+(pc = 43.66158632864665, pdef_exo_l = 0.01394850233464957, zeta_Rl = 1637.3419681925104)
+Total 'main loop' iterations: 4
+error: 0.015412098509377687
+(pc = 43.64155734808444, pdef_exo_l = 0.013936790594895975, zeta_Rl = 1639.4779137470505)
+Total 'main loop' iterations: 4
+error: 0.015288057846672158
+(pc = 43.640541932167125, pdef_exo_l = 0.013937870047319162, zeta_Rl = 1641.0021311555977)
+Total 'main loop' iterations: 4
+error: 0.015617087464270154
+(pc = 43.648838268859166, pdef_exo_l = 0.013940601849830217, zeta_Rl = 1638.3238748273488)
+Total 'main loop' iterations: 4
+error: 0.015184479380015704
+(pc = 43.63478249146173, pdef_exo_l = 0.013954995737511059, zeta_Rl = 1637.5002447878915)
+Total 'main loop' iterations: 4
+error: 0.015458694101105806
+(pc = 43.649682758322925, pdef_exo_l = 0.013935807348903123, zeta_Rl = 1639.4808992194244)
+Total 'main loop' iterations: 4
+error: 0.015280999062954301
+(pc = 43.65224596471743, pdef_exo_l = 0.01394830741824018, zeta_Rl = 1638.0264454255848)
+Total 'main loop' iterations: 4
+error: 0.015279046913300141
+(pc = 43.645829358741935, pdef_exo_l = 0.01395762404379107, zeta_Rl = 1637.0538240906512)
+Total 'main loop' iterations: 4
+error: 0.015547708963110626
+(pc = 43.64887996674355, pdef_exo_l = 0.013940352493671445, zeta_Rl = 1638.9752585675967)
+Total 'main loop' iterations: 4
+error: 0.015232270549848966
+(pc = 43.64102215369818, pdef_exo_l = 0.013939820691408191, zeta_Rl = 1639.1408199791658)
+Total 'main loop' iterations: 4
+error: 0.015255571274685105
+(pc = 43.64336044766053, pdef_exo_l = 0.01394158875949819, zeta_Rl = 1638.9086586138365)
+Total 'main loop' iterations: 4
+error: 0.015230744516542149
+(pc = 43.651868513488104, pdef_exo_l = 0.013930457581029008, zeta_Rl = 1639.0200966270077)
+Total 'main loop' iterations: 4
+error: 0.01511992077023256
+(pc = 43.655096703977236, pdef_exo_l = 0.013923530834381713, zeta_Rl = 1639.2095405986167)
+Total 'main loop' iterations: 4
+error: 0.015074706794309969
+(pc = 43.64931698025438, pdef_exo_l = 0.013930128468801968, zeta_Rl = 1638.6527907922712)
+Total 'main loop' iterations: 4
+error: 0.015062732772959133
+(pc = 43.64946265142466, pdef_exo_l = 0.013926720460512142, zeta_Rl = 1638.5453015338294)
+Total 'main loop' iterations: 4
+error: 0.015070097830703994
+(pc = 43.65880752106666, pdef_exo_l = 0.013921252009177742, zeta_Rl = 1638.5488121983208)
+Total 'main loop' iterations: 4
+error: 0.01502604855985385
+(pc = 43.66395654553538, pdef_exo_l = 0.01391447309240426, zeta_Rl = 1638.428863393149)
+Total 'main loop' iterations: 4
+error: 0.019846587566814355
+(pc = 43.659975868006356, pdef_exo_l = 0.013909339025077398, zeta_Rl = 1639.2835542321232)
+Total 'main loop' iterations: 4
+error: 0.019671182556880044
+(pc = 43.65115860201483, pdef_exo_l = 0.013934088761340047, zeta_Rl = 1638.5238080366769)
+Total 'main loop' iterations: 4
+error: 0.015105927757159396
+(pc = 43.65765553485069, pdef_exo_l = 0.013915852113567568, zeta_Rl = 1639.0836210227951)
+Total 'main loop' iterations: 4
+error: 0.01972151937922791
+(pc = 43.652512129688965, pdef_exo_l = 0.01393028945972078, zeta_Rl = 1638.6404357421181)
+Total 'main loop' iterations: 4
+error: 0.015060107452784955
+(pc = 43.65199438336276, pdef_exo_l = 0.013930915790751949, zeta_Rl = 1638.0184852231894)
+Total 'main loop' iterations: 4
+error: 0.0152001817458604
+(pc = 43.65445038718256, pdef_exo_l = 0.013925069366958845, zeta_Rl = 1638.9614040620693)
+Total 'main loop' iterations: 4
+error: 0.01504202429245451
+(pc = 43.66119637837106, pdef_exo_l = 0.013920945421769611, zeta_Rl = 1638.7809772094013)
+Total 'main loop' iterations: 4
+error: 0.014969253431535863
+(pc = 43.665156177743285, pdef_exo_l = 0.013917884406092158, zeta_Rl = 1638.8237060151114)
+Total 'main loop' iterations: 4
+error: 0.014938095441610138
+(pc = 43.666430594306014, pdef_exo_l = 0.013912514395098382, zeta_Rl = 1638.915512441549)
+Total 'main loop' iterations: 4
+error: 0.019726473978448258
+(pc = 43.655411809817515, pdef_exo_l = 0.01392658632125778, zeta_Rl = 1638.6977433878328)
+Total 'main loop' iterations: 4
+error: 0.015024779579689599
+(pc = 43.66513328523575, pdef_exo_l = 0.013918745790726278, zeta_Rl = 1638.418770338774)
+Total 'main loop' iterations: 4
+error: 0.015030797333005037
+(pc = 43.662907681474664, pdef_exo_l = 0.013920063202441395, zeta_Rl = 1638.5318190311273)
+Total 'main loop' iterations: 4
+error: 0.015016425242906093
+(pc = 43.66350959162362, pdef_exo_l = 0.013921770610683145, zeta_Rl = 1638.8200334243934)
+Total 'main loop' iterations: 4
+error: 0.01497665060669066
+(pc = 43.672303824076856, pdef_exo_l = 0.013913225824886683, zeta_Rl = 1638.7526289259213)
+Total 'main loop' iterations: 4
+error: 0.019754300074519494
+(pc = 43.65893097945488, pdef_exo_l = 0.013923802884513801, zeta_Rl = 1638.7091778749345)
+Total 'main loop' iterations: 4
+error: 0.015002603129569815
+(pc = 43.66215681773984, pdef_exo_l = 0.013922242065084673, zeta_Rl = 1639.0367925118326)
+Total 'main loop' iterations: 4
+error: 0.015026757216681313
+(pc = 43.66275125152991, pdef_exo_l = 0.013920517132158744, zeta_Rl = 1638.6370218396075)
+Total 'main loop' iterations: 4
+error: 0.014995809812554975
+(pc = 43.66868036780966, pdef_exo_l = 0.013916311881442225, zeta_Rl = 1638.811329644474)
+Total 'main loop' iterations: 4
+error: 0.014926769627531304
+(pc = 43.67193016392792, pdef_exo_l = 0.013913814880418367, zeta_Rl = 1638.8453802343204)
+Total 'main loop' iterations: 4
+error: 0.019737407893121638
+(pc = 43.66881283992113, pdef_exo_l = 0.013916794133319607, zeta_Rl = 1638.9996908830447)
+Total 'main loop' iterations: 4
+error: 0.014954874727110939
+(pc = 43.67158999869241, pdef_exo_l = 0.013912223003219515, zeta_Rl = 1638.93645093736)
+Total 'main loop' iterations: 4
+error: 0.019710836086417178
+(pc = 43.66519300976295, pdef_exo_l = 0.013919781525794888, zeta_Rl = 1638.8442870729282)
+Total 'main loop' iterations: 4
+error: 0.014957832403517874
+(pc = 43.66990658055308, pdef_exo_l = 0.013914212088107772, zeta_Rl = 1638.9121972888252)
+Total 'main loop' iterations: 4
+error: 0.01972842064885974
+(pc = 43.666175003677566, pdef_exo_l = 0.013918621226276738, zeta_Rl = 1638.8584350345734)
+Total 'main loop' iterations: 4
+error: 0.014946854699208235
+(pc = 43.66452819289921, pdef_exo_l = 0.013918417542554474, zeta_Rl = 1638.6626229130609)
+Total 'main loop' iterations: 4
+error: 0.014977035334165521
+(pc = 43.6679202051249, pdef_exo_l = 0.01391713234357687, zeta_Rl = 1638.929468389298)
+Total 'main loop' iterations: 4
+error: 0.014944015562166596
+(pc = 43.66832949677432, pdef_exo_l = 0.01391559786113076, zeta_Rl = 1638.851234331349)
+Total 'main loop' iterations: 4
+error: 0.01975107426352109
+(pc = 43.666623856406055, pdef_exo_l = 0.013917991358537992, zeta_Rl = 1638.8569348880683)
+Total 'main loop' iterations: 4
+error: 0.014938942543396545
+(pc = 43.66572006284777, pdef_exo_l = 0.013917659420471375, zeta_Rl = 1638.731845309137)
+Total 'main loop' iterations: 4
+error: 0.014956080879755276
+(pc = 43.6674618421505, pdef_exo_l = 0.013917242151263226, zeta_Rl = 1638.8882969142646)
+Total 'main loop' iterations: 4
+error: 0.014936581829980453
+(pc = 43.66757506872958, pdef_exo_l = 0.013916300933993746, zeta_Rl = 1638.8252868278314)
+Total 'main loop' iterations: 4
+error: 0.014925765240046717
+(pc = 43.66789213950409, pdef_exo_l = 0.013915737459145665, zeta_Rl = 1638.8147374744192)
+Total 'main loop' iterations: 4
+error: 0.019760522603168792
+(pc = 43.67065534138321, pdef_exo_l = 0.013915352238373972, zeta_Rl = 1638.859569575935)
+Total 'main loop' iterations: 4
+error: 0.019743743789665882
+(pc = 43.66630183683493, pdef_exo_l = 0.013917356871150869, zeta_Rl = 1638.831177590283)
+Total 'main loop' iterations: 4
+error: 0.014931821309320683
+(pc = 43.66757634009895, pdef_exo_l = 0.013916070973128, zeta_Rl = 1638.7568991274607)
+Total 'main loop' iterations: 4
+error: 0.019775299222304782
+(pc = 43.66748569588976, pdef_exo_l = 0.013916998155818388, zeta_Rl = 1638.8609223753472)
+Total 'main loop' iterations: 4
+error: 0.014927871296036965
+(pc = 43.66952558478438, pdef_exo_l = 0.01391571710968537, zeta_Rl = 1638.8338483081516)
+Total 'main loop' iterations: 4
+error: 0.01975317027094935
+(pc = 43.666973450991065, pdef_exo_l = 0.01391701525417889, zeta_Rl = 1638.831733989839)
+Total 'main loop' iterations: 4
+error: 0.014928829300121132
+(pc = 43.66885397062825, pdef_exo_l = 0.013916058726657349, zeta_Rl = 1638.8332919085956)
+Total 'main loop' iterations: 4
+error: 0.01975612145699819
+(pc = 43.667365225915475, pdef_exo_l = 0.013916815977611902, zeta_Rl = 1638.8320585562467)
+Total 'main loop' iterations: 4
+error: 0.014927083977454571
+(pc = 43.66826141241338, pdef_exo_l = 0.013915954372880191, zeta_Rl = 1638.7848609770206)
+Total 'main loop' iterations: 4
+error: 0.019767356513090292
+(pc = 43.667647303498846, pdef_exo_l = 0.013916780701039596, zeta_Rl = 1638.845076250696)
+Total 'main loop' iterations: 4
+error: 0.014923533826405447
+(pc = 43.66856993410991, pdef_exo_l = 0.013916113033371808, zeta_Rl = 1638.8224032590872)
+Total 'main loop' iterations: 4
+error: 0.014923628458483672
+(pc = 43.66718116974923, pdef_exo_l = 0.01391648456416121, zeta_Rl = 1638.8505145806025)
+Total 'main loop' iterations: 4
+error: 0.014921848795070731
+(pc = 43.666681437062415, pdef_exo_l = 0.013916542125067538, zeta_Rl = 1638.8635762259787)
+Total 'main loop' iterations: 4
+error: 0.014922285005003182
+(pc = 43.66802386950908, pdef_exo_l = 0.013916617931721328, zeta_Rl = 1638.853375899092)
+Total 'main loop' iterations: 4
+error: 0.014921866555026277
+(pc = 43.66666496106153, pdef_exo_l = 0.013917142431242946, zeta_Rl = 1638.8769078945058)
+Total 'main loop' iterations: 4
+error: 0.014932527257557393
+(pc = 43.66817306472483, pdef_exo_l = 0.013916327491261628, zeta_Rl = 1638.833758391466)
+Total 'main loop' iterations: 4
+error: 0.014922897798493203
+(pc = 43.66793809915658, pdef_exo_l = 0.013916172623723176, zeta_Rl = 1638.8466896634113)
+Total 'main loop' iterations: 4
+error: 0.01491979196153906
+(pc = 43.66803503104249, pdef_exo_l = 0.01391596993128437, zeta_Rl = 1638.8472274676499)
+Total 'main loop' iterations: 4
+error: 0.019754209168795646
+(pc = 43.66725569421842, pdef_exo_l = 0.013916522588475515, zeta_Rl = 1638.8666283706045)
+Total 'main loop' iterations: 4
+error: 0.014922997331790294
+(pc = 43.66798194586933, pdef_exo_l = 0.01391636813651452, zeta_Rl = 1638.8406063037867)
+Total 'main loop' iterations: 4
+error: 0.014921951886007654
+(pc = 43.66744681307392, pdef_exo_l = 0.013916481943222623, zeta_Rl = 1638.859780458284)
+Total 'main loop' iterations: 4
+error: 0.014921176500122075
+(pc = 43.66702018514406, pdef_exo_l = 0.013916141489016678, zeta_Rl = 1638.8512805691066)
+Total 'main loop' iterations: 4
+error: 0.014920387330198326
+(pc = 43.6677555618338, pdef_exo_l = 0.013916046139813773, zeta_Rl = 1638.8546525465981)
+Total 'main loop' iterations: 4
+error: 0.019753460185412252
+(pc = 43.66730083476685, pdef_exo_l = 0.013916393225755495, zeta_Rl = 1638.8513766568517)
+Total 'main loop' iterations: 4
+error: 0.014921006605664559
+(pc = 43.66739259963772, pdef_exo_l = 0.013915989615774279, zeta_Rl = 1638.8397841346289)
+Total 'main loop' iterations: 4
+error: 0.019757138420194754
+(pc = 43.667435518608045, pdef_exo_l = 0.013916379375004218, zeta_Rl = 1638.8556145575224)
+Total 'main loop' iterations: 4
+error: 0.014919758335907677
+(pc = 43.667628367172256, pdef_exo_l = 0.013916069099407216, zeta_Rl = 1638.8510132031756)
+Total 'main loop' iterations: 4
+error: 0.019754601224334242
+(pc = 43.66736907068464, pdef_exo_l = 0.013916325699432937, zeta_Rl = 1638.851300937336)
+Total 'main loop' iterations: 4
+error: 0.01492057851865219
+(pc = 43.66756013125446, pdef_exo_l = 0.013916136625729774, zeta_Rl = 1638.8510889226914)
+Total 'main loop' iterations: 4
+error: 0.014919379875167596
+(pc = 43.66762381811107, pdef_exo_l = 0.013916073601162053, zeta_Rl = 1638.8510182511432)
+Total 'main loop' iterations: 4
+error: 0.019754629301628402
+(pc = 43.66826898086867, pdef_exo_l = 0.013916317593954765, zeta_Rl = 1638.8509815266439)
+Total 'main loop' iterations: 4
+error: 0.014918899520390414
+(pc = 43.6686852461102, pdef_exo_l = 0.013916376295600793, zeta_Rl = 1638.8508818458229)
+Total 'main loop' iterations: 4
+error: 0.014918707496353495
+(pc = 43.66784916482522, pdef_exo_l = 0.013916422240500012, zeta_Rl = 1638.8583672206132)
+Total 'main loop' iterations: 4
+error: 0.014920364680247197
+(pc = 43.66791957117088, pdef_exo_l = 0.01391622462721835, zeta_Rl = 1638.8491224878285)
+Total 'main loop' iterations: 4
+error: 0.014919537223758649
+(pc = 43.668674447082324, pdef_exo_l = 0.013916112324028392, zeta_Rl = 1638.8451142800393)
+Total 'main loop' iterations: 4
+error: 0.014918455498328206
+(pc = 43.66908742324042, pdef_exo_l = 0.01391602330703645, zeta_Rl = 1638.841614187545)
+Total 'main loop' iterations: 4
+error: 0.019753698613302874
+(pc = 43.6686936451271, pdef_exo_l = 0.013916192203020957, zeta_Rl = 1638.848934211207)
+Total 'main loop' iterations: 4
+error: 0.014917955430776073
+(pc = 43.668951669779176, pdef_exo_l = 0.013916181394955159, zeta_Rl = 1638.8488714523332)
+Total 'main loop' iterations: 4
+error: 0.014917428187304833
+(pc = 43.669980777393334, pdef_exo_l = 0.013916310050659785, zeta_Rl = 1638.845489462772)
+Total 'main loop' iterations: 4
+error: 0.014917489499535336
+(pc = 43.66971935005968, pdef_exo_l = 0.013916026217494765, zeta_Rl = 1638.8421016176064)
+Total 'main loop' iterations: 4
+error: 0.019752414641487977
+(pc = 43.66890068443301, pdef_exo_l = 0.013916303362662037, zeta_Rl = 1638.8490526316111)
+Total 'main loop' iterations: 4
+error: 0.014918054283020213
+(pc = 43.66988097398803, pdef_exo_l = 0.01391641754815626, zeta_Rl = 1638.8504947511049)
+Total 'main loop' iterations: 4
+error: 0.014919812656715783
+(pc = 43.66892580685435, pdef_exo_l = 0.013916175912388366, zeta_Rl = 1638.8462352115114)
+Total 'main loop' iterations: 4
+error: 0.014918028800512352
+(pc = 43.669671484918226, pdef_exo_l = 0.013916141542673503, zeta_Rl = 1638.8446781194668)
+Total 'main loop' iterations: 4
+error: 0.014916791639290527
+(pc = 43.6699284184133, pdef_exo_l = 0.013916087602677325, zeta_Rl = 1638.843219948752)
+Total 'main loop' iterations: 4
+error: 0.014916370774238064
+(pc = 43.67031477020285, pdef_exo_l = 0.013916210119806479, zeta_Rl = 1638.8454853643932)
+Total 'main loop' iterations: 4
+error: 0.014916430185299376
+(pc = 43.66948246153687, pdef_exo_l = 0.013916009360966193, zeta_Rl = 1638.8462283808803)
+Total 'main loop' iterations: 4
+error: 0.01975188091979111
+(pc = 43.66987696158991, pdef_exo_l = 0.01391624740697362, zeta_Rl = 1638.8456434040447)
+Total 'main loop' iterations: 4
+error: 0.014916683449923598
+(pc = 43.671128430358195, pdef_exo_l = 0.013916182024683123, zeta_Rl = 1638.8406943591267)
+Total 'main loop' iterations: 4
+error: 0.014915542127126351
+(pc = 43.67185401721787, pdef_exo_l = 0.013916182234592444, zeta_Rl = 1638.8379686613912)
+Total 'main loop' iterations: 4
+error: 0.014915386204973007
+(pc = 43.67152117563276, pdef_exo_l = 0.013916072564410546, zeta_Rl = 1638.8388059123129)
+Total 'main loop' iterations: 4
+error: 0.01974995331752122
+(pc = 43.67021950618217, pdef_exo_l = 0.013916210981439647, zeta_Rl = 1638.8442189266007)
+Total 'main loop' iterations: 4
+error: 0.014916174152516722
+(pc = 43.671019857672704, pdef_exo_l = 0.013916110425999797, zeta_Rl = 1638.8381196601024)
+Total 'main loop' iterations: 4
+error: 0.014915518706337717
+(pc = 43.67213383563519, pdef_exo_l = 0.013916248158677265, zeta_Rl = 1638.8369848833108)
+Total 'main loop' iterations: 4
+error: 0.01491616098762234
+(pc = 43.67311896750167, pdef_exo_l = 0.013916149564740025, zeta_Rl = 1638.8311632099358)
+Total 'main loop' iterations: 4
+error: 0.014914276187228832
+(pc = 43.674085454608175, pdef_exo_l = 0.013916129092506817, zeta_Rl = 1638.8268113043807)
+Total 'main loop' iterations: 4
+error: 0.014913659981836067
+(pc = 43.67250571736397, pdef_exo_l = 0.013916033010055437, zeta_Rl = 1638.831614867272)
+Total 'main loop' iterations: 4
+error: 0.0197494908994057
+(pc = 43.67221131099535, pdef_exo_l = 0.013916203336047718, zeta_Rl = 1638.8358661299694)
+Total 'main loop' iterations: 4
+error: 0.014915413405031067
+(pc = 43.67441399754156, pdef_exo_l = 0.013916232682764856, zeta_Rl = 1638.828977737058)
+Total 'main loop' iterations: 4
+error: 0.014915585589894604
+(pc = 43.671726970145386, pdef_exo_l = 0.013916135896159185, zeta_Rl = 1638.8362150928015)
+Total 'main loop' iterations: 4
+error: 0.014914710233554784
+(pc = 43.672899650318925, pdef_exo_l = 0.013916094812791246, zeta_Rl = 1638.8314639090795)
+Total 'main loop' iterations: 4
+error: 0.014913532875017949
+(pc = 43.673129096760114, pdef_exo_l = 0.013916058638372423, zeta_Rl = 1638.8299965021163)
+Total 'main loop' iterations: 4
+error: 0.019748788114189748
+(pc = 43.67395403283044, pdef_exo_l = 0.01391605763304572, zeta_Rl = 1638.8250248761165)
+Total 'main loop' iterations: 4
+error: 0.019748317473468942
+(pc = 43.67229152047049, pdef_exo_l = 0.013916156275936876, zeta_Rl = 1638.835272039459)
+Total 'main loop' iterations: 4
+error: 0.01491474835952131
+(pc = 43.67351652957782, pdef_exo_l = 0.013916083591701288, zeta_Rl = 1638.8277214980487)
+Total 'main loop' iterations: 4
+error: 0.014912962347845091
+(pc = 43.67392486594693, pdef_exo_l = 0.013916059363622758, zeta_Rl = 1638.825204650912)
+Total 'main loop' iterations: 4
+error: 0.019748340998646256
+(pc = 43.675274119524545, pdef_exo_l = 0.01391606910184038, zeta_Rl = 1638.8211160482042)
+Total 'main loop' iterations: 4
+error: 0.014912396846398928
+(pc = 43.67645650265093, pdef_exo_l = 0.013916046837067444, zeta_Rl = 1638.8160830333384)
+Total 'main loop' iterations: 4
+error: 0.01974551169231027
+(pc = 43.673708078339345, pdef_exo_l = 0.013916035911715124, zeta_Rl = 1638.826722999174)
+Total 'main loop' iterations: 4
+error: 0.01974830973627416
+(pc = 43.674006834552166, pdef_exo_l = 0.013916109679841882, zeta_Rl = 1638.8267929074627)
+Total 'main loop' iterations: 4
+error: 0.014913370006606521
+(pc = 43.67563200545075, pdef_exo_l = 0.013916080102797783, zeta_Rl = 1638.8189563933975)
+Total 'main loop' iterations: 4
+error: 0.01491228654692526
+(pc = 43.67654279049469, pdef_exo_l = 0.013916075199466629, zeta_Rl = 1638.8147872215034)
+Total 'main loop' iterations: 4
+error: 0.014911871046240434
+(pc = 43.67621545851254, pdef_exo_l = 0.013916042248830316, zeta_Rl = 1638.8156236043747)
+Total 'main loop' iterations: 4
+error: 0.019746045092322907
+(pc = 43.67446696454391, pdef_exo_l = 0.013916095631714472, zeta_Rl = 1638.8244659693194)
+Total 'main loop' iterations: 4
+error: 0.0149129700541446
+(pc = 43.67575532852079, pdef_exo_l = 0.013916056296957725, zeta_Rl = 1638.817950542518)
+Total 'main loop' iterations: 4
+error: 0.01974646678365928
+(pc = 43.67473537370576, pdef_exo_l = 0.013916087436973484, zeta_Rl = 1638.8231085887357)
+Total 'main loop' iterations: 4
+error: 0.014912736744742793
+(pc = 43.67751832623883, pdef_exo_l = 0.01391607090048571, zeta_Rl = 1638.8116197409129)
+Total 'main loop' iterations: 4
+error: 0.014911707291207145
+(pc = 43.67885225845917, pdef_exo_l = 0.013916066670080517, zeta_Rl = 1638.8062524885343)
+Total 'main loop' iterations: 4
+error: 0.01491128881533171
+(pc = 43.67904407194652, pdef_exo_l = 0.0139160532106182, zeta_Rl = 1638.8049952500921)
+Total 'main loop' iterations: 4
+error: 0.014910967638333805
+(pc = 43.68048030469344, pdef_exo_l = 0.013916041801833104, zeta_Rl = 1638.7989574705443)
+Total 'main loop' iterations: 4
+error: 0.019741659887116122
+(pc = 43.68101862774239, pdef_exo_l = 0.013916060951603186, zeta_Rl = 1638.7962405918825)
+Total 'main loop' iterations: 4
+error: 0.014910354582454622
+(pc = 43.682933463815004, pdef_exo_l = 0.013916058234857455, zeta_Rl = 1638.7879487731086)
+Total 'main loop' iterations: 4
+error: 0.014909673576087783
+(pc = 43.684010405652444, pdef_exo_l = 0.013916043544237486, zeta_Rl = 1638.784677119653)
+Total 'main loop' iterations: 4
+error: 0.01490941527517567
+(pc = 43.68649961070503, pdef_exo_l = 0.013916032992494439, zeta_Rl = 1638.7746404190361)
+Total 'main loop' iterations: 4
+error: 0.014908596253417956
+(pc = 43.68679917251852, pdef_exo_l = 0.013916029621899542, zeta_Rl = 1638.7721371396235)
+Total 'main loop' iterations: 4
+error: 0.014908202600972014
+(pc = 43.68944814387164, pdef_exo_l = 0.013916017272505883, zeta_Rl = 1638.7607653566533)
+Total 'main loop' iterations: 4
+error: 0.014907173375205264
+(pc = 43.69354340698125, pdef_exo_l = 0.013916019122620313, zeta_Rl = 1638.74390778244)
+Total 'main loop' iterations: 4
+error: 0.014905992938975503
+(pc = 43.698376518659494, pdef_exo_l = 0.01391600775995435, zeta_Rl = 1638.7235452932225)
+Total 'main loop' iterations: 4
+error: 0.014904333102173423
+(pc = 43.69994938500909, pdef_exo_l = 0.013915980448445657, zeta_Rl = 1638.7180186061662)
+Total 'main loop' iterations: 4
+error: 0.019722469888823757
+(pc = 43.68647844739711, pdef_exo_l = 0.013916042029354998, zeta_Rl = 1638.773379988329)
+Total 'main loop' iterations: 4
+error: 0.01490843545278613
+(pc = 43.69636912924712, pdef_exo_l = 0.01391601171538238, zeta_Rl = 1638.7304866731006)
+Total 'main loop' iterations: 4
+error: 0.014904698411239108
+(pc = 43.70298408045507, pdef_exo_l = 0.01391598246920674, zeta_Rl = 1638.703151560322)
+Total 'main loop' iterations: 4
+error: 0.014902365959247458
+(pc = 43.708485958141054, pdef_exo_l = 0.013915962615823988, zeta_Rl = 1638.6797420843197)
+Total 'main loop' iterations: 4
+error: 0.01490034071478288
+(pc = 43.712706260160125, pdef_exo_l = 0.013915970788267928, zeta_Rl = 1638.661750677108)
+Total 'main loop' iterations: 4
+error: 0.01489907113572393
+(pc = 43.72045896558962, pdef_exo_l = 0.013915955293521944, zeta_Rl = 1638.6287457839264)
+Total 'main loop' iterations: 4
+error: 0.014896366305793147
+(pc = 43.72184516567965, pdef_exo_l = 0.013915938730817805, zeta_Rl = 1638.6242021012117)
+Total 'main loop' iterations: 4
+error: 0.014895992238348085
+(pc = 43.730337177823834, pdef_exo_l = 0.013915914402629613, zeta_Rl = 1638.5887739105822)
+Total 'main loop' iterations: 4
+error: 0.014893085279109076
+(pc = 43.74114488237684, pdef_exo_l = 0.013915880448029341, zeta_Rl = 1638.541295892663)
+Total 'main loop' iterations: 4
+error: 0.014888849019768943
+(pc = 43.75540100361595, pdef_exo_l = 0.013915838010721005, zeta_Rl = 1638.4805460924763)
+Total 'main loop' iterations: 4
+error: 0.014883676033660725
+(pc = 43.762312139878546, pdef_exo_l = 0.013915842522091054, zeta_Rl = 1638.45230177367)
+Total 'main loop' iterations: 4
+error: 0.014881728986801108
+(pc = 43.78025420045771, pdef_exo_l = 0.013915802490846743, zeta_Rl = 1638.3764883367867)
+Total 'main loop' iterations: 4
+error: 0.014875504695754344
+(pc = 43.79020262234203, pdef_exo_l = 0.013915747975942964, zeta_Rl = 1638.3351264426367)
+Total 'main loop' iterations: 4
+error: 0.014871785496396976
+(pc = 43.81345050792616, pdef_exo_l = 0.013915678870083305, zeta_Rl = 1638.2372533288735)
+Total 'main loop' iterations: 4
+error: 0.014863524695409752
+(pc = 43.8357332968427, pdef_exo_l = 0.013915631845137754, zeta_Rl = 1638.1407512615085)
+Total 'main loop' iterations: 4
+error: 0.014855086957134328
+(pc = 43.87086533651565, pdef_exo_l = 0.013915537659307135, zeta_Rl = 1637.991410378484)
+Total 'main loop' iterations: 4
+error: 0.014841973907639871
+(pc = 43.88764569298372, pdef_exo_l = 0.013915508002770449, zeta_Rl = 1637.9228886036199)
+Total 'main loop' iterations: 4
+error: 0.014836470709718302
+(pc = 43.931727256106306, pdef_exo_l = 0.013915398000120264, zeta_Rl = 1637.737002774001)
+Total 'main loop' iterations: 4
+error: 0.014820335206718835
+(pc = 43.963774533241015, pdef_exo_l = 0.01391527386216039, zeta_Rl = 1637.6006226507852)
+Total 'main loop' iterations: 4
+error: 0.014807696771207201
+(pc = 44.024947977502116, pdef_exo_l = 0.013915097652598274, zeta_Rl = 1637.3420007554514)
+Total 'main loop' iterations: 4
+error: 0.014778772876850648
+(pc = 44.07157653882322, pdef_exo_l = 0.013915010004600475, zeta_Rl = 1637.1430226097505)
+Total 'main loop' iterations: 4
+error: 0.014755888213452585
+(pc = 44.15761854912224, pdef_exo_l = 0.013914787049439532, zeta_Rl = 1636.7782790367094)
+Total 'main loop' iterations: 4
+error: 0.014713234249523966
+(pc = 44.20533051863812, pdef_exo_l = 0.013914650808798244, zeta_Rl = 1636.58011133229)
+Total 'main loop' iterations: 4
+error: 0.014690342026978196
+(pc = 44.31681891267895, pdef_exo_l = 0.013914355191961948, zeta_Rl = 1636.109678316892)
+Total 'main loop' iterations: 4
+error: 0.014621310044395727
+(pc = 44.40119637009588, pdef_exo_l = 0.013914095262546236, zeta_Rl = 1635.7496359653676)
+Total 'main loop' iterations: 4
+error: 0.013859066878149166
+(pc = 44.557686074759076, pdef_exo_l = 0.013913661016688226, zeta_Rl = 1635.0871803624898)
+Total 'main loop' iterations: 4
+error: 0.015325600500638102
+(pc = 44.55880791042926, pdef_exo_l = 0.01391372735003354, zeta_Rl = 1635.0830614571946)
+Total 'main loop' iterations: 4
+error: 0.015325431211090135
+(pc = 44.13616879686194, pdef_exo_l = 0.013914812172897287, zeta_Rl = 1636.871388401648)
+Total 'main loop' iterations: 4
+error: 0.014723953412888334
+(pc = 44.44758709106944, pdef_exo_l = 0.013914012829734526, zeta_Rl = 1635.5536738109981)
+Total 'main loop' iterations: 4
+error: 0.013823858932349765
+(pc = 44.5513931891386, pdef_exo_l = 0.013913746382013606, zeta_Rl = 1635.1144356141149)
+Total 'main loop' iterations: 4
+error: 0.015327804677319088
+(pc = 44.61944970010726, pdef_exo_l = 0.013913521806722276, zeta_Rl = 1634.8303796921289)
+Total 'main loop' iterations: 4
+error: 0.015303942413575747
+(pc = 44.25383337224412, pdef_exo_l = 0.01391452345720677, zeta_Rl = 1636.372466673255)
+Total 'main loop' iterations: 4
+error: 0.014666717207815393
+(pc = 44.523234876985384, pdef_exo_l = 0.013913785398955037, zeta_Rl = 1635.2361920555832)
+Total 'main loop' iterations: 4
+error: 0.01533617120790696
+(pc = 44.30995868573188, pdef_exo_l = 0.013914369695070993, zeta_Rl = 1636.1357427945734)
+Total 'main loop' iterations: 4
+error: 0.014623969302115406
+(pc = 44.46710956349762, pdef_exo_l = 0.013913939161090814, zeta_Rl = 1635.4729159342648)
+Total 'main loop' iterations: 4
+error: 0.013808888860678452
+(pc = 44.519493189419535, pdef_exo_l = 0.013913795649764088, zeta_Rl = 1635.2519736474953)
+Total 'main loop' iterations: 4
+error: 0.015337403350563128
+(pc = 44.560443103763, pdef_exo_l = 0.01391367631028577, zeta_Rl = 1635.0744721568615)
+Total 'main loop' iterations: 4
+error: 0.015325053177338399
+(pc = 44.36757395248812, pdef_exo_l = 0.013914213758279411, zeta_Rl = 1635.8940103668856)
+Total 'main loop' iterations: 4
+error: 0.013880881337845834
+(pc = 44.509688063953824, pdef_exo_l = 0.013913817743968307, zeta_Rl = 1635.290140106868)
+Total 'main loop' iterations: 4
+error: 0.015341317854797403
+(pc = 44.397181059043476, pdef_exo_l = 0.013914131255297932, zeta_Rl = 1635.7682040627153)
+Total 'main loop' iterations: 4
+error: 0.01386279529401657
+(pc = 44.48008095739847, pdef_exo_l = 0.013913900246949787, zeta_Rl = 1635.4159464110382)
+Total 'main loop' iterations: 4
+error: 0.013798374607440773
+(pc = 44.507714256850136, pdef_exo_l = 0.013913823244167072, zeta_Rl = 1635.2985271938126)
+Total 'main loop' iterations: 4
+error: 0.015341958724768802
+(pc = 44.52865537121448, pdef_exo_l = 0.013913806229303848, zeta_Rl = 1635.2120548054993)
+Total 'main loop' iterations: 4
+error: 0.015334837249422266
+(pc = 44.427750328662256, pdef_exo_l = 0.013914035047287405, zeta_Rl = 1635.6376398903951)
+Total 'main loop' iterations: 4
+error: 0.013838794612252995
+(pc = 44.5021014126481, pdef_exo_l = 0.013913866444562679, zeta_Rl = 1635.3240508804718)
+Total 'main loop' iterations: 4
+error: 0.013781916885482495
+(pc = 44.52688510731005, pdef_exo_l = 0.013913810243654437, zeta_Rl = 1635.2195212104973)
+Total 'main loop' iterations: 4
+error: 0.015335414470396484
+(pc = 44.518607531293355, pdef_exo_l = 0.013913791072000995, zeta_Rl = 1635.254935006185)
+Total 'main loop' iterations: 4
+error: 0.015337831601491783
+(pc = 44.462383016116085, pdef_exo_l = 0.013913966630206706, zeta_Rl = 1635.4914365599955)
+Total 'main loop' iterations: 4
+error: 0.013812421007202853
+(pc = 44.50381160624671, pdef_exo_l = 0.013913837271528815, zeta_Rl = 1635.3171722571876)
+Total 'main loop' iterations: 4
+error: 0.013780359120013923
+(pc = 44.517621136290245, pdef_exo_l = 0.013913794151969519, zeta_Rl = 1635.2590841562517)
+Total 'main loop' iterations: 4
+error: 0.01533816117689692
+(pc = 44.52355308736457, pdef_exo_l = 0.01391379681427004, zeta_Rl = 1635.231863764867)
+Total 'main loop' iterations: 4
+error: 0.015336777477781892
+(pc = 44.478868630969906, pdef_exo_l = 0.013913909505503154, zeta_Rl = 1635.422696732307)
+Total 'main loop' iterations: 4
+error: 0.013799723661505763
+(pc = 44.511794019892285, pdef_exo_l = 0.0139138264698577, zeta_Rl = 1635.2820829668249)
+Total 'main loop' iterations: 4
+error: 0.015340508608416107
+(pc = 44.4857280869954, pdef_exo_l = 0.013913892206410351, zeta_Rl = 1635.3934021978316)
+Total 'main loop' iterations: 4
+error: 0.013794375349282188
+(pc = 44.514346446528336, pdef_exo_l = 0.013913830368051442, zeta_Rl = 1635.2738038126224)
+Total 'main loop' iterations: 4
+error: 0.015339172288220139
+(pc = 44.487219600967194, pdef_exo_l = 0.013913885688845965, zeta_Rl = 1635.3863333697016)
+Total 'main loop' iterations: 4
+error: 0.013793032712799136
+(pc = 44.50969365957926, pdef_exo_l = 0.013913834063547955, zeta_Rl = 1635.2916354737422)
+Total 'main loop' iterations: 4
+error: 0.015341060817199909
+(pc = 44.490720914617036, pdef_exo_l = 0.013913880093314018, zeta_Rl = 1635.3722007969798)
+Total 'main loop' iterations: 4
+error: 0.01379051271177169
+(pc = 44.51053635470737, pdef_exo_l = 0.013913836850757708, zeta_Rl = 1635.289282586724)
+Total 'main loop' iterations: 4
+error: 0.015340543080804056
+(pc = 44.4920772579964, pdef_exo_l = 0.013913875514244245, zeta_Rl = 1635.3661144565813)
+Total 'main loop' iterations: 4
+error: 0.013789379340986617
+(pc = 44.50793926997708, pdef_exo_l = 0.013913839393576473, zeta_Rl = 1635.2993575991807)
+Total 'main loop' iterations: 4
+error: 0.015341574014353052
+(pc = 44.49430807198371, pdef_exo_l = 0.013913871614202029, zeta_Rl = 1635.3570251307717)
+Total 'main loop' iterations: 4
+error: 0.01378775165574401
+(pc = 44.50807013592261, pdef_exo_l = 0.013913841372618104, zeta_Rl = 1635.299384389039)
+Total 'main loop' iterations: 4
+error: 0.015341415090469816
+(pc = 44.495409107564356, pdef_exo_l = 0.013913868401405466, zeta_Rl = 1635.3522123591765)
+Total 'main loop' iterations: 4
+error: 0.013786864356702113
+(pc = 44.50657334565574, pdef_exo_l = 0.013913843130795944, zeta_Rl = 1635.305265200452)
+Total 'main loop' iterations: 4
+error: 0.01534199486093775
+(pc = 44.49686333733205, pdef_exo_l = 0.013913865680159095, zeta_Rl = 1635.346241811955)
+Total 'main loop' iterations: 4
+error: 0.013785791515586546
+(pc = 44.506441796586884, pdef_exo_l = 0.013913844529428258, zeta_Rl = 1635.306097607233)
+Total 'main loop' iterations: 4
+error: 0.015341982687506174
+(pc = 44.49770758444405, pdef_exo_l = 0.013913863428076882, zeta_Rl = 1635.3426051191882)
+Total 'main loop' iterations: 4
+error: 0.01378512486448722
+(pc = 44.50555039822718, pdef_exo_l = 0.01391384574928649, zeta_Rl = 1635.3096436926096)
+Total 'main loop' iterations: 4
+error: 0.01534231938399153
+(pc = 44.4986731416852, pdef_exo_l = 0.01391386152789397, zeta_Rl = 1635.338617203758)
+Total 'main loop' iterations: 4
+error: 0.013784406394056946
+(pc = 44.50534985594262, pdef_exo_l = 0.013913846734580095, zeta_Rl = 1635.3106217750897)
+Total 'main loop' iterations: 4
+error: 0.013779329765925186
+(pc = 44.50789727977548, pdef_exo_l = 0.013913841170081166, zeta_Rl = 1635.29996066039)
+Total 'main loop' iterations: 4
+error: 0.015341502611746658
+(pc = 44.508835441539745, pdef_exo_l = 0.013913838772553753, zeta_Rl = 1635.2959460714078)
+Total 'main loop' iterations: 4
+error: 0.015341205134264633
+(pc = 44.50079028748823, pdef_exo_l = 0.013913856787198092, zeta_Rl = 1635.3297273845185)
+Total 'main loop' iterations: 4
+error: 0.013782793526631983
+(pc = 44.50671829573672, pdef_exo_l = 0.01391384351324963, zeta_Rl = 1635.3048358906474)
+Total 'main loop' iterations: 4
+error: 0.015341910646536604
+(pc = 44.502025289206664, pdef_exo_l = 0.013913854021792162, zeta_Rl = 1635.3245416566288)
+Total 'main loop' iterations: 4
+error: 0.013781852624642278
+(pc = 44.505356421615886, pdef_exo_l = 0.013913825574038034, zeta_Rl = 1635.3108395787988)
+Total 'main loop' iterations: 4
+error: 0.013779110759793711
+(pc = 44.50644142460515, pdef_exo_l = 0.013913811950529818, zeta_Rl = 1635.3064358115744)
+Total 'main loop' iterations: 4
+error: 0.01534175563352699
+(pc = 44.50765329999681, pdef_exo_l = 0.01391381903163913, zeta_Rl = 1635.3012140840888)
+Total 'main loop' iterations: 4
+error: 0.01534142692107364
+(pc = 44.50319779145461, pdef_exo_l = 0.013913846732176946, zeta_Rl = 1635.3196817456828)
+Total 'main loop' iterations: 4
+error: 0.013780914014836554
+(pc = 44.506480797748864, pdef_exo_l = 0.013913826321254345, zeta_Rl = 1635.3060739950347)
+Total 'main loop' iterations: 4
+error: 0.015341853623853065
+(pc = 44.50388175109924, pdef_exo_l = 0.013913842479901404, zeta_Rl = 1635.3168467976311)
+Total 'main loop' iterations: 4
+error: 0.013780366472862087
+(pc = 44.50579683810423, pdef_exo_l = 0.013913830573529887, zeta_Rl = 1635.3089089430864)
+Total 'main loop' iterations: 4
+error: 0.01534210263539958
+(pc = 44.504280727558616, pdef_exo_l = 0.013913839999407339, zeta_Rl = 1635.3151930779343)
+Total 'main loop' iterations: 4
+error: 0.013780047066707808
+(pc = 44.50617973049804, pdef_exo_l = 0.013913837600488161, zeta_Rl = 1635.307264030694)
+Total 'main loop' iterations: 4
+error: 0.015342020218391225
+(pc = 44.504304965465735, pdef_exo_l = 0.013913837340062012, zeta_Rl = 1635.3151080433347)
+Total 'main loop' iterations: 4
+error: 0.013779999436783874
+(pc = 44.50572676779088, pdef_exo_l = 0.013913833099712752, zeta_Rl = 1635.3091865202143)
+Total 'main loop' iterations: 4
+error: 0.015342140815427712
+(pc = 44.50458198594034, pdef_exo_l = 0.013913838561970968, zeta_Rl = 1635.3139417117427)
+Total 'main loop' iterations: 4
+error: 0.013779810787183187
+(pc = 44.50588721020017, pdef_exo_l = 0.013913836573664053, zeta_Rl = 1635.308494000419)
+Total 'main loop' iterations: 4
+error: 0.015342109483341184
+(pc = 44.50463459978541, pdef_exo_l = 0.01391383718039577, zeta_Rl = 1635.3137301177273)
+Total 'main loop' iterations: 4
+error: 0.013779756801367728
+(pc = 44.50564526562227, pdef_exo_l = 0.013913834430704961, zeta_Rl = 1635.309519269334)
+Total 'main loop' iterations: 4
+error: 0.015342175487796653
+(pc = 44.504803502540746, pdef_exo_l = 0.01391383770129055, zeta_Rl = 1635.3130203695741)
+Total 'main loop' iterations: 4
+error: 0.013779639256389893
+(pc = 44.50570525361409, pdef_exo_l = 0.01391383615954335, zeta_Rl = 1635.3092576979145)
+Total 'main loop' iterations: 4
+error: 0.01534216637651647
+(pc = 44.50485765266639, pdef_exo_l = 0.013913836967718182, zeta_Rl = 1635.3127983635998)
+Total 'main loop' iterations: 4
+error: 0.013779591438678624
+(pc = 44.5055724509425, pdef_exo_l = 0.013913835149600323, zeta_Rl = 1635.3098194420845)
+Total 'main loop' iterations: 4
+error: 0.015342203616523116
+(pc = 44.50496370012444, pdef_exo_l = 0.01391383716968842, zeta_Rl = 1635.3123535096804)
+Total 'main loop' iterations: 4
+error: 0.013779516228838964
+(pc = 44.50558899912225, pdef_exo_l = 0.013913836017819512, zeta_Rl = 1635.3097448787792)
+Total 'main loop' iterations: 4
+error: 0.015342203473465515
+(pc = 44.50501001651136, pdef_exo_l = 0.013913836769822626, zeta_Rl = 1635.3121622209287)
+Total 'main loop' iterations: 4
+error: 0.013779477889176777
+(pc = 44.50551382925547, pdef_exo_l = 0.01391383554927208, zeta_Rl = 1635.3100622068648)
+Total 'main loop' iterations: 4
+error: 0.0137790960462571
+(pc = 44.50569720563248, pdef_exo_l = 0.013913835009133301, zeta_Rl = 1635.3092984392597)
+Total 'main loop' iterations: 4
+error: 0.015342162034533606
+(pc = 44.505803388031296, pdef_exo_l = 0.013913835135437517, zeta_Rl = 1635.3088534862404)
+Total 'main loop' iterations: 4
+error: 0.01534212813432706
+(pc = 44.50517530224468, pdef_exo_l = 0.013913836429325728, zeta_Rl = 1635.311472901202)
+Total 'main loop' iterations: 4
+error: 0.013779353293187203
+(pc = 44.50563810229798, pdef_exo_l = 0.013913835475934415, zeta_Rl = 1635.309542805967)
+Total 'main loop' iterations: 4
+error: 0.015342184158792802
+(pc = 44.50527171892245, pdef_exo_l = 0.013913836230702538, zeta_Rl = 1635.3110707980281)
+Total 'main loop' iterations: 4
+error: 0.013779280611818696
+(pc = 44.50541145725325, pdef_exo_l = 0.013913818168095001, zeta_Rl = 1635.310693280705)
+Total 'main loop' iterations: 4
+error: 0.013778995179506214
+(pc = 44.505431991023464, pdef_exo_l = 0.013913808645933303, zeta_Rl = 1635.3107171159102)
+Total 'main loop' iterations: 4
+error: 0.013778883650603367
+(pc = 44.50559644234077, pdef_exo_l = 0.01391381028212641, zeta_Rl = 1635.3100084696875)
+Total 'main loop' iterations: 4
+error: 0.015342015291697283
+(pc = 44.5053393696346, pdef_exo_l = 0.013913830824749177, zeta_Rl = 1635.3108494796238)
+Total 'main loop' iterations: 4
+error: 0.013779176253803866
+(pc = 44.50552879162862, pdef_exo_l = 0.01391381568807977, zeta_Rl = 1635.3102297880919)
+Total 'main loop' iterations: 4
+error: 0.013778884050340869
+(pc = 44.50562665298915, pdef_exo_l = 0.013913814348152063, zeta_Rl = 1635.3098331617787)
+Total 'main loop' iterations: 4
+error: 0.015342035293158722
+(pc = 44.50541271981865, pdef_exo_l = 0.01391382323531179, zeta_Rl = 1635.3106299085862)
+Total 'main loop' iterations: 4
+error: 0.01377904568596471
+(pc = 44.50540183905836, pdef_exo_l = 0.013913796163611164, zeta_Rl = 1635.3109890015269)
+Total 'main loop' iterations: 4
+error: 0.013778779545151283
+(pc = 44.505364508992656, pdef_exo_l = 0.013913783035057525, zeta_Rl = 1635.3112979330808)
+Total 'main loop' iterations: 4
+error: 0.013778674044821485
+(pc = 44.505470807944505, pdef_exo_l = 0.013913781677401944, zeta_Rl = 1635.310866649469)
+Total 'main loop' iterations: 4
+error: 0.013778582144421275
+(pc = 44.505490170653125, pdef_exo_l = 0.013913767824765328, zeta_Rl = 1635.3109455630968)
+Total 'main loop' iterations: 4
+error: 0.013778427630443747
+(pc = 44.50532898881754, pdef_exo_l = 0.013913757315757662, zeta_Rl = 1635.3117439532994)
+Total 'main loop' iterations: 4
+error: 0.01377843950046457
+(pc = 44.50535712128542, pdef_exo_l = 0.013913730137787038, zeta_Rl = 1635.3119411837413)
+Total 'main loop' iterations: 4
+error: 0.0137781438001015
+(pc = 44.505332164706076, pdef_exo_l = 0.01391370396840495, zeta_Rl = 1635.3123492063517)
+Total 'main loop' iterations: 4
+error: 0.013777897183336416
+(pc = 44.5054030404585, pdef_exo_l = 0.0139137030375611, zeta_Rl = 1635.3120612154175)
+Total 'main loop' iterations: 4
+error: 0.01377783549779548
+(pc = 44.50541588428045, pdef_exo_l = 0.013913676371728958, zeta_Rl = 1635.312315642863)
+Total 'main loop' iterations: 4
+error: 0.013777555981908881
+(pc = 44.505496490942235, pdef_exo_l = 0.013913674794175164, zeta_Rl = 1635.311996321575)
+Total 'main loop' iterations: 4
+error: 0.013777481029120854
+(pc = 44.5055523249838, pdef_exo_l = 0.013913647286980997, zeta_Rl = 1635.3120804443336)
+Total 'main loop' iterations: 4
+error: 0.013777161537921963
+(pc = 44.505376745327105, pdef_exo_l = 0.013913583926644607, zeta_Rl = 1635.3135512992687)
+Total 'main loop' iterations: 4
+error: 0.013776648839059614
+(pc = 44.505338936885096, pdef_exo_l = 0.013913522627271033, zeta_Rl = 1635.3144198779928)
+Total 'main loop' iterations: 4
+error: 0.01377605590871503
+(pc = 44.505539266060154, pdef_exo_l = 0.013913526888915707, zeta_Rl = 1635.3135281037742)
+Total 'main loop' iterations: 4
+error: 0.013775951766744293
+(pc = 44.505608299844845, pdef_exo_l = 0.013913467862419293, zeta_Rl = 1635.3139210695817)
+Total 'main loop' iterations: 4
+error: 0.013775303292555975
+(pc = 44.50558382352871, pdef_exo_l = 0.013913415479385254, zeta_Rl = 1635.314631951742)
+Total 'main loop' iterations: 4
+error: 0.013774791175289966
+(pc = 44.50563980327813, pdef_exo_l = 0.013913328515270686, zeta_Rl = 1635.3154040547017)
+Total 'main loop' iterations: 4
+error: 0.01854620802185814
+(pc = 44.50546838185529, pdef_exo_l = 0.013913290025736052, zeta_Rl = 1635.3165681552107)
+Total 'main loop' iterations: 4
+error: 0.018545941969848014
+(pc = 44.50553483683203, pdef_exo_l = 0.013913572857554967, zeta_Rl = 1635.3130153840996)
+Total 'main loop' iterations: 4
+error: 0.013776420672030215
+(pc = 44.505485870007064, pdef_exo_l = 0.013913364455162083, zeta_Rl = 1635.3156332154447)
+Total 'main loop' iterations: 4
+error: 0.013774346246561618
+(pc = 44.505469547732076, pdef_exo_l = 0.013913294987697788, zeta_Rl = 1635.316505825893)
+Total 'main loop' iterations: 4
+error: 0.01854599096263969
+(pc = 44.505779725368654, pdef_exo_l = 0.013913309237373389, zeta_Rl = 1635.3150376131862)
+Total 'main loop' iterations: 4
+error: 0.01854591563178975
+(pc = 44.50543076781917, pdef_exo_l = 0.013913478171042357, zeta_Rl = 1635.3145485728248)
+Total 'main loop' iterations: 4
+error: 0.013775538268873668
+(pc = 44.50568789443458, pdef_exo_l = 0.013913353693602065, zeta_Rl = 1635.3149089183541)
+Total 'main loop' iterations: 4
+error: 0.013774088871980684
+(pc = 44.50577360330638, pdef_exo_l = 0.013913312201121967, zeta_Rl = 1635.3150290335307)
+Total 'main loop' iterations: 4
+error: 0.01854594969557595
+(pc = 44.505563425468715, pdef_exo_l = 0.013913287889680307, zeta_Rl = 1635.3161949874457)
+Total 'main loop' iterations: 4
+error: 0.01854585391151776
+(pc = 44.50559895101648, pdef_exo_l = 0.01391343036809867, zeta_Rl = 1635.3143948024701)
+Total 'main loop' iterations: 4
+error: 0.013774930572674213
+(pc = 44.50557277429708, pdef_exo_l = 0.013913325384000929, zeta_Rl = 1635.3157212545573)
+Total 'main loop' iterations: 4
+error: 0.018546223638135875
+(pc = 44.50559349753327, pdef_exo_l = 0.013913408496411641, zeta_Rl = 1635.314671146655)
+Total 'main loop' iterations: 4
+error: 0.013774713152723255
+(pc = 44.50559435112122, pdef_exo_l = 0.013913335617398605, zeta_Rl = 1635.3155102352268)
+Total 'main loop' iterations: 4
+error: 0.018546310783376964
+(pc = 44.50558601677715, pdef_exo_l = 0.013913398841471369, zeta_Rl = 1635.314814927468)
+Total 'main loop' iterations: 4
+error: 0.013774621001115478
+(pc = 44.50557968994593, pdef_exo_l = 0.013913336163745365, zeta_Rl = 1635.3155668941893)
+Total 'main loop' iterations: 4
+error: 0.013773990927279049
+(pc = 44.50557508741682, pdef_exo_l = 0.013913312052856605, zeta_Rl = 1635.3158654767008)
+Total 'main loop' iterations: 4
+error: 0.01854608810294772
+(pc = 44.50558295281457, pdef_exo_l = 0.013913304033534971, zeta_Rl = 1635.315924424524)
+Total 'main loop' iterations: 4
+error: 0.018546001888054837
+(pc = 44.50558537845161, pdef_exo_l = 0.013913379089817953, zeta_Rl = 1635.315046072688)
+Total 'main loop' iterations: 4
+error: 0.01377442142375229
+(pc = 44.50558359114011, pdef_exo_l = 0.013913323785188387, zeta_Rl = 1635.315693279304)
+Total 'main loop' iterations: 4
+error: 0.018546199757919345
+(pc = 44.505585006095046, pdef_exo_l = 0.013913367568020127, zeta_Rl = 1635.3151809073995)
+Total 'main loop' iterations: 4
+error: 0.013774305003613648
+(pc = 44.50574919030997, pdef_exo_l = 0.013913340495082954, zeta_Rl = 1635.3148045978508)
+Total 'main loop' iterations: 4
+error: 0.013773910287996766
+(pc = 44.50583696374427, pdef_exo_l = 0.01391333250838991, zeta_Rl = 1635.3145283919862)
+Total 'main loop' iterations: 4
+error: 0.020190988430700545
+(pc = 44.50575951036528, pdef_exo_l = 0.013913319333600127, zeta_Rl = 1635.3150060328628)
+Total 'main loop' iterations: 4
+error: 0.018546031291714952
+(pc = 44.50562136115134, pdef_exo_l = 0.013913357519182627, zeta_Rl = 1635.3151444752043)
+Total 'main loop' iterations: 4
+error: 0.013774176542100381
+(pc = 44.505723155308985, pdef_exo_l = 0.013913329382437627, zeta_Rl = 1635.315042465058)
+Total 'main loop' iterations: 4
+error: 0.018546157766415817
+(pc = 44.50564256826752, pdef_exo_l = 0.013913351657360752, zeta_Rl = 1635.3151232230905)
+Total 'main loop' iterations: 4
+error: 0.013774101606170559
+(pc = 44.50570194819281, pdef_exo_l = 0.013913335244259502, zeta_Rl = 1635.3150637171718)
+Total 'main loop' iterations: 4
+error: 0.018546231543283578
+(pc = 44.50565493908529, pdef_exo_l = 0.013913348237964657, zeta_Rl = 1635.315110826024)
+Total 'main loop' iterations: 4
+error: 0.013774057893527532
+(pc = 44.50563465179288, pdef_exo_l = 0.013913329570926582, zeta_Rl = 1635.3154126270217)
+Total 'main loop' iterations: 4
+error: 0.018546222069374313
+(pc = 44.50567680221756, pdef_exo_l = 0.013913348668044672, zeta_Rl = 1635.3150138576598)
+Total 'main loop' iterations: 4
+error: 0.013774046162679044
+(pc = 44.50568218256369, pdef_exo_l = 0.013913335313283998, zeta_Rl = 1635.3151460737758)
+Total 'main loop' iterations: 4
+error: 0.018546246174383083
+(pc = 44.505660614809955, pdef_exo_l = 0.013913345545322853, zeta_Rl = 1635.3151181693056)
+Total 'main loop' iterations: 4
+error: 0.013774026462636603
+(pc = 44.50564952782633, pdef_exo_l = 0.01391333280138944, zeta_Rl = 1635.3153125832368)
+Total 'main loop' iterations: 4
+error: 0.018546243995852415
+(pc = 44.50567112005272, pdef_exo_l = 0.0139133453624915, zeta_Rl = 1635.315076092155)
+Total 'main loop' iterations: 4
+error: 0.013774016883522339
+(pc = 44.50566666676954, pdef_exo_l = 0.013913340673773271, zeta_Rl = 1635.3151491947315)
+Total 'main loop' iterations: 4
+error: 0.013773972699660134
+ * Status: failure (reached maximum number of iterations)
+
+ * Candidate solution
+    Final objective value:     1.377391e-02
+
+ * Found with
+    Algorithm:     Nelder-Mead
+
+ * Convergence measures
+    √(Σ(yᵢ-ȳ)²)/n ≰ 1.0e-08
+
+ * Work counters
+    Seconds run:   691  (vs limit 10800)
+    Iterations:    200
+    f(x) calls:    388
+
+Total 'main loop' iterations: 4
+
+To keep these values, replace these lines in parameters():
+    pc::Float64 = par(:pc, 44.50574919030997)
+    pdef_exo_l::Float64 = par(:pdef_exo_l, 0.013913340495082954)
+    zeta_Rl::Float64 = par(:zeta_Rl, 1635.3148045978508)
+    Fcut::Float64 = par(:Fcut, 1232.8467394420663)
+Saved to C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\GY06_46\CALIB_AB.csv
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 3
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+Total 'main loop' iterations: 4
+GE wage 1.0 (27.4 s): entry value - c_e = -2.842170943040401e-14
+(pc = 48.21355731555013, pdef_exo_l = 0.001178858564884304, zeta_Rl = 1433.150847673843)
+Total 'main loop' iterations: 7
+error: 0.16446998863740167
+(pc = 72.3453359733252, pdef_exo_l = 0.001178858564884304, zeta_Rl = 1433.150847673843)
+Total 'main loop' iterations: 8
+error: 0.48155699767102306
+(pc = 48.21355731555013, pdef_exo_l = 0.026768287847326457, zeta_Rl = 1433.150847673843)
+Total 'main loop' iterations: 9
+error: 0.5662585755423565
+(pc = 48.21355731555013, pdef_exo_l = 0.001178858564884304, zeta_Rl = 2149.7512715107646)
+Total 'main loop' iterations: 7
+error: 0.18999328713138675
+(pc = 51.565193240241115, pdef_exo_l = 0.016106025646308895, zeta_Rl = 1532.6786843178597)
+Total 'main loop' iterations: 9
+error: 0.30999268240728955
+(pc = 26.31620260756904, pdef_exo_l = 0.011130303285834031, zeta_Rl = 1977.2363546611352)
+Total 'main loop' iterations: 8
+error: 0.37755612904763447
+(pc = 35.90560539210158, pdef_exo_l = 0.009057085635636172, zeta_Rl = 1863.885207372116)
+Total 'main loop' iterations: 8
+error: 0.4961633065571904
+(pc = 48.21355731555013, pdef_exo_l = 0.001178858564884304, zeta_Rl = 1910.884463565124)
+Total 'main loop' iterations: 8
+error: 0.22937333948832328
+(pc = 50.44798126534412, pdef_exo_l = 0.011130303285834033, zeta_Rl = 1499.5027387698542)
+Total 'main loop' iterations: 8
+error: 0.34463973109787777
+(pc = 64.30140975406685, pdef_exo_l = 0.001178858564884304, zeta_Rl = 1433.150847673843)
+Total 'main loop' iterations: 7
+error: 0.30957517397599305
+(pc = 51.75139523605728, pdef_exo_l = 0.006983867985438313, zeta_Rl = 1538.2080085758607)
+Total 'main loop' iterations: 8
+error: 0.33618197041212056
+(pc = 52.51172005230662, pdef_exo_l = 0.0045651140602074765, zeta_Rl = 1560.7860826293645)
+Total 'main loop' iterations: 8
+error: 0.2240513227899395
+(pc = 34.991146701537744, pdef_exo_l = 0.003436362228433085, zeta_Rl = 1836.730081571711)
+Total 'main loop' iterations: 8
+error: 0.2642850107334946
+(pc = 41.097451504147976, pdef_exo_l = 0.0029660489651937554, zeta_Rl = 1752.6510745096552)
+Total 'main loop' iterations: 9
+error: 0.1215100452160057
+(pc = 46.33492859911969, pdef_exo_l = 0.004627822495306053, zeta_Rl = 1253.5075396434513)
+Total 'main loop' iterations: 8
+error: 0.17874720709602165
+(pc = 37.91890489357193, pdef_exo_l = 0.0012833726233819317, zeta_Rl = 1398.7535585886017)
+Total 'main loop' iterations: 8
+error: 0.12758472435410856
+(pc = 44.69952969855177, pdef_exo_l = 0.00345349092135353, zeta_Rl = 1367.9565482325827)
+Total 'main loop' iterations: 8
+error: 0.2816455209223461
+(pc = 38.97842043043061, pdef_exo_l = 0.001844264737319206, zeta_Rl = 1516.7193972289529)
+Total 'main loop' iterations: 8
+error: 0.22009588395807184
+(pc = 45.84152204508275, pdef_exo_l = 0.0017745886983207876, zeta_Rl = 1539.6509232857804)
+Total 'main loop' iterations: 8
+error: 0.20740943796019423
+(pc = 44.58910290079579, pdef_exo_l = 0.004073897985268621, zeta_Rl = 1419.888717932186)
+Total 'main loop' iterations: 8
+error: 0.14391955460752814
+(pc = 48.70696386958705, pdef_exo_l = 0.00403209236186957, zeta_Rl = 1624.741079922795)
+Total 'main loop' iterations: 8
+error: 0.18334927539626222
+(pc = 43.754156804604456, pdef_exo_l = 0.005606770843233844, zeta_Rl = 1658.53632495731)
+Total 'main loop' iterations: 8
+error: 0.24845148797818428
+(pc = 45.40665428664977, pdef_exo_l = 0.002572959978511007, zeta_Rl = 1564.4187153006824)
+Total 'main loop' iterations: 8
+error: 0.1203681252652552
+(pc = 38.688508591475305, pdef_exo_l = 0.0023765122574460184, zeta_Rl = 1533.2312585722207)
+Total 'main loop' iterations: 8
+error: 0.3346563320214667
+(pc = 46.619785686647106, pdef_exo_l = 0.0036871798401146637, zeta_Rl = 1605.676533808092)
+Total 'main loop' iterations: 8
+error: 0.21202177921921583
+(pc = 42.533852431648576, pdef_exo_l = 0.002835019302966173, zeta_Rl = 1689.9069547733309)
+Total 'main loop' iterations: 8
+error: 0.14929081270243724
+(pc = 44.86162002941378, pdef_exo_l = 0.0035735853163494165, zeta_Rl = 1468.0653837216848)
+Total 'main loop' iterations: 8
+error: 0.1454664481226702
+(pc = 47.606860675274625, pdef_exo_l = 0.0035457149007500494, zeta_Rl = 1604.6336250487575)
+Total 'main loop' iterations: 8
+error: 0.2177792022825748
+(pc = 40.92789048986679, pdef_exo_l = 0.0024419948311343483, zeta_Rl = 1543.6270774817076)
+Total 'main loop' iterations: 8
+error: 0.3463282040133314
+(pc = 46.21540855331466, pdef_exo_l = 0.0033157732195801116, zeta_Rl = 1591.9239276389553)
+Total 'main loop' iterations: 8
+error: 0.22579220377021308
+(pc = 45.04329811515911, pdef_exo_l = 0.003240043537069947, zeta_Rl = 1500.183160914684)
+Total 'main loop' iterations: 8
+error: 0.1320258464971296
+(pc = 43.491453049982304, pdef_exo_l = 0.0027476661948144508, zeta_Rl = 1648.0775416157815)
+Total 'main loop' iterations: 8
+error: 0.1539640280845452
+(pc = 46.87345854573301, pdef_exo_l = 0.003221463260003702, zeta_Rl = 1591.2286551327325)
+Total 'main loop' iterations: 8
+error: 0.21324244771298984
+(pc = 42.42081175546111, pdef_exo_l = 0.0024856498802599014, zeta_Rl = 1550.5576234213659)
+Total 'main loop' iterations: 8
+error: 0.21519472681269347
+(pc = 45.945823797759694, pdef_exo_l = 0.0030681688058904104, zeta_Rl = 1582.7555235261977)
+Total 'main loop' iterations: 8
+error: 0.1823965507474875
+(pc = 43.348446503434424, pdef_exo_l = 0.002638944334373193, zeta_Rl = 1559.0307550279006)
+Total 'main loop' iterations: 8
+error: 0.2402963150235134
+(pc = 45.4047035281086, pdef_exo_l = 0.00297874704099099, zeta_Rl = 1577.8128634223858)
+Total 'main loop' iterations: 8
+error: 0.17833038056584277
+(pc = 43.88956677308552, pdef_exo_l = 0.0027283660992726134, zeta_Rl = 1563.9734151317125)
+Total 'main loop' iterations: 8
+error: 0.2348540456562171
+(pc = 45.08905003747879, pdef_exo_l = 0.0029265843447996613, zeta_Rl = 1574.9296450284955)
+Total 'main loop' iterations: 8
+error: 0.1783651852526209
+(pc = 45.16441683898933, pdef_exo_l = 0.0030176823508836336, zeta_Rl = 1521.5950123766836)
+Total 'main loop' iterations: 8
+error: 0.15156239313060677
+(pc = 44.12985346220479, pdef_exo_l = 0.0026894307893799694, zeta_Rl = 1620.1912661774152)
+Total 'main loop' iterations: 8
+error: 0.13593825138768295
+(pc = 45.40535378095566, pdef_exo_l = 0.0028434846868309956, zeta_Rl = 1573.348147381818)
+Total 'main loop' iterations: 8
+error: 0.18125713962031342
+(pc = 44.39526261094027, pdef_exo_l = 0.0026765640590187445, zeta_Rl = 1564.1218485213687)
+Total 'main loop' iterations: 9
+error: 0.23476228392811346
+(pc = 45.19491812053579, pdef_exo_l = 0.0028087095560367765, zeta_Rl = 1571.4260017858912)
+Total 'main loop' iterations: 8
+error: 0.1668680216205199
+(pc = 44.60569827136014, pdef_exo_l = 0.0027113391898129636, zeta_Rl = 1566.0439941172956)
+Total 'main loop' iterations: 8
+error: 0.12070442289067312
+(pc = 44.26372050782046, pdef_exo_l = 0.0022981376209189937, zeta_Rl = 1645.5076380202447)
+Total 'main loop' iterations: 8
+error: 0.14612938830165334
+(pc = 44.45136557681398, pdef_exo_l = 0.0024480427729949602, zeta_Rl = 1619.6925076778361)
+Total 'main loop' iterations: 8
+error: 0.13067778088016513
+(pc = 45.51262529434446, pdef_exo_l = 0.0024654638381659843, zeta_Rl = 1546.5788785531274)
+Total 'main loop' iterations: 8
+error: 0.11068237961895913
+(pc = 45.973549238391016, pdef_exo_l = 0.0023908081877613225, zeta_Rl = 1522.0414160116982)
+Total 'main loop' iterations: 8
+error: 0.14411720584759763
+(pc = 45.898619658088926, pdef_exo_l = 0.0027184658979983434, zeta_Rl = 1498.3352176362341)
+Total 'main loop' iterations: 8
+error: 0.14933438888973194
+(pc = 44.75287684374626, pdef_exo_l = 0.0025043809240373315, zeta_Rl = 1594.409738919169)
+Total 'main loop' iterations: 8
+error: 0.12381617159441988
+(pc = 45.597108391156645, pdef_exo_l = 0.002662127746955972, zeta_Rl = 1523.6179863949012)
+Total 'main loop' iterations: 8
+error: 0.15469688882800295
+(pc = 44.92875841612342, pdef_exo_l = 0.002537244845478715, zeta_Rl = 1579.66145714328)
+Total 'main loop' iterations: 8
+error: 0.12026639849493068
+(pc = 45.95966039338495, pdef_exo_l = 0.002339106584957507, zeta_Rl = 1561.0620398807644)
+Total 'main loop' iterations: 8
+error: 0.11173529032540261
+(pc = 45.52737511591877, pdef_exo_l = 0.0023215835338904634, zeta_Rl = 1560.449535084099)
+Total 'main loop' iterations: 8
+error: 0.11203698357498992
+(pc = 46.40434878630868, pdef_exo_l = 0.0022135244591972537, zeta_Rl = 1532.398845202047)
+Total 'main loop' iterations: 8
+error: 0.10660488268888965
+(pc = 46.8962122430371, pdef_exo_l = 0.0021056176637701, zeta_Rl = 1516.644641221636)
+Total 'main loop' iterations: 8
+error: 0.1389086089179572
+(pc = 46.39038120010662, pdef_exo_l = 0.0023571463876566993, zeta_Rl = 1532.91030733986)
+Total 'main loop' iterations: 8
+error: 0.14824290657151373
+(pc = 45.70716805012457, pdef_exo_l = 0.0023289924617584295, zeta_Rl = 1554.7121959707158)
+Total 'main loop' iterations: 8
+error: 0.11099655792944768
+(pc = 45.78976769380017, pdef_exo_l = 0.0023328805877902716, zeta_Rl = 1528.0645732698288)
+Total 'main loop' iterations: 8
+error: 0.1039696007834977
+(pc = 45.73313679393858, pdef_exo_l = 0.0023308052554011933, zeta_Rl = 1517.0654177328502)
+Total 'main loop' iterations: 8
+error: 0.21044770262534956
+(pc = 46.09732646617764, pdef_exo_l = 0.0023455867950105767, zeta_Rl = 1516.649335379286)
+Total 'main loop' iterations: 8
+error: 0.1418153201121306
+(pc = 45.78845105346896, pdef_exo_l = 0.0023324496145192934, zeta_Rl = 1546.7824333475012)
+Total 'main loop' iterations: 8
+error: 0.1089452512422738
+(pc = 46.47575306137408, pdef_exo_l = 0.0021204392695052285, zeta_Rl = 1524.9183559931237)
+Total 'main loop' iterations: 8
+error: 0.10244066151106278
+(pc = 46.79679565038395, pdef_exo_l = 0.002005431079951643, zeta_Rl = 1517.6981818064558)
+Total 'main loop' iterations: 8
+error: 0.09815714550019941
+(pc = 46.872157033526236, pdef_exo_l = 0.0020354411367734856, zeta_Rl = 1505.3253001713863)
+Total 'main loop' iterations: 8
+error: 0.13907671411506373
+(pc = 46.01422313264756, pdef_exo_l = 0.0022705728483222503, zeta_Rl = 1538.1455306024773)
+Total 'main loop' iterations: 8
+error: 0.10680567038826862
+(pc = 46.64638495434764, pdef_exo_l = 0.0020973179029705287, zeta_Rl = 1513.9622029164102)
+Total 'main loop' iterations: 8
+error: 0.09508974705772168
+(pc = 46.857105561581, pdef_exo_l = 0.0020395662545199546, zeta_Rl = 1505.9010936877212)
+Total 'main loop' iterations: 8
+error: 0.13928999041272686
+(pc = 46.41761674604583, pdef_exo_l = 0.002076895254611042, zeta_Rl = 1507.4177934597494)
+Total 'main loop' iterations: 8
+error: 0.20799240362916985
+(pc = 46.407112944587254, pdef_exo_l = 0.002185060041575126, zeta_Rl = 1527.1944594224017)
+Total 'main loop' iterations: 8
+error: 0.10441790322632957
+(pc = 46.41485258776726, pdef_exo_l = 0.0021053596722331695, zeta_Rl = 1512.6221792393947)
+Total 'main loop' iterations: 8
+error: 0.10079596588706763
+(pc = 47.44892110119906, pdef_exo_l = 0.0018058585156466227, zeta_Rl = 1501.457136038345)
+Total 'main loop' iterations: 8
+error: 0.08640606909987361
+(pc = 48.00197223699869, pdef_exo_l = 0.0016301844915987398, zeta_Rl = 1492.587990294517)
+Total 'main loop' iterations: 8
+error: 0.08015018234928048
+(pc = 47.881915973386256, pdef_exo_l = 0.0017165959774474385, zeta_Rl = 1503.5434041055275)
+Total 'main loop' iterations: 8
+error: 0.08242145992521582
+(pc = 48.22338645943777, pdef_exo_l = 0.0016239678347261615, zeta_Rl = 1489.0308830711808)
+Total 'main loop' iterations: 8
+error: 0.079049775443411
+(pc = 48.698916729122374, pdef_exo_l = 0.001496813419651001, zeta_Rl = 1479.475116826089)
+Total 'main loop' iterations: 8
+error: 0.14030469676523213
+(pc = 49.42513149220083, pdef_exo_l = 0.0012165142995443643, zeta_Rl = 1476.1459820644068)
+Total 'main loop' iterations: 7
+error: 0.14897439649736488
+(pc = 47.225290483067056, pdef_exo_l = 0.0019138171522567445, zeta_Rl = 1506.0838235722429)
+Total 'main loop' iterations: 8
+error: 0.09018795779267828
+(pc = 48.846225963481416, pdef_exo_l = 0.0014000150502581485, zeta_Rl = 1484.0243614085741)
+Total 'main loop' iterations: 8
+error: 0.13203466412776413
+(pc = 47.562985374820045, pdef_exo_l = 0.0018067750476737036, zeta_Rl = 1501.4881022881452)
+Total 'main loop' iterations: 8
+error: 0.08452004995221009
+(pc = 48.50853107172843, pdef_exo_l = 0.0015070571548411894, zeta_Rl = 1488.6200826926718)
+Total 'main loop' iterations: 8
+error: 0.07422111111073003
+(pc = 48.82371297069789, pdef_exo_l = 0.0014071511905636848, zeta_Rl = 1484.3307428275139)
+Total 'main loop' iterations: 8
+error: 0.12915275790794925
+(pc = 48.607343872057, pdef_exo_l = 0.0014575436766632883, zeta_Rl = 1476.6158999333854)
+Total 'main loop' iterations: 8
+error: 0.07568984794597303
+(pc = 48.89086869848344, pdef_exo_l = 0.001428861285888353, zeta_Rl = 1476.9232535036417)
+Total 'main loop' iterations: 8
+error: 0.13347792191206131
+(pc = 48.18715899980801, pdef_exo_l = 0.0015882421570757425, zeta_Rl = 1489.3245034630847)
+Total 'main loop' iterations: 8
+error: 0.07598776019191222
+(pc = 48.64530283629119, pdef_exo_l = 0.0014112608243273183, zeta_Rl = 1480.6761076549135)
+Total 'main loop' iterations: 8
+error: 0.07494710572003374
+(pc = 48.98695952024304, pdef_exo_l = 0.0013289989468121212, zeta_Rl = 1474.6168900575624)
+Total 'main loop' iterations: 8
+error: 0.13254627512126665
+(pc = 48.35378410823198, pdef_exo_l = 0.001534233154937488, zeta_Rl = 1486.2604173369343)
+Total 'main loop' iterations: 8
+error: 0.07550385891162703
+(pc = 48.397734805444045, pdef_exo_l = 0.0015108237460740425, zeta_Rl = 1493.7551718562943)
+Total 'main loop' iterations: 8
+error: 0.07527451345285706
+(pc = 48.68059503407713, pdef_exo_l = 0.0014185279952242118, zeta_Rl = 1489.1071574656519)
+Total 'main loop' iterations: 8
+error: 0.07782374645598548
+(pc = 48.42186971778305, pdef_exo_l = 0.0015101279133305555, zeta_Rl = 1486.8534881970838)
+Total 'main loop' iterations: 8
+error: 0.07498770887723857
+(pc = 48.652734278424376, pdef_exo_l = 0.0014414735155919992, zeta_Rl = 1477.0112805068181)
+Total 'main loop' iterations: 8
+error: 0.07448549628563439
+(pc = 48.78250907317961, pdef_exo_l = 0.0013963997498431158, zeta_Rl = 1477.3514923725186)
+Total 'main loop' iterations: 8
+error: 0.13010747111772913
+(pc = 48.497002916824, pdef_exo_l = 0.001486434545937339, zeta_Rl = 1484.8739057336327)
+Total 'main loop' iterations: 8
+error: 0.07487984412225013
+(pc = 48.460209341693336, pdef_exo_l = 0.001545382653253033, zeta_Rl = 1486.327404967168)
+Total 'main loop' iterations: 8
+error: 0.07515425509039105
+(pc = 48.6067416915833, pdef_exo_l = 0.0014392028720201756, zeta_Rl = 1481.8534612616331)
+Total 'main loop' iterations: 8
+error: 0.0758241071808472
+(pc = 48.60466654285906, pdef_exo_l = 0.0014633347286750625, zeta_Rl = 1480.880881235436)
+Total 'main loop' iterations: 8
+error: 0.07509226663087053
+(pc = 48.50084563512548, pdef_exo_l = 0.0014933087489052892, zeta_Rl = 1486.1226313866457)
+Total 'main loop' iterations: 8
+error: 0.07476857819082981
+(pc = 48.5997122481036, pdef_exo_l = 0.0014431929344986087, zeta_Rl = 1483.3240993341662)
+Total 'main loop' iterations: 8
+error: 0.07444377967404879
+(pc = 48.468059427112614, pdef_exo_l = 0.0014990378301549957, zeta_Rl = 1491.1636610402197)
+Total 'main loop' iterations: 8
+error: 0.07439166822488205
+(pc = 48.5500228628376, pdef_exo_l = 0.0014728831974245734, zeta_Rl = 1489.282597324726)
+Total 'main loop' iterations: 8
+error: 0.07394728698890474
+(pc = 48.56641527207498, pdef_exo_l = 0.0014660746802643348, zeta_Rl = 1490.3359193040862)
+Total 'main loop' iterations: 8
+error: 0.07388569890025731
+(pc = 48.42895826584041, pdef_exo_l = 0.0015382535090084045, zeta_Rl = 1496.7556760238188)
+Total 'main loop' iterations: 8
+error: 0.07687331211299911
+(pc = 48.564138501798766, pdef_exo_l = 0.0014629972208548162, zeta_Rl = 1486.1223444778439)
+Total 'main loop' iterations: 8
+error: 0.07430084538334578
+(pc = 48.62466380328882, pdef_exo_l = 0.001458381540485231, zeta_Rl = 1485.5552366095148)
+Total 'main loop' iterations: 8
+error: 0.0742662333278095
+(pc = 48.56893492959604, pdef_exo_l = 0.0014913450295390206, zeta_Rl = 1490.218481259671)
+Total 'main loop' iterations: 8
+error: 0.07420789576927778
+(pc = 48.471257045644144, pdef_exo_l = 0.0015179363692777988, zeta_Rl = 1493.8944188947712)
+Total 'main loop' iterations: 8
+error: 0.07566558058455264
+(pc = 48.592704062112844, pdef_exo_l = 0.0014707887964836826, zeta_Rl = 1487.2925662522766)
+Total 'main loop' iterations: 8
+error: 0.074189110371812
+(pc = 48.64350510412747, pdef_exo_l = 0.0014450818493501692, zeta_Rl = 1489.9445618513507)
+Total 'main loop' iterations: 8
+error: 0.07351907227145044
+(pc = 48.68849644826049, pdef_exo_l = 0.0014244234141864958, zeta_Rl = 1490.3860549042438)
+Total 'main loop' iterations: 8
+error: 0.07837143396844394
+(pc = 48.63281469594749, pdef_exo_l = 0.0014299518545264369, zeta_Rl = 1488.1635503454713)
+Total 'main loop' iterations: 8
+error: 0.07765285963532724
+(pc = 48.58224321425259, pdef_exo_l = 0.0014785547847447323, zeta_Rl = 1489.7903706525462)
+Total 'main loop' iterations: 8
+error: 0.073664319781154
+(pc = 48.60207166485718, pdef_exo_l = 0.001455685413089141, zeta_Rl = 1492.7546682863785)
+Total 'main loop' iterations: 8
+error: 0.07430063335197881
+(pc = 48.59465564601791, pdef_exo_l = 0.0014676422582764865, zeta_Rl = 1488.4305041760479)
+Total 'main loop' iterations: 8
+error: 0.07396587640998792
+(pc = 48.60012008095211, pdef_exo_l = 0.0014588319512963371, zeta_Rl = 1491.6167303626073)
+Total 'main loop' iterations: 8
+error: 0.07401129916921842
+(pc = 48.59579406996254, pdef_exo_l = 0.001465806777655622, zeta_Rl = 1489.0943012982477)
+Total 'main loop' iterations: 8
+error: 0.0738357095165032
+(pc = 48.64794632015342, pdef_exo_l = 0.0014602209275693472, zeta_Rl = 1488.8835698973432)
+Total 'main loop' iterations: 8
+error: 0.07341253458283634
+(pc = 48.675123336179574, pdef_exo_l = 0.001458269676671018, zeta_Rl = 1488.3994534284288)
+Total 'main loop' iterations: 8
+error: 0.07343516075913906
+(pc = 48.65333568905979, pdef_exo_l = 0.0014567649301205435, zeta_Rl = 1489.984700302579)
+Total 'main loop' iterations: 8
+error: 0.07344299783116087
+(pc = 48.71428152797453, pdef_exo_l = 0.0014294903532819743, zeta_Rl = 1489.4181840483025)
+Total 'main loop' iterations: 8
+error: 0.07788616393059584
+(pc = 48.609751196278, pdef_exo_l = 0.001468333028189991, zeta_Rl = 1489.7128317766621)
+Total 'main loop' iterations: 8
+error: 0.07349155542001132
+(pc = 48.63051703286666, pdef_exo_l = 0.001478464074569752, zeta_Rl = 1489.1095061330386)
+Total 'main loop' iterations: 8
+error: 0.07363635523644649
+(pc = 48.64079925594814, pdef_exo_l = 0.001452036479604249, zeta_Rl = 1489.7705919100358)
+Total 'main loop' iterations: 8
+error: 0.0732368235980287
+(pc = 48.68496964716289, pdef_exo_l = 0.001444348530006102, zeta_Rl = 1489.3797429633094)
+Total 'main loop' iterations: 8
+error: 0.07812343398012547
+(pc = 48.62542170687902, pdef_exo_l = 0.001463336257735014, zeta_Rl = 1489.6434382738803)
+Total 'main loop' iterations: 8
+error: 0.07340360534813525
+(pc = 48.622775832927275, pdef_exo_l = 0.001460297513151863, zeta_Rl = 1488.8803664182603)
+Total 'main loop' iterations: 8
+error: 0.07376886068497
+(pc = 48.64696905236551, pdef_exo_l = 0.001457500884918735, zeta_Rl = 1489.754630743346)
+Total 'main loop' iterations: 8
+error: 0.07336983412327604
+(pc = 48.62751368997502, pdef_exo_l = 0.0014550281539359848, zeta_Rl = 1490.5622040541646)
+Total 'main loop' iterations: 8
+error: 0.07351154850760798
+(pc = 48.64368952219959, pdef_exo_l = 0.0014591390997290635, zeta_Rl = 1489.233285346681)
+Total 'main loop' iterations: 8
+error: 0.07334736327581864
+(pc = 48.662216846796476, pdef_exo_l = 0.0014491147184330173, zeta_Rl = 1489.5289003928278)
+Total 'main loop' iterations: 8
+error: 0.07315737806242201
+(pc = 48.674481893435626, pdef_exo_l = 0.0014443742053323518, zeta_Rl = 1489.4907210991437)
+Total 'main loop' iterations: 8
+error: 0.0781305398133515
+(pc = 48.65083469759728, pdef_exo_l = 0.0014493593135921513, zeta_Rl = 1489.2672210230173)
+Total 'main loop' iterations: 8
+error: 0.07353442774652
+(pc = 48.647774395122134, pdef_exo_l = 0.0014558047242256968, zeta_Rl = 1489.653087051611)
+Total 'main loop' iterations: 8
+error: 0.07330307867242727
+(pc = 48.656837476378236, pdef_exo_l = 0.0014454981817795783, zeta_Rl = 1490.0684342229683)
+Total 'main loop' iterations: 8
+error: 0.07323016525831887
+(pc = 48.65879465762642, pdef_exo_l = 0.001441961528985533, zeta_Rl = 1489.9255306322773)
+Total 'main loop' iterations: 8
+error: 0.0781705248013076
+(pc = 48.65007028314386, pdef_exo_l = 0.0014529207252173292, zeta_Rl = 1489.7098461309165)
+Total 'main loop' iterations: 8
+error: 0.07326350386499655
+(pc = 48.656498769604696, pdef_exo_l = 0.0014448455279939005, zeta_Rl = 1489.8687715529718)
+Total 'main loop' iterations: 8
+error: 0.07315275370087766
+(pc = 48.65864159842497, pdef_exo_l = 0.001442153795586091, zeta_Rl = 1489.9217466936568)
+Total 'main loop' iterations: 8
+error: 0.07817317809227085
+(pc = 48.67623613923814, pdef_exo_l = 0.0014409358058667483, zeta_Rl = 1489.8734788691422)
+Total 'main loop' iterations: 8
+error: 0.07817811720390735
+(pc = 48.64818193996689, pdef_exo_l = 0.0014497238392422696, zeta_Rl = 1489.792026693183)
+Total 'main loop' iterations: 8
+error: 0.07321318089427939
+(pc = 48.65442756120046, pdef_exo_l = 0.0014502912086665465, zeta_Rl = 1489.3913648696862)
+Total 'main loop' iterations: 8
+error: 0.0731939923743397
+(pc = 48.66724684510086, pdef_exo_l = 0.0014464437974867062, zeta_Rl = 1489.4006645171405)
+Total 'main loop' iterations: 8
+error: 0.07312826600463278
+(pc = 48.673601813478854, pdef_exo_l = 0.0014453504502348518, zeta_Rl = 1489.2702104584596)
+Total 'main loop' iterations: 8
+error: 0.07808135205158359
+(pc = 48.66954741313422, pdef_exo_l = 0.001443311487275869, zeta_Rl = 1489.807526105607)
+Total 'main loop' iterations: 8
+error: 0.07819221568629185
+(pc = 48.65757753035332, pdef_exo_l = 0.0014488371000434888, zeta_Rl = 1489.4780651271697)
+Total 'main loop' iterations: 8
+error: 0.07315775800632641
+(pc = 48.66639744398135, pdef_exo_l = 0.0014447655958989268, zeta_Rl = 1489.7208258481235)
+Total 'main loop' iterations: 8
+error: 0.07818899970991121
+(pc = 48.65941501235916, pdef_exo_l = 0.0014479888700133718, zeta_Rl = 1489.5286402773684)
+Total 'main loop' iterations: 8
+error: 0.07313662212219355
+(pc = 48.659890237913324, pdef_exo_l = 0.0014437374118963016, zeta_Rl = 1489.6698171721591)
+Total 'main loop' iterations: 8
+error: 0.07813328989621948
+(pc = 48.661732136612486, pdef_exo_l = 0.0014479944462378682, zeta_Rl = 1489.5582580551886)
+Total 'main loop' iterations: 8
+error: 0.0731404177446479
+(pc = 48.66909722644364, pdef_exo_l = 0.0014501058811647303, zeta_Rl = 1489.122937013493)
+Total 'main loop' iterations: 8
+error: 0.07321881378777109
+(pc = 48.65912344811281, pdef_exo_l = 0.00144594143490449, zeta_Rl = 1489.713389357247)
+Total 'main loop' iterations: 8
+error: 0.07313600866790557
+(pc = 48.6621247337694, pdef_exo_l = 0.0014455882886985104, zeta_Rl = 1489.536871379315)
+Total 'main loop' iterations: 8
+error: 0.0731006755843607
+(pc = 48.662255599488375, pdef_exo_l = 0.0014447862361853911, zeta_Rl = 1489.5297424873572)
+Total 'main loop' iterations: 8
+error: 0.07309102224535294
+(pc = 48.66633558277552, pdef_exo_l = 0.0014434587757043529, zeta_Rl = 1489.5672239637945)
+Total 'main loop' iterations: 8
+error: 0.07811246835103522
+(pc = 48.66085679786257, pdef_exo_l = 0.0014470451003656595, zeta_Rl = 1489.536678545374)
+Total 'main loop' iterations: 8
+error: 0.07312134436172928
+(pc = 48.66778271352172, pdef_exo_l = 0.0014462419877873476, zeta_Rl = 1489.2646676760007)
+Total 'main loop' iterations: 8
+error: 0.07314651364397048
+(pc = 48.66092746173966, pdef_exo_l = 0.0014460040500884187, zeta_Rl = 1489.619905673654)
+Total 'main loop' iterations: 8
+error: 0.07311339792705698
+(pc = 48.65544639429288, pdef_exo_l = 0.0014454464602729402, zeta_Rl = 1489.7235532871161)
+Total 'main loop' iterations: 8
+error: 0.07311791514237165
+(pc = 48.658229505818035, pdef_exo_l = 0.0014437793973321737, zeta_Rl = 1489.7121224200441)
+Total 'main loop' iterations: 8
+error: 0.07814291670363764
+(pc = 48.66030944535329, pdef_exo_l = 0.0014463647455670167, zeta_Rl = 1489.5732293525969)
+Total 'main loop' iterations: 8
+error: 0.07310710875422366
+(pc = 48.66688194342801, pdef_exo_l = 0.0014459902276209439, zeta_Rl = 1489.425031721956)
+Total 'main loop' iterations: 8
+error: 0.0731187738999578
+(pc = 48.6578288003627, pdef_exo_l = 0.0014455597451371075, zeta_Rl = 1489.6613612943745)
+Total 'main loop' iterations: 8
+error: 0.07310777465627055
+(pc = 48.65933510172992, pdef_exo_l = 0.0014451364345045915, zeta_Rl = 1489.5563164158984)
+Total 'main loop' iterations: 8
+error: 0.07309448511552147
+(pc = 48.663437964018364, pdef_exo_l = 0.001445298532367559, zeta_Rl = 1489.4448308761937)
+Total 'main loop' iterations: 8
+error: 0.0731100125656737
+(pc = 48.6589973761243, pdef_exo_l = 0.0014455053258101182, zeta_Rl = 1489.616250790587)
+Total 'main loop' iterations: 8
+error: 0.07309583337081699
+(pc = 48.660082606208434, pdef_exo_l = 0.0014439205854330504, zeta_Rl = 1489.5616437766314)
+Total 'main loop' iterations: 8
+error: 0.07846716374248558
+(pc = 48.660262187198114, pdef_exo_l = 0.001445855545539107, zeta_Rl = 1489.5708156909375)
+Total 'main loop' iterations: 8
+error: 0.07310078169933866
+(pc = 48.66012986436361, pdef_exo_l = 0.00144442978546096, zeta_Rl = 1489.5640574382908)
+Total 'main loop' iterations: 8
+error: 0.07308306440349464
+(pc = 48.66008575675211, pdef_exo_l = 0.0014439545321015778, zeta_Rl = 1489.5618046874085)
+Total 'main loop' iterations: 8
+error: 0.07810511791784511
+(pc = 48.66214966759696, pdef_exo_l = 0.0014440629782905105, zeta_Rl = 1489.483826770444)
+Total 'main loop' iterations: 8
+error: 0.07808881641993393
+(pc = 48.659654103514434, pdef_exo_l = 0.0014452048367435332, zeta_Rl = 1489.5886624530572)
+Total 'main loop' iterations: 8
+error: 0.0730899553052258
+(pc = 48.66202460984769, pdef_exo_l = 0.0014444774710886648, zeta_Rl = 1489.565325169905)
+Total 'main loop' iterations: 8
+error: 0.07812286468505392
+(pc = 48.65989541592113, pdef_exo_l = 0.0014449991504596068, zeta_Rl = 1489.5581932396499)
+Total 'main loop' iterations: 8
+error: 0.07309178866634478
+(pc = 48.66146429565649, pdef_exo_l = 0.0014446147551336495, zeta_Rl = 1489.5634483461536)
+Total 'main loop' iterations: 8
+error: 0.0730842391254352
+(pc = 48.6585765762013, pdef_exo_l = 0.001444713348706704, zeta_Rl = 1489.614369670977)
+Total 'main loop' iterations: 8
+error: 0.07308048492254501
+(pc = 48.6573502351056, pdef_exo_l = 0.0014446890528804748, zeta_Rl = 1489.6425787321837)
+Total 'main loop' iterations: 8
+error: 0.07308138011744919
+(pc = 48.66045972063316, pdef_exo_l = 0.0014439670894573426, zeta_Rl = 1489.5725878505573)
+Total 'main loop' iterations: 8
+error: 0.07810972797901977
+(pc = 48.65982194041417, pdef_exo_l = 0.0014449469727255769, zeta_Rl = 1489.5853135775365)
+Total 'main loop' iterations: 8
+error: 0.07308688893976831
+(pc = 48.66029188373343, pdef_exo_l = 0.001444224953475299, zeta_Rl = 1489.575936726078)
+Total 'main loop' iterations: 8
+error: 0.07811599674564443
+(pc = 48.65991984527235, pdef_exo_l = 0.0014447965520484355, zeta_Rl = 1489.5833600668159)
+Total 'main loop' iterations: 8
+error: 0.07308510018549445
+(pc = 48.66019397887525, pdef_exo_l = 0.0014443753741524403, zeta_Rl = 1489.5778902367986)
+Total 'main loop' iterations: 8
+error: 0.07811965356921068
+(pc = 48.65997695643962, pdef_exo_l = 0.0014447088066534366, zeta_Rl = 1489.5822205188956)
+Total 'main loop' iterations: 8
+error: 0.07308405673150976
+(pc = 48.6576579690132, pdef_exo_l = 0.0014446198720804173, zeta_Rl = 1489.6103167392885)
+Total 'main loop' iterations: 8
+error: 0.0730808329846291
+(pc = 48.65759931661245, pdef_exo_l = 0.0014444665308452841, zeta_Rl = 1489.6102753801415)
+Total 'main loop' iterations: 8
+error: 0.07307886510289355
+(pc = 48.65680677000339, pdef_exo_l = 0.0014443857722425666, zeta_Rl = 1489.6196270005569)
+Total 'main loop' iterations: 8
+error: 0.07344029573635265
+(pc = 48.65575937685436, pdef_exo_l = 0.0014447700489606432, zeta_Rl = 1489.6592504219805)
+Total 'main loop' iterations: 8
+error: 0.07308388086327504
+(pc = 48.65921934613252, pdef_exo_l = 0.0014445006736900608, zeta_Rl = 1489.5838893098928)
+Total 'main loop' iterations: 8
+error: 0.07308181275740612
+(pc = 48.65666989508546, pdef_exo_l = 0.0014446991607315425, zeta_Rl = 1489.6394185503784)
+Total 'main loop' iterations: 8
+error: 0.0730787094545588
+(pc = 48.65582007806977, pdef_exo_l = 0.001444765323078703, zeta_Rl = 1489.657928297207)
+Total 'main loop' iterations: 8
+error: 0.07308353610267772
+(pc = 48.657572556252916, pdef_exo_l = 0.0014446328214419361, zeta_Rl = 1489.6323923283762)
+Total 'main loop' iterations: 8
+error: 0.0730776065888876
+(pc = 48.65754408533282, pdef_exo_l = 0.0014446371378957757, zeta_Rl = 1489.6397508580721)
+Total 'main loop' iterations: 8
+error: 0.07307990018034875
+(pc = 48.65598460243258, pdef_exo_l = 0.001444485659972471, zeta_Rl = 1489.6403545016203)
+Total 'main loop' iterations: 8
+error: 0.07344661995242993
+(pc = 48.65803658166615, pdef_exo_l = 0.0014446659135537387, zeta_Rl = 1489.6197831773611)
+Total 'main loop' iterations: 8
+error: 0.07307955795575423
+(pc = 48.65652459696773, pdef_exo_l = 0.0014445330951254362, zeta_Rl = 1489.6349409952363)
+Total 'main loop' iterations: 9
+error: 0.07344751365243038
+(pc = 48.65772158485398, pdef_exo_l = 0.0014446382430478423, zeta_Rl = 1489.6229410560852)
+Total 'main loop' iterations: 8
+error: 0.07307901728937102
+(pc = 48.6568395937799, pdef_exo_l = 0.0014445607656313325, zeta_Rl = 1489.6317831165122)
+Total 'main loop' iterations: 8
+error: 0.0730775036753138
+(pc = 48.65654559675521, pdef_exo_l = 0.0014445349398258293, zeta_Rl = 1489.634730469988)
+Total 'main loop' iterations: 9
+error: 0.07344754840853551
+(pc = 48.65645538013305, pdef_exo_l = 0.0014447953010245903, zeta_Rl = 1489.6587872833693)
+Total 'main loop' iterations: 8
+error: 0.07308624920266239
+(pc = 48.65736099651257, pdef_exo_l = 0.0014445350246326395, zeta_Rl = 1489.6203820266473)
+Total 'main loop' iterations: 8
+error: 0.07307842406202728
+(pc = 48.6578455359448, pdef_exo_l = 0.0014444532470723965, zeta_Rl = 1489.6169530973123)
+Total 'main loop' iterations: 8
+error: 0.07307737988091646
+(pc = 48.65823741623125, pdef_exo_l = 0.001444371275852681, zeta_Rl = 1489.6094646129568)
+Total 'main loop' iterations: 8
+error: 0.07307707001697969
+(pc = 48.65773871433013, pdef_exo_l = 0.0014445082173179932, zeta_Rl = 1489.6287113452495)
+Total 'main loop' iterations: 8
+error: 0.07307636270922975
+(pc = 48.657864620269315, pdef_exo_l = 0.0014444992815464445, zeta_Rl = 1489.6314877847835)
+Total 'main loop' iterations: 8
+error: 0.07307567561236974
+(pc = 48.65772186393406, pdef_exo_l = 0.0014443213939117024, zeta_Rl = 1489.6160980144587)
+Total 'main loop' iterations: 8
+error: 0.07307589279596852
+(pc = 48.659043006509854, pdef_exo_l = 0.001444233868575886, zeta_Rl = 1489.6062504916201)
+Total 'main loop' iterations: 8
+error: 0.07812227314020667
+(pc = 48.65729863809864, pdef_exo_l = 0.0014444926620781145, zeta_Rl = 1489.6264638196596)
+Total 'main loop' iterations: 8
+error: 0.07307696576067801
+(pc = 48.65701933197008, pdef_exo_l = 0.0014445042825048263, zeta_Rl = 1489.6399017996446)
+Total 'main loop' iterations: 8
+error: 0.07307554173711682
+(pc = 48.65661330388303, pdef_exo_l = 0.0014445486180555414, zeta_Rl = 1489.6500475285404)
+Total 'main loop' iterations: 8
+error: 0.07307853333217514
+(pc = 48.65777190601699, pdef_exo_l = 0.0014443906432305342, zeta_Rl = 1489.6318612462649)
+Total 'main loop' iterations: 8
+error: 0.07307427061113929
+(pc = 48.657929661989776, pdef_exo_l = 0.0014443566369480075, zeta_Rl = 1489.6336603884665)
+Total 'main loop' iterations: 8
+error: 0.0730733722480121
+(pc = 48.657487212218726, pdef_exo_l = 0.001444585406754483, zeta_Rl = 1489.6539353008043)
+Total 'main loop' iterations: 8
+error: 0.0730830086372921
+(pc = 48.65767297816003, pdef_exo_l = 0.0014443763965872817, zeta_Rl = 1489.6239807824472)
+Total 'main loop' iterations: 8
+error: 0.07307542829018317
+(pc = 48.65721669447728, pdef_exo_l = 0.0014443255958136324, zeta_Rl = 1489.6335408622554)
+Total 'main loop' iterations: 8
+error: 0.07307371554771984
+(pc = 48.658193557781296, pdef_exo_l = 0.001444201470394455, zeta_Rl = 1489.6208862224676)
+Total 'main loop' iterations: 8
+error: 0.0781238416282692
+(pc = 48.65726396234742, pdef_exo_l = 0.001444441196648499, zeta_Rl = 1489.635940221066)
+Total 'main loop' iterations: 8
+error: 0.07307482193840666
+(pc = 48.65726723438295, pdef_exo_l = 0.0014443725563528106, zeta_Rl = 1489.6447801987447)
+Total 'main loop' iterations: 8
+error: 0.07307484847997377
+(pc = 48.65735176433651, pdef_exo_l = 0.0014443733564016587, zeta_Rl = 1489.640446987016)
+Total 'main loop' iterations: 8
+error: 0.0730737565104916
+(pc = 48.657734784854945, pdef_exo_l = 0.0014442625294603666, zeta_Rl = 1489.6358252707591)
+Total 'main loop' iterations: 8
+error: 0.073071982657105
+(pc = 48.65789172569079, pdef_exo_l = 0.0014442029737309892, zeta_Rl = 1489.6357869539902)
+Total 'main loop' iterations: 8
+error: 0.07307103623536336
+(pc = 48.658006957102046, pdef_exo_l = 0.0014442167812600938, zeta_Rl = 1489.6282118161255)
+Total 'main loop' iterations: 8
+error: 0.07307229683857323
+(pc = 48.65866886871111, pdef_exo_l = 0.001444191998812428, zeta_Rl = 1489.631565243466)
+Total 'main loop' iterations: 8
+error: 0.07812820317079523
+(pc = 48.65751923077599, pdef_exo_l = 0.001444297763105048, zeta_Rl = 1489.6331292750076)
+Total 'main loop' iterations: 8
+error: 0.0730730986709522
+(pc = 48.65768228038943, pdef_exo_l = 0.001444121708449413, zeta_Rl = 1489.6310916416155)
+Total 'main loop' iterations: 8
+error: 0.07344052465556644
+(pc = 48.65787812415637, pdef_exo_l = 0.0014443076935108004, zeta_Rl = 1489.6331252328725)
+Total 'main loop' iterations: 8
+error: 0.07307286043943345
+(pc = 48.65833197385682, pdef_exo_l = 0.0014441872025628736, zeta_Rl = 1489.6316200603176)
+Total 'main loop' iterations: 8
+error: 0.07812722082216675
+(pc = 48.65768855225116, pdef_exo_l = 0.0014442747296587617, zeta_Rl = 1489.6328148552805)
+Total 'main loop' iterations: 8
+error: 0.07307266776078175
+(pc = 48.65784669920629, pdef_exo_l = 0.0014441552962557622, zeta_Rl = 1489.631417184058)
+Total 'main loop' iterations: 8
+error: 0.07812516826382696
+(pc = 48.65787157729177, pdef_exo_l = 0.0014442759440826674, zeta_Rl = 1489.6327693893695)
+Total 'main loop' iterations: 8
+error: 0.07307250203856001
+(pc = 48.65815828780525, pdef_exo_l = 0.0014441890697237385, zeta_Rl = 1489.6316972510429)
+Total 'main loop' iterations: 8
+error: 0.07812682507391597
+(pc = 48.65778641382493, pdef_exo_l = 0.0014442568838389652, zeta_Rl = 1489.6325820210643)
+Total 'main loop' iterations: 8
+error: 0.07307236662380284
+(pc = 48.65791848712007, pdef_exo_l = 0.001444175148470698, zeta_Rl = 1489.6316178047505)
+Total 'main loop' iterations: 8
+error: 0.07812585786294383
+(pc = 48.657881350172666, pdef_exo_l = 0.0014442549449968404, zeta_Rl = 1489.6325294759072)
+Total 'main loop' iterations: 8
+error: 0.07307225114710042
+(pc = 48.65806694148541, pdef_exo_l = 0.0014441929161529837, zeta_Rl = 1489.631770142951)
+Total 'main loop' iterations: 8
+error: 0.07812669000153152
+(pc = 48.65784485708753, pdef_exo_l = 0.001444243557237719, zeta_Rl = 1489.6324128797908)
+Total 'main loop' iterations: 8
+error: 0.07307215611597863
+(pc = 48.657738331531945, pdef_exo_l = 0.0014442508693836053, zeta_Rl = 1489.6389410569993)
+Total 'main loop' iterations: 8
+error: 0.07307167193741866
+(pc = 48.65776859270084, pdef_exo_l = 0.0014442099885713688, zeta_Rl = 1489.6388977846127)
+Total 'main loop' iterations: 8
+error: 0.07307084156261476
+(pc = 48.6577310068769, pdef_exo_l = 0.0014441950030962116, zeta_Rl = 1489.6410205541813)
+Total 'main loop' iterations: 8
+error: 0.07307106527422583
+(pc = 48.65775424286152, pdef_exo_l = 0.0014441989972195897, zeta_Rl = 1489.6433376506109)
+Total 'main loop' iterations: 8
+error: 0.07307193899893306
+(pc = 48.657773120825276, pdef_exo_l = 0.0014442082805567, zeta_Rl = 1489.64106165669)
+Total 'main loop' iterations: 8
+error: 0.07307148929566376
+(pc = 48.657883961279325, pdef_exo_l = 0.0014441632925224334, zeta_Rl = 1489.6382232065287)
+Total 'main loop' iterations: 8
+error: 0.07812755207761451
+(pc = 48.65776867106265, pdef_exo_l = 0.0014442326242041946, zeta_Rl = 1489.6387915048178)
+Total 'main loop' iterations: 8
+error: 0.07307130814222865
+(pc = 48.657846205477576, pdef_exo_l = 0.0014442221104476686, zeta_Rl = 1489.6345891722567)
+Total 'main loop' iterations: 8
+error: 0.07307152638636465
+(pc = 48.657788346794504, pdef_exo_l = 0.0014442111617839852, zeta_Rl = 1489.639713222433)
+Total 'main loop' iterations: 8
+error: 0.07307117644139097
+(pc = 48.65786377239477, pdef_exo_l = 0.001444183458520034, zeta_Rl = 1489.6374738025395)
+Total 'main loop' iterations: 8
+error: 0.07812771020824742
+(pc = 48.65778848384017, pdef_exo_l = 0.0014442223813533278, zeta_Rl = 1489.6385169835098)
+Total 'main loop' iterations: 8
+error: 0.07307105247653681
+(pc = 48.65784418802669, pdef_exo_l = 0.0014442124006531388, zeta_Rl = 1489.6357545923086)
+Total 'main loop' iterations: 8
+error: 0.07307121554922977
+(pc = 48.65779998038454, pdef_exo_l = 0.0014442114198817255, zeta_Rl = 1489.6388885078238)
+Total 'main loop' iterations: 8
+error: 0.073070958433831
+(pc = 48.65785171534393, pdef_exo_l = 0.001444193873436061, zeta_Rl = 1489.6371985141081)
+Total 'main loop' iterations: 8
+error: 0.0781278221783396
+(pc = 48.657801657070124, pdef_exo_l = 0.0014442164422038973, zeta_Rl = 1489.6382423023845)
+Total 'main loop' iterations: 8
+error: 0.07307092022201303
+(pc = 48.65768842774622, pdef_exo_l = 0.0014442222600403382, zeta_Rl = 1489.6415654425568)
+Total 'main loop' iterations: 8
+error: 0.0730717164065012
+(pc = 48.65784937195234, pdef_exo_l = 0.0014442069917121035, zeta_Rl = 1489.636990805775)
+Total 'main loop' iterations: 8
+error: 0.07307094317349146
+(pc = 48.657813100764315, pdef_exo_l = 0.0014442108617765206, zeta_Rl = 1489.637198754024)
+Total 'main loop' iterations: 8
+error: 0.07307099915205423
+(pc = 48.65780271379699, pdef_exo_l = 0.0014442113036098078, zeta_Rl = 1489.638536475782)
+Total 'main loop' iterations: 8
+error: 0.07307085410919607
+(pc = 48.65773260375963, pdef_exo_l = 0.0014442181645446125, zeta_Rl = 1489.6401269027447)
+Total 'main loop' iterations: 8
+error: 0.07307130294529587
+(pc = 48.657825045245524, pdef_exo_l = 0.0014442093193855429, zeta_Rl = 1489.6376441593104)
+Total 'main loop' iterations: 8
+error: 0.07307089600308316
+(pc = 48.65779591075878, pdef_exo_l = 0.0014442039655072488, zeta_Rl = 1489.6384766440858)
+Total 'main loop' iterations: 8
+error: 0.07307072356159143
+(pc = 48.65779399532166, pdef_exo_l = 0.001444199806608366, zeta_Rl = 1489.6385547579862)
+Total 'main loop' iterations: 8
+error: 0.07307065800808175
+(pc = 48.65775182263413, pdef_exo_l = 0.0014442047464741522, zeta_Rl = 1489.6396818529436)
+Total 'main loop' iterations: 8
+error: 0.07307092254496471
+(pc = 48.65780979053482, pdef_exo_l = 0.0014442083666956697, zeta_Rl = 1489.6380686788173)
+Total 'main loop' iterations: 8
+error: 0.07307083206850064
+(pc = 48.65777887190789, pdef_exo_l = 0.0014442008043071284, zeta_Rl = 1489.6384776718282)
+Total 'main loop' iterations: 8
+error: 0.07307069904216824
+(pc = 48.65781984580874, pdef_exo_l = 0.0014441959965027405, zeta_Rl = 1489.6378362878086)
+Total 'main loop' iterations: 8
+error: 0.07307069421425864
+(pc = 48.65778535149071, pdef_exo_l = 0.0014441893715831534, zeta_Rl = 1489.6385104662647)
+Total 'main loop' iterations: 8
+error: 0.0730705354410854
+(pc = 48.65777720514267, pdef_exo_l = 0.0014441830398789813, zeta_Rl = 1489.6386577287471)
+Total 'main loop' iterations: 8
+error: 0.07812783820286509
+(pc = 48.657820589839524, pdef_exo_l = 0.0014441893121557112, zeta_Rl = 1489.6381233362117)
+Total 'main loop' iterations: 8
+error: 0.07812792577285631
+(pc = 48.65778756314364, pdef_exo_l = 0.0014441984101089165, zeta_Rl = 1489.6384038519082)
+Total 'main loop' iterations: 8
+error: 0.07307066995004703
+(pc = 48.65775809416193, pdef_exo_l = 0.0014441957290308833, zeta_Rl = 1489.6391430962972)
+Total 'main loop' iterations: 8
+error: 0.07307057372974565
+(pc = 48.65777073083922, pdef_exo_l = 0.0014441915280393517, zeta_Rl = 1489.6390683617906)
+Total 'main loop' iterations: 8
+error: 0.07307049331218524
+(pc = 48.657765120071076, pdef_exo_l = 0.0014441892340161635, zeta_Rl = 1489.6392898650847)
+Total 'main loop' iterations: 8
+error: 0.07307049579819111
+(pc = 48.65774878900623, pdef_exo_l = 0.001444184612493893, zeta_Rl = 1489.6392598582488)
+Total 'main loop' iterations: 8
+error: 0.07812798401576987
+(pc = 48.65778457733928, pdef_exo_l = 0.0014441966411678508, zeta_Rl = 1489.6387016538743)
+Total 'main loop' iterations: 8
+error: 0.07307060252470834
+(pc = 48.65775820698861, pdef_exo_l = 0.001444187777934408, zeta_Rl = 1489.6391129623607)
+Total 'main loop' iterations: 8
+error: 0.07307044717147271
+(pc = 48.657749416871724, pdef_exo_l = 0.0014441848235232605, zeta_Rl = 1489.6392500651896)
+Total 'main loop' iterations: 8
+error: 0.07812798729210971
+(pc = 48.657784765383745, pdef_exo_l = 0.001444183389340392, zeta_Rl = 1489.6386514306464)
+Total 'main loop' iterations: 8
+error: 0.07812786399964253
+(pc = 48.657763650666475, pdef_exo_l = 0.001444193158262031, zeta_Rl = 1489.6390406659532)
+Total 'main loop' iterations: 8
+error: 0.07307052437262176
+(pc = 48.65774304083882, pdef_exo_l = 0.0014441922712407074, zeta_Rl = 1489.6396375271381)
+Total 'main loop' iterations: 8
+error: 0.07307060886002341
+(pc = 48.657776536771564, pdef_exo_l = 0.001444189975678477, zeta_Rl = 1489.6387452706133)
+Total 'main loop' iterations: 8
+error: 0.0730705154787991
+(pc = 48.65777333239978, pdef_exo_l = 0.00144418636283946, zeta_Rl = 1489.638910397223)
+Total 'main loop' iterations: 8
+error: 0.07812797936842755
+(pc = 48.65776566769425, pdef_exo_l = 0.0014441917425489954, zeta_Rl = 1489.6390135266345)
+Total 'main loop' iterations: 8
+error: 0.07307050778696297
+(pc = 48.65775320024315, pdef_exo_l = 0.0014441907233366932, zeta_Rl = 1489.6393846299104)
+Total 'main loop' iterations: 8
+error: 0.07307052463033283
+(pc = 48.65777167499481, pdef_exo_l = 0.0014441901314406055, zeta_Rl = 1489.6388784704668)
+Total 'main loop' iterations: 8
+error: 0.07307050153057892
+(pc = 48.6577680741875, pdef_exo_l = 0.0014441878823939149, zeta_Rl = 1489.639026336444)
+Total 'main loop' iterations: 8
+error: 0.07307045204828723
+(pc = 48.657759666348745, pdef_exo_l = 0.001444187994137844, zeta_Rl = 1489.6392599699302)
+Total 'main loop' iterations: 8
+error: 0.07307044382873007
+(pc = 48.65775566346672, pdef_exo_l = 0.0014441872817035903, zeta_Rl = 1489.639387136418)
+Total 'main loop' iterations: 8
+error: 0.07307045639847742
+(pc = 48.65775323417735, pdef_exo_l = 0.0014441842416047597, zeta_Rl = 1489.6391978173656)
+Total 'main loop' iterations: 8
+error: 0.0781279684195359
+(pc = 48.65776708570133, pdef_exo_l = 0.001444190010032145, zeta_Rl = 1489.639095331702)
+Total 'main loop' iterations: 8
+error: 0.07307047040969308
+(pc = 48.65775687931524, pdef_exo_l = 0.0014441857596119664, zeta_Rl = 1489.6391708474541)
+Total 'main loop' iterations: 8
+error: 0.07812800314731272
+(pc = 48.657764959370894, pdef_exo_l = 0.0014441891245279411, zeta_Rl = 1489.6391110641505)
+Total 'main loop' iterations: 8
+error: 0.0730704583690223
+(pc = 48.65776198250828, pdef_exo_l = 0.0014441878848220557, zeta_Rl = 1489.639133089578)
+Total 'main loop' iterations: 8
+error: 0.07307044151208576
+ * Status: success
+
+ * Candidate solution
+    Final objective value:     7.307044e-02
+
+ * Found with
+    Algorithm:     Nelder-Mead
+
+ * Convergence measures
+    √(Σ(yᵢ-ȳ)²)/n ≤ 1.0e-08
+
+ * Work counters
+    Seconds run:   849  (vs limit 10800)
+    Iterations:    150
+    f(x) calls:    293
+
+Total 'main loop' iterations: 8
+
+To keep these values, replace these lines in parameters():
+    pc::Float64 = par(:pc, 48.65776198250828)
+    pdef_exo_l::Float64 = par(:pdef_exo_l, 0.0014441878848220557)
+    zeta_Rl::Float64 = par(:zeta_Rl, 1489.639133089578)
+    Fcut::Float64 = par(:Fcut, 1232.8467394420663)
+Saved to C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\GY06_46\CALIB_CF.csv
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 7
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 8
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+Total 'main loop' iterations: 9
+GE wage 1.012116 (51.7 s): entry value - c_e = -0.00022255958862160696
+Saved to C:\Users\szjud\OneDrive\Asztali gép\EBCs\CFL-git\Julia codes\Model Replication\Search\runs\GY06_46
+Candidate GY06_46 finished 2026-11-16T15:23:16.835 (37.9 min)

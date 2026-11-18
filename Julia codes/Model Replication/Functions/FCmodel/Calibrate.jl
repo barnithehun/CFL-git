@@ -3,6 +3,8 @@
 #   data_targets:  DataFrame with columns moment, weighted, small, large - read from calib_targets.R's output (read_targets).
 #                  The row "Share of small firms" sets the size cutoff Fcut.
 #   calib_moments: vector of (moment, row in sumSS, row in sumSSsme, targeted); targeted = false: shown, not targeted.
+#                  Row in sumSS "small" or "large": the moment is that group's value of the sumSSsme row; "gap": small
+#                  minus large firms.
 #   calib_params:  NamedTuple, name = (start, lower, upper). Any number field of parameters() can be calibrated;
 #                  a parameter that is not listed keeps its value from parameters().
 # Every trial runs the same FirmOptim, EntryValue and sumSS as the results, with the trial values set as overrides in parameters().
@@ -53,26 +55,52 @@ function data_value(data_targets, moment, col = :weighted)
 end
 
 ####### Model moments and the error #######
-# error term of one moment: |model - data| / data if it is targeted, 0 if it is only shown
-error_term(model, data, targeted) = targeted ? abs(model - data) / data : 0.0
+# error term of one moment: |model - data| / |data| if it is targeted, 0 if it is only shown.
+# CALIB_LOSS[] = :sq uses the squared percentage error ((model - data) / data)^2 instead (default :abs)
+const CALIB_LOSS = Ref(:abs)
+error_term(model, data, targeted) = !targeted ? 0.0 :
+    CALIB_LOSS[] == :sq ? ((model - data) / data)^2 : abs(model - data) / abs(data)
+
+# Size moments: a moment whose sumSS row is "small" or "large" is that group's value of its sumSSsme row, and "gap" is
+# small minus large firms. The model value is from sme (the sumSSsme table at the Fcut that matches the data's share of
+# small firms, from sme_at_share), the data value from the small and large columns of the targets.
+const SIZE_ROWS = ("gap", "small", "large")
+size_data(data_targets, moment, row) = row == "gap" ?
+    data_value(data_targets, moment, :small) - data_value(data_targets, moment, :large) : data_value(data_targets, moment, Symbol(row))
+size_model(sme, row_sme, row) = row == "gap" ? sme[row_sme, "SME Values"] - sme[row_sme, "LE Values"] :
+    sme[row_sme, row == "small" ? "SME Values" : "LE Values"]
+size_label(moment, row) = row == "gap" ? "$moment, small - large" : "$moment, $row firms"
 
 # targeted moments from the sumSS table r: data, model and the error term of each moment in calib_moments
-function targeted_table(r, calib_moments, data_targets)
-    data  = [data_value(data_targets, moment) for (moment, _, _, _) in calib_moments]
-    model = [r[row, "values"] for (_, row, _, _) in calib_moments]
+function targeted_table(r, calib_moments, data_targets; sme = nothing)
+    data  = [row in SIZE_ROWS ? size_data(data_targets, moment, row) : data_value(data_targets, moment)
+             for (moment, row, _, _) in calib_moments]
+    model = [row in SIZE_ROWS ? size_model(sme, row_sme, row) : r[row, "values"] for (_, row, row_sme, _) in calib_moments]
     targeted = [targeted for (_, _, _, targeted) in calib_moments]
-    return DataFrame(moment = first.(calib_moments), data = data, model = model,
-                     error = error_term.(model, data, targeted), targeted = targeted)
+    return DataFrame(moment = [row in SIZE_ROWS ? size_label(moment, row) : moment for (moment, row, _, _) in calib_moments],
+                     data = data, model = model, error = error_term.(model, data, targeted), targeted = targeted)
 end
 
-# calib_fit: solves the model at wage with vals as overrides; returns the targeted moments, the total error and c_e
+has_size(calib_moments) = any(row in SIZE_ROWS for (_, row, _, _) in calib_moments)
+
+# sme_at_share: Fcut set to match the data's share of small firms (fit_Fcut), and the sumSSsme table at that Fcut
+function sme_at_share(SumPol, Fmat, f0, data_targets)
+    zeta_R = parameters().zeta_Rl
+    Fcut = fit_Fcut(SumPol, Fmat, f0, data_value(data_targets, "Share of small firms"); zeta_R = zeta_R)
+    sme = with_params(() -> sumSSsme(SumPol, Fmat, f0; zeta_R = zeta_R, rate_digits = nothing), (Fcut = Fcut,))
+    return sme, Fcut
+end
+
+# calib_fit: solves the model at wage with vals as overrides; returns the targeted moments, the total error and c_e.
+# With a size moment, each trial also sets Fcut to the data's share of small firms.
 function calib_fit(vals, calib_moments, data_targets; wage = 1)
     return with_params(vals) do
         SumPol, e_chain, Fmat = FirmOptim(wage)
         c_e, f0 = EntryValue(SumPol, e_chain)
         # unrounded interest rate: sumSS's default 2 digits would make the error flat in steps
         SumRes = sumSS(SumPol, Fmat, f0; zeta_R = parameters().zeta_Rl, rate_digits = nothing)
-        table = targeted_table(SumRes, calib_moments, data_targets)
+        sme = has_size(calib_moments) ? sme_at_share(SumPol, Fmat, f0, data_targets)[1] : nothing
+        table = targeted_table(SumRes, calib_moments, data_targets; sme = sme)
         (table = table, error = sum(table.error), c_e = c_e)
     end
 end
@@ -131,19 +159,20 @@ function model_fit(vals, calib_moments, data_targets; wage = 1)
         p.pdef_exo_s == p.pdef_exo_l || @warn "pdef_exo_s differs from pdef_exo_l, so Fcut also enters FirmOptim; fit_Fcut does not account for that"
         SumPol, e_chain, Fmat = FirmOptim(wage)
         c_e, f0 = EntryValue(SumPol, e_chain)
-        targeted = targeted_table(sumSS(SumPol, Fmat, f0; zeta_R = p.zeta_Rl, rate_digits = nothing), calib_moments, data_targets)
         check_grid((SumPol = SumPol, mu = stat_dist(SumPol, Fmat, f0; zeta_R = p.zeta_Rl)[1], gridsize = gridsize()))
 
         # the cutoff only moves if the targets have a share of small firms
         share_data = "Share of small firms" in data_targets.moment ? data_value(data_targets, "Share of small firms") : missing
         Fcut = ismissing(share_data) ? p.Fcut : fit_Fcut(SumPol, Fmat, f0, share_data; zeta_R = p.zeta_Rl)
         sme = with_params(() -> sumSSsme(SumPol, Fmat, f0; zeta_R = p.zeta_Rl, rate_digits = nothing), (Fcut = Fcut,))
+        targeted = targeted_table(sumSS(SumPol, Fmat, f0; zeta_R = p.zeta_Rl, rate_digits = nothing), calib_moments, data_targets; sme = sme)
 
-        size_table = DataFrame(moment = first.(calib_moments),
-                               data_small  = [data_value(data_targets, moment, :small) for (moment, _, _, _) in calib_moments],
-                               model_small = [sme[row, "SME Values"] for (_, _, row, _) in calib_moments],
-                               data_large  = [data_value(data_targets, moment, :large) for (moment, _, _, _) in calib_moments],
-                               model_large = [sme[row, "LE Values"] for (_, _, row, _) in calib_moments])
+        size_moments = filter(((_, row, _, _),) -> !(row in SIZE_ROWS), calib_moments)    # size rows would repeat their moment
+        size_table = DataFrame(moment = first.(size_moments),
+                               data_small  = [data_value(data_targets, moment, :small) for (moment, _, _, _) in size_moments],
+                               model_small = [sme[row, "SME Values"] for (_, _, row, _) in size_moments],
+                               data_large  = [data_value(data_targets, moment, :large) for (moment, _, _, _) in size_moments],
+                               model_large = [sme[row, "LE Values"] for (_, _, row, _) in size_moments])
 
         (values = merge(vals, (Fcut = Fcut,)), error = sum(targeted.error), c_e = c_e, wage = wage, Fcut = Fcut,
          share = (data = share_data, model = sme["share", "SME Values"]), targeted = targeted, size = size_table)
